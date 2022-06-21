@@ -1,0 +1,78 @@
+{
+  "name": "@heliofi/react",
+  "version": "0.0.0",
+  "description": "React components for Helio",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/module.js",
+  "repository": "git@github.com:heliofi/heliopay.git",
+  "author": "martinavagyan <martinavagyan@gmail.com>",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "dependencies": {
+    "@heliofi/solana-adapter": "*",
+    "@project-serum/anchor": "^0.21.0",
+    "@solana/wallet-adapter-base": "^0.9.5",
+    "@solana/wallet-adapter-react": "^0.15.5",
+    "@solana/wallet-adapter-react-ui": "^0.9.7",
+    "@solana/wallet-adapter-wallets": "^0.16.1",
+    "@solana/web3.js": "^1.44.0",
+    "crypto-js": "^4.1.1",
+    "jest": "^28.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-jest": "^28.0.5"
+  },
+  "devDependencies": {
+    "@heliofi/eslint-config-helio": "^0.1.1",
+    "@types/jest": "^28.1.2",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.2",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "parcel": "^2.5.0",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {
+    "build": "parcel build",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix",
+    "prettier:fix": "prettier -w .",
+    "prettier": "prettier -c .",
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "prettier",
+      "jest"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    },
+    "extends": [
+      "@heliofi/eslint-config-helio/react",
+      "prettier"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "ignorePatterns": [
+      "**/dist"
+    ]
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "./dist"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
