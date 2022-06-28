@@ -10,6 +10,7 @@
   "license": "MIT",
   "source": "src/index.ts",
   "dependencies": {
+    "@heliofi/backend-api": "^0.1.37",
     "@heliofi/solana-adapter": "*",
     "@project-serum/anchor": "^0.21.0",
     "@solana/wallet-adapter-base": "^0.9.5",
@@ -17,6 +18,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.7",
     "@solana/wallet-adapter-wallets": "^0.16.1",
     "@solana/web3.js": "^1.44.0",
+    "aws-amplify": "^4.3.26",
     "crypto-js": "^4.1.1",
     "jest": "^28.1.1",
     "react": "^18.2.0",
@@ -25,6 +27,8 @@
   },
   "devDependencies": {
     "@heliofi/eslint-config-helio": "^0.1.1",
+    "@parcel/packager-ts": "2.6.1",
+    "@parcel/transformer-typescript-types": "2.6.1",
     "@types/jest": "^28.1.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/react": "^17.0.0",

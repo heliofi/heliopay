@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
 
-import 'aos/dist/aos.css';
-
 import { Card } from '../card';
 
 export type InheritedModalProps = {
