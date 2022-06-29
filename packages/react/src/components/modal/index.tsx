@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Card } from '../card';
 
 export type InheritedModalProps = {
-  onHide?: () => void;
+  onHide: () => void;
 };
 
 type ModalProps = {
@@ -11,21 +11,23 @@ type ModalProps = {
   children: React.ReactNode;
 };
 
+console.log('Modal');
+
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
   title,
   onHide,
   children,
 }) => (
-  <div className="fixed top-0 left-0 z-10 m-auto h-full w-full bg-black bg-opacity-[0.4] backdrop-blur-[3px]">
+  <div className="fixed top-0 left-0 z-10 m-auto h-full w-full bg-black bg-opacity-4 backdrop-blur-2">
     <div
       className="relative m-auto flex h-full w-full items-center justify-center"
       data-aos="fade-up"
     >
-      <Card className="relative w-[432px] p-6">
+      <Card className="relative w-12 p-6">
         <div
-          className="absolute top-[25px] right-[24px]"
+          className="absolute top-4 right-4"
           onClick={() => {
-            onHide?.();
+            onHide();
           }}
         >
           x
