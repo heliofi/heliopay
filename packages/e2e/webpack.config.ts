@@ -36,6 +36,9 @@ const webpackConfig = (env): Configuration => ({
     new HtmlWebpackPlugin({
       template: "./public/index.html"
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     new webpack.DefinePlugin({
       "process.env.PRODUCTION": env.production || !env.development,
       "process.env.NAME": JSON.stringify(require("./package.json").name),
