@@ -25,7 +25,6 @@ const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
   margin: 0 auto;
   display: flex;
-  min-height: 100%;
   padding: 0 16px;
   flex-direction: column;
 `;
@@ -43,7 +42,6 @@ export default function App() {
         onHide={() => {
           console.log('hide');
         }} />
-      <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/features" component={FeaturePage} />
