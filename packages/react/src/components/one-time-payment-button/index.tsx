@@ -11,7 +11,7 @@ import {
 import { createOneTimePayment } from '../../infrastructure';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 
-interface OneTimePaymentProps {
+export interface OneTimePaymentProps {
   amount: number;
   currency?: string;
   onStartPayment?: () => void;
@@ -55,7 +55,9 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   const onStartPaymentFlow = useCallback(async () => {
     setShowLoadingModal(true);
+    console.log('onStartPaymentFlowaaa', helioProvider, currency)
     if (helioProvider && currency != null) {
+      console.log('asdas')
       onStartPayment?.();
       await createOneTimePayment({
         anchorProvider: helioProvider,
