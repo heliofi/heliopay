@@ -12,7 +12,6 @@ export const ConnectButton: FC<Props> = ({ onError }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(!publicKey && isClicked);
     setLoading(!publicKey && isClicked);
   }, [publicKey, isClicked]);
 

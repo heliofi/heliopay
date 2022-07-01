@@ -17,7 +17,7 @@ import {
 import { TransactionTimeoutError } from './TransactionTimeoutError';
 import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
-import { cluster, helioBaseUrl } from '../config';
+import { cluster, helioApiBaseUrl } from '../config';
 import {getMintAddressByCluster} from "../../domain/constants/currency";
 
 const SOL_SYMBOL = 'SOL';
@@ -38,7 +38,7 @@ interface Props {
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const res = await fetch(`${helioBaseUrl}/approve-transaction`, {
+  const res = await fetch(`${helioApiBaseUrl}/approve-transaction`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

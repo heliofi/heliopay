@@ -1,17 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResult } from '@aws-amplify/api-graphql/lib';
-import { API } from 'aws-amplify';
 import {
   currenciesByOrder,
   CurrenciesByOrderQuery,
+  getPaymentRequestById,
+  GetPaymentRequestByIdQuery,
 } from '@heliofi/backend-api';
+import { Amplify, API } from 'aws-amplify';
+
+
+import { getAwsConfig } from '../config';
+
+Amplify.configure(getAwsConfig());
 
 enum AuthMode {
   AWS_LAMBDA = 'AWS_LAMBDA',
   API_KEY = 'API_KEY',
 }
 
-export class HelioApiAdapter {
-  async listCurrencies(): Promise<any> {
+export const HelioApiAdapter = {
+   getPaymentRequestById: async (id: string) => {
+    const result = (await API.graphql({
+      query: getPaymentRequestById,
+      variables: {
+        id,
+      },
+      authMode: AuthMode.API_KEY,
+    })) as GraphQLResult<GetPaymentRequestByIdQuery>;
+    return result.data?.getPaymentRequest;
+  },
+
+  listCurrencies: async () => {
     const result = (await API.graphql({
       query: currenciesByOrder,
       variables: {
@@ -19,7 +38,6 @@ export class HelioApiAdapter {
       },
       authMode: AuthMode.API_KEY,
     })) as GraphQLResult<CurrenciesByOrderQuery>;
-
-    return result.data?.currenciesByOrder;
+    return result.data?.currenciesByOrder?.items || [];
   }
 }

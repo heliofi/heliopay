@@ -13,6 +13,7 @@ import { clusterApiUrl } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo } from 'react';
 
 import { AnchorProvider } from '../anchor';
+import { HelioProvider } from '../helio';
 
 export const SolanaProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const network = WalletAdapterNetwork.Mainnet;
@@ -31,7 +32,9 @@ export const SolanaProvider: FC<{ children: ReactNode }> = ({ children }) => {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <AnchorProvider>{children}</AnchorProvider>
+          <AnchorProvider>
+            <HelioProvider>{children}</HelioProvider>
+          </AnchorProvider>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

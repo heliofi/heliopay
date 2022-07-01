@@ -11,8 +11,6 @@ type ModalProps = {
   children: React.ReactNode;
 };
 
-console.log('Modal');
-
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
   title,
   onHide,

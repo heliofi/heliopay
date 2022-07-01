@@ -4,6 +4,7 @@ export interface Currency {
   mintAddress?: string;
   decimals: number;
   coinMarketCapId?: number;
+  sign?: string;
 }
 
 export interface FiatCurrency {
