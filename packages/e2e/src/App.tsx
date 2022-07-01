@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     SolanaProvider,
     HelioPayContainer,
@@ -8,12 +8,28 @@ import {
 } from "@heliofi/react";
 
 const App = () => {
-    const [paymentId, setPaymentId] = useState<string | null>('ded08427-cbd4-4c9c-b29f-cd2c78e59f1c');
+    const [paymentId, setPaymentId] = useState<string | null>(
+        "ded08427-cbd4-4c9c-b29f-cd2c78e59f1c"
+    );
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     return (
         <SolanaProvider>
-            <input type="text" placeholder="Payment request ID" value={paymentId} onChange={(e:any) => {
-                setPaymentId(e.target.value);
-            }} />
+            <input
+                type="text"
+                placeholder="Payment request ID"
+                value={paymentId}
+                onChange={(e: any) => {
+                    setPaymentId(e.target.value);
+                }}
+            />
+            <button
+                onClick={() => {
+                    setIsFormSubmitted(true);
+                }}
+            >
+                make payment
+            </button>
+
             <HelioPayContainer
                 buttonType={"button"}
                 amount={1}
@@ -21,15 +37,15 @@ const App = () => {
                 receiverSolanaAddress={"3guZfyRAE7dnn3jFdNMJjLxJDzaHHe893zXuiHF7PG6a"}
                 paymentRequestId={paymentId}
                 onSuccess={function (event: SuccessPaymentEvent): void {
-                    console.log('onSuccess')
+                    console.log("onSuccess", {event});
                 }}
                 onError={function (event: ErrorPaymentEvent): void {
-                    console.log('onError')
+                    console.log("onError", {event});
                 }}
                 onPending={function (event: PendingPaymentEvent): void {
-                    console.log('onPending')
+                    console.log("onPending", {event});
                 }}
-                isFormSubmitted={false}
+                isFormSubmitted={isFormSubmitted}
                 customerDetails={undefined}
             />
             {/* <OneTimePaymentButton
