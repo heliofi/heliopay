@@ -5,8 +5,10 @@ import {
 } from '../../domain';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopay-container';
-import { ThemeProvider } from 'styled-components';
+import { DefaultTheme, ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../theme';
+import { useEffect, useState } from 'react';
+import { deepMerge } from '../../utils';
 
 interface HelioPayProps {
   receiverSolanaAddress: string;
@@ -16,6 +18,7 @@ interface HelioPayProps {
   onPending: (event: PendingPaymentEvent) => void;
   onStartPayment: () => void;
   quantity?: number;
+  theme?: DefaultTheme;
 }
 
 export const HelioPay = ({
@@ -26,9 +29,18 @@ export const HelioPay = ({
   onPending,
   onStartPayment,
   quantity = 1,
+  theme,
 }: HelioPayProps) => {
+  const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+
+  useEffect(() => {
+    const mergedTheme = deepMerge(defaultTheme, theme || {});
+    console.log({ mergedTheme });
+    setCurrentTheme(mergedTheme);
+  }, [theme]);
+
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={currentTheme}>
       <SolanaProvider>
         <HelioPayContainer
           receiverSolanaAddress={receiverSolanaAddress}
