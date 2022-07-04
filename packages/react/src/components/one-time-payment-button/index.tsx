@@ -22,7 +22,7 @@ export interface OneTimePaymentProps {
   onPending: (event: PendingPaymentEvent) => void;
   isFormSubmitted: boolean;
   type?: 'submit' | 'reset' | 'button' | undefined;
-  customerDetails: CustomerDetails;
+  customerDetails?: CustomerDetails;
   quantity?: number;
 }
 
@@ -69,7 +69,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
         onError,
         onPending,
         customerDetails,
-        quantity: Number(quantity),
+        quantity: Number(quantity) || 1,
       });
     }
   }, [

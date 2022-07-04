@@ -1,5 +1,5 @@
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 import ConnectButton from '../connect-button';
@@ -7,29 +7,38 @@ import OneTimePaymentButton, {
   OneTimePaymentProps,
 } from '../one-time-payment-button';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
+import {
+  ErrorPaymentEvent,
+  PendingPaymentEvent,
+  SuccessPaymentEvent,
+} from '../../domain';
+import Button from '../button';
 
-interface HeliopayContainerProps extends OneTimePaymentProps {
-  buttonType: OneTimePaymentProps['type'];
+interface HeliopayContainerProps {
+  receiverSolanaAddress: string;
+  paymentRequestId: string;
+  onSuccess: (event: SuccessPaymentEvent) => void;
+  onError: (event: ErrorPaymentEvent) => void;
+  onPending: (event: PendingPaymentEvent) => void;
+  onStartPayment: () => void;
+  quantity?: number;
 }
 
 export const HelioPayContainer: FC<HeliopayContainerProps> = ({
-  amount,
-  currency,
   onStartPayment,
   onSuccess,
   receiverSolanaAddress,
   paymentRequestId,
   onError,
   onPending,
-  isFormSubmitted,
-  buttonType,
-  customerDetails,
-  quantity,
+  quantity = 1,
 }) => {
   const wallet = useAnchorWallet();
 
   const { currencyList, paymentDetails, getCurrencyList, getPaymentDetails } =
     useHelioProvider();
+
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
     getCurrencyList();
@@ -46,6 +55,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   return (
     <div>
+      <Button>test button</Button>
       <ConnectButton />
       {paymentDetails && (
         <>
@@ -70,31 +80,9 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         paymentRequestId={paymentRequestId}
         onError={onError}
         onPending={onPending}
-        isFormSubmitted={isFormSubmitted}
-        type={buttonType}
-        customerDetails={customerDetails}
         quantity={quantity}
+        isFormSubmitted={isFormSubmitted}
       />
-      {/* {wallet ? (
-        <div>
-          <OneTimePaymentButton
-            amount={amount}
-            currency={currency}
-            onStartPayment={onStartPayment}
-            onSuccess={onSuccess}
-            receiverSolanaAddress={receiverSolanaAddress}
-            paymentRequestId={paymentRequestId}
-            onError={onError}
-            onPending={onPending}
-            isFormSubmitted={isFormSubmitted}
-            type={buttonType}
-            customerDetails={customerDetails}
-            quantity={quantity}
-          />
-        </div>
-      ) : (
-        <ConnectButton />
-      )} */}
     </div>
   );
 };

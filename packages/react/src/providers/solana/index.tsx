@@ -16,7 +16,7 @@ import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
 
 export const SolanaProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const network = WalletAdapterNetwork.Mainnet;
+  const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   const wallets = useMemo(
