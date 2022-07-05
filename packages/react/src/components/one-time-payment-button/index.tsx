@@ -42,13 +42,11 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
   customerDetails,
   quantity,
 }) => {
-  const [showGetAccessBtn, setShowGetAccessBtn] = useState(true);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const helioProvider = useAnchorProvider();
 
   const updateSuccessfulPayment = useCallback(
     (event: SuccessPaymentEvent) => {
-      setShowGetAccessBtn(false);
       setShowLoadingModal(false);
       onSuccess(event);
     },
@@ -57,21 +55,21 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   const onStartPaymentFlow = useCallback(async () => {
     setShowLoadingModal(true);
-    if (helioProvider && currency != null) {
-      onStartPayment?.();
-      await createOneTimePayment({
-        anchorProvider: helioProvider,
-        recipientPK: receiverSolanaAddress,
-        symbol: currency,
-        amount: amount * (quantity || 1),
-        paymentRequestId,
-        onSuccess: updateSuccessfulPayment,
-        onError,
-        onPending,
-        customerDetails,
-        quantity: Number(quantity) || 1,
-      });
-    }
+    // if (helioProvider && currency != null) {
+    //   onStartPayment?.();
+    //   await createOneTimePayment({
+    //     anchorProvider: helioProvider,
+    //     recipientPK: receiverSolanaAddress,
+    //     symbol: currency,
+    //     amount: amount * (quantity || 1),
+    //     paymentRequestId,
+    //     onSuccess: updateSuccessfulPayment,
+    //     onError,
+    //     onPending,
+    //     customerDetails,
+    //     quantity: Number(quantity) || 1,
+    //   });
+    // }
   }, [
     amount,
     quantity,
@@ -94,19 +92,17 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   return (
     <>
-      {showGetAccessBtn && (
-        <StyledButtonContainer>
-          <Button
-            type="button"
-            onClick={async () =>
-              type !== 'submit' && (await onStartPaymentFlow())
-            }
-            className="rounded-lg text-sm"
-          >
-            PAY
-          </Button>
-        </StyledButtonContainer>
-      )}
+      <StyledButtonContainer>
+        <Button
+          type="button"
+          onClick={async () =>
+            type !== 'submit' && (await onStartPaymentFlow())
+          }
+          className="rounded-lg text-sm"
+        >
+          PAY
+        </Button>
+      </StyledButtonContainer>
       {showLoadingModal && (
         <LoadingModal onHide={() => setShowLoadingModal(false)} />
       )}

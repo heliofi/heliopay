@@ -21,7 +21,7 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
-import HelioLogoGray from '../Icons/HelioLogoGray';
+import HelioLogoGray from '../icons/HelioLogoGray';
 
 interface HeliopayContainerProps {
   receiverSolanaAddress: string;

@@ -1,6 +1,14 @@
 import React, { FC } from 'react';
-
-import { Card } from '../card';
+import CloseGray from '../icons/CloseGray';
+import {
+  StyledModalCloseButton,
+  StyledModalContainer,
+  StyledModalContent,
+  StyledModalHeader,
+  StyledModalIcon,
+  StyledModalTitle,
+  StyledModalWrapper,
+} from './styles';
 
 export type InheritedModalProps = {
   onHide: () => void;
@@ -9,32 +17,29 @@ export type InheritedModalProps = {
 type ModalProps = {
   title?: string;
   children: React.ReactNode;
+  icon?: React.ReactNode;
+  closeOnClickOutside?: boolean;
 };
 
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
   title,
   onHide,
   children,
+  icon,
+  closeOnClickOutside = false,
 }) => (
-  <div className="fixed top-0 left-0 z-10 m-auto h-full w-full bg-black bg-opacity-4 backdrop-blur-2">
-    <div
-      className="relative m-auto flex h-full w-full items-center justify-center"
-      data-aos="fade-up"
-    >
-      <Card className="relative w-12 p-6">
-        <div
-          className="absolute top-4 right-4"
-          onClick={() => {
-            onHide();
-          }}
-        >
-          x
-        </div>
-        <h3 className="font-poppins text-black">{title}</h3>
-        <div className="pt-2">{children}</div>
-      </Card>
-    </div>
-  </div>
+  <StyledModalWrapper>
+    <StyledModalContainer>
+      <StyledModalHeader>
+        {icon && <StyledModalIcon>{icon}</StyledModalIcon>}
+        {title && <StyledModalTitle>{title}</StyledModalTitle>}
+        <StyledModalCloseButton onClick={onHide}>
+          <CloseGray />
+        </StyledModalCloseButton>
+      </StyledModalHeader>
+      <StyledModalContent>{children}</StyledModalContent>
+    </StyledModalContainer>
+  </StyledModalWrapper>
 );
 
 export default Modal;

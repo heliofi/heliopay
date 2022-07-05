@@ -3,8 +3,8 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useState } from 'react';
 import useOnClickOutside from '../../hooks/useClickOutside';
 import { shortenWalletAddress } from '../../utils';
-import ArrowSwap from '../Icons/ArrowSwap';
-import Exit from '../Icons/Exit';
+import ArrowSwap from '../icons/ArrowSwap';
+import Exit from '../icons/Exit';
 import {
   StyledDropdownButton,
   StyledMenu,
