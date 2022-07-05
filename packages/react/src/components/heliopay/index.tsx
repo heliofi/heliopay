@@ -10,6 +10,9 @@ import { defaultTheme } from '../../theme';
 import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
 
+import './style.scss'
+console.log('solan22a')
+
 interface HelioPayProps {
   receiverSolanaAddress: string;
   paymentRequestId: string;
