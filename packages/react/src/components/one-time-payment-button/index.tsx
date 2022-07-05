@@ -57,9 +57,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   const onStartPaymentFlow = useCallback(async () => {
     setShowLoadingModal(true);
-    console.log('onStartPaymentFlowaaa', helioProvider, currency);
     if (helioProvider && currency != null) {
-      console.log('helioProvider && currency != null');
       onStartPayment?.();
       await createOneTimePayment({
         anchorProvider: helioProvider,

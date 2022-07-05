@@ -16,7 +16,6 @@ export const useHelioProvider = () => {
     const result = await HelioApiAdapter.getPaymentRequestById(
       paymentRequestId
     );
-    console.log('payment result', { result });
     setPaymentDetails(result || {});
   };
 

@@ -60,14 +60,12 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
-  console.log('Sending transaction...', { symbol, request, provider });
   try {
     if (symbol === SOL_SYMBOL) {
       return await singleSolPaymentSC(provider, request);
     }
     return await singlePaymentSC(provider, request);
   } catch (e) {
-    console.log('Error while sending transaction', { e });
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
 };
@@ -90,7 +88,6 @@ const retryCallback = async (
         await retryCallback(callback, count - 1, delay, onError);
       }, delay);
     } else {
-      console.log('Error while retrying', { e });
       onError(String(e));
     }
   }
