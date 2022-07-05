@@ -1,35 +1,24 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { FC, useEffect, useState } from 'react';
+import { StyledConnectButtonWrapper } from './styles';
 
-interface Props {
-  onError?: (err: unknown) => void;
-}
-
-export const ConnectButton: FC<Props> = ({ onError }) => {
-  const { publicKey } = useWallet();
-  const [isClicked, setIsClicked] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(!publicKey && isClicked);
-  }, [publicKey, isClicked]);
+export const ConnectButton: FC = () => {
+  const { connecting } = useWallet();
 
   return (
-    <label onClick={() => setIsClicked(true)}>
+    <StyledConnectButtonWrapper>
       <WalletMultiButton startIcon={undefined}>
-        {loading ? (
+        {connecting ? (
           <>
             <span>CONNECTING...</span>
           </>
         ) : (
-          <span className='rounded-full'>CONNECT WALLET</span>
+          <span className="rounded-full">CONNECT WALLET</span>
         )}
       </WalletMultiButton>
-    </label>
+    </StyledConnectButtonWrapper>
   );
 };
 
 export default ConnectButton;
-
-

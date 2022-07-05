@@ -30,6 +30,12 @@ const App = () => {
             onStartPayment={function (): void {
                 console.log("onStartPayment");
             }}
+            // theme={{
+            //     colors: {
+            //         primary: "#ff0000",
+            //         secondary: "#00ff00",
+            //     }
+            // }}
         />
     );
 };

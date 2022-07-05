@@ -2,10 +2,13 @@ import { StyledButton } from './styles';
 
 interface ButtonProps {
   children: React.ReactNode;
+  type?: 'submit' | 'reset' | 'button';
+  onClick?: () => void;
+  className?: string;
 }
 
-const Button = ({ children }: ButtonProps) => {
-  return <StyledButton>{children}</StyledButton>;
+const Button = ({ children, ...props }: ButtonProps) => {
+  return <StyledButton {...props}>{children}</StyledButton>;
 };
 
 export default Button;

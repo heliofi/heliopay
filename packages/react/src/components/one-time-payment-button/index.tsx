@@ -10,6 +10,8 @@ import {
 } from '../../domain';
 import { createOneTimePayment } from '../../infrastructure';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
+import Button from '../button';
+import { StyledButtonContainer } from './styles';
 
 export interface OneTimePaymentProps {
   amount: number;
@@ -55,9 +57,9 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   const onStartPaymentFlow = useCallback(async () => {
     setShowLoadingModal(true);
-    console.log('onStartPaymentFlowaaa', helioProvider, currency)
+    console.log('onStartPaymentFlowaaa', helioProvider, currency);
     if (helioProvider && currency != null) {
-      console.log('helioProvider && currency != null')
+      console.log('helioProvider && currency != null');
       onStartPayment?.();
       await createOneTimePayment({
         anchorProvider: helioProvider,
@@ -95,15 +97,17 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
   return (
     <>
       {showGetAccessBtn && (
-        <button
-          type="button"
-          onClick={async () =>
-            type !== 'submit' && (await onStartPaymentFlow())
-          }
-          className="rounded-lg text-sm"
-        >
-          PAY
-        </button>
+        <StyledButtonContainer>
+          <Button
+            type="button"
+            onClick={async () =>
+              type !== 'submit' && (await onStartPaymentFlow())
+            }
+            className="rounded-lg text-sm"
+          >
+            PAY
+          </Button>
+        </StyledButtonContainer>
       )}
       {showLoadingModal && (
         <LoadingModal onHide={() => setShowLoadingModal(false)} />

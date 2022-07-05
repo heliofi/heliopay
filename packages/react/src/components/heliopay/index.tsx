@@ -35,7 +35,6 @@ export const HelioPay = ({
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
-    console.log({ mergedTheme });
     setCurrentTheme(mergedTheme);
   }, [theme]);
 

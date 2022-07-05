@@ -13,6 +13,15 @@ import {
   SuccessPaymentEvent,
 } from '../../domain';
 import Button from '../button';
+import WalletController from '../WalletController';
+import {
+  StyledLeft,
+  StyledLogo,
+  StyledRight,
+  StyledRow,
+  StyledWrapper,
+} from './styles';
+import HelioLogoGray from '../Icons/HelioLogoGray';
 
 interface HeliopayContainerProps {
   receiverSolanaAddress: string;
@@ -54,36 +63,37 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   };
 
   return (
-    <div>
-      <Button>test button</Button>
-      <ConnectButton />
-      {paymentDetails && (
-        <>
-          <h2>currency: {getCurrency(paymentDetails.currency)?.name}</h2>
-          <h2>product name: {paymentDetails.name}</h2>
-          <h2>
-            product amount:{' '}
-            {TokenConversionService.convertFromMinimalUnits(
-              getCurrency(paymentDetails.currency),
-              paymentDetails.normalizedPrice
-            )}
-          </h2>
-        </>
-      )}
-      <br />
-      <OneTimePaymentButton
-        amount={paymentDetails.normalizedPrice}
-        currency={getCurrency(paymentDetails.currency)?.symbol}
-        onStartPayment={onStartPayment}
-        onSuccess={onSuccess}
-        receiverSolanaAddress={receiverSolanaAddress}
-        paymentRequestId={paymentRequestId}
-        onError={onError}
-        onPending={onPending}
-        quantity={quantity}
-        isFormSubmitted={isFormSubmitted}
-      />
-    </div>
+    <StyledWrapper>
+      <StyledRow>
+        <StyledLeft>
+          {wallet ? (
+            <OneTimePaymentButton
+              amount={paymentDetails.normalizedPrice}
+              currency={getCurrency(paymentDetails.currency)?.symbol}
+              onStartPayment={onStartPayment}
+              onSuccess={onSuccess}
+              receiverSolanaAddress={receiverSolanaAddress}
+              paymentRequestId={paymentRequestId}
+              onError={onError}
+              onPending={onPending}
+              quantity={quantity}
+              isFormSubmitted={isFormSubmitted}
+            />
+          ) : (
+            <>
+              <ConnectButton />
+            </>
+          )}
+        </StyledLeft>
+        <StyledRight>
+          Powered by
+          <StyledLogo>
+            <HelioLogoGray />
+          </StyledLogo>
+        </StyledRight>
+      </StyledRow>
+      {wallet && <WalletController />}
+    </StyledWrapper>
   );
 };
 
