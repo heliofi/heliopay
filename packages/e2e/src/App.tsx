@@ -12,7 +12,7 @@ const RECEIVER_SOL_ADDRESS = "3guZfyRAE7dnn3jFdNMJjLxJDzaHHe893zXuiHF7PG6a";
 
 const App = () => {
     const [paymentId, setPaymentId] = useState<string | null>(
-        "ded08427-cbd4-4c9c-b29f-cd2c78e59f1c"
+        "c5d4dd5d-d880-4b9f-a918-efb931a3aa1e"
     );
     return (
         <HelioPay

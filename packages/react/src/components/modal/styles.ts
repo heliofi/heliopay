@@ -15,7 +15,7 @@ export const StyledModalWrapper = styled.div`
 
 export const StyledModalContainer = styled.div`
   width: 400px;
-  padding: 30px;
+  padding: 24px;
   background: #ffffff;
   box-shadow: 0px 4px 20px rgba(156, 163, 175, 0.15);
   border-radius: 8px;

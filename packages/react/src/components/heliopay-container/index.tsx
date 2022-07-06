@@ -22,6 +22,7 @@ import {
   StyledWrapper,
 } from './styles';
 import HelioLogoGray from '../icons/HelioLogoGray';
+import CustomerDetailsForm from '../customer-details-form';
 
 interface HeliopayContainerProps {
   receiverSolanaAddress: string;
@@ -48,6 +49,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     useHelioProvider();
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
 
   useEffect(() => {
     getCurrencyList();
@@ -62,23 +64,40 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
+  const isCustomerDetailsRequired = (): boolean => {
+    if (!paymentDetails) return false;
+    return (
+      paymentDetails.requireEmail ||
+      paymentDetails.requireFullName ||
+      paymentDetails.requireDiscordUsername ||
+      paymentDetails.requireTwitterUsername ||
+      paymentDetails.requireCountry ||
+      paymentDetails.requireDeliveryAddress ||
+      false
+    );
+  };
+
   return (
     <StyledWrapper>
       <StyledRow>
         <StyledLeft>
           {wallet ? (
-            <OneTimePaymentButton
-              amount={paymentDetails.normalizedPrice}
-              currency={getCurrency(paymentDetails.currency)?.symbol}
-              onStartPayment={onStartPayment}
-              onSuccess={onSuccess}
-              receiverSolanaAddress={receiverSolanaAddress}
-              paymentRequestId={paymentRequestId}
-              onError={onError}
-              onPending={onPending}
-              quantity={quantity}
-              isFormSubmitted={isFormSubmitted}
-            />
+            isCustomerDetailsRequired() ? (
+              <Button onClick={() => setShowFormModal(true)}>PAY</Button>
+            ) : (
+              <OneTimePaymentButton
+                amount={paymentDetails.normalizedPrice}
+                currency={getCurrency(paymentDetails.currency)?.symbol}
+                onStartPayment={onStartPayment}
+                onSuccess={onSuccess}
+                receiverSolanaAddress={receiverSolanaAddress}
+                paymentRequestId={paymentRequestId}
+                onError={onError}
+                onPending={onPending}
+                quantity={quantity}
+                isFormSubmitted={isFormSubmitted}
+              />
+            )
           ) : (
             <>
               <ConnectButton />
@@ -93,6 +112,9 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         </StyledRight>
       </StyledRow>
       {wallet && <WalletController />}
+      {showFormModal && (
+        <CustomerDetailsForm onHide={() => setShowFormModal(false)} />
+      )}
     </StyledWrapper>
   );
 };
