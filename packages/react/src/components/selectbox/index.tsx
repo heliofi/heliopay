@@ -13,7 +13,7 @@ import {
   StyledSelectLabel,
   StyledSelectWrapper,
 } from './styles';
-import ArrowDown from '../icons/ArrowDown';
+import { ArrowsDownIcon } from '@heliofi/helio-icons'
 
 interface Option {
   value: number | string;
@@ -75,7 +75,7 @@ const SelectBox = ({
             </StyledSelectLabel>
 
             <StyledSelectIcon>
-              <ArrowDown />
+              <ArrowsDownIcon />
             </StyledSelectIcon>
           </StyledSelectHead>
           <StyledSelectDropdownContainer {...getMenuProps()}>

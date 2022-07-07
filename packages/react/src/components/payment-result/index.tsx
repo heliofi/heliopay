@@ -12,7 +12,7 @@ import {
   StyledResultTopLine,
   StyledResultWrapper,
 } from './styles';
-import ArrowDown from '../icons/ArrowDown';
+import { WarningTriangleIcon } from '@heliofi/helio-icons';
 
 interface Props {
   result: {
@@ -30,7 +30,7 @@ const PaymentResult = ({ result }: Props) => {
         <StyledResultTopLine error={!!hasError} />
         <StyledResultContainer>
           <StyledResultIcon error={!!hasError}>
-            {hasError ? <ArrowDown /> : <CheckMarkIcon />}
+            {hasError ? <WarningTriangleIcon /> : <CheckMarkIcon />}
           </StyledResultIcon>
           <StyledResultTitle error={!!hasError}>
             {hasError ? 'Transaction failed' : 'Success!'}

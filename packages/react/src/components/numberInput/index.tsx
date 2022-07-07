@@ -1,6 +1,6 @@
 import Input from '../input';
 import { StyledNumberButtons, StyledNumberMinus, StyledNumberPlus } from './styles';
-import ArrowDown from '../icons/ArrowDown';
+import { MinusIcon, PlusIcon } from '@heliofi/helio-icons';
 
 interface NumberInputProps {
   fieldId: string;
@@ -66,13 +66,13 @@ const NumberInput = ({
             className="flex h-6 w-6 cursor-pointer select-none items-center justify-center"
             onClick={handleDecrement}
           >
-            <ArrowDown />
+            <MinusIcon />
           </StyledNumberMinus>
           <StyledNumberPlus
             className="flex h-6 w-6 cursor-pointer select-none items-center justify-center"
             onClick={handleIncrement}
           >
-            <ArrowDown />
+            <PlusIcon />
           </StyledNumberPlus>
         </StyledNumberButtons>
       }

@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 
-export const StyledWrapper = styled.div`
-  max-width: 270px;
-`;
+export const StyledWrapper = styled.div``;
 
 export const StyledRow = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 4px;
+  max-width: 270px;
 `;
 
 export const StyledLeft = styled.div`
