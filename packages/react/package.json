@@ -11,7 +11,7 @@
   "source": "src/index.ts",
   "dependencies": {
     "@heliofi/backend-api": "^0.1.37",
-    "@heliofi/helio-icons": "^1.0.3",
+    "@heliofi/helio-icons": "^1.0.4",
     "@heliofi/solana-adapter": "^0.0.7-alpha.0",
     "@project-serum/anchor": "^0.21.0",
     "@solana/wallet-adapter-base": "^0.9.5",
