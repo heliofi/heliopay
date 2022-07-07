@@ -8,60 +8,40 @@ import { useEffect, useState } from 'react';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import Input from '../input';
 import Button from '../button';
-import { StyledCurrency, StyledFormText, StyledFormTitle, StyledPrice } from './styles';
+import {
+  StyledCurrency,
+  StyledFormText,
+  StyledFormTitle,
+  StyledPrice,
+} from './styles';
 import SelectBox from '../selectbox';
 import { countries } from '../../domain/constants/countries';
 import { removeUndefinedFields } from '../../utils';
-import OneTimePaymentButton from '../one-time-payment-button';
 import {
-  ErrorPaymentEvent,
-  PendingPaymentEvent,
-  SuccessPaymentEvent,
+  Currency,
+  CustomerDetails,
 } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
 
 interface Props extends InheritedModalProps {
-  onStartPayment: () => void;
-  onSuccess: (event: SuccessPaymentEvent) => void;
-  paymentRequestId: string;
-  onError: (event: ErrorPaymentEvent) => void;
-  onPending: (event: PendingPaymentEvent) => void;
+  onSubmit: (data: {
+    amount: number;
+    customerDetails?: CustomerDetails;
+    quantity: number;
+  }) => void;
 }
 
 const CustomerDetailsFormModal = ({
   onHide,
-  paymentRequestId,
-  onStartPayment,
-  onSuccess,
-  onError,
-  onPending,
+  onSubmit,
 }: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
-  const [currency, setCurrency] = useState<{
-    id: string;
-    symbol?: string | null;
-    name?: string | null;
-    mintAddress?: string | null;
-    decimals?: number | null;
-    coinMarketCapId?: number | null;
-    type: string;
-    sign?: string | null;
-    order: number;
-    createdAt: string;
-    updatedAt: string;
-  } | null>(null);
+  const [currency, setCurrency] = useState<Currency | null>(null);
 
-  const [customerDetails, setCustomerDetails] = useState<{
-    fullName?: string;
-    email?: string;
-    discordUsername?: string;
-    twitterUsername?: string;
-    country?: string;
-    deliveryAddress?: string;
-  }>({
+  const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
     fullName: undefined,
     email: undefined,
     discordUsername: undefined,
@@ -159,7 +139,14 @@ const CustomerDetailsFormModal = ({
               const clearDetails = removeUndefinedFields(details);
 
               setCustomerDetails(clearDetails);
-              setIsFormSubmitted(true);
+              onSubmit({
+                customerDetails: clearDetails,
+                amount: TokenConversionService.convertToMinimalUnits(
+                  getCurrency(paymentDetails.currency),
+                  values.canChangePrice ? values.customPrice : normalizedPrice
+                ),
+                quantity: values.quantity || 1,
+              });
             }}
           >
             {({ values, setFieldValue }) => (
@@ -270,29 +257,7 @@ const CustomerDetailsFormModal = ({
                       label="Shipping address"
                     />
                   )}
-                  <OneTimePaymentButton
-                    type="submit"
-                    // amount={paymentDetails?.normalizedPrice}
-                    amount={TokenConversionService.convertToMinimalUnits(
-                      getCurrency(paymentDetails.currency),
-                      values.canChangePrice
-                        ? values.customPrice
-                        : normalizedPrice
-                    )}
-                    currency={getCurrency(paymentDetails?.currency)?.symbol}
-                    onStartPayment={onStartPayment}
-                    onSuccess={onSuccess}
-                    receiverSolanaAddress={
-                      paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
-                    }
-                    paymentRequestId={paymentRequestId}
-                    onError={onError}
-                    onPending={onPending}
-                    quantity={values.quantity}
-                    isFormSubmitted={isFormSubmitted}
-                    disabled={!paymentDetails}
-                    customerDetails={customerDetails}
-                  />
+                  <Button type="submit">PAY</Button>
                 </div>
               </Form>
             )}

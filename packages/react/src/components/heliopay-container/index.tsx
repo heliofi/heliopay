@@ -24,6 +24,8 @@ import {
 import HelioLogoGray from '../icons/HelioLogoGray';
 import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
+import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
+import { createOneTimePayment } from '../../infrastructure';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -41,11 +43,11 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onPending,
 }) => {
   const wallet = useAnchorWallet();
+  const helioProvider = useAnchorProvider();
 
   const { currencyList, paymentDetails, getCurrencyList, getPaymentDetails } =
     useHelioProvider();
 
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
 
@@ -77,30 +79,57 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     );
   };
 
+  const handleSuccessPayment = (event: SuccessPaymentEvent) => {
+    onSuccess(event);
+    setShowLoadingModal(false);
+  };
+
+  const handleErrorPayment = (event: ErrorPaymentEvent) => {
+    onError(event);
+    setShowLoadingModal(false);
+  };
+
+  const submitPayment = async ({ amount, quantity, customerDetails }: any) => {
+    if (helioProvider) {
+      onStartPayment?.();
+      setShowLoadingModal(true);
+      setShowFormModal(false);
+      const payload = {
+        anchorProvider: helioProvider,
+        recipientPK: paymentDetails?.owner?.wallets?.items?.[0]?.publicKey,
+        symbol: getCurrency(paymentDetails?.currency)?.symbol,
+        amount: amount * (quantity || 1),
+        paymentRequestId,
+        onSuccess: handleSuccessPayment,
+        onError: handleErrorPayment,
+        onPending,
+        customerDetails,
+        quantity: Number(quantity) || 1,
+      };
+      await createOneTimePayment(payload);
+    }
+  };
+
   return (
     <StyledWrapper>
       <StyledRow>
         <StyledLeft>
           {wallet ? (
-            isCustomerDetailsRequired() ? (
-              <Button onClick={() => setShowFormModal(true)}>PAY</Button>
-            ) : (
-              <OneTimePaymentButton
-                amount={paymentDetails?.normalizedPrice}
-                currency={getCurrency(paymentDetails?.currency)?.symbol}
-                onStartPayment={onStartPayment}
-                onSuccess={onSuccess}
-                receiverSolanaAddress={
-                  paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
+            <Button
+              onClick={() => {
+                if (isCustomerDetailsRequired()) {
+                  setShowFormModal(true);
+                } else {
+                  submitPayment({
+                    amount: paymentDetails?.normalizedPrice,
+                    quantity: 1,
+                    customerDetails: undefined,
+                  });
                 }
-                paymentRequestId={paymentRequestId}
-                onError={onError}
-                onPending={onPending}
-                quantity={1}
-                isFormSubmitted={isFormSubmitted}
-                disabled={!paymentDetails}
-              />
-            )
+              }}
+            >
+              PAY
+            </Button>
           ) : (
             <>
               <ConnectButton />
@@ -118,23 +147,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       {showFormModal && (
         <CustomerDetailsFormModal
           onHide={() => setShowFormModal(false)}
-          onStartPayment={function (): void {
-            console.log('onStartPayment');
-            setShowFormModal(false);
-            setShowLoadingModal(true);
-          }}
-          onSuccess={function (event: SuccessPaymentEvent): void {
-            console.log('onSuccess', { event });
-            setShowLoadingModal(false);
-          }}
-          paymentRequestId={paymentRequestId}
-          onError={function (event: ErrorPaymentEvent): void {
-            console.log('onError', { event });
-            setShowLoadingModal(false);
-          }}
-          onPending={function (event: PendingPaymentEvent): void {
-            console.log('onPending', { event });
-          }}
+          onSubmit={submitPayment}
         />
       )}
 
