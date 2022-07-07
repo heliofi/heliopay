@@ -9,10 +9,14 @@ import { TokenConversionService } from '../../domain/services/TokenConversionSer
 import Input from '../input';
 import Button from '../button';
 import { StyledFormText, StyledFormTitle, StyledPrice } from './styles';
+import SelectBox from '../selectbox';
+import { countries } from '../../domain/constants/countries';
+import { removeUndefinedFields } from '../../utils';
 
 const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [actualPrice, setActualPrice] = useState(0);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [currency, setCurrency] = useState<{
     id: string;
     symbol?: string | null;
@@ -26,6 +30,27 @@ const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
     createdAt: string;
     updatedAt: string;
   } | null>(null);
+
+  const [customerDetails, setCustomerDetails] = useState<{
+    fullName?: string;
+    email?: string;
+    discordUsername?: string;
+    twitterUsername?: string;
+    country?: string;
+    deliveryAddress?: string;
+  }>({
+    fullName: undefined,
+    email: undefined,
+    discordUsername: undefined,
+    twitterUsername: undefined,
+    country: undefined,
+    deliveryAddress: undefined,
+  });
+
+  const countryOptions = countries.map((country) => ({
+    label: country.name,
+    value: country.code,
+  }));
 
   const getCurrency = (currency?: string) => {
     if (!currency) return;
@@ -86,107 +111,109 @@ const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
             }}
             onSubmit={(values) => {
               console.log('submit', { values });
-              // const details = {
-              //   fullName: values.fullName,
-              //   email: values.email,
-              //   discordUsername: values.discordUsername,
-              //   twitterUsername: values.twitterUsername,
-              //   country: values.country,
-              //   deliveryAddress: values.deliveryAddress,
-              // };
+              const details = {
+                fullName: values.fullName,
+                email: values.email,
+                discordUsername: values.discordUsername,
+                twitterUsername: values.twitterUsername,
+                country: values.country,
+                deliveryAddress: values.deliveryAddress,
+              };
 
-              // const clearDetails = removeUndefinedFields(details);
+              const clearDetails = removeUndefinedFields(details);
 
-              // setCustomerDetails(clearDetails);
-              // setIsFormSubmitted(true);
+              setCustomerDetails(clearDetails);
+              setIsFormSubmitted(true);
             }}
           >
-            <Form>
-              <div>
-                <StyledPrice>
-                  Total price:{' '}
-                  <b>
-                    {actualPrice} {currency?.symbol}
-                  </b>
-                </StyledPrice>
-                <StyledFormTitle>Information required</StyledFormTitle>
-                <StyledFormText>
-                  We need some information from you to deliver the product.
-                </StyledFormText>
-                {paymentDetails.requireFullName && (
-                  <div className="mb-2">
-                    <Input
-                      fieldId="fullName"
-                      fieldName="fullName"
-                      placeholder="Full name"
-                      label="Full name"
-                    />
-                  </div>
-                )}
+            {({ values, setFieldValue }) => (
+              <Form>
+                <div>
+                  <StyledPrice>
+                    Total price:{' '}
+                    <b>
+                      {actualPrice} {currency?.symbol}
+                    </b>
+                  </StyledPrice>
+                  <StyledFormTitle>Information required</StyledFormTitle>
+                  <StyledFormText>
+                    We need some information from you to deliver the product.
+                  </StyledFormText>
+                  {paymentDetails.requireFullName && (
+                    <div className="mb-2">
+                      <Input
+                        fieldId="fullName"
+                        fieldName="fullName"
+                        placeholder="Full name"
+                        label="Full name"
+                      />
+                    </div>
+                  )}
 
-                {paymentDetails.requireEmail && (
-                  <div className="mb-2">
-                    <Input
-                      fieldId="email"
-                      fieldName="email"
-                      placeholder="john@helio.co"
-                      label="E-mail address"
-                    />
-                  </div>
-                )}
+                  {paymentDetails.requireEmail && (
+                    <div className="mb-2">
+                      <Input
+                        fieldId="email"
+                        fieldName="email"
+                        placeholder="john@helio.co"
+                        label="E-mail address"
+                      />
+                    </div>
+                  )}
 
-                {paymentDetails.requireTwitterUsername && (
-                  <div className="mb-2">
-                    <Input
-                      fieldId="twitterUsername"
-                      fieldName="twitterUsername"
-                      placeholder="@helio_pay"
-                      label="Twitter username"
-                    />
-                  </div>
-                )}
+                  {paymentDetails.requireTwitterUsername && (
+                    <div className="mb-2">
+                      <Input
+                        fieldId="twitterUsername"
+                        fieldName="twitterUsername"
+                        placeholder="@helio_pay"
+                        label="Twitter username"
+                      />
+                    </div>
+                  )}
 
-                {paymentDetails.requireDiscordUsername && (
-                  <div className="mb-2">
-                    <Input
-                      fieldId="discordUsername"
-                      fieldName="discordUsername"
-                      placeholder="HelioFi"
-                      label="Discord username"
-                    />
-                  </div>
-                )}
+                  {paymentDetails.requireDiscordUsername && (
+                    <div className="mb-2">
+                      <Input
+                        fieldId="discordUsername"
+                        fieldName="discordUsername"
+                        placeholder="HelioFi"
+                        label="Discord username"
+                      />
+                    </div>
+                  )}
 
-                {/* {paymentDetails.requireCountry && (
-                  <div className="mb-2">
-                    <Label required>Country</Label>
-                    <SelectBox
-                      options={countryOptions}
-                      placeholder="Select country"
-                      value={values.country}
-                      showValidations
-                      fieldName="country"
-                      onChange={(option) =>
-                        setFieldValue('country', option.label)
-                      }
-                    />
-                  </div>
-                )} */}
+                  {paymentDetails.requireCountry && (
+                    <div className="mb-2">
+                      <SelectBox
+                        options={countryOptions}
+                        placeholder="Select country"
+                        value={values.country}
+                        showValidations
+                        fieldName="country"
+                        label="Country"
+                        onChange={(option) =>
+                          setFieldValue('country', option.label)
+                        }
+                      />
+                    </div>
+                  )}
 
-                {paymentDetails.requireDeliveryAddress && (
-                  <div className="mb-2">
-                    <Input
-                      fieldId="deliveryAddress"
-                      fieldName="deliveryAddress"
-                      fieldAs="textarea"
-                      placeholder="Shipping address"
-                      label="Shipping address"
-                    />
-                  </div>
-                )}
-                <Button>PAY</Button>
-              </div>
-            </Form>
+                  {paymentDetails.requireDeliveryAddress && (
+                    <div className="mb-2">
+                      <Input
+                        fieldId="deliveryAddress"
+                        fieldName="deliveryAddress"
+                        fieldAs="textarea"
+                        placeholder="Shipping address"
+                        label="Shipping address"
+                      />
+                    </div>
+                  )}
+                  <Button>PAY</Button>
+                </div>
+              </Form>
+            )}
           </Formik>
         ) : (
           <h2>Failed to load payment details</h2>

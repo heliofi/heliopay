@@ -10,7 +10,7 @@ import "./styles/style.scss";
 
 const App = () => {
     const [paymentId, setPaymentId] = useState<string | null>(
-        "d1b46c90-2c5a-443b-9699-ba70fc7744c9"
+        "c5d4dd5d-d880-4b9f-a918-efb931a3aa1e"
     );
     return (
         <HelioPay

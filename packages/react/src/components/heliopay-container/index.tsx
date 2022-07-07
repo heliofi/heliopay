@@ -82,8 +82,8 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
               <Button onClick={() => setShowFormModal(true)}>PAY</Button>
             ) : (
               <OneTimePaymentButton
-                amount={paymentDetails.normalizedPrice}
-                currency={getCurrency(paymentDetails.currency)?.symbol}
+                amount={paymentDetails?.normalizedPrice}
+                currency={getCurrency(paymentDetails?.currency)?.symbol}
                 onStartPayment={onStartPayment}
                 onSuccess={onSuccess}
                 receiverSolanaAddress={paymentDetails?.owner?.wallets?.items?.[0]?.publicKey}
@@ -92,6 +92,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 onPending={onPending}
                 quantity={1}
                 isFormSubmitted={isFormSubmitted}
+                disabled={!paymentDetails}
               />
             )
           ) : (

@@ -11,9 +11,15 @@ export const StyledField = styled(Field)`
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
+  color: #5a6578;
 
   &:focus {
     outline: none;
+  }
+
+  &::placeholder {
+    color: #5a6578;
+    opacity: 0.5;
   }
 
   ${({ as }) =>

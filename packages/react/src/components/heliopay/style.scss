@@ -1,1 +1,5 @@
-@import '../../../../../node_modules/@solana/wallet-adapter-react-ui/styles.css'
+@import '../../../../../node_modules/@solana/wallet-adapter-react-ui/styles.css';
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}

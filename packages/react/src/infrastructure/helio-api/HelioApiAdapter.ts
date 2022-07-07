@@ -28,7 +28,10 @@ const getHelioApiBaseUrl = (cluster: Cluster) => {
 };
 
 export const HelioApiAdapter = {
-  async getPaymentRequestByIdPublic(id: string, cluster: Cluster): Promise<any> {
+  async getPaymentRequestByIdPublic(
+    id: string,
+    cluster: Cluster
+  ): Promise<any> {
     const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
     const url = `${HELIO_BASE_API_URL}/payment-request/${id}`;
     const paymentResult = await (
@@ -39,7 +42,6 @@ export const HelioApiAdapter = {
         },
       })
     ).json();
-
     return paymentResult;
   },
 

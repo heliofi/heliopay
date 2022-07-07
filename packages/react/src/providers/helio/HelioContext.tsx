@@ -12,7 +12,7 @@ export const HelioContext = createContext<{
 }>({
   currencyList: [],
   setCurrencyList: () => {},
-  paymentDetails: {},
+  paymentDetails: null,
   setPaymentDetails: () => {},
   cluster: 'devnet',
   setCluster: () => {},

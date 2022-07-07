@@ -26,6 +26,7 @@ export interface OneTimePaymentProps {
   type?: 'submit' | 'reset' | 'button' | undefined;
   customerDetails?: CustomerDetails;
   quantity?: number;
+  disabled?: boolean;
 }
 
 export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
@@ -41,6 +42,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
   type,
   customerDetails,
   quantity,
+  disabled
 }) => {
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const helioProvider = useAnchorProvider();
@@ -95,6 +97,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
       <StyledButtonContainer>
         <Button
           type="button"
+          disabled={disabled}
           onClick={async () =>
             type !== 'submit' && (await onStartPaymentFlow())
           }

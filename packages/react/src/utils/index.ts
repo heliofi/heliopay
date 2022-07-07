@@ -29,3 +29,13 @@ export const getStringBetween = (
   }
   return result[1].trim();
 };
+
+export const removeUndefinedFields = (obj: Record<string, unknown>) => {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach((key) => {
+    if (newObj[key] === undefined) {
+      delete newObj[key];
+    }
+  });
+  return newObj;
+};

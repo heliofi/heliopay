@@ -6,7 +6,7 @@ export const HelioProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [currencyList, setCurrencyList] = useState<any[]>([]);
-  const [paymentDetails, setPaymentDetails] = useState<any>({});
+  const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [cluster, setCluster] = useState<Cluster>('devnet');
   return (
     <HelioContext.Provider
