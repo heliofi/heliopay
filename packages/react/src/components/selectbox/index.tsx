@@ -52,8 +52,6 @@ const SelectBox = ({
     getItemProps,
     highlightedIndex,
     getLabelProps,
-    selectItem,
-    closeMenu,
   } = useSelect({
     items: options,
     itemToString,
