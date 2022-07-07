@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 export const StyledInput = styled.div`
   margin-bottom: 12px;
+  user-select: none;
 `;
 
 export const StyledField = styled(Field)`

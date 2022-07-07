@@ -13,6 +13,7 @@ export const StyledButton = styled.button`
   width: 100%;
   height: 48px;
   cursor: pointer;
+  user-select: none;
   &:disabled {
     cursor: not-allowed;
   }
