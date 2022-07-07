@@ -9,9 +9,8 @@ import {
   SlopeWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
+import { Cluster, clusterApiUrl } from '@solana/web3.js';
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
-import { Cluster } from '../../domain';
 
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';

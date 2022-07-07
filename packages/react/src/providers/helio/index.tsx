@@ -1,5 +1,5 @@
+import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useState } from 'react';
-import { Cluster } from '../../domain';
 import { HelioContext } from './HelioContext';
 
 export const HelioProvider: FC<{

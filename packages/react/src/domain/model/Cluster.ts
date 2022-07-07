@@ -1,1 +1,0 @@
-export type Cluster = 'devnet' | 'mainnet';

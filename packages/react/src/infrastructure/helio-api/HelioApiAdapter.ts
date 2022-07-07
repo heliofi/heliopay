@@ -4,8 +4,8 @@ import {
   currenciesByOrder,
   CurrenciesByOrderQuery,
 } from '@heliofi/backend-api';
+import { Cluster } from '@solana/web3.js';
 import { Amplify, API } from 'aws-amplify';
-import { Cluster } from '../../domain';
 
 import { getAwsConfig } from '../config';
 
@@ -20,7 +20,7 @@ const getHelioApiBaseUrl = (cluster: Cluster) => {
   switch (cluster) {
     case 'devnet':
       return 'https://test.api.hel.io';
-    case 'mainnet':
+    case 'mainnet-beta':
       return 'https://test.api.hel.io';
     default:
       return 'https://test.api.hel.io';

@@ -1,5 +1,5 @@
+import { Cluster } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
-import { Cluster } from '../../domain';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 
 export const HelioContext = createContext<{

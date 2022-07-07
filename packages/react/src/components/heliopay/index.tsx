@@ -1,5 +1,4 @@
 import {
-  Cluster,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -13,6 +12,7 @@ import { deepMerge } from '../../utils';
 
 import './style.scss';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
+import { Cluster } from '@solana/web3.js';
 
 interface HelioPayProps {
   paymentRequestId: string;
