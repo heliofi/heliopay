@@ -17,7 +17,6 @@ const ExplorerLink: FC<Props> = ({ transaction }) => {
         transaction,
         cluster
       )}
-      className="text-sm text-horange underline"
       target="_blank"
       rel="noreferrer"
     >

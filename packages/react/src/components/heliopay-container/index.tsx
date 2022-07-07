@@ -26,6 +26,7 @@ import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
+import PaymentResult from '../payment-result';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -44,6 +45,10 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
+
+  const [result, setResult] = useState<
+    SuccessPaymentEvent | ErrorPaymentEvent | null
+  >(null);
 
   const { currencyList, paymentDetails, getCurrencyList, getPaymentDetails } =
     useHelioProvider();
@@ -81,11 +86,13 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
     onSuccess(event);
+    setResult(event);
     setShowLoadingModal(false);
   };
 
   const handleErrorPayment = (event: ErrorPaymentEvent) => {
     onError(event);
+    setResult(event);
     setShowLoadingModal(false);
   };
 
@@ -112,38 +119,44 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   return (
     <StyledWrapper>
-      <StyledRow>
-        <StyledLeft>
-          {wallet ? (
-            <Button
-              onClick={() => {
-                if (isCustomerDetailsRequired()) {
-                  setShowFormModal(true);
-                } else {
-                  submitPayment({
-                    amount: paymentDetails?.normalizedPrice,
-                    quantity: 1,
-                    customerDetails: undefined,
-                  });
-                }
-              }}
-            >
-              PAY
-            </Button>
-          ) : (
-            <>
-              <ConnectButton />
-            </>
-          )}
-        </StyledLeft>
-        <StyledRight>
-          Powered by
-          <StyledLogo>
-            <HelioLogoGray />
-          </StyledLogo>
-        </StyledRight>
-      </StyledRow>
-      {wallet && <WalletController />}
+      {!result ? (
+        <>
+          <StyledRow>
+            <StyledLeft>
+              {wallet ? (
+                <Button
+                  onClick={() => {
+                    if (isCustomerDetailsRequired()) {
+                      setShowFormModal(true);
+                    } else {
+                      submitPayment({
+                        amount: paymentDetails?.normalizedPrice,
+                        quantity: 1,
+                        customerDetails: undefined,
+                      });
+                    }
+                  }}
+                >
+                  PAY
+                </Button>
+              ) : (
+                <>
+                  <ConnectButton />
+                </>
+              )}
+            </StyledLeft>
+            <StyledRight>
+              Powered by
+              <StyledLogo>
+                <HelioLogoGray />
+              </StyledLogo>
+            </StyledRight>
+          </StyledRow>
+          {wallet && <WalletController />}
+        </>
+      ) : (
+        <PaymentResult result={result} />
+      )}
       {showFormModal && (
         <CustomerDetailsFormModal
           onHide={() => setShowFormModal(false)}
