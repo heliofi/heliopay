@@ -1,7 +1,6 @@
 {
   "name": "@heliofi/react",
   "version": "0.0.2",
-  "private": true,
   "description": "React components for Helio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
