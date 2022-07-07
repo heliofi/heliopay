@@ -34,6 +34,7 @@ export const useHelioProvider = () => {
   };
 
   const getPaymentDetails = async (paymentRequestId: string) => {
+    setPaymentDetails(null);
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
       paymentRequestId,
       cluster
