@@ -1,4 +1,5 @@
 import {
+  Cluster,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -10,31 +11,34 @@ import { defaultTheme } from '../../theme';
 import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
 
-import './style.scss'
-console.log('solan22a')
+import './style.scss';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
 
 interface HelioPayProps {
-  receiverSolanaAddress: string;
   paymentRequestId: string;
   onSuccess: (event: SuccessPaymentEvent) => void;
   onError: (event: ErrorPaymentEvent) => void;
   onPending: (event: PendingPaymentEvent) => void;
   onStartPayment: () => void;
-  quantity?: number;
   theme?: DefaultTheme;
+  cluster: Cluster;
 }
 
 export const HelioPay = ({
-  receiverSolanaAddress,
   paymentRequestId,
   onSuccess,
   onError,
   onPending,
   onStartPayment,
-  quantity = 1,
   theme,
+  cluster,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+  const { setCluster } = useHelioProvider();
+
+  useEffect(() => {
+    setCluster(cluster);
+  }, [cluster]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
@@ -43,15 +47,13 @@ export const HelioPay = ({
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <SolanaProvider>
+      <SolanaProvider cluster={cluster}>
         <HelioPayContainer
-          receiverSolanaAddress={receiverSolanaAddress}
           paymentRequestId={paymentRequestId}
           onStartPayment={onStartPayment}
           onSuccess={onSuccess}
           onError={onError}
           onPending={onPending}
-          quantity={quantity}
         />
       </SolanaProvider>
     </ThemeProvider>

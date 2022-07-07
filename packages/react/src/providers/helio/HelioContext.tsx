@@ -1,11 +1,32 @@
 import { createContext, useContext } from 'react';
+import { Cluster } from '../../domain';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 
-export const HelioContext = createContext<any | null>(null);
+export const HelioContext = createContext<{
+  currencyList: any[];
+  setCurrencyList: (currencyList: any[]) => void;
+  paymentDetails: any;
+  setPaymentDetails: (paymentDetails: any) => void;
+  cluster: Cluster;
+  setCluster: (cluster: Cluster) => void;
+}>({
+  currencyList: [],
+  setCurrencyList: () => {},
+  paymentDetails: {},
+  setPaymentDetails: () => {},
+  cluster: 'devnet',
+  setCluster: () => {},
+});
 
 export const useHelioProvider = () => {
-  const { currencyList, setCurrencyList, paymentDetails, setPaymentDetails } =
-    useContext(HelioContext);
+  const {
+    currencyList,
+    setCurrencyList,
+    paymentDetails,
+    setPaymentDetails,
+    cluster,
+    setCluster,
+  } = useContext(HelioContext);
 
   const getCurrencyList = async () => {
     const result = await HelioApiAdapter.listCurrencies();
@@ -13,11 +34,19 @@ export const useHelioProvider = () => {
   };
 
   const getPaymentDetails = async (paymentRequestId: string) => {
-    const result = await HelioApiAdapter.getPaymentRequestById(
-      paymentRequestId
+    const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
+      paymentRequestId,
+      cluster
     );
     setPaymentDetails(result || {});
   };
 
-  return { currencyList, paymentDetails, getCurrencyList, getPaymentDetails };
+  return {
+    currencyList,
+    paymentDetails,
+    getCurrencyList,
+    getPaymentDetails,
+    cluster,
+    setCluster,
+  };
 };

@@ -55,21 +55,21 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
 
   const onStartPaymentFlow = useCallback(async () => {
     setShowLoadingModal(true);
-    // if (helioProvider && currency != null) {
-    //   onStartPayment?.();
-    //   await createOneTimePayment({
-    //     anchorProvider: helioProvider,
-    //     recipientPK: receiverSolanaAddress,
-    //     symbol: currency,
-    //     amount: amount * (quantity || 1),
-    //     paymentRequestId,
-    //     onSuccess: updateSuccessfulPayment,
-    //     onError,
-    //     onPending,
-    //     customerDetails,
-    //     quantity: Number(quantity) || 1,
-    //   });
-    // }
+    if (helioProvider && currency != null) {
+      onStartPayment?.();
+      await createOneTimePayment({
+        anchorProvider: helioProvider,
+        recipientPK: receiverSolanaAddress,
+        symbol: currency,
+        amount: amount * (quantity || 1),
+        paymentRequestId,
+        onSuccess: updateSuccessfulPayment,
+        onError,
+        onPending,
+        customerDetails,
+        quantity: Number(quantity) || 1,
+      });
+    }
   }, [
     amount,
     quantity,

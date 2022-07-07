@@ -16,3 +16,16 @@ export const shortenWalletAddress = (address: string): string => {
   }
   return `${address.slice(0, 6)}..${address.slice(-3)}`;
 };
+
+
+export const getStringBetween = (
+  str: string,
+  start: string,
+  end: string
+): string | undefined => {
+  const result = str.match(new RegExp(start + '(.*)' + end));
+  if (result == null || result.length < 1) {
+    return undefined;
+  }
+  return result[1].trim();
+};

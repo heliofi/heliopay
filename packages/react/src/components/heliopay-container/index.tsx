@@ -25,23 +25,19 @@ import HelioLogoGray from '../icons/HelioLogoGray';
 import CustomerDetailsForm from '../customer-details-form';
 
 interface HeliopayContainerProps {
-  receiverSolanaAddress: string;
   paymentRequestId: string;
   onSuccess: (event: SuccessPaymentEvent) => void;
   onError: (event: ErrorPaymentEvent) => void;
   onPending: (event: PendingPaymentEvent) => void;
   onStartPayment: () => void;
-  quantity?: number;
 }
 
 export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onStartPayment,
   onSuccess,
-  receiverSolanaAddress,
   paymentRequestId,
   onError,
   onPending,
-  quantity = 1,
 }) => {
   const wallet = useAnchorWallet();
 
@@ -90,11 +86,11 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 currency={getCurrency(paymentDetails.currency)?.symbol}
                 onStartPayment={onStartPayment}
                 onSuccess={onSuccess}
-                receiverSolanaAddress={receiverSolanaAddress}
+                receiverSolanaAddress={paymentDetails?.owner?.wallets?.items?.[0]?.publicKey}
                 paymentRequestId={paymentRequestId}
                 onError={onError}
                 onPending={onPending}
-                quantity={quantity}
+                quantity={1}
                 isFormSubmitted={isFormSubmitted}
               />
             )
