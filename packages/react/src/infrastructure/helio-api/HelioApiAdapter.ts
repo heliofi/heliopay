@@ -21,7 +21,7 @@ const getHelioApiBaseUrl = (cluster: Cluster) => {
     case 'devnet':
       return 'https://test.api.hel.io';
     case 'mainnet-beta':
-      return 'https://test.api.hel.io';
+      return 'https://prod.api.hel.io';
     default:
       return 'https://test.api.hel.io';
   }

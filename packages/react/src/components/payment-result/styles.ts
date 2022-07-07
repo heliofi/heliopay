@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const StyledResultWrapper = styled.div``;
 
 export const StyledResultBox = styled.div`
+  background: #fff;
   box-shadow: 0px 8px 10px rgba(195, 200, 209, 0.2);
   border-radius: 8px;
   width: 400px;

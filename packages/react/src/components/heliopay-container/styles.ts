@@ -5,12 +5,12 @@ export const StyledWrapper = styled.div``;
 export const StyledRow = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
 export const StyledLeft = styled.div`
   width: 160px;
   flex: 1;
-  margin-bottom: 4px;
 `;
 
 export const StyledRight = styled.div`

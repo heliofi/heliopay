@@ -10,7 +10,7 @@ import "./styles/style.scss";
 
 const App = () => {
     const [paymentId, setPaymentId] = useState<string | null>(
-        "207572d0-e915-457b-a8db-d79f59e47496"
+        "2e3a9bed-4ea7-44b7-85c3-d708c4d5acea"
     );
 
     return (
