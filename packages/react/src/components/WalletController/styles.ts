@@ -58,8 +58,6 @@ export const StyledDropdownButton = styled.div`
   display: flex;
   align-items: center;
   user-select: none;
-
-  
 `;
 
 export const StyledWalletAddress = styled.span`
