@@ -8,15 +8,13 @@ import {
 
 import "./styles/style.scss";
 
-const RECEIVER_SOL_ADDRESS = "3guZfyRAE7dnn3jFdNMJjLxJDzaHHe893zXuiHF7PG6a";
-
 const App = () => {
     const [paymentId, setPaymentId] = useState<string | null>(
-        "c5d4dd5d-d880-4b9f-a918-efb931a3aa1e"
+        "d1b46c90-2c5a-443b-9699-ba70fc7744c9"
     );
     return (
         <HelioPay
-            receiverSolanaAddress={RECEIVER_SOL_ADDRESS}
+            cluster="devnet"
             paymentRequestId={paymentId}
             onSuccess={function (event: SuccessPaymentEvent): void {
                 console.log("onSuccess", event);
