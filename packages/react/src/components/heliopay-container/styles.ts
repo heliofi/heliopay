@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const StyledWrapper = styled.div``;
+export const StyledWrapper = styled.div`
+  max-width: 270px;
+`;
 
 export const StyledRow = styled.div`
   display: flex;
@@ -9,12 +11,12 @@ export const StyledRow = styled.div`
 `;
 
 export const StyledLeft = styled.div`
-  width: 160px;
+  max-width: 160px;
   flex: 1;
 `;
 
 export const StyledRight = styled.div`
-  margin-left: 16px;
+  margin-left: 12px;
   font-family: 'Arial', sans-serif;
   font-style: normal;
   font-weight: 400;

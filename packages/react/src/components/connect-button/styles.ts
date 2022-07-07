@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const StyledConnectButtonWrapper = styled.div`
   display: inline-block;
+  width: 100%;
 
   .wallet-adapter-button-trigger {
     background-color: ${(props) => props.theme.colors.primary};
@@ -15,5 +16,8 @@ export const StyledConnectButtonWrapper = styled.div`
     line-height: 125%;
     height: 48px;
     cursor: pointer;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 `;
