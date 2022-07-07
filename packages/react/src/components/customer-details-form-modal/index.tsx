@@ -12,8 +12,29 @@ import { StyledFormText, StyledFormTitle, StyledPrice } from './styles';
 import SelectBox from '../selectbox';
 import { countries } from '../../domain/constants/countries';
 import { removeUndefinedFields } from '../../utils';
+import OneTimePaymentButton from '../one-time-payment-button';
+import {
+  ErrorPaymentEvent,
+  PendingPaymentEvent,
+  SuccessPaymentEvent,
+} from '../../domain';
 
-const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
+interface Props extends InheritedModalProps {
+  onStartPayment: () => void;
+  onSuccess: (event: SuccessPaymentEvent) => void;
+  paymentRequestId: string;
+  onError: (event: ErrorPaymentEvent) => void;
+  onPending: (event: PendingPaymentEvent) => void;
+}
+
+const CustomerDetailsFormModal = ({
+  onHide,
+  paymentRequestId,
+  onStartPayment,
+  onSuccess,
+  onError,
+  onPending,
+}: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [actualPrice, setActualPrice] = useState(0);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
@@ -73,12 +94,6 @@ const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
         )
       );
     }
-    console.log({
-      price: TokenConversionService.convertFromMinimalUnits(
-        getCurrency(paymentDetails.currency),
-        paymentDetails.normalizedPrice
-      ),
-    });
   }, [paymentDetails]);
 
   return ReactDOM.createPortal(
@@ -210,7 +225,23 @@ const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
                       />
                     </div>
                   )}
-                  <Button>PAY</Button>
+                  <OneTimePaymentButton
+                    type="submit"
+                    amount={paymentDetails?.normalizedPrice}
+                    currency={getCurrency(paymentDetails?.currency)?.symbol}
+                    onStartPayment={onStartPayment}
+                    onSuccess={onSuccess}
+                    receiverSolanaAddress={
+                      paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
+                    }
+                    paymentRequestId={paymentRequestId}
+                    onError={onError}
+                    onPending={onPending}
+                    quantity={1}
+                    isFormSubmitted={isFormSubmitted}
+                    disabled={!paymentDetails}
+                    customerDetails={customerDetails}
+                  />
                 </div>
               </Form>
             )}
@@ -224,4 +255,4 @@ const CustomerDetailsForm = ({ onHide }: InheritedModalProps) => {
   );
 };
 
-export default CustomerDetailsForm;
+export default CustomerDetailsFormModal;

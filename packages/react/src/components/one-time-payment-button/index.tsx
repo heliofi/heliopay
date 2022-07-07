@@ -42,21 +42,18 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
   type,
   customerDetails,
   quantity,
-  disabled
+  disabled,
 }) => {
-  const [showLoadingModal, setShowLoadingModal] = useState(false);
   const helioProvider = useAnchorProvider();
 
   const updateSuccessfulPayment = useCallback(
     (event: SuccessPaymentEvent) => {
-      setShowLoadingModal(false);
       onSuccess(event);
     },
     [onSuccess]
   );
 
   const onStartPaymentFlow = useCallback(async () => {
-    setShowLoadingModal(true);
     if (helioProvider && currency != null) {
       onStartPayment?.();
       await createOneTimePayment({
@@ -87,6 +84,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
   ]);
 
   useEffect(() => {
+    console.log({ isFormSubmitted });
     if (isFormSubmitted) {
       onStartPaymentFlow();
     }
@@ -96,7 +94,7 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
     <>
       <StyledButtonContainer>
         <Button
-          type="button"
+          type={type}
           disabled={disabled}
           onClick={async () =>
             type !== 'submit' && (await onStartPaymentFlow())
@@ -106,9 +104,6 @@ export const OneTimePaymentButton: React.FC<OneTimePaymentProps> = ({
           PAY
         </Button>
       </StyledButtonContainer>
-      {showLoadingModal && (
-        <LoadingModal onHide={() => setShowLoadingModal(false)} />
-      )}
     </>
   );
 };

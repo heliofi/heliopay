@@ -22,7 +22,8 @@ import {
   StyledWrapper,
 } from './styles';
 import HelioLogoGray from '../icons/HelioLogoGray';
-import CustomerDetailsForm from '../customer-details-form';
+import CustomerDetailsFormModal from '../customer-details-form-modal';
+import { LoadingModal } from '../loading-modal';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -46,6 +47,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
 
   useEffect(() => {
     getCurrencyList();
@@ -86,7 +88,9 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 currency={getCurrency(paymentDetails?.currency)?.symbol}
                 onStartPayment={onStartPayment}
                 onSuccess={onSuccess}
-                receiverSolanaAddress={paymentDetails?.owner?.wallets?.items?.[0]?.publicKey}
+                receiverSolanaAddress={
+                  paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
+                }
                 paymentRequestId={paymentRequestId}
                 onError={onError}
                 onPending={onPending}
@@ -110,7 +114,30 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       </StyledRow>
       {wallet && <WalletController />}
       {showFormModal && (
-        <CustomerDetailsForm onHide={() => setShowFormModal(false)} />
+        <CustomerDetailsFormModal
+          onHide={() => setShowFormModal(false)}
+          onStartPayment={function (): void {
+            console.log('onStartPayment');
+            setShowFormModal(false);
+            setShowLoadingModal(true);
+          }}
+          onSuccess={function (event: SuccessPaymentEvent): void {
+            console.log('onSuccess', { event });
+            setShowLoadingModal(false);
+          }}
+          paymentRequestId={paymentRequestId}
+          onError={function (event: ErrorPaymentEvent): void {
+            console.log('onError', { event });
+            setShowLoadingModal(false);
+          }}
+          onPending={function (event: PendingPaymentEvent): void {
+            console.log('onPending', { event });
+          }}
+        />
+      )}
+
+      {showLoadingModal && (
+        <LoadingModal onHide={() => setShowLoadingModal(false)} />
       )}
     </StyledWrapper>
   );
