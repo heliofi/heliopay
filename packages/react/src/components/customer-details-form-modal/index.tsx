@@ -17,10 +17,7 @@ import {
 import SelectBox from '../selectbox';
 import { countries } from '../../domain/constants/countries';
 import { removeUndefinedFields } from '../../utils';
-import {
-  Currency,
-  CustomerDetails,
-} from '../../domain';
+import { Currency, CustomerDetails } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
 
@@ -32,10 +29,7 @@ interface Props extends InheritedModalProps {
   }) => void;
 }
 
-const CustomerDetailsFormModal = ({
-  onHide,
-  onSubmit,
-}: Props) => {
+const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [currency, setCurrency] = useState<Currency | null>(null);
@@ -90,7 +84,7 @@ const CustomerDetailsFormModal = ({
     <div>
       <Modal
         onHide={onHide}
-        icon={<HelioIcon />}
+        icon={<CurrencyIcon iconName={currency?.symbol || ''} />}
         title={`Pay with ${currency?.symbol}`}
       >
         {paymentDetails ? (

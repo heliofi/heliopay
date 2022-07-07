@@ -29,20 +29,28 @@ export const StyledModalHeader = styled.div`
 `;
 
 export const StyledModalIcon = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
 
-  svg {
+  svg,
+  img,
+  div {
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 `;
 
 export const StyledModalTitle = styled.div`
   font-style: normal;
   font-weight: 700;
-  font-size: 24px;
-  line-height: 125%;
+  font-size: 16px;
+  line-height: 140%;
+  color: #5a6578;
 `;
 
 export const StyledModalCloseButton = styled.div`
@@ -62,4 +70,3 @@ export const StyledModalCloseButton = styled.div`
 export const StyledModalContent = styled.div`
   padding-top: 20px;
 `;
-
