@@ -38,17 +38,7 @@ const CustomerDetailsFormModal = ({
 }: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
-  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [currency, setCurrency] = useState<Currency | null>(null);
-
-  const [customerDetails, setCustomerDetails] = useState<CustomerDetails>({
-    fullName: undefined,
-    email: undefined,
-    discordUsername: undefined,
-    twitterUsername: undefined,
-    country: undefined,
-    deliveryAddress: undefined,
-  });
 
   const countryOptions = countries.map((country) => ({
     label: country.name,
@@ -138,7 +128,6 @@ const CustomerDetailsFormModal = ({
 
               const clearDetails = removeUndefinedFields(details);
 
-              setCustomerDetails(clearDetails);
               onSubmit({
                 customerDetails: clearDetails,
                 amount: TokenConversionService.convertToMinimalUnits(
