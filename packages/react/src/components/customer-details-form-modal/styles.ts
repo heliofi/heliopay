@@ -35,3 +35,14 @@ export const StyledFormText = styled.div`
   color: #000000;
   margin-bottom: 20px;
 `;
+
+export const StyledCurrency = styled.div`
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-weight: 400;
+
+  p {
+    margin-right: 8px;
+  }
+`;

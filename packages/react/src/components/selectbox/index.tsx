@@ -1,6 +1,6 @@
 import { useSelect } from 'downshift';
-import { ErrorMessage } from 'formik';
-import ArrowDown from '../icons/ArrowDown';
+import { ArrowsDownIcon } from '@heliofi/helio-icons'
+
 import InputContainer from '../input-container';
 import {
   StyledErrorMessage,
@@ -75,7 +75,7 @@ const SelectBox = ({
             </StyledSelectLabel>
 
             <StyledSelectIcon>
-              <ArrowDown />
+              <ArrowsDownIcon />
             </StyledSelectIcon>
           </StyledSelectHead>
           <StyledSelectDropdownContainer {...getMenuProps()}>

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import Input from '../input';
 import Button from '../button';
-import { StyledFormText, StyledFormTitle, StyledPrice } from './styles';
+import { StyledCurrency, StyledFormText, StyledFormTitle, StyledPrice } from './styles';
 import SelectBox from '../selectbox';
 import { countries } from '../../domain/constants/countries';
 import { removeUndefinedFields } from '../../utils';
@@ -18,6 +18,8 @@ import {
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '../../domain';
+import NumberInput from '../numberInput';
+import CurrencyIcon from '../currency-icon';
 
 interface Props extends InheritedModalProps {
   onStartPayment: () => void;
@@ -36,7 +38,7 @@ const CustomerDetailsFormModal = ({
   onPending,
 }: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
-  const [actualPrice, setActualPrice] = useState(0);
+  const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
   const [currency, setCurrency] = useState<{
     id: string;
@@ -87,7 +89,7 @@ const CustomerDetailsFormModal = ({
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
-      setActualPrice(
+      setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
           getCurrency(paymentDetails.currency),
           paymentDetails.normalizedPrice
@@ -95,6 +97,24 @@ const CustomerDetailsFormModal = ({
       );
     }
   }, [paymentDetails]);
+
+  const formatTotalPrice = (price: number, quantity = 1): number => {
+    const totalPrice = Number((price * quantity).toFixed(3));
+    return totalPrice || price;
+  };
+
+  const isCustomerDetailsRequired = (): boolean => {
+    if (!paymentDetails) return false;
+    return (
+      paymentDetails.requireEmail ||
+      paymentDetails.requireFullName ||
+      paymentDetails.requireDiscordUsername ||
+      paymentDetails.requireTwitterUsername ||
+      paymentDetails.requireCountry ||
+      paymentDetails.requireDeliveryAddress ||
+      false
+    );
+  };
 
   return ReactDOM.createPortal(
     <div>
@@ -122,10 +142,11 @@ const CustomerDetailsFormModal = ({
               country: undefined,
               deliveryAddress: undefined,
               quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
-              customPrice: paymentDetails.canChangePrice ? undefined : 0,
+              customPrice: paymentDetails.canChangePrice
+                ? undefined
+                : normalizedPrice,
             }}
             onSubmit={(values) => {
-              console.log('submit', { values });
               const details = {
                 fullName: values.fullName,
                 email: values.email,
@@ -144,90 +165,120 @@ const CustomerDetailsFormModal = ({
             {({ values, setFieldValue }) => (
               <Form>
                 <div>
-                  <StyledPrice>
-                    Total price:{' '}
-                    <b>
-                      {actualPrice} {currency?.symbol}
-                    </b>
-                  </StyledPrice>
-                  <StyledFormTitle>Information required</StyledFormTitle>
-                  <StyledFormText>
-                    We need some information from you to deliver the product.
-                  </StyledFormText>
+                  {values.canChangePrice ? (
+                    <Input
+                      fieldId="customPrice"
+                      fieldName="customPrice"
+                      label="Name your own price"
+                      prefix={currency?.sign}
+                      suffix={
+                        currency && (
+                          <StyledCurrency>
+                            <p>{currency.symbol}</p>
+                            <CurrencyIcon
+                              gradient
+                              iconName={currency?.symbol || ''}
+                            />
+                          </StyledCurrency>
+                        )
+                      }
+                    />
+                  ) : (
+                    <StyledPrice>
+                      Total price:{' '}
+                      <b>
+                        {formatTotalPrice(normalizedPrice, values.quantity)}{' '}
+                        {currency?.symbol}
+                      </b>
+                    </StyledPrice>
+                  )}
+                  {paymentDetails?.canChangeQuantity && (
+                    <NumberInput
+                      fieldId="quantity"
+                      fieldName="quantity"
+                      setFieldValue={setFieldValue}
+                      value={values.quantity}
+                      placeholder="Quantity"
+                      label="Quantity"
+                    />
+                  )}
+                  {isCustomerDetailsRequired() && (
+                    <>
+                      <StyledFormTitle>Information required</StyledFormTitle>
+                      <StyledFormText>
+                        We need some information from you to deliver the
+                        product.
+                      </StyledFormText>
+                    </>
+                  )}
                   {paymentDetails.requireFullName && (
-                    <div className="mb-2">
-                      <Input
-                        fieldId="fullName"
-                        fieldName="fullName"
-                        placeholder="Full name"
-                        label="Full name"
-                      />
-                    </div>
+                    <Input
+                      fieldId="fullName"
+                      fieldName="fullName"
+                      placeholder="Full name"
+                      label="Full name"
+                    />
                   )}
 
                   {paymentDetails.requireEmail && (
-                    <div className="mb-2">
-                      <Input
-                        fieldId="email"
-                        fieldName="email"
-                        placeholder="john@helio.co"
-                        label="E-mail address"
-                      />
-                    </div>
+                    <Input
+                      fieldId="email"
+                      fieldName="email"
+                      placeholder="john@helio.co"
+                      label="E-mail address"
+                    />
                   )}
 
                   {paymentDetails.requireTwitterUsername && (
-                    <div className="mb-2">
-                      <Input
-                        fieldId="twitterUsername"
-                        fieldName="twitterUsername"
-                        placeholder="@helio_pay"
-                        label="Twitter username"
-                      />
-                    </div>
+                    <Input
+                      fieldId="twitterUsername"
+                      fieldName="twitterUsername"
+                      placeholder="@helio_pay"
+                      label="Twitter username"
+                    />
                   )}
 
                   {paymentDetails.requireDiscordUsername && (
-                    <div className="mb-2">
-                      <Input
-                        fieldId="discordUsername"
-                        fieldName="discordUsername"
-                        placeholder="HelioFi"
-                        label="Discord username"
-                      />
-                    </div>
+                    <Input
+                      fieldId="discordUsername"
+                      fieldName="discordUsername"
+                      placeholder="HelioFi"
+                      label="Discord username"
+                    />
                   )}
 
                   {paymentDetails.requireCountry && (
-                    <div className="mb-2">
-                      <SelectBox
-                        options={countryOptions}
-                        placeholder="Select country"
-                        value={values.country}
-                        showValidations
-                        fieldName="country"
-                        label="Country"
-                        onChange={(option) =>
-                          setFieldValue('country', option.label)
-                        }
-                      />
-                    </div>
+                    <SelectBox
+                      options={countryOptions}
+                      placeholder="Select country"
+                      value={values.country}
+                      showValidations
+                      fieldName="country"
+                      label="Country"
+                      onChange={(option) =>
+                        setFieldValue('country', option.label)
+                      }
+                    />
                   )}
 
                   {paymentDetails.requireDeliveryAddress && (
-                    <div className="mb-2">
-                      <Input
-                        fieldId="deliveryAddress"
-                        fieldName="deliveryAddress"
-                        fieldAs="textarea"
-                        placeholder="Shipping address"
-                        label="Shipping address"
-                      />
-                    </div>
+                    <Input
+                      fieldId="deliveryAddress"
+                      fieldName="deliveryAddress"
+                      fieldAs="textarea"
+                      placeholder="Shipping address"
+                      label="Shipping address"
+                    />
                   )}
                   <OneTimePaymentButton
                     type="submit"
-                    amount={paymentDetails?.normalizedPrice}
+                    // amount={paymentDetails?.normalizedPrice}
+                    amount={TokenConversionService.convertToMinimalUnits(
+                      getCurrency(paymentDetails.currency),
+                      values.canChangePrice
+                        ? values.customPrice
+                        : normalizedPrice
+                    )}
                     currency={getCurrency(paymentDetails?.currency)?.symbol}
                     onStartPayment={onStartPayment}
                     onSuccess={onSuccess}
@@ -237,7 +288,7 @@ const CustomerDetailsFormModal = ({
                     paymentRequestId={paymentRequestId}
                     onError={onError}
                     onPending={onPending}
-                    quantity={1}
+                    quantity={values.quantity}
                     isFormSubmitted={isFormSubmitted}
                     disabled={!paymentDetails}
                     customerDetails={customerDetails}

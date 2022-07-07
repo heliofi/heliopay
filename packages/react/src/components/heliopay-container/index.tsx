@@ -71,6 +71,8 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       paymentDetails.requireTwitterUsername ||
       paymentDetails.requireCountry ||
       paymentDetails.requireDeliveryAddress ||
+      paymentDetails.canChangeQuantity ||
+      paymentDetails.canChangePrice ||
       false
     );
   };

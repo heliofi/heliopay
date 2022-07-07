@@ -2485,10 +2485,10 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
-"@heliofi/helio-icons@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.2.tgz#141bab4335c8bbacd2bea2e81b7eea8ec601dc50"
-  integrity sha512-zUIGR/NLwZtiPammBSuuYRxAw1KmY1oBsX5oHQ7cFgGm6jVI6TN4x/qb3bFEUcLZEE2U1dfp6tOrHruK4PGZUA==
+"@heliofi/helio-icons@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.3.tgz#e635779ef0b9990f9f004ee36b77659ca65681a6"
+  integrity sha512-NgGRTqJlTBI8hOmvj4YfhMFz0/XgFRn4FGqzFd5VfUV+/nI+/rmvU81NQv/OUTqRMb+l/PKkrGdVFybBPhfdKA==
 
 "@heliofi/web3-auth-common@^0.0.8":
   version "0.0.8"
