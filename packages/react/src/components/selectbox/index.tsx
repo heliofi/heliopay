@@ -1,5 +1,4 @@
 import { useSelect } from 'downshift';
-import { ArrowsDownIcon } from '@heliofi/helio-icons'
 
 import InputContainer from '../input-container';
 import {
@@ -14,6 +13,7 @@ import {
   StyledSelectLabel,
   StyledSelectWrapper,
 } from './styles';
+import ArrowDown from '../icons/ArrowDown';
 
 interface Option {
   value: number | string;
@@ -75,7 +75,7 @@ const SelectBox = ({
             </StyledSelectLabel>
 
             <StyledSelectIcon>
-              <ArrowsDownIcon />
+              <ArrowDown />
             </StyledSelectIcon>
           </StyledSelectHead>
           <StyledSelectDropdownContainer {...getMenuProps()}>

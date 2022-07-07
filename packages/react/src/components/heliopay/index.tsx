@@ -10,7 +10,6 @@ import { defaultTheme } from '../../theme';
 import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
 
-import './style.scss';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Cluster } from '@solana/web3.js';
 

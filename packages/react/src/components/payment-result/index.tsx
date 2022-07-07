@@ -1,5 +1,3 @@
-import { ErrorPaymentEvent, SuccessPaymentEvent } from '../../domain';
-import { WarningTriangleIcon } from '@heliofi/helio-icons';
 import CheckMarkIcon from '../icons/CheckMarkIcon';
 import ExplorerLink from '../explorer-link';
 import {
@@ -14,6 +12,7 @@ import {
   StyledResultTopLine,
   StyledResultWrapper,
 } from './styles';
+import ArrowDown from '../icons/ArrowDown';
 
 interface Props {
   result: {
@@ -31,7 +30,7 @@ const PaymentResult = ({ result }: Props) => {
         <StyledResultTopLine error={!!hasError} />
         <StyledResultContainer>
           <StyledResultIcon error={!!hasError}>
-            {hasError ? <WarningTriangleIcon /> : <CheckMarkIcon />}
+            {hasError ? <ArrowDown /> : <CheckMarkIcon />}
           </StyledResultIcon>
           <StyledResultTitle error={!!hasError}>
             {hasError ? 'Transaction failed' : 'Success!'}
