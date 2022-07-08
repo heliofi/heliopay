@@ -30,3 +30,20 @@ export const StyledLogo = styled.div`
   margin-top: 2px;
   display: block;
 `;
+
+export const StyledLogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const StyledEnvironment = styled.div`
+  margin-left: 8px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 4px 6px 3px;
+  margin-top: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1;
+`;

@@ -15,8 +15,10 @@ import {
 import Button from '../button';
 import WalletController from '../WalletController';
 import {
+  StyledEnvironment,
   StyledLeft,
   StyledLogo,
+  StyledLogoContainer,
   StyledRight,
   StyledRow,
   StyledWrapper,
@@ -50,8 +52,13 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     SuccessPaymentEvent | ErrorPaymentEvent | null
   >(null);
 
-  const { currencyList, paymentDetails, getCurrencyList, getPaymentDetails } =
-    useHelioProvider();
+  const {
+    currencyList,
+    paymentDetails,
+    getCurrencyList,
+    getPaymentDetails,
+    cluster,
+  } = useHelioProvider();
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
@@ -147,9 +154,14 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
             </StyledLeft>
             <StyledRight>
               Powered by
-              <StyledLogo>
-                <HelioLogoGray />
-              </StyledLogo>
+              <StyledLogoContainer>
+                <StyledLogo>
+                  <HelioLogoGray />
+                </StyledLogo>
+                {cluster === 'devnet' && (
+                  <StyledEnvironment>DEVNET</StyledEnvironment>
+                )}
+              </StyledLogoContainer>
             </StyledRight>
           </StyledRow>
           {wallet && <WalletController />}
