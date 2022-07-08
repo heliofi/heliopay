@@ -17,7 +17,7 @@ const App = () => {
         <>
             <input type="text" value={paymentId} onChange={(e) => setPaymentId(e.target.value)} />
             <HelioPay
-                cluster="devnet"
+                cluster="mainnet-beta"
                 paymentRequestId={paymentId}
                 onSuccess={function (event: SuccessPaymentEvent): void {
                     console.log("onSuccess", event);

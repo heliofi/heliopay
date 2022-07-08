@@ -7,14 +7,14 @@ export const HelioContext = createContext<{
   setCurrencyList: (currencyList: any[]) => void;
   paymentDetails: any;
   setPaymentDetails: (paymentDetails: any) => void;
-  cluster: Cluster;
+  cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
 }>({
   currencyList: [],
   setCurrencyList: () => {},
   paymentDetails: null,
   setPaymentDetails: () => {},
-  cluster: 'devnet',
+  cluster: null,
   setCluster: () => {},
 });
 
@@ -35,6 +35,9 @@ export const useHelioProvider = () => {
 
   const getPaymentDetails = async (paymentRequestId: string) => {
     setPaymentDetails(null);
+    if (!cluster) {
+      throw new Error('Please provide a cluster');
+    }
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
       paymentRequestId,
       cluster
@@ -42,12 +45,16 @@ export const useHelioProvider = () => {
     setPaymentDetails(result || {});
   };
 
+  const initCluster = (cluster: Cluster) => {
+    setCluster(cluster);
+  }
+
   return {
     currencyList,
     paymentDetails,
     getCurrencyList,
     getPaymentDetails,
     cluster,
-    setCluster,
+    initCluster,
   };
 };

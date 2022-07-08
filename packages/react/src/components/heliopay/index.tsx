@@ -10,7 +10,6 @@ import { defaultTheme } from '../../theme';
 import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
 
-import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Cluster } from '@solana/web3.js';
 
 interface HelioPayProps {
@@ -33,11 +32,6 @@ export const HelioPay = ({
   cluster,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
-  const { setCluster } = useHelioProvider();
-
-  useEffect(() => {
-    setCluster(cluster);
-  }, [cluster]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
@@ -53,6 +47,7 @@ export const HelioPay = ({
           onSuccess={onSuccess}
           onError={onError}
           onPending={onPending}
+          cluster={cluster}
         />
       </SolanaProvider>
     </ThemeProvider>

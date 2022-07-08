@@ -24,6 +24,7 @@ import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
+import { Cluster } from '@solana/web3.js';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -31,6 +32,7 @@ interface HeliopayContainerProps {
   onError: (event: ErrorPaymentEvent) => void;
   onPending: (event: PendingPaymentEvent) => void;
   onStartPayment: () => void;
+  cluster: Cluster;
 }
 
 export const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -39,6 +41,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   paymentRequestId,
   onError,
   onPending,
+  cluster
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -52,19 +55,27 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     paymentDetails,
     getCurrencyList,
     getPaymentDetails,
-    cluster,
+    initCluster,
+    cluster: mainCluster,
   } = useHelioProvider();
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
+
+
+  useEffect(() => {
+    initCluster(cluster);
+  }, [cluster]);
 
   useEffect(() => {
     getCurrencyList();
   }, []);
 
   useEffect(() => {
-    getPaymentDetails(paymentRequestId);
-  }, [paymentRequestId]);
+    if (mainCluster) {
+      getPaymentDetails(paymentRequestId);
+    }
+  }, [paymentRequestId, mainCluster]);
 
   const getCurrency = (currency?: string) => {
     if (!currency) return;
