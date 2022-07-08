@@ -38,12 +38,13 @@ export const StyledLogoContainer = styled.div`
 
 export const StyledEnvironment = styled.div`
   margin-left: 8px;
-  background-color: #f5f5f5;
+  background-color: rgb(5 5 21 / 20%);
   border-radius: 20px;
-  padding: 4px 6px 3px;
+  padding: 5px 6px 4px;
   margin-top: 4px;
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.5px;
   line-height: 1;
+  color: #fff;
 `;
