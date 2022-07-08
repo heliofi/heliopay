@@ -9,6 +9,9 @@
   "author": "martinavagyan <martinavagyan@gmail.com>",
   "license": "MIT",
   "source": "src/index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@heliofi/backend-api": "^0.1.37",
     "@heliofi/helio-icons": "^1.0.4",
