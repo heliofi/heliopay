@@ -12,7 +12,6 @@ export const StyledPrice = styled.div`
   line-height: 125%;
   color: #8e522e;
   margin-bottom: 20px;
-
   b {
     font-weight: 600;
   }
