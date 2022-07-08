@@ -2465,11 +2465,6 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@heliofi/backend-api@^0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@heliofi/backend-api/-/backend-api-0.0.25.tgz#cf0d57df5303924943cbe365fc40f70f2c2d93da"
-  integrity sha512-pbiJUslsIgKVVhHGXvcTzX0mR4u81DiPwKAmOgNULMLMCN0qASkHbH7beEADhbLW42nAzMG9piNkg1nWQ279zw==
-
 "@heliofi/eslint-config-helio@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.0.4.tgz#51eeddbf669f67866e1303201120a373ec0e8d22"
@@ -2484,15 +2479,6 @@
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.4.tgz#031c27df0948981a7046b0723a7b3a52a8ff9396"
   integrity sha512-5idPlSIp0IBlk7hPT4xqGgB3rvNTKEnbaOUhSbDJfvbDrA/v9KDFuuduhNz4fBulBiCqDi+MxxvYN1cvgzyS7g==
-
-"@heliofi/web3-auth-common@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@heliofi/web3-auth-common/-/web3-auth-common-0.0.8.tgz#deed83857b240abc5fe86cd5a2676f250b6420a9"
-  integrity sha512-MwoL1pisUbMduHwj58toWsydqSuWn1Q8+BvlfkAl3qVTFvy83NGDOMfHdk5SMspKOXF3K2nFZFglseQIDJOYxw==
-  dependencies:
-    bs58 "^5.0.0"
-    jsonwebtoken "^8.5.1"
-    tweetnacl "^1.0.3"
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
