@@ -90,5 +90,6 @@
   },
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "gitHead": "22468952a7870f49bf64a76d0414d75ba9b1e626"
 }

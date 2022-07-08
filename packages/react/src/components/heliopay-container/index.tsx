@@ -1,12 +1,7 @@
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
-import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 import ConnectButton from '../connect-button';
-import OneTimePaymentButton, {
-  OneTimePaymentProps,
-} from '../one-time-payment-button';
-import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
