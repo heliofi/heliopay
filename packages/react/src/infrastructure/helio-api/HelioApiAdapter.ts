@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResult } from '@aws-amplify/api-graphql/lib';
-import {
-  currenciesByOrder,
-  CurrenciesByOrderQuery,
-} from '@heliofi/backend-api';
 import { Cluster } from '@solana/web3.js';
 import { Amplify, API } from 'aws-amplify';
 
 import { getAwsConfig } from '../config';
+import { currenciesByOrder, CurrenciesByOrderQuery } from './ApiTypes';
 
 Amplify.configure(getAwsConfig());
+
 
 enum AuthMode {
   AWS_LAMBDA = 'AWS_LAMBDA',

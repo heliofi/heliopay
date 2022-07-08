@@ -2470,11 +2470,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/backend-api/-/backend-api-0.0.25.tgz#cf0d57df5303924943cbe365fc40f70f2c2d93da"
   integrity sha512-pbiJUslsIgKVVhHGXvcTzX0mR4u81DiPwKAmOgNULMLMCN0qASkHbH7beEADhbLW42nAzMG9piNkg1nWQ279zw==
 
-"@heliofi/backend-api@^0.1.37":
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/@heliofi/backend-api/-/backend-api-0.1.37.tgz#c6928fcde37f66f27783f1ab203740c090bef03e"
-  integrity sha512-+m/vOzUNg1+gyWAAGwSTswAPaM5ViTwW0HVSwaK/W09JjjRQtxYgu1MOKiUwEyNQ1ePaLyZ7GCF+TRJHuu9BKg==
-
 "@heliofi/eslint-config-helio@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.0.4.tgz#51eeddbf669f67866e1303201120a373ec0e8d22"
