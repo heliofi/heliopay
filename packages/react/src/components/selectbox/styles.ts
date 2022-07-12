@@ -8,6 +8,7 @@ export const StyledSelectWrapper = styled.div`
 export const StyledSelectContainer = styled.div`
   position: relative;
   width: 100%;
+
 `;
 
 export const StyledSelectHead = styled.div`
@@ -17,6 +18,10 @@ export const StyledSelectHead = styled.div`
   padding: 12px;
   width: 100%;
   justify-content: space-between;
+  box-sizing: border-box;
+  * {
+    box-sizing: border-box;
+  }
 `;
 
 export const StyledSelectLabel = styled.div<{ selected: boolean }>`
@@ -41,6 +46,10 @@ export const StyledSelectIcon = styled.div`
 
 export const StyledSelectDropdownContainer = styled.div`
   outline: none;
+
+  * {
+    box-sizing: border-box;
+  }
 `;
 
 export const StyledSelectDropdown = styled.div`

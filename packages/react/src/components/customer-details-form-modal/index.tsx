@@ -213,7 +213,7 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
                     <Input
                       fieldId="discordUsername"
                       fieldName="discordUsername"
-                      placeholder="HelioFi"
+                      placeholder="Helio#1234"
                       label="Discord username"
                     />
                   )}
