@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const StyledWrapper = styled.div``;
+export const StyledWrapper = styled.div`
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
+`;
 
 export const StyledRow = styled.div`
   display: flex;

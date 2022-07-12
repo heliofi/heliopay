@@ -25,9 +25,9 @@ export const StyledNumberPlus = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
     margin-left: 8px;
     cursor: pointer;
     padding: 4px;

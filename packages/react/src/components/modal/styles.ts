@@ -11,6 +11,10 @@ export const StyledModalWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding-top: 120px;
+
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
 `;
 
 export const StyledModalContainer = styled.div`
