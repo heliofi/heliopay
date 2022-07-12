@@ -12,6 +12,7 @@ import Button from '../button';
 import WalletController from '../WalletController';
 import {
   StyledEnvironment,
+  StyledErrorMessage,
   StyledLeft,
   StyledLogo,
   StyledLogoContainer,
@@ -113,7 +114,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
+      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey;
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
@@ -125,8 +126,13 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onPending,
         customerDetails,
         quantity: Number(quantity) ?? 1,
+        cluster: cluster,
       };
-      await createOneTimePayment(payload);
+      try {
+        await createOneTimePayment(payload);
+      } catch (error) {
+        console.log({ error });
+      }
     }
   };
 
@@ -137,21 +143,24 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
           <StyledRow>
             <StyledLeft>
               {wallet ? (
-                <Button
-                  onClick={() => {
-                    if (isCustomerDetailsRequired()) {
-                      setShowFormModal(true);
-                    } else {
-                      submitPayment({
-                        amount: paymentDetails?.normalizedPrice,
-                        quantity: 1,
-                        customerDetails: undefined,
-                      });
-                    }
-                  }}
-                >
-                  PAY
-                </Button>
+                <div>
+                  <Button
+                    onClick={() => {
+                      if (isCustomerDetailsRequired()) {
+                        setShowFormModal(true);
+                      } else {
+                        submitPayment({
+                          amount: paymentDetails?.normalizedPrice,
+                          quantity: 1,
+                          customerDetails: undefined,
+                        });
+                      }
+                    }}
+                    disabled={!paymentDetails?.id}
+                  >
+                    PAY
+                  </Button>
+                </div>
               ) : (
                 <>
                   <ConnectButton />
@@ -170,6 +179,10 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
               </StyledLogoContainer>
             </StyledRight>
           </StyledRow>
+
+          {paymentDetails?.message && (
+            <StyledErrorMessage>{paymentDetails.message}</StyledErrorMessage>
+          )}
           {wallet && <WalletController />}
         </>
       ) : (

@@ -15,7 +15,7 @@ enum AuthMode {
   API_KEY = 'API_KEY',
 }
 
-const getHelioApiBaseUrl = (cluster: Cluster) => {
+export const getHelioApiBaseUrl = (cluster: Cluster) => {
   switch (cluster) {
     case ClusterType.Testnet:
     case ClusterType.Devnet:

@@ -1,20 +1,9 @@
+import { Currency } from "../../domain";
+
 export declare type CurrenciesByOrderQuery = {
   currenciesByOrder?: {
     __typename: 'ModelCurrencyConnection';
-    items: Array<{
-      __typename: 'Currency';
-      id: string;
-      symbol?: string | null;
-      name?: string | null;
-      mintAddress?: string | null;
-      decimals?: number | null;
-      coinMarketCapId?: number | null;
-      type: string;
-      sign?: string | null;
-      order: number;
-      createdAt: string;
-      updatedAt: string;
-    } | null>;
+    items: Currency[];
     nextToken?: string | null;
   } | null;
 };

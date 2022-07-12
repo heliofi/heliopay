@@ -5,7 +5,7 @@ import {
   singleSolPaymentSC,
 } from '@heliofi/solana-adapter';
 import { Program } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
+import { Cluster, PublicKey } from '@solana/web3.js';
 
 import {
   CustomerDetails,
@@ -17,8 +17,8 @@ import {
 import { TransactionTimeoutError } from './TransactionTimeoutError';
 import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
-import { cluster, helioApiBaseUrl } from '../config';
-import { getMintAddressByCluster } from '../../domain/constants/currency';
+import { CurrencyService } from '../../domain/services/CurrencyService';
+import { getHelioApiBaseUrl } from '../helio-api/HelioApiAdapter';
 
 const SOL_SYMBOL = 'SOL';
 
@@ -33,12 +33,14 @@ interface Props {
   onPending: (event: PendingPaymentEvent) => void;
   customerDetails?: CustomerDetails;
   quantity?: number;
+  cluster: Cluster;
 }
 
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const res = await fetch(`${helioApiBaseUrl}/approve-transaction`, {
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -104,8 +106,11 @@ export const createOneTimePayment = async ({
   onSuccess,
   onError,
   onPending,
+  cluster,
 }: Props): Promise<void> => {
-  const mintAddress = getMintAddressByCluster(cluster, symbol);
+  const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
+    .mintAddress as string;
+  console.log({ mintAddress });
   const signature = await sendTransaction(
     symbol,
     {

@@ -36,6 +36,14 @@ export const StyledLogoContainer = styled.div`
   align-items: center;
 `;
 
+export const StyledErrorMessage = styled.div`
+  color: #ff0000;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 4px;
+`;
+
 export const StyledEnvironment = styled.div`
   margin-left: 8px;
   background-color: #9ca3af;

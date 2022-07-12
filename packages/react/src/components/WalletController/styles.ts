@@ -37,6 +37,11 @@ export const StyledMenuIcon = styled.div`
   svg {
     width: 100%;
     height: 100%;
+    fill: ${({ theme }) => theme.colors.primary};
+  }
+
+  path {
+    fill: ${({ theme }) => theme.colors.primary};
   }
 `;
 export const StyledMenuLabel = styled.div`
@@ -63,4 +68,16 @@ export const StyledDropdownButton = styled.div`
 export const StyledWalletAddress = styled.span`
   color: ${(props) => props.theme.colors.primary};
   margin-left: 4px;
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: solid 6px ${(props) => props.theme.colors.primary};
+    border-left: solid 6px transparent;
+    border-right: solid 6px transparent;
+    margin-left: 10px;
+  }
 `;

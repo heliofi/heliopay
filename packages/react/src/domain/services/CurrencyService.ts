@@ -1,5 +1,5 @@
-import { SupportedCurrency } from '../constants/currency';
-import { Currency } from '..';
+import { DefaultCurrencies } from '../constants/currency';
+import { Currency } from '../model';
 
 export class CurrencyService {
   private static currencies: Currency[];
@@ -29,16 +29,8 @@ export class CurrencyService {
     return currency;
   }
 
-  static getSplTokens(): string[] {
-    return CurrencyService.currencies
-      .filter(
-        (currency) => currency.symbol !== CurrencyService.getSolCurrencySymbol()
-      )
-      .map((currency) => currency.symbol);
-  }
-
   static getDefaultCurrencySymbol(): string {
-    return SupportedCurrency.USDC;
+    return DefaultCurrencies.USDC;
   }
 
   static getDefaultCurrency(): Currency {
@@ -59,6 +51,6 @@ export class CurrencyService {
   }
 
   static getSolCurrencySymbol(): string {
-    return SupportedCurrency.SOL;
+    return DefaultCurrencies.SOL;
   }
 }

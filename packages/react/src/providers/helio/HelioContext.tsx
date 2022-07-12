@@ -1,5 +1,6 @@
 import { Cluster } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
+import { CurrencyService } from '../../domain/services/CurrencyService';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 
 export const HelioContext = createContext<{
@@ -31,6 +32,7 @@ export const useHelioProvider = () => {
   const getCurrencyList = async () => {
     const result = await HelioApiAdapter.listCurrencies();
     setCurrencyList(result || []);
+    CurrencyService.setCurrencies(result);
   };
 
   const getPaymentDetails = async (paymentRequestId: string) => {
@@ -47,7 +49,7 @@ export const useHelioProvider = () => {
 
   const initCluster = (cluster: Cluster) => {
     setCluster(cluster);
-  }
+  };
 
   return {
     currencyList,
