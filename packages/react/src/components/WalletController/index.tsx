@@ -3,8 +3,7 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useState } from 'react';
 import useOnClickOutside from '../../hooks/useClickOutside';
 import { shortenWalletAddress } from '../../utils';
-import ArrowSwap from '../icons/ArrowSwap';
-import Exit from '../icons/Exit';
+import {ExitIcon, ArrowsDoubleIcon} from '@heliofi/helio-icons';
 import {
   StyledDropdownButton,
   StyledMenu,
@@ -33,7 +32,7 @@ const WalletController = () => {
         setIsOpen(false);
         setVisible(true);
       },
-      icon: <ArrowSwap />,
+      icon: <ArrowsDoubleIcon />,
     },
     {
       label: 'Disconnect Wallet',
@@ -41,7 +40,7 @@ const WalletController = () => {
         setIsOpen(false);
         disconnect();
       },
-      icon: <Exit />,
+      icon: <ExitIcon />,
     },
   ];
   return (

@@ -19,5 +19,9 @@ export const StyledConnectButtonWrapper = styled.div`
     width: 100%;
     text-align: center;
     justify-content: center;
+
+    &:hover {
+      background-color: ${(props) => props.theme.colors.primary};
+    }
   }
 `;

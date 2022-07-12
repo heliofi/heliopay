@@ -38,7 +38,7 @@ export const StyledLogoContainer = styled.div`
 
 export const StyledEnvironment = styled.div`
   margin-left: 8px;
-  background-color: rgb(5 5 21 / 20%);
+  background-color: #9ca3af;
   border-radius: 20px;
   padding: 5px 6px 4px;
   margin-top: 4px;

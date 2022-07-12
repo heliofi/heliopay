@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import CloseGray from '../icons/CloseGray';
+import { CrossIcon } from '@heliofi/helio-icons';
 import {
   StyledModalCloseButton,
   StyledModalContainer,
@@ -34,7 +34,7 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
         {icon && <StyledModalIcon>{icon}</StyledModalIcon>}
         {title && <StyledModalTitle>{title}</StyledModalTitle>}
         <StyledModalCloseButton onClick={onHide}>
-          <CloseGray />
+          <CrossIcon />
         </StyledModalCloseButton>
       </StyledModalHeader>
       <StyledModalContent>{children}</StyledModalContent>

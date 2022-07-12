@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import ConnectButton from '../connect-button';
 import {
+  ClusterType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -41,7 +42,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   paymentRequestId,
   onError,
   onPending,
-  cluster
+  cluster,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -61,7 +62,6 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
-
 
   useEffect(() => {
     initCluster(cluster);
@@ -92,8 +92,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       paymentDetails.requireCountry ||
       paymentDetails.requireDeliveryAddress ||
       paymentDetails.canChangeQuantity ||
-      paymentDetails.canChangePrice ||
-      false
+      paymentDetails.canChangePrice
     );
   };
 
@@ -114,9 +113,10 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
+      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey
       const payload = {
         anchorProvider: helioProvider,
-        recipientPK: paymentDetails?.owner?.wallets?.items?.[0]?.publicKey,
+        recipientPK: recipient,
         symbol: getCurrency(paymentDetails?.currency)?.symbol,
         amount: amount * (quantity || 1),
         paymentRequestId,
@@ -124,7 +124,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onError: handleErrorPayment,
         onPending,
         customerDetails,
-        quantity: Number(quantity) || 1,
+        quantity: Number(quantity) ?? 1,
       };
       await createOneTimePayment(payload);
     }
@@ -164,7 +164,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <StyledLogo>
                   <HelioLogoGray />
                 </StyledLogo>
-                {cluster === 'devnet' && (
+                {cluster === ClusterType.Devnet && (
                   <StyledEnvironment>DEVNET</StyledEnvironment>
                 )}
               </StyledLogoContainer>

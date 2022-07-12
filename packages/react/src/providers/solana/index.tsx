@@ -11,12 +11,13 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { Cluster, clusterApiUrl } from '@solana/web3.js';
 import React, { FC, ReactNode, useEffect, useMemo } from 'react';
+import { ClusterType } from '../../domain';
 
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
 
 export const SolanaProvider: FC<{ children: ReactNode, cluster: Cluster }> = ({ children, cluster }) => {
-  const network = cluster == 'devnet' ? WalletAdapterNetwork.Devnet : WalletAdapterNetwork.Mainnet;
+  const network = cluster == ClusterType.Devnet ? WalletAdapterNetwork.Devnet : WalletAdapterNetwork.Mainnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   const wallets = useMemo(

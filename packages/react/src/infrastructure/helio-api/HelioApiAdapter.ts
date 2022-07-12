@@ -2,6 +2,7 @@
 import { GraphQLResult } from '@aws-amplify/api-graphql/lib';
 import { Cluster } from '@solana/web3.js';
 import { Amplify, API } from 'aws-amplify';
+import { ClusterType } from '../../domain';
 
 import { getAwsConfig } from '../config';
 import { currenciesByOrder, CurrenciesByOrderQuery } from './ApiTypes';
@@ -16,9 +17,10 @@ enum AuthMode {
 
 const getHelioApiBaseUrl = (cluster: Cluster) => {
   switch (cluster) {
-    case 'devnet':
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
       return 'https://test.api.hel.io';
-    case 'mainnet-beta':
+    case ClusterType.Mainnet:
       return 'https://prod.api.hel.io';
     default:
       return 'https://test.api.hel.io';

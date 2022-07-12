@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { KEYS } from '../domain/constants/keys';
 
 const useOnClickOutside = (onClose: () => void) => {
   const ref = useRef(null);
   const escapeListener = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === KEYS.ESC) {
       onClose();
     }
   }, []);

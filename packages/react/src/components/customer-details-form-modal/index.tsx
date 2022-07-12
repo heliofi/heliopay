@@ -79,6 +79,46 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
       false
     );
   };
+  const initialValues = {
+    requireEmail: paymentDetails.requireEmail,
+    requireDiscordUsername: paymentDetails.requireDiscordUsername,
+    requireFullName: paymentDetails.requireFullName,
+    requireTwitterUsername: paymentDetails.requireTwitterUsername,
+    requireCountry: paymentDetails.requireCountry,
+    requireDeliveryAddress: paymentDetails.requireDeliveryAddress,
+    canChangePrice: paymentDetails.canChangePrice,
+    canChangeQuantity: paymentDetails.canChangeQuantity,
+    fullName: undefined,
+    email: undefined,
+    discordUsername: undefined,
+    twitterUsername: undefined,
+    country: undefined,
+    deliveryAddress: undefined,
+    quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
+    customPrice: paymentDetails.canChangePrice ? undefined : normalizedPrice,
+  };
+
+  const handleSubmit = (values: any) => {
+    const details = {
+      fullName: values.fullName,
+      email: values.email,
+      discordUsername: values.discordUsername,
+      twitterUsername: values.twitterUsername,
+      country: values.country,
+      deliveryAddress: values.deliveryAddress,
+    };
+
+    const clearDetails = removeUndefinedFields(details);
+
+    onSubmit({
+      customerDetails: clearDetails,
+      amount: TokenConversionService.convertToMinimalUnits(
+        getCurrency(paymentDetails.currency),
+        values.canChangePrice ? values.customPrice : normalizedPrice
+      ),
+      quantity: values.quantity || 1,
+    });
+  };
 
   return ReactDOM.createPortal(
     <div>
@@ -90,47 +130,8 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
         {paymentDetails ? (
           <Formik
             validationSchema={validationSchema}
-            initialValues={{
-              requireEmail: paymentDetails.requireEmail,
-              requireDiscordUsername: paymentDetails.requireDiscordUsername,
-              requireFullName: paymentDetails.requireFullName,
-              requireTwitterUsername: paymentDetails.requireTwitterUsername,
-              requireCountry: paymentDetails.requireCountry,
-              requireDeliveryAddress: paymentDetails.requireDeliveryAddress,
-              canChangePrice: paymentDetails.canChangePrice,
-              canChangeQuantity: paymentDetails.canChangeQuantity,
-              fullName: undefined,
-              email: undefined,
-              discordUsername: undefined,
-              twitterUsername: undefined,
-              country: undefined,
-              deliveryAddress: undefined,
-              quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
-              customPrice: paymentDetails.canChangePrice
-                ? undefined
-                : normalizedPrice,
-            }}
-            onSubmit={(values) => {
-              const details = {
-                fullName: values.fullName,
-                email: values.email,
-                discordUsername: values.discordUsername,
-                twitterUsername: values.twitterUsername,
-                country: values.country,
-                deliveryAddress: values.deliveryAddress,
-              };
-
-              const clearDetails = removeUndefinedFields(details);
-
-              onSubmit({
-                customerDetails: clearDetails,
-                amount: TokenConversionService.convertToMinimalUnits(
-                  getCurrency(paymentDetails.currency),
-                  values.canChangePrice ? values.customPrice : normalizedPrice
-                ),
-                quantity: values.quantity || 1,
-              });
-            }}
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
           >
             {({ values, setFieldValue }) => (
               <Form>

@@ -10,9 +10,7 @@ export const ConnectButton: FC = () => {
     <StyledConnectButtonWrapper>
       <WalletMultiButton startIcon={undefined}>
         {connecting ? (
-          <>
-            <span>CONNECTING...</span>
-          </>
+          <span>CONNECTING...</span>
         ) : (
           <span className="rounded-full">CONNECT WALLET</span>
         )}

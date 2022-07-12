@@ -1,5 +1,5 @@
 import { Cluster } from '@solana/web3.js';
-import { Currency } from '../model';
+import { ClusterType, Currency } from '../model';
 
 export enum SupportedCurrency {
   USDC = 'USDC',
@@ -138,10 +138,10 @@ export const getMintAddressByCluster = (
   symbol: string
 ): string => {
   switch (cluster) {
-    case 'testnet':
-    case 'devnet':
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
       return getMintAddress(mintAddressDevnet, symbol);
-    case 'mainnet-beta':
+    case ClusterType.Mainnet:
       return getMintAddress(mintAddressMainnet, symbol);
     default:
       throw new Error(`The cluster ${cluster} is not supported.`);
