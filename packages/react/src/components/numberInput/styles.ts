@@ -14,6 +14,7 @@ export const StyledNumberMinus = styled.div`
     font-size: 28px;
     margin-left: 8px;
     cursor: pointer;
+
     svg {
         width: 100%;
         height: 100%;
