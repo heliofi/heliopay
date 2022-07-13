@@ -1,0 +1,16 @@
+@import './reset.scss';
+
+body {
+  font-family: sans-serif;
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  background-color: #f5f5f5;
+  padding: 20px;
+  text-align: center;
+  font-size: 30px;
+}
