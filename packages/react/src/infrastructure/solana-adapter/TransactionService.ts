@@ -110,7 +110,6 @@ export const createOneTimePayment = async ({
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
-  console.log({ mintAddress });
   const signature = await sendTransaction(
     symbol,
     {
