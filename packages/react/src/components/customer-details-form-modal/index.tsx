@@ -75,8 +75,7 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
       paymentDetails.requireDiscordUsername ||
       paymentDetails.requireTwitterUsername ||
       paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress ||
-      false
+      paymentDetails.requireDeliveryAddress
     );
   };
   const initialValues = {

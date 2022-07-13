@@ -12,7 +12,9 @@ export const StyledModalWrapper = styled.div`
   align-items: flex-start;
   padding-top: 120px;
 
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: border-box;
   }
 `;
@@ -32,13 +34,22 @@ export const StyledModalHeader = styled.div`
   padding-right: 50px;
 `;
 
-export const StyledModalIcon = styled.div`
+export const StyledModalIcon = styled.div<{ spin?: boolean }>`
   width: 30px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 8px;
+  ${({ spin }) =>
+    spin &&
+    `
+    animation: spin 1s linear infinite;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `}
 
   svg,
   img,

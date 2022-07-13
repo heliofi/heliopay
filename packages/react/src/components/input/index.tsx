@@ -33,7 +33,6 @@ const Input: FC<InputProps & InputContainerProps> = ({
   inputClassName = '',
   label,
 }) => {
-
   const [focus, setFocus] = useState(false);
 
   return (
@@ -64,7 +63,7 @@ const Input: FC<InputProps & InputContainerProps> = ({
         ) : (
           <StyledField
             id={fieldId}
-            as={fieldAs as never}
+            component={fieldAs}
             type="text"
             name={fieldName}
             placeholder={placeholder}

@@ -19,6 +19,7 @@ type ModalProps = {
   children: React.ReactNode;
   icon?: React.ReactNode;
   closeOnClickOutside?: boolean;
+  animateIcon?: boolean;
 };
 
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
@@ -26,12 +27,13 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
   onHide,
   children,
   icon,
+  animateIcon = false,
   closeOnClickOutside = false,
 }) => (
   <StyledModalWrapper>
     <StyledModalContainer>
       <StyledModalHeader>
-        {icon && <StyledModalIcon>{icon}</StyledModalIcon>}
+        {icon && <StyledModalIcon spin={animateIcon}>{icon}</StyledModalIcon>}
         {title && <StyledModalTitle>{title}</StyledModalTitle>}
         <StyledModalCloseButton onClick={onHide}>
           <CrossIcon />

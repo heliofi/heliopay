@@ -12,7 +12,7 @@ import {
 export const LoadingModal = ({ onHide }: InheritedModalProps) =>
   ReactDOM.createPortal(
     <div>
-      <Modal onHide={onHide} icon={<HelioIcon />}>
+      <Modal onHide={onHide} icon={<HelioIcon />} animateIcon>
         <StyledLoadingWrapper>
           <StyledLoadingTitle>Processing..</StyledLoadingTitle>
           <StyledLoadingText>Approving trasnsaction</StyledLoadingText>

@@ -55,6 +55,7 @@ export const StyledSelectDropdown = styled.div`
   max-height: 192px;
   overflow-y: auto;
   margin-top: 8px;
+  z-index: 2;
 `;
 
 export const StyledSelectItem = styled.div<{ highlighted: boolean }>`
