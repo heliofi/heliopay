@@ -246,7 +246,7 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
             )}
           </Formik>
         ) : (
-          <h2>Failed to load payment details</h2>
+          <h2>Failed to load payment details.</h2>
         )}
       </Modal>
     </div>,
