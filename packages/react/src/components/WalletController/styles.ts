@@ -44,6 +44,7 @@ export const StyledMenuIcon = styled.div`
     fill: ${({ theme }) => theme.colors.primary};
   }
 `;
+
 export const StyledMenuLabel = styled.div`
   font-style: normal;
   font-weight: 400;

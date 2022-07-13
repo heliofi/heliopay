@@ -52,7 +52,6 @@ export const singlePayment = async (
 
   // Sign and prepare
   const signed = await wallet.signTransaction(transaction);
-  // const tx = await sendAndConfirmTransaction(connection, transaction, [wallet]);
   const tx = await sendAndConfirmRawTransaction(connection, signed.serialize());
   return { transaction: tx };
 };
