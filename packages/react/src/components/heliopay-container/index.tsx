@@ -35,7 +35,7 @@ interface HeliopayContainerProps {
   onPending: (event: PendingPaymentEvent) => void;
   onStartPayment: () => void;
   cluster: Cluster;
-  payButtonCTA?: string;
+  payButtonTitle?: string;
 }
 
 export const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -45,7 +45,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onError,
   onPending,
   cluster,
-  payButtonCTA = 'Pay',
+  payButtonTitle = 'Pay',
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -160,7 +160,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                     }}
                     disabled={!paymentDetails?.id}
                   >
-                    {payButtonCTA}
+                    {payButtonTitle}
                   </Button>
                 </div>
               ) : (

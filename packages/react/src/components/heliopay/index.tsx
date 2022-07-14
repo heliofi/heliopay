@@ -20,7 +20,7 @@ interface HelioPayProps {
   onStartPayment: () => void;
   theme?: DefaultTheme;
   cluster: Cluster;
-  payButtonCTA?: string;
+  payButtonTitle?: string;
 }
 
 export const HelioPay = ({
@@ -31,7 +31,7 @@ export const HelioPay = ({
   onStartPayment,
   theme,
   cluster,
-  payButtonCTA,
+  payButtonTitle,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -50,7 +50,7 @@ export const HelioPay = ({
           onError={onError}
           onPending={onPending}
           cluster={cluster}
-          payButtonCTA={payButtonCTA}
+          payButtonTitle={payButtonTitle}
         />
       </SolanaProvider>
     </ThemeProvider>
