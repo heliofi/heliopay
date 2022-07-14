@@ -40,8 +40,8 @@ const App = () => {
 | :------- | :----- | :------- | :------------ | :----------- |
 | cluster    | string | yes      |         | **available values;** devnet, mainnet-beta, testnet |
 | paymentRequestId    | string | yes       |            | Your paylink ID |
-| onSuccess    | function | yes       |            | triggered event when success |
-| onError    | function | yes       |            | triggered event when error |
-| onPending    | function | yes       |            | triggered event when pending |
-| onStartPayment    | function | yes       |            | triggered event on start payment |
+| onSuccess    | function | no       |            | triggered event when success |
+| onError    | function | no       |            | triggered event when error |
+| onPending    | function | no       |            | triggered event when pending |
+| onStartPayment    | function | no       |            | triggered event on start payment |
 
