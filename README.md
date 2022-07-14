@@ -10,7 +10,7 @@
 A container that gets all the payment informations.
 
 ```js
-import React, { useState } from 'react';
+import { HelioPay } from '@heliofi/react';
 
 const App = () => {
     return (
