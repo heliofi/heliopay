@@ -14,10 +14,10 @@ import { Cluster } from '@solana/web3.js';
 
 interface HelioPayProps {
   paymentRequestId: string;
-  onSuccess: (event: SuccessPaymentEvent) => void;
-  onError: (event: ErrorPaymentEvent) => void;
-  onPending: (event: PendingPaymentEvent) => void;
-  onStartPayment: () => void;
+  onSuccess?: (event: SuccessPaymentEvent) => void;
+  onError?: (event: ErrorPaymentEvent) => void;
+  onPending?: (event: PendingPaymentEvent) => void;
+  onStartPayment?: () => void;
   theme?: DefaultTheme;
   cluster: Cluster;
 }

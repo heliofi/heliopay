@@ -28,9 +28,9 @@ interface Props {
   symbol: string;
   amount: number;
   paymentRequestId: string;
-  onSuccess: (event: SuccessPaymentEvent) => void;
-  onError: (event: ErrorPaymentEvent) => void;
-  onPending: (event: PendingPaymentEvent) => void;
+  onSuccess?: (event: SuccessPaymentEvent) => void;
+  onError?: (event: ErrorPaymentEvent) => void;
+  onPending?: (event: PendingPaymentEvent) => void;
   customerDetails?: CustomerDetails;
   quantity?: number;
   cluster: Cluster;
@@ -123,7 +123,7 @@ export const createOneTimePayment = async ({
   );
 
   if (signature === undefined) {
-    onError({ errorMessage: 'Failed to send transaction' });
+    onError?.({ errorMessage: 'Failed to send transaction' });
     return;
   }
 
@@ -142,17 +142,17 @@ export const createOneTimePayment = async ({
   try {
     approveTransactionPayload.transactionSignature = signature;
     const content = await approveTransaction(approveTransactionPayload);
-    onSuccess({ transaction: signature, content });
+    onSuccess?.({ transaction: signature, content });
   } catch (e) {
     const errorHandler = (message: string) => {
-      onError({ errorMessage: message, transaction: signature });
+      onError?.({ errorMessage: message, transaction: signature });
     };
     if (e instanceof VerificationError) {
-      onPending({ transaction: signature });
+      onPending?.({ transaction: signature });
       await retryCallback(
         async () => {
           const content = await approveTransaction(approveTransactionPayload);
-          onSuccess({ transaction: signature, content });
+          onSuccess?.({ transaction: signature, content });
         },
         20,
         5_000,
