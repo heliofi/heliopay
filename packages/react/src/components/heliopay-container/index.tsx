@@ -30,10 +30,10 @@ import { Cluster } from '@solana/web3.js';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
-  onSuccess: (event: SuccessPaymentEvent) => void;
-  onError: (event: ErrorPaymentEvent) => void;
-  onPending: (event: PendingPaymentEvent) => void;
-  onStartPayment: () => void;
+  onSuccess?: (event: SuccessPaymentEvent) => void;
+  onError?: (event: ErrorPaymentEvent) => void;
+  onPending?: (event: PendingPaymentEvent) => void;
+  onStartPayment?: () => void;
   cluster: Cluster;
 }
 
@@ -98,13 +98,13 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   };
 
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
-    onSuccess(event);
+    onSuccess?.(event);
     setResult(event);
     setShowLoadingModal(false);
   };
 
   const handleErrorPayment = (event: ErrorPaymentEvent) => {
-    onError(event);
+    onError?.(event);
     setResult(event);
     setShowLoadingModal(false);
   };
