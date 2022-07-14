@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "description": "React components for Helio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@heliofi/helio-icons": "^1.0.4",
-    "@heliofi/solana-adapter": "^0.1.2-alpha.0",
+    "@heliofi/solana-adapter": "^0.1.10",
     "@project-serum/anchor": "^0.21.0",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.5",
