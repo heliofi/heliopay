@@ -7,7 +7,7 @@
 
 ### 1. HelioPay
 
-A container that gets all the payment informations.
+A container that fetches payment information as well as performs payment on Solana blockchain validates it via Helio API.
 
 ```js
 import { HelioPay } from '@heliofi/react';
