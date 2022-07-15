@@ -36,7 +36,7 @@
     "@heliofi/eslint-config-helio": "^0.1.1",
     "@parcel/packager-ts": "2.6.1",
     "@parcel/transformer-sass": "2.6.1",
-    "@parcel/transformer-typescript-types": "2.6.1",
+    "@parcel/transformer-typescript-types": "2.6.2",
     "@types/jest": "^28.1.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/react": "^17.0.0",
