@@ -3,5 +3,5 @@
     "packages/*"
   ],
   "useNx": false,
-  "version": "0.1.11"
+  "version": "0.1.12-alpha.0"
 }
