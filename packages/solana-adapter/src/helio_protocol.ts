@@ -1,5 +1,4 @@
 export default {
-  
   "version": "0.0.0",
   "name": "helio_protocol",
   "instructions": [

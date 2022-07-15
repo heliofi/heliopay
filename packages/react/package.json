@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "0.1.11",
+  "version": "0.1.13",
   "description": "React components for Helio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@heliofi/helio-icons": "^1.0.4",
-    "@heliofi/solana-adapter": "^0.1.10",
+    "@heliofi/solana-adapter": "^0.1.13",
     "@project-serum/anchor": "^0.21.0",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.5",
@@ -36,7 +36,7 @@
     "@heliofi/eslint-config-helio": "^0.1.1",
     "@parcel/packager-ts": "2.6.1",
     "@parcel/transformer-sass": "2.6.1",
-    "@parcel/transformer-typescript-types": "2.6.2",
+    "@parcel/transformer-typescript-types": "2.6.1",
     "@types/jest": "^28.1.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/react": "^17.0.0",
