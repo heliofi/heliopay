@@ -9,7 +9,6 @@ import { DefaultTheme, ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../theme';
 import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
-
 import { Cluster } from '@solana/web3.js';
 
 interface HelioPayProps {
