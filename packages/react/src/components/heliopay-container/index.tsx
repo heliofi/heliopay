@@ -116,7 +116,8 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       paymentDetails.requireCountry ||
       paymentDetails.requireDeliveryAddress ||
       paymentDetails.canChangeQuantity ||
-      paymentDetails.canChangePrice
+      paymentDetails.canChangePrice ||
+      supportedCurrencies?.length
     );
   };
 
@@ -183,6 +184,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                           amount: paymentDetails?.normalizedPrice,
                           quantity: 1,
                           customerDetails: undefined,
+                          currency: paymentDetails?.currency,
                         });
                       }
                     }}
