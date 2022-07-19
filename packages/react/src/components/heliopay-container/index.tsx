@@ -4,6 +4,7 @@ import { useHelioProvider } from '../../providers/helio/HelioContext';
 import ConnectButton from '../connect-button';
 import {
   ClusterType,
+  Currency,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -36,6 +37,8 @@ interface HeliopayContainerProps {
   onStartPayment?: () => void;
   cluster: Cluster;
   payButtonTitle?: string;
+  supportedCurrencies?: string[];
+  totalAmount?: number;
 }
 
 export const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -46,6 +49,8 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onPending,
   cluster,
   payButtonTitle = 'Pay',
+  supportedCurrencies,
+  totalAmount,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -65,14 +70,30 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
+  const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[] | null>(
+    null
+  );
 
   useEffect(() => {
     initCluster(cluster);
   }, [cluster]);
 
+  const generateAllowedCurrencies = () => {
+    const allowedCurrenciesTemp = currencyList.filter((currency) =>
+      supportedCurrencies?.includes(currency.symbol)
+    );
+    setAllowedCurrencies(allowedCurrenciesTemp);
+  };
+
   useEffect(() => {
     getCurrencyList();
   }, []);
+
+  useEffect(() => {
+    if (supportedCurrencies) {
+      generateAllowedCurrencies();
+    }
+  }, [currencyList, supportedCurrencies]);
 
   useEffect(() => {
     if (mainCluster) {
@@ -111,7 +132,12 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setShowLoadingModal(false);
   };
 
-  const submitPayment = async ({ amount, quantity, customerDetails }: any) => {
+  const submitPayment = async ({
+    amount,
+    currency,
+    quantity,
+    customerDetails,
+  }: any) => {
     if (helioProvider) {
       onStartPayment?.();
       setShowLoadingModal(true);
@@ -120,7 +146,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
-        symbol: getCurrency(paymentDetails?.currency)?.symbol,
+        symbol: getCurrency(currency)?.symbol,
         amount: amount * (quantity || 1),
         paymentRequestId,
         onSuccess: handleSuccessPayment,
@@ -133,7 +159,9 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       try {
         await createOneTimePayment(payload);
       } catch (error) {
-        console.log({ error });
+        handleErrorPayment({
+          errorMessage: String(error),
+        });
       }
     }
   };
@@ -194,6 +222,8 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         <CustomerDetailsFormModal
           onHide={() => setShowFormModal(false)}
           onSubmit={submitPayment}
+          allowedCurrencies={allowedCurrencies}
+          totalAmount={totalAmount}
         />
       )}
 

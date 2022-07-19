@@ -21,6 +21,8 @@ interface HelioPayProps {
   theme?: DefaultTheme;
   cluster: Cluster;
   payButtonTitle?: string;
+  supportedCurrencies?: string[];
+  totalAmount?: number;
 }
 
 export const HelioPay = ({
@@ -32,6 +34,8 @@ export const HelioPay = ({
   theme,
   cluster,
   payButtonTitle,
+  supportedCurrencies,
+  totalAmount,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -51,6 +55,8 @@ export const HelioPay = ({
           onPending={onPending}
           cluster={cluster}
           payButtonTitle={payButtonTitle}
+          supportedCurrencies={supportedCurrencies}
+          totalAmount={totalAmount}
         />
       </SolanaProvider>
     </ThemeProvider>

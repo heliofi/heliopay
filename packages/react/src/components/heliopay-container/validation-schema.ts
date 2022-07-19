@@ -8,6 +8,10 @@ const validationSchema = yup.object({
     is: true,
     then: yup.number().required('Price is required'),
   }),
+  currency: yup.string().when('canSelectCurrency', {
+    is: true,
+    then: yup.string().required('Currency is required'),
+  }),
   quantity: yup.number().when('canChangeQuantity', {
     is: true,
     then: yup

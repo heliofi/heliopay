@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ErrorPaymentEvent,
   HelioPay,
   PendingPaymentEvent,
   SuccessPaymentEvent,
+  HelioApiAdapter,
 } from '@heliofi/react';
 
 import './styles/style.scss';
@@ -12,6 +13,20 @@ const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     'c5d4dd5d-d880-4b9f-a918-efb931a3aa1e'
   );
+
+  const getListCurrencies = () => {
+    HelioApiAdapter.listCurrencies()
+      .then((res) => {
+        // console.log(2, res);
+      })
+      .catch((err) => {
+        // console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    getListCurrencies()
+  }, []);
 
   return (
     <>
@@ -35,6 +50,8 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
+        supportedCurrencies={['USDC', 'SOL', 'DUST', 'BOO', 'HALO']}
+        totalAmount={0.145}
       />
     </>
   );
