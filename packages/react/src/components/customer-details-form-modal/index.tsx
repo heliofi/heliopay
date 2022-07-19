@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
-import HelioIcon from '../icons/HelioIcon';
 import { Form, Formik } from 'formik';
 import { Modal, InheritedModalProps } from '../modal';
 import validationSchema from '../heliopay-container/validation-schema';
@@ -10,6 +9,7 @@ import Input from '../input';
 import Button from '../button';
 import {
   StyledCurrency,
+  StyledCurrencySelectIcon,
   StyledFormText,
   StyledFormTitle,
   StyledPrice,
@@ -26,13 +26,29 @@ interface Props extends InheritedModalProps {
     amount: number;
     customerDetails?: CustomerDetails;
     quantity: number;
+    currency: Currency;
   }) => void;
+  allowedCurrencies?: Currency[] | null;
+  totalAmount?: number;
 }
 
-const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
+const CustomerDetailsFormModal = ({
+  onHide,
+  onSubmit,
+  allowedCurrencies,
+  totalAmount,
+}: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [currency, setCurrency] = useState<Currency | null>(null);
+
+  const canSelectCurrency = !!allowedCurrencies?.length;
+
+  const currenciesOptions = allowedCurrencies?.map((currency: Currency) => ({
+    label: currency?.symbol ?? '',
+    value: currency?.symbol ?? '',
+    icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
+  }));
 
   const countryOptions = countries.map((country) => ({
     label: country.name,
@@ -45,8 +61,10 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
   };
 
   useEffect(() => {
-    setCurrency(getCurrency(paymentDetails.currency));
-  }, [paymentDetails?.currency]);
+    if (!canSelectCurrency) {
+      setCurrency(getCurrency(paymentDetails.currency));
+    }
+  }, [paymentDetails?.currency, canSelectCurrency]);
 
   useEffect(() => {
     if (
@@ -95,6 +113,8 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
     deliveryAddress: undefined,
     quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
     customPrice: paymentDetails.canChangePrice ? undefined : normalizedPrice,
+    canSelectCurrency: canSelectCurrency,
+    currency: canSelectCurrency ? undefined : paymentDetails.currency,
   };
 
   const handleSubmit = (values: any) => {
@@ -112,10 +132,13 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
     onSubmit({
       customerDetails: clearDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(paymentDetails.currency),
-        values.canChangePrice ? values.customPrice : normalizedPrice
+        getCurrency(values.currency),
+        values.canChangePrice
+          ? values.customPrice
+          : totalAmount || normalizedPrice
       ),
       quantity: values.quantity || 1,
+      currency: values.currency || paymentDetails?.currency,
     });
   };
 
@@ -123,8 +146,12 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
     <div>
       <Modal
         onHide={onHide}
-        icon={<CurrencyIcon iconName={currency?.symbol || ''} />}
-        title={`Pay with ${currency?.symbol}`}
+        icon={
+          currency && (
+            <CurrencyIcon gradient iconName={currency?.symbol || ''} />
+          )
+        }
+        title={currency ? `Pay with ${currency?.symbol}` : 'Pay'}
       >
         {paymentDetails ? (
           <Formik
@@ -157,10 +184,31 @@ const CustomerDetailsFormModal = ({ onHide, onSubmit }: Props) => {
                     <StyledPrice>
                       Total price:{' '}
                       <b>
-                        {formatTotalPrice(normalizedPrice, values.quantity)}{' '}
-                        {currency?.symbol}
+                        {formatTotalPrice(totalAmount || normalizedPrice, values.quantity)}{' '}
+                        {values.currency}
                       </b>
                     </StyledPrice>
+                  )}
+                  {canSelectCurrency && (
+                    <SelectBox
+                      options={currenciesOptions || []}
+                      placeholder="Select currency"
+                      value={values.currency}
+                      showValidations
+                      fieldName="currency"
+                      label="Currency"
+                      prefix={
+                        values.currency && (
+                          <StyledCurrencySelectIcon>
+                            <CurrencyIcon gradient iconName={values.currency} />
+                          </StyledCurrencySelectIcon>
+                        )
+                      }
+                      onChange={(option) => {
+                        setFieldValue('currency', option.value);
+                        setCurrency(getCurrency(option.value as string));
+                      }}
+                    />
                   )}
                   {paymentDetails?.canChangeQuantity && (
                     <NumberInput

@@ -8,6 +8,7 @@ export const StyledInputContainer = styled.div<{ focus?: boolean }>`
   border: 1px solid #ececec;
   border-radius: 8px;
   min-height: 48px;
+  position: relative;
   transition: all 0.3s ease-in-out;
 
   ${({ focus }) =>

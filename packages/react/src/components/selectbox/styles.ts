@@ -6,7 +6,6 @@ export const StyledSelectWrapper = styled.div`
 `;
 
 export const StyledSelectContainer = styled.div`
-  position: relative;
   width: 100%;
 
 `;
@@ -52,13 +51,15 @@ export const StyledSelectDropdown = styled.div`
   background-color: #fff;
   box-shadow: 0px 8px 10px rgba(195, 200, 209, 0.2);
   border-radius: 8px;
-  max-height: 192px;
+  max-height: 200px;
   overflow-y: auto;
   margin-top: 8px;
   z-index: 2;
 `;
 
 export const StyledSelectItem = styled.div<{ highlighted: boolean }>`
+  display: flex;
+  align-items: center;
   cursor: pointer;
   padding: 8px;
   font-style: normal;
@@ -77,6 +78,18 @@ export const StyledSelectItem = styled.div<{ highlighted: boolean }>`
         background-color: #FFF4ED;
     `}
 `;
+
+export const StyledSelectItemIcon = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+`
 
 export const StyledLabel = styled.label`
   font-style: normal;

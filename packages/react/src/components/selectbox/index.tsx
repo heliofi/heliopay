@@ -10,14 +10,18 @@ import {
   StyledSelectHead,
   StyledSelectIcon,
   StyledSelectItem,
+  StyledSelectItemIcon,
   StyledSelectLabel,
   StyledSelectWrapper,
 } from './styles';
 import { ArrowsDownIcon } from '@heliofi/helio-icons'
+import { ReactNode } from 'react';
+import CurrencyIcon from '../currency-icon';
 
-interface Option {
+export interface Option {
   value: number | string;
   label: string;
+  icon?: ReactNode;
 }
 
 interface Props {
@@ -29,6 +33,7 @@ interface Props {
   fieldName?: string;
   showValidations?: boolean;
   label?: string;
+  prefix?: React.ReactNode | string;
 }
 
 function itemToString(item: Option | null) {
@@ -44,6 +49,7 @@ const SelectBox = ({
   fieldName,
   className,
   label,
+  prefix
 }: Props) => {
   const {
     isOpen,
@@ -65,7 +71,7 @@ const SelectBox = ({
   return (
     <StyledSelectWrapper className={className}>
       {label && <StyledLabel>{label}</StyledLabel>}
-      <InputContainer placeholder={placeholder} focus={isOpen}>
+      <InputContainer prefix={prefix} placeholder={placeholder} focus={isOpen}>
         <StyledSelectContainer>
           <StyledSelectHead {...getToggleButtonProps()}>
             <StyledSelectLabel selected={value} {...getLabelProps()}>
@@ -90,6 +96,7 @@ const SelectBox = ({
                         item,
                       })}
                     >
+                      {item.icon && <StyledSelectItemIcon>{item.icon}</StyledSelectItemIcon>}
                       <div>
                         {item.label}
                       </div>
