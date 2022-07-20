@@ -1,5 +1,6 @@
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { Cluster } from '@solana/web3.js';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import ConnectButton from '../connect-button';
 import {
@@ -27,7 +28,6 @@ import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
-import { Cluster } from '@solana/web3.js';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -101,8 +101,10 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [paymentRequestId, mainCluster]);
 
-  const getCurrency = (currency?: string) => {
-    if (!currency) return;
+  const getCurrency = (currency?: string): Currency => {
+    if (!currency) {
+      throw new Error('Unknown currency');
+    }
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
@@ -144,10 +146,12 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
       setShowLoadingModal(true);
       setShowFormModal(false);
       const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey;
+      const { symbol } = getCurrency(currency);
+      if (symbol == null) throw new Error('Unknown currency symbol');
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
-        symbol: getCurrency(currency)?.symbol,
+        symbol,
         amount: amount * (quantity || 1),
         paymentRequestId,
         onSuccess: handleSuccessPayment,
@@ -155,7 +159,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onPending,
         customerDetails,
         quantity: Number(quantity) ?? 1,
-        cluster: cluster,
+        cluster,
       };
       try {
         await createOneTimePayment(payload);
@@ -194,9 +198,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
                   </Button>
                 </div>
               ) : (
-                <>
-                  <ConnectButton />
-                </>
+                <ConnectButton />
               )}
             </StyledLeft>
             <StyledRight>

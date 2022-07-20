@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
-import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Modal, InheritedModalProps } from '../modal';
 import validationSchema from '../heliopay-container/validation-schema';
-import { useEffect, useState } from 'react';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import Input from '../input';
 import Button from '../button';
@@ -42,7 +42,8 @@ const CustomerDetailsFormModal = ({
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [currency, setCurrency] = useState<Currency | null>(null);
 
-  const canSelectCurrency = !!allowedCurrencies?.length;
+  const canSelectCurrency =
+    allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
 
   const currenciesOptions = allowedCurrencies?.map((currency: Currency) => ({
     label: currency?.symbol ?? '',
@@ -61,7 +62,9 @@ const CustomerDetailsFormModal = ({
   };
 
   useEffect(() => {
-    if (!canSelectCurrency) {
+    if (allowedCurrencies?.length === 1) {
+      setCurrency(allowedCurrencies[0]);
+    } else if (!canSelectCurrency) {
       setCurrency(getCurrency(paymentDetails.currency));
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
@@ -113,7 +116,7 @@ const CustomerDetailsFormModal = ({
     deliveryAddress: undefined,
     quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
     customPrice: paymentDetails.canChangePrice ? undefined : normalizedPrice,
-    canSelectCurrency: canSelectCurrency,
+    canSelectCurrency,
     currency: canSelectCurrency ? undefined : paymentDetails.currency,
   };
 
@@ -184,7 +187,10 @@ const CustomerDetailsFormModal = ({
                     <StyledPrice>
                       Total price:{' '}
                       <b>
-                        {formatTotalPrice(totalAmount || normalizedPrice, values.quantity)}{' '}
+                        {formatTotalPrice(
+                          totalAmount || normalizedPrice,
+                          values.quantity
+                        )}{' '}
                         {values.currency}
                       </b>
                     </StyledPrice>

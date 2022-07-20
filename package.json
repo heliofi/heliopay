@@ -4,6 +4,9 @@
   "devDependencies": {
     "lerna": "^5.1.8"
   },
+  "scripts": {
+    "release": "lerna publish"
+  },
   "workspaces": ["packages/*"],
   "publishConfig": {
     "access": "public"
