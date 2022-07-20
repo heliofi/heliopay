@@ -1,21 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GraphQLResult } from '@aws-amplify/api-graphql/lib';
 import { Cluster } from '@solana/web3.js';
 import { Amplify, API } from 'aws-amplify';
 import { ClusterType } from '../../domain';
-
-import { getAwsConfig } from '../config';
+import { configDev, configProd } from '../config';
 import { currenciesByOrder, CurrenciesByOrderQuery } from './ApiTypes';
 
-Amplify.configure(getAwsConfig());
-
+export const getHelioApiBaseUrl = (cluster: Cluster) => {
+  switch (cluster) {
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
+      return configDev;
+    case ClusterType.Mainnet:
+      return configProd;
+    default:
+      return configDev;
+  }
+};
 
 enum AuthMode {
   AWS_LAMBDA = 'AWS_LAMBDA',
   API_KEY = 'API_KEY',
 }
 
-export const getHelioApiBaseUrl = (cluster: Cluster) => {
+export const getAwsConfig = (cluster: Cluster) => {
   switch (cluster) {
     case ClusterType.Testnet:
     case ClusterType.Devnet:
@@ -45,7 +52,9 @@ export const HelioApiAdapter = {
     return paymentResult;
   },
 
-  listCurrencies: async () => {
+  listCurrencies: async (cluster: Cluster) => {
+    Amplify.configure(getHelioApiBaseUrl(cluster));
+
     const result = (await API.graphql({
       query: currenciesByOrder,
       variables: {

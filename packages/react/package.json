@@ -13,6 +13,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@aws-amplify/api-graphql": "^2.3.9",
     "@heliofi/helio-icons": "^1.0.4",
     "@heliofi/solana-adapter": "^0.2.0",
     "@project-serum/anchor": "^0.21.0",
