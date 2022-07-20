@@ -163,3 +163,5 @@ If the transaction is valid the return object has the following signature:
 }
 ```
 The secret content that is revealed upon valid payment.
+
+An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
