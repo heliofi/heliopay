@@ -145,6 +145,8 @@ const CustomerDetailsFormModal = ({
     });
   };
 
+  const symbol = currency ? `Pay with ${currency?.symbol}` : 'Pay';
+
   return ReactDOM.createPortal(
     <div>
       <Modal
@@ -154,7 +156,7 @@ const CustomerDetailsFormModal = ({
             <CurrencyIcon gradient iconName={currency?.symbol || ''} />
           )
         }
-        title={currency ? `Pay with ${currency?.symbol}` : 'Pay'}
+        title={symbol}
       >
         {paymentDetails ? (
           <Formik
@@ -191,7 +193,7 @@ const CustomerDetailsFormModal = ({
                           totalAmount || normalizedPrice,
                           values.quantity
                         )}{' '}
-                        {values.currency}
+                        {currency?.symbol}
                       </b>
                     </StyledPrice>
                   )}
