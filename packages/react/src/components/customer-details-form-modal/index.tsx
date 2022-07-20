@@ -43,7 +43,7 @@ const CustomerDetailsFormModal = ({
   const [currency, setCurrency] = useState<Currency | null>(null);
 
   const canSelectCurrency =
-    allowedCurrencies?.length && allowedCurrencies?.length > 0;
+    allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
 
   const currenciesOptions = allowedCurrencies?.map((currency: Currency) => ({
     label: currency?.symbol ?? '',

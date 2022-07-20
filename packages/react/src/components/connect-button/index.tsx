@@ -8,15 +8,14 @@ export const ConnectButton: FC = () => {
 
   return (
     <StyledConnectButtonWrapper>
-      <WalletMultiButton
-        startIcon={
-          connecting ? (
-            <span>CONNECTING...</span>
-          ) : (
-            <span className="rounded-full">CONNECT WALLET</span>
-          )
-        }
-      />
+      {/* @ts-ignore TODO since we are using react v18 children don't exist on FC */}
+      <WalletMultiButton startIcon={undefined}>
+        {connecting ? (
+          <span>CONNECTING...</span>
+        ) : (
+          <span className="rounded-full">CONNECT WALLET</span>
+        )}
+      </WalletMultiButton>
     </StyledConnectButtonWrapper>
   );
 };
