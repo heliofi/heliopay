@@ -30,12 +30,11 @@ export const useHelioProvider = () => {
   } = useContext(HelioContext);
 
   const getCurrencyList = async () => {
-    if (!cluster) {
-      throw new Error('Please provide a cluster');
+    if (cluster) {
+      const result = await HelioApiAdapter.listCurrencies(cluster);
+      setCurrencyList(result || []);
+      CurrencyService.setCurrencies(result);
     }
-    const result = await HelioApiAdapter.listCurrencies(cluster);
-    setCurrencyList(result || []);
-    CurrencyService.setCurrencies(result);
   };
 
   const getPaymentDetails = async (paymentRequestId: string) => {

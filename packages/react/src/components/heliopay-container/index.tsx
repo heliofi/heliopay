@@ -86,8 +86,10 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   };
 
   useEffect(() => {
-    getCurrencyList();
-  }, []);
+    if (mainCluster) {
+      getCurrencyList();
+    }
+  }, [mainCluster]);
 
   useEffect(() => {
     if (supportedCurrencies) {
