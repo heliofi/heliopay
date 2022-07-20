@@ -5,7 +5,7 @@ import { ClusterType } from '../../domain';
 import { configDev, configProd } from '../config';
 import { currenciesByOrder, CurrenciesByOrderQuery } from './ApiTypes';
 
-export const getHelioApiBaseUrl = (cluster: Cluster) => {
+export const getAwsConfig = (cluster: Cluster) => {
   switch (cluster) {
     case ClusterType.Testnet:
     case ClusterType.Devnet:
@@ -22,7 +22,7 @@ enum AuthMode {
   API_KEY = 'API_KEY',
 }
 
-export const getAwsConfig = (cluster: Cluster) => {
+export const getHelioApiBaseUrl = (cluster: Cluster) => {
   switch (cluster) {
     case ClusterType.Testnet:
     case ClusterType.Devnet:
