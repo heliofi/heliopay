@@ -1,4 +1,4 @@
-import CheckMarkIcon from '../icons/CheckMarkIcon';
+import CheckMarkIcon from '../Icons/CheckMarkIcon';
 import ExplorerLink from '../explorer-link';
 import {
   StyledResultBox,
