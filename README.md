@@ -145,6 +145,21 @@ const approveTransaction = async (
   });
   return res;
 };
+
+const coefficient = 1000000;
+const amount = 0.1 * coefficient; // in this case you are paying 0.1SOL
+
+approveTransaction({
+  "transactionSignature":"test_signature",
+  "paymentRequestId":"test request id",
+  "amount":amount, 
+  "sender":"sender_id",
+  "recipient":"recipient_id",
+  "currency":"SOL",
+  "cluster":"devnet",
+  "quantity":1
+})
+
 ```
 
 Please note that the API will check with the blockchain to validate the signature of the transaction.
