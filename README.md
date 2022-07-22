@@ -116,7 +116,7 @@ Approve transaction request body has the following signature:
 export interface ApproveTransactionPayload {
   transactionSignature: string;
   paymentRequestId: string;
-  amount: number; // 0.1 SOL = 
+  amount: number;
   sender: string;
   recipient: string;
   currency: string;
