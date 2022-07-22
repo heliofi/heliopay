@@ -53,7 +53,7 @@ export const HelioApiAdapter = {
   },
 
   listCurrencies: async (cluster: Cluster) => {
-    Amplify.configure(getHelioApiBaseUrl(cluster));
+    Amplify.configure(getAwsConfig(cluster));
 
     const result = (await API.graphql({
       query: currenciesByOrder,
