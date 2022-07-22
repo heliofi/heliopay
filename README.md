@@ -146,8 +146,8 @@ const approveTransaction = async (
   return res;
 };
 
-const coefficient = 1000000;
-const amount = 0.1 * coefficient; // in this case you are paying 0.1SOL
+const usdcCoefficient = 1000000;
+const amount = 0.1 * usdcCoefficient; // in this case you are paying 0.1 USDC
 
 approveTransaction({
   "transactionSignature":"test_signature",
@@ -155,7 +155,7 @@ approveTransaction({
   "amount":amount, 
   "sender":"sender_id",
   "recipient":"recipient_id",
-  "currency":"SOL",
+  "currency":"USDC",
   "cluster":"devnet",
   "quantity":1
 })
