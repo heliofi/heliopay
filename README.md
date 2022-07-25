@@ -107,7 +107,49 @@ The example above shows verification process for devnet, you can replace the bas
 
 ### 3. Dynamic payment without embedded button
 
-If you choose to not use embedded button you can still use Helio api for registering payment. 
+If you choose to not use embedded button you can still use Helio api for registering payment.
+Please note that the blockchain transaction has to go through our smart contract. In inder to achieve that you can use our @heliofi/solana-adapter package.
+Example:
+
+```ts
+import {
+  HelioIdl,
+  SinglePaymentRequest,
+  singlePaymentSC,
+  singleSolPaymentSC,
+} from '@heliofi/solana-adapter';
+
+const sendTransaction = async (
+  symbol: string,
+  request: SinglePaymentRequest,
+  provider: Program<HelioIdl>
+): Promise<string | undefined> => {
+  try {
+    if (symbol === 'SOL') {
+      return await singleSolPaymentSC(provider, request);
+    }
+    return await singlePaymentSC(provider, request);
+  } catch (e) {
+    return new TransactionTimeoutError(String(e)).extractSignature();
+  }
+};
+```
+
+The signature for SinglePaymentRequest looks as follows:
+
+```ts
+import { Cluster, PublicKey } from '@solana/web3.js';
+
+export type SinglePaymentRequest = {
+    amount: number;
+    sender: PublicKey;
+    recipient: PublicKey;
+    mintAddress: PublicKey;
+    cluster: Cluster;
+};
+```
+
+After performing the transaction you can proceed by submitting it to our api.
 For that you can directly call our `approve-transaction` api endpoint with request body as follows.
 
 Approve transaction request body has the following signature:
@@ -129,31 +171,6 @@ export interface ApproveTransactionPayload {
   };
 }
 ```
-
-Example request:
-
-```ts
-import {
-  HelioIdl,
-  SinglePaymentRequest,
-  singlePaymentSC,
-  singleSolPaymentSC,
-} from '@heliofi/solana-adapter';
-
-const sendTransaction = async (
-  symbol: string,
-  request: SinglePaymentRequest,
-  provider: Program<HelioIdl>
-): Promise<string | undefined> => {
-  try {
-    if (symbol === SOL_SYMBOL) {
-      return await singleSolPaymentSC(provider, request);
-    }
-    return await singlePaymentSC(provider, request);
-  } catch (e) {
-    return new TransactionTimeoutError(String(e)).extractSignature();
-  }
-};
 
 const signature = await sendTransaction(
   symbol,
