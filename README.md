@@ -118,6 +118,7 @@ import {
   singlePaymentSC,
   singleSolPaymentSC,
 } from '@heliofi/solana-adapter';
+import { Cluster, PublicKey } from '@solana/web3.js';
 
 const sendTransaction = async (
   symbol: string,
@@ -133,6 +134,18 @@ const sendTransaction = async (
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
 };
+
+const signature = await sendTransaction(
+  symbol,
+  {
+    amount,
+    sender: anchorProvider.provider.wallet.publicKey,
+    recipient: new PublicKey(recipientPK),
+    mintAddress: new PublicKey(mintAddress),
+    cluster,
+  },
+  anchorProvider
+);
 ```
 
 The signature for SinglePaymentRequest looks as follows:
@@ -172,18 +185,7 @@ export interface ApproveTransactionPayload {
 }
 ```
 
-const signature = await sendTransaction(
-  symbol,
-  {
-    amount,
-    sender: anchorProvider.provider.wallet.publicKey,
-    recipient: new PublicKey(recipientPK),
-    mintAddress: new PublicKey(mintAddress),
-    cluster,
-  },
-  anchorProvider
-);
-
+```ts
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<Response> => {
