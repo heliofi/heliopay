@@ -108,7 +108,7 @@ The example above shows verification process for devnet, you can replace the bas
 ### 3. Dynamic payment without embedded button
 
 If you choose to not use embedded button you can still use Helio api for registering payment.
-Please note that the blockchain transaction has to go through our smart contract. In inder to achieve that you can use our @heliofi/solana-adapter package.
+Please note that the blockchain transaction has to go through our smart contract. In order to achieve that you can use our @heliofi/solana-adapter package.
 Example:
 
 ```ts
