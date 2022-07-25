@@ -107,7 +107,62 @@ The example above shows verification process for devnet, you can replace the bas
 
 ### 3. Dynamic payment without embedded button
 
-If you choose to not use embedded button you can still use Helio api for registering payment. 
+If you choose to not use embedded button you can still use Helio api for registering payment.
+Please note that the blockchain transaction has to go through our smart contract. In order to achieve that you can use our @heliofi/solana-adapter package.
+Example:
+
+```ts
+import {
+  HelioIdl,
+  SinglePaymentRequest,
+  singlePaymentSC,
+  singleSolPaymentSC,
+} from '@heliofi/solana-adapter';
+import { Cluster, PublicKey } from '@solana/web3.js';
+
+const sendTransaction = async (
+  symbol: string,
+  request: SinglePaymentRequest,
+  provider: Program<HelioIdl>
+): Promise<string | undefined> => {
+  try {
+    if (symbol === 'SOL') {
+      return await singleSolPaymentSC(provider, request);
+    }
+    return await singlePaymentSC(provider, request);
+  } catch (e) {
+    return new TransactionTimeoutError(String(e)).extractSignature();
+  }
+};
+
+const signature = await sendTransaction(
+  symbol,
+  {
+    amount,
+    sender: anchorProvider.provider.wallet.publicKey,
+    recipient: new PublicKey(recipientPK),
+    mintAddress: new PublicKey(mintAddress),
+    cluster,
+  },
+  anchorProvider
+);
+```
+
+The signature for SinglePaymentRequest looks as follows:
+
+```ts
+import { Cluster, PublicKey } from '@solana/web3.js';
+
+export type SinglePaymentRequest = {
+    amount: number;
+    sender: PublicKey;
+    recipient: PublicKey;
+    mintAddress: PublicKey;
+    cluster: Cluster;
+};
+```
+
+After performing the transaction you can proceed by submitting it to our api.
 For that you can directly call our `approve-transaction` api endpoint with request body as follows.
 
 Approve transaction request body has the following signature:
@@ -130,8 +185,6 @@ export interface ApproveTransactionPayload {
 }
 ```
 
-Example request:
-
 ```ts
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
@@ -150,7 +203,7 @@ const usdcCoefficient = 1000000;
 const amount = 0.1 * usdcCoefficient; // in this case you are paying 0.1 USDC
 
 approveTransaction({
-  "transactionSignature":"test_signature",
+  "transactionSignature": signature,
   "paymentRequestId":"test request id",
   "amount":amount, 
   "sender":"sender_id",
@@ -178,5 +231,6 @@ If the transaction is valid the return object has the following signature:
 }
 ```
 The secret content that is revealed upon valid payment.
+
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
