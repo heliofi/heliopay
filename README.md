@@ -133,6 +133,40 @@ export interface ApproveTransactionPayload {
 Example request:
 
 ```ts
+import {
+  HelioIdl,
+  SinglePaymentRequest,
+  singlePaymentSC,
+  singleSolPaymentSC,
+} from '@heliofi/solana-adapter';
+
+const sendTransaction = async (
+  symbol: string,
+  request: SinglePaymentRequest,
+  provider: Program<HelioIdl>
+): Promise<string | undefined> => {
+  try {
+    if (symbol === SOL_SYMBOL) {
+      return await singleSolPaymentSC(provider, request);
+    }
+    return await singlePaymentSC(provider, request);
+  } catch (e) {
+    return new TransactionTimeoutError(String(e)).extractSignature();
+  }
+};
+
+const signature = await sendTransaction(
+  symbol,
+  {
+    amount,
+    sender: anchorProvider.provider.wallet.publicKey,
+    recipient: new PublicKey(recipientPK),
+    mintAddress: new PublicKey(mintAddress),
+    cluster,
+  },
+  anchorProvider
+);
+
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<Response> => {
@@ -150,7 +184,7 @@ const usdcCoefficient = 1000000;
 const amount = 0.1 * usdcCoefficient; // in this case you are paying 0.1 USDC
 
 approveTransaction({
-  "transactionSignature":"test_signature",
+  "transactionSignature": signature,
   "paymentRequestId":"test request id",
   "amount":amount, 
   "sender":"sender_id",
@@ -178,5 +212,6 @@ If the transaction is valid the return object has the following signature:
 }
 ```
 The secret content that is revealed upon valid payment.
+
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
