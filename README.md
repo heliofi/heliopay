@@ -131,7 +131,7 @@ const sendTransaction = async (
     }
     return await singlePaymentSC(provider, request);
   } catch (e) {
-    return new TransactionTimeoutError(String(e)).extractSignature();
+    // hangle error
   }
 };
 
@@ -216,7 +216,7 @@ approveTransaction({
 ```
 
 Please note that the API will check with the blockchain to validate the signature of the transaction.
-If the transaction has status confirmed or finalized the API will return success, otherwise will flow one of the following error codes.
+If the transaction has status confirmed or finalized the API will return success, otherwise will throw one of the following error codes.
 
 `HTTP 400` - invalid request body
 
