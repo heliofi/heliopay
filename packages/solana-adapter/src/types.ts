@@ -2,26 +2,26 @@ import { Cluster, Keypair, PublicKey } from '@solana/web3.js';
 
 export type CreatePaymentStateRequest = {
   amount: number;
-  startAt: Date;
-  endAt: Date;
+  startAt: number;
+  endAt: number;
   interval: number;
   sender: PublicKey;
   recipient: PublicKey;
   paymentAccount: Keypair;
-  MINT?: PublicKey;
+  mintAddress?: PublicKey;
 };
 
 export type CancelPaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   payment: PublicKey;
-  MINT?: PublicKey;
+  mintAddress?: PublicKey;
 };
 
 export type WithdrawRequest = {
   recipient: Keypair;
   payment: PublicKey;
-  MINT?: PublicKey;
+  mintAddress?: PublicKey;
 };
 
 export type SinglePaymentRequest = {

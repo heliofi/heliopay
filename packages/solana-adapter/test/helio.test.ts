@@ -123,14 +123,14 @@ describe('api', () => {
 
   it('Creates payment', async () => {
     paymentAccount = new Keypair();
-    const startAt = new Date();
-    const endAt = new Date(startAt.getTime() + 100 * 1000);
+    const startAt = Math.floor(new Date().getTime() / 1000) + 1;
+    const endAt = startAt + 100;
     const request: CreatePaymentStateRequest = {
       amount: 1000,
       startAt,
       endAt,
       interval: 50,
-      MINT: mint.publicKey,
+      mintAddress: mint.publicKey,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       paymentAccount,
@@ -159,7 +159,7 @@ describe('api', () => {
     const request: WithdrawRequest = {
       recipient,
       payment: paymentAccount.publicKey,
-      MINT: mint.publicKey,
+      mintAddress: mint.publicKey,
     };
 
     //  Sign with recipient wallet?
@@ -187,7 +187,7 @@ describe('api', () => {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       payment: paymentAccount.publicKey,
-      MINT: mint.publicKey,
+      mintAddress: mint.publicKey,
     };
 
     const cancelTransaction = await cancelPayment(program, request);
@@ -311,8 +311,8 @@ describe('api', () => {
 
   it('Creates SOL payment', async () => {
     paymentAccount = new Keypair();
-    const startAt = new Date();
-    const endAt = new Date(startAt.getTime() + 200 * 1000);
+    const startAt = Math.floor(new Date().getTime() / 1000) + 1;
+    const endAt = startAt + 200;
     const request: CreatePaymentStateRequest = {
       amount: 1e6,
       startAt,

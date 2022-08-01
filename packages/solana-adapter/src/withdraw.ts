@@ -12,12 +12,11 @@ export const withdraw = async (
   program: Program<HelioIdl>,
   req: WithdrawRequest
 ): Promise<string> => {
-  // TODO: save bump on FE and use createProgramAddress
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
     program.programId
   );
-  const mint = req.MINT!;
+  const mint = req.mintAddress!;
 
   const recipientAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,

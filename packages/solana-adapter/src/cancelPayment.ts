@@ -16,7 +16,7 @@ export const cancelPayment = async (
     [req.payment.toBytes()],
     program.programId
   );
-  const mint = req.MINT!;
+  const mint = req.mintAddress!;
 
   // Find a token accounts
   const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(

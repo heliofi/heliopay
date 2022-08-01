@@ -9,13 +9,10 @@ export const createSolPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest
 ): Promise<string> => {
-  const startAt = Math.floor(req.startAt.getTime() / 1000) + 1;
-  const endAt = Math.floor(req.endAt.getTime() / 1000) + 1;
-
   return program.rpc.createSolPayment(
     new BN(req.amount),
-    new BN(startAt),
-    new BN(endAt),
+    new BN(req.startAt),
+    new BN(req.endAt),
     new BN(req.interval),
     {
       accounts: {

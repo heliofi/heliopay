@@ -18,7 +18,7 @@ export const createPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest
 ): Promise<string> => {
-  const mint = req.MINT!;
+  const mint = req.mintAddress!;
   // Associated token accounts
   const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -60,13 +60,10 @@ export const createPayment = async (
     );
   instructions.push(createAssociatedTokenAccountInstruction);
 
-  const startAt = Math.floor(req.startAt.getTime() / 1000) + 1;
-  const endAt = Math.floor(req.endAt.getTime() / 1000) + 1;
-
   return program.rpc.createPayment(
     new BN(req.amount),
-    new BN(startAt),
-    new BN(endAt),
+    new BN(req.startAt),
+    new BN(req.endAt),
     new BN(req.interval),
     bump,
     {
