@@ -232,6 +232,7 @@ If the transaction is valid the return object has the following signature:
 ```
 The secret content that is revealed upon valid payment.
 
+### Retry logic
 If you get the error `HTTP 424` you can resubmit the transaction again with interval before it's accepted.
 Below is an example of using retry logic:
 ```ts
