@@ -11,20 +11,6 @@ import { Program, Wallet } from '@project-serum/anchor';
 import { TOKEN_PROGRAM_ID, Token } from '@solana/spl-token';
 import { assert } from 'chai';
 import { describe } from 'mocha';
-import {
-  AuthPayload,
-  getAuthenticatedMessage,
-} from '@heliofi/web3-auth-common';
-import base58 from 'bs58';
-import nacl from 'tweetnacl';
-import {
-  createPaymentRequest,
-  CreatePaymentRequestInput,
-  PaymentType,
-  User,
-} from '@heliofi/backend-api';
-import { API } from 'aws-amplify';
-import * as jsonwebtoken from 'jsonwebtoken';
 import { HelioIdl, IDL, PROGRAM_ID } from '../src/program';
 import { txOpts } from '../src/config';
 import {
@@ -326,12 +312,12 @@ describe('api', () => {
   it('Creates SOL payment', async () => {
     paymentAccount = new Keypair();
     const startAt = new Date();
-    const endAt = new Date(startAt.getTime() + 100 * 1000);
+    const endAt = new Date(startAt.getTime() + 200 * 1000);
     const request: CreatePaymentStateRequest = {
       amount: 1e6,
       startAt,
       endAt,
-      interval: 50,
+      interval: 100,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       paymentAccount,
@@ -352,7 +338,7 @@ describe('api', () => {
     assert.ok(paymentAccountLocal.senderKey.equals(sender.publicKey));
     assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
     assert.ok(paymentAccountLocal.amount.toNumber() === 1e6);
-    assert.ok(paymentAccountLocal.interval.toNumber() === 50);
+    assert.ok(paymentAccountLocal.interval.toNumber() === 100);
     assert.ok(paymentAccountLocal.withdrawal.toNumber() === 0);
     // Check balance of payment account
     const paymentAccountBalance = await connection.getBalance(
@@ -361,7 +347,7 @@ describe('api', () => {
     console.log('Payment bal', paymentAccountBalance); // amount + rent
     assert.ok(paymentAccountBalance > 1e6);
     const senderBalance = await connection.getBalance(sender.publicKey);
-    paymentSOLBalance = senderBalance; // save for later
+    paymentSOLBalance = paymentAccountLocal.amount.toNumber();
     assert.ok(senderBalanceBefore > senderBalance + 1e6); // sender balance = old balance - amount - tx fee - rent
   }).timeout(40000);
 
@@ -389,8 +375,9 @@ describe('api', () => {
       recipient: recipient.publicKey,
       payment: paymentAccount.publicKey,
     };
+    await sleep(15 * 1000);
     const cancelTransaction = await cancelSolPayment(program, request);
-    await sleep(15 * 1000); // Wait for devnet
+    await sleep(20 * 1000);
     console.log('cancel sol tx: ', cancelTransaction);
     const sendersBalance = await connection.getBalance(sender.publicKey);
     console.log(
@@ -399,8 +386,7 @@ describe('api', () => {
       'Senders balance: ',
       sendersBalance
     );
-    assert.ok(sendersBalance > sendersBalanceBefore);
-    assert.ok(sendersBalance <= sendersBalanceBefore + paymentSOLBalance); // get back rent, half amount, deduct fees
+    assert.ok(sendersBalance >= sendersBalanceBefore + paymentSOLBalance / 2); // get back rent, half amount, deduct fees
   });
 
   it('Pays SOL one time over smart contract', async () => {
