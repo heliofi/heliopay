@@ -232,5 +232,49 @@ If the transaction is valid the return object has the following signature:
 ```
 The secret content that is revealed upon valid payment.
 
+If you get the error `HTTP 424` you can resubmit the transaction again with interval before it's accepted.
+Below is an example of using retry logic:
+```ts
+export class VerificationError extends Error {
+  constructor(message?: string) {
+    super(message);
+    Object.setPrototypeOf(this, VerificationError.prototype);
+  }
+}
+
+const retryCallback = async (
+  callback: () => Promise<void>,
+  count: number,
+  delay: number,
+  onError: (message: string) => void
+): Promise<void> => {
+  if (count < 0) {
+    onError('Unable to verify the transaction.');
+    return;
+  }
+  try {
+    await callback();
+  } catch (e) {
+    if (e instanceof VerificationError) {
+      setTimeout(async () => {
+        await retryCallback(callback, count - 1, delay, onError);
+      }, delay);
+    } else {
+      onError(String(e));
+    }
+  }
+};
+
+await retryCallback(
+  async () => {
+    const content = await approveTransaction(approveTransactionPayload);
+    console.log(content); // Success
+  },
+  20, // retry 20 times
+  5_000, // retry every 5 seconds
+  (e) => console.error(e)
+);
+
+```
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
