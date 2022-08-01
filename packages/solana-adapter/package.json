@@ -11,7 +11,8 @@
     "build": "tsc",
     "watch": "yarn build -w",
     "lint": "eslint .",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "test": "yarn run ts-mocha -t 1000000 test/*.ts"
   },
   "repository": {
     "type": "git",
