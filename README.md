@@ -275,6 +275,35 @@ await retryCallback(
   (e) => console.error(e)
 );
 
+const approveTransaction = async (
+  reqBody: ApproveTransactionPayload
+): Promise<string> => {
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(reqBody),
+  });
+  const result = await res.json();
+  if (res.status === HttpCodes.SUCCESS && result.content != null) {
+    return result.content;
+  }
+  if (res.status === HttpCodes.FAILED_DEPENDENCY) {
+    throw new VerificationError(result.message);
+  }
+  throw new Error(result.message);
+};
+
+export enum HttpCodes {
+  SUCCESS = 200,
+  NOT_FOUNT = 404,
+  BAD_REQUEST = 400,
+  FAILED_DEPENDENCY = 424,
+}
 ```
+
+You can find the full code example in [TransactionService.ts](https://github.com/heliofi/heliopay/blob/main/packages/react/src/infrastructure/solana-adapter/TransactionService.ts)
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
