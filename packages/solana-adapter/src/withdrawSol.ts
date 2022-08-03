@@ -9,9 +9,8 @@ export const withdrawSol = async (
 ): Promise<string> =>
   program.rpc.withdrawSol({
     accounts: {
-      recipient: req.recipient.publicKey,
+      recipient: req.recipient,
       solPaymentAccount: req.payment,
       systemProgram: SystemProgram.programId,
     },
-    signers: [req.recipient],
   });

@@ -22,7 +22,7 @@ export const withdraw = async (
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
     mint,
-    req.recipient.publicKey
+    req.recipient
   );
 
   const paymentAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
@@ -34,7 +34,7 @@ export const withdraw = async (
 
   return program.rpc.withdraw({
     accounts: {
-      recipient: req.recipient.publicKey,
+      recipient: req.recipient,
       recipientTokenAccount: recipientAssociatedTokenAddress,
       paymentAccount: req.payment,
       paymentTokenAccount: paymentAssociatedTokenAddress,
@@ -42,6 +42,5 @@ export const withdraw = async (
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     },
-    signers: [req.recipient],
   });
 };

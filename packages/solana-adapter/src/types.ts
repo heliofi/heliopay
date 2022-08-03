@@ -19,7 +19,7 @@ export type CancelPaymentRequest = {
 };
 
 export type WithdrawRequest = {
-  recipient: Keypair;
+  recipient: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
 };
