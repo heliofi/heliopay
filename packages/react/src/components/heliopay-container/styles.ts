@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const StyledWrapper = styled.div`
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: border-box;
   }
 `;

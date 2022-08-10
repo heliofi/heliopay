@@ -64,4 +64,4 @@ export const StyledCurrencySelectIcon = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`
+`;

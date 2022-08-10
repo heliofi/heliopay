@@ -1,14 +1,10 @@
-
 export class TokenConversionService {
-  static convertFromMinimalUnits(
-    currency: any,
-    minimalAmount: number
-  ): number {
+  static convertFromMinimalUnits(currency: any, minimalAmount: number): number {
     const currencyMeta = currency;
     if (currencyMeta == null) {
       return 0;
     }
-    return minimalAmount / Math.pow(10, currencyMeta.decimals);
+    return minimalAmount / 10 ** currencyMeta.decimals;
   }
 
   static convertToMinimalUnits(currency?: any, actualAmount?: number): number {
@@ -17,6 +13,6 @@ export class TokenConversionService {
     if (currencyMeta == null) {
       return 0;
     }
-    return Math.round(Math.pow(10, currencyMeta.decimals) * actualAmount);
+    return Math.round(10 ** currencyMeta.decimals * actualAmount);
   }
 }

@@ -24,19 +24,17 @@ const InputContainer: FC<InputContainerProps> = ({
   prefix,
   suffix,
   children,
-  focus
-}) => {
-  return (
-    <StyledInputContainer className={className} focus={focus}>
-      {prefix && <StyledInputPrefix>{prefix}</StyledInputPrefix>}
-      {inactive ? (
-        <StyledInputInactive>{fieldValue ?? placeholder}</StyledInputInactive>
-      ) : (
-        children
-      )}
-      {suffix && <StyledInputSuffix>{suffix}</StyledInputSuffix>}
-    </StyledInputContainer>
-  );
-};
+  focus,
+}) => (
+  <StyledInputContainer className={className} focus={focus}>
+    {prefix && <StyledInputPrefix>{prefix}</StyledInputPrefix>}
+    {inactive ? (
+      <StyledInputInactive>{fieldValue ?? placeholder}</StyledInputInactive>
+    ) : (
+      children
+    )}
+    {suffix && <StyledInputSuffix>{suffix}</StyledInputSuffix>}
+  </StyledInputContainer>
+);
 
 export default InputContainer;

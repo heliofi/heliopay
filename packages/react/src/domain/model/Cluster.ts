@@ -1,5 +1,5 @@
 export enum ClusterType {
-    Mainnet = "mainnet-beta",
-    Testnet = "testnet",
-    Devnet = "devnet"
+  Mainnet = 'mainnet-beta',
+  Testnet = 'testnet',
+  Devnet = 'devnet',
 }

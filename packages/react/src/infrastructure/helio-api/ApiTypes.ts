@@ -1,4 +1,4 @@
-import { Currency } from "../../domain";
+import { Currency } from '../../domain';
 
 export declare type CurrenciesByOrderQuery = {
   currenciesByOrder?: {

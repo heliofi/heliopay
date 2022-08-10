@@ -13,6 +13,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@aws-amplify/api-graphql": "^2.3.12",
     "@heliofi/helio-icons": "^1.0.4",
     "@heliofi/solana-adapter": "^0.2.0",
     "@project-serum/anchor": "^0.21.0",
@@ -65,7 +66,9 @@
       "jest"
     ],
     "rules": {
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-props-no-spreading": "off"
     },
     "extends": [
       "@heliofi/eslint-config-helio/react",

@@ -1,5 +1,7 @@
 import { useSelect } from 'downshift';
 
+import { ArrowsDownIcon } from '@heliofi/helio-icons';
+import { ReactNode } from 'react';
 import InputContainer from '../input-container';
 import {
   StyledErrorMessage,
@@ -14,9 +16,6 @@ import {
   StyledSelectLabel,
   StyledSelectWrapper,
 } from './styles';
-import { ArrowsDownIcon } from '@heliofi/helio-icons'
-import { ReactNode } from 'react';
-import CurrencyIcon from '../currency-icon';
 
 export interface Option {
   value: number | string;
@@ -49,7 +48,7 @@ const SelectBox = ({
   fieldName,
   className,
   label,
-  prefix
+  prefix,
 }: Props) => {
   const {
     isOpen,
@@ -85,24 +84,22 @@ const SelectBox = ({
           <StyledSelectDropdownContainer {...getMenuProps()}>
             {isOpen && (
               <StyledSelectDropdown>
-                {options.map((item, index) => {
-                  return (
-                    <StyledSelectItem
-                      key={`${item.value}${index}`}
-                      highlighted={highlightedIndex === index}
-                      {...getItemProps({
-                        key: item.label,
-                        index,
-                        item,
-                      })}
-                    >
-                      {item.icon && <StyledSelectItemIcon>{item.icon}</StyledSelectItemIcon>}
-                      <div>
-                        {item.label}
-                      </div>
-                    </StyledSelectItem>
-                  );
-                })}
+                {options.map((item, index) => (
+                  <StyledSelectItem
+                    key={`${item.value}`}
+                    highlighted={highlightedIndex === index}
+                    {...getItemProps({
+                      key: item.label,
+                      index,
+                      item,
+                    })}
+                  >
+                    {item.icon && (
+                      <StyledSelectItemIcon>{item.icon}</StyledSelectItemIcon>
+                    )}
+                    <div>{item.label}</div>
+                  </StyledSelectItem>
+                ))}
               </StyledSelectDropdown>
             )}
           </StyledSelectDropdownContainer>

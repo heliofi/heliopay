@@ -8,8 +8,8 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button = ({ children, ...props }: ButtonProps) => {
-  return <StyledButton {...props}>{children}</StyledButton>;
-};
+const Button = ({ children, ...props }: ButtonProps) => (
+  <StyledButton {...props}>{children}</StyledButton>
+);
 
 export default Button;

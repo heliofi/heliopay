@@ -1,3 +1,4 @@
+import { WarningTriangleIcon } from '@heliofi/helio-icons';
 import CheckMarkIcon from '../Icons/CheckMarkIcon';
 import ExplorerLink from '../explorer-link';
 import {
@@ -12,7 +13,6 @@ import {
   StyledResultTopLine,
   StyledResultWrapper,
 } from './styles';
-import { WarningTriangleIcon } from '@heliofi/helio-icons';
 
 interface Props {
   result: {
@@ -55,7 +55,7 @@ const PaymentResult = ({ result }: Props) => {
       <StyledResultFooter>
         <StyledResultFooterText>
           Need help?{' '}
-          <a href="https://www.hel.io/" target={'_blank'} rel="noreferrer">
+          <a href="https://www.hel.io/" target="_blank" rel="noreferrer">
             Contact Helio
           </a>
         </StyledResultFooterText>

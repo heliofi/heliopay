@@ -1,5 +1,5 @@
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import ConnectButton from '../connect-button';
@@ -22,7 +22,7 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
-import HelioLogoGray from '../Icons/HelioLogoGray';
+import HelioLogoGray from '../icons/HelioLogoGray';
 import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
@@ -41,7 +41,7 @@ interface HeliopayContainerProps {
   totalAmount?: number;
 }
 
-export const HelioPayContainer: FC<HeliopayContainerProps> = ({
+const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onStartPayment,
   onSuccess,
   paymentRequestId,

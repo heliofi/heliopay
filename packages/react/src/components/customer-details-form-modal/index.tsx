@@ -40,7 +40,7 @@ const CustomerDetailsFormModal = ({
 }: Props) => {
   const { currencyList, paymentDetails } = useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
-  const [currency, setCurrency] = useState<Currency | null>(null);
+  const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
 
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
@@ -57,15 +57,15 @@ const CustomerDetailsFormModal = ({
   }));
 
   const getCurrency = (currency?: string) => {
-    if (!currency) return;
+    if (!currency) return null;
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
   useEffect(() => {
     if (allowedCurrencies?.length === 1) {
-      setCurrency(allowedCurrencies[0]);
+      setActiveCurrency(allowedCurrencies[0]);
     } else if (!canSelectCurrency) {
-      setCurrency(getCurrency(paymentDetails.currency));
+      setActiveCurrency(getCurrency(paymentDetails.currency));
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
@@ -145,15 +145,15 @@ const CustomerDetailsFormModal = ({
     });
   };
 
-  const symbol = currency ? `Pay with ${currency?.symbol}` : 'Pay';
+  const symbol = activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay';
 
   return ReactDOM.createPortal(
     <div>
       <Modal
         onHide={onHide}
         icon={
-          currency && (
-            <CurrencyIcon gradient iconName={currency?.symbol || ''} />
+          activeCurrency && (
+            <CurrencyIcon gradient iconName={activeCurrency?.symbol || ''} />
           )
         }
         title={symbol}
@@ -172,14 +172,14 @@ const CustomerDetailsFormModal = ({
                       fieldId="customPrice"
                       fieldName="customPrice"
                       label="Name your own price"
-                      prefix={currency?.sign}
+                      prefix={activeCurrency?.sign}
                       suffix={
-                        currency && (
+                        activeCurrency && (
                           <StyledCurrency>
-                            <p>{currency.symbol}</p>
+                            <p>{activeCurrency.symbol}</p>
                             <CurrencyIcon
                               gradient
-                              iconName={currency?.symbol || ''}
+                              iconName={activeCurrency?.symbol || ''}
                             />
                           </StyledCurrency>
                         )
@@ -193,7 +193,7 @@ const CustomerDetailsFormModal = ({
                           totalAmount || normalizedPrice,
                           values.quantity
                         )}{' '}
-                        {currency?.symbol}
+                        {activeCurrency?.symbol}
                       </b>
                     </StyledPrice>
                   )}
@@ -214,7 +214,7 @@ const CustomerDetailsFormModal = ({
                       }
                       onChange={(option) => {
                         setFieldValue('currency', option.value);
-                        setCurrency(getCurrency(option.value as string));
+                        setActiveCurrency(getCurrency(option.value as string));
                       }}
                     />
                   )}

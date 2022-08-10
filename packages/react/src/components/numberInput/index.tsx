@@ -1,6 +1,10 @@
-import Input from '../input';
-import { StyledNumberButtons, StyledNumberMinus, StyledNumberPlus } from './styles';
 import { MinusIcon, PlusIcon } from '@heliofi/helio-icons';
+import Input from '../input';
+import {
+  StyledNumberButtons,
+  StyledNumberMinus,
+  StyledNumberPlus,
+} from './styles';
 
 interface NumberInputProps {
   fieldId: string;

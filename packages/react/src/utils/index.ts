@@ -1,9 +1,10 @@
 export const deepMerge = (target: any, source: any) => {
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object)
+  Object.keys(source).forEach((key) => {
+    if (source[key] instanceof Object) {
       Object.assign(source[key], deepMerge(target[key], source[key]));
-  }
+    }
+  });
 
   // Join `target` and modified `source`
   Object.assign(target || {}, source);
@@ -11,19 +12,18 @@ export const deepMerge = (target: any, source: any) => {
 };
 
 export const shortenWalletAddress = (address: string): string => {
-  if (address == 'null') {
+  if (address === 'null') {
     return 'N/A';
   }
   return `${address.slice(0, 6)}..${address.slice(-3)}`;
 };
-
 
 export const getStringBetween = (
   str: string,
   start: string,
   end: string
 ): string | undefined => {
-  const result = str.match(new RegExp(start + '(.*)' + end));
+  const result = str.match(new RegExp(`${start}(.*)${end}`));
   if (result == null || result.length < 1) {
     return undefined;
   }

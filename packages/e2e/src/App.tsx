@@ -15,7 +15,7 @@ const App = () => {
   );
 
   const getListCurrencies = () => {
-    HelioApiAdapter.listCurrencies()
+    HelioApiAdapter.listCurrencies('devnet')
       .then((res) => {
         // console.log(2, res);
       })
