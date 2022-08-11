@@ -1,9 +1,9 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useState } from 'react';
+import { ExitIcon, ArrowsDoubleIcon } from '@heliofi/helio-icons';
 import useOnClickOutside from '../../hooks/useClickOutside';
 import { shortenWalletAddress } from '../../utils';
-import {ExitIcon, ArrowsDoubleIcon} from '@heliofi/helio-icons';
 import {
   StyledDropdownButton,
   StyledMenu,

@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+
 const validationSchema = yup.object({
   fullName: yup.string().when('requireFullName', {
     is: true,

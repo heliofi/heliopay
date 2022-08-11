@@ -3,8 +3,9 @@ import { Currency } from '../model';
 
 export class CurrencyService {
   private static currencies: Currency[];
+
   static amountToUSD(amount: number | string): string {
-    return '$' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `$${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   }
 
   static roundValue(amount: number | string, decimals: number): string {
@@ -21,7 +22,7 @@ export class CurrencyService {
 
   static getCurrencyBySymbol(symbol: string): Currency {
     const currency = CurrencyService.currencies?.find(
-      (currency) => currency.symbol === symbol
+      (currencyItem) => currencyItem.symbol === symbol
     );
     if (currency == null) {
       throw new Error(`Unable to find currency: ${currency}`);

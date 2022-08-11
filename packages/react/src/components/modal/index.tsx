@@ -18,7 +18,6 @@ type ModalProps = {
   title?: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
-  closeOnClickOutside?: boolean;
   animateIcon?: boolean;
 };
 
@@ -28,7 +27,6 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
   children,
   icon,
   animateIcon = false,
-  closeOnClickOutside = false,
 }) => (
   <StyledModalWrapper>
     <StyledModalContainer>

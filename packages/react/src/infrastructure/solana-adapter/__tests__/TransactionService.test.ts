@@ -1,4 +1,4 @@
-import {TransactionTimeoutError} from "../TransactionTimeoutError";
+import { TransactionTimeoutError } from '../TransactionTimeoutError';
 
 describe('extractSignatureFromError', () => {
   it('should extract signature form error message', () => {

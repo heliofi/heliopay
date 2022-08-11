@@ -7,7 +7,6 @@ export const StyledSelectWrapper = styled.div`
 
 export const StyledSelectContainer = styled.div`
   width: 100%;
-
 `;
 
 export const StyledSelectHead = styled.div`
@@ -89,7 +88,7 @@ export const StyledSelectItemIcon = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`
+`;
 
 export const StyledLabel = styled.label`
   font-style: normal;

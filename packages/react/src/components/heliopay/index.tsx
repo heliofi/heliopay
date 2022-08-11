@@ -1,3 +1,6 @@
+import { DefaultTheme, ThemeProvider } from 'styled-components';
+import { useEffect, useState } from 'react';
+import { Cluster } from '@solana/web3.js';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
@@ -5,11 +8,8 @@ import {
 } from '../../domain';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopay-container';
-import { DefaultTheme, ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../theme';
-import { useEffect, useState } from 'react';
 import { deepMerge } from '../../utils';
-import { Cluster } from '@solana/web3.js';
 
 interface HelioPayProps {
   paymentRequestId: string;

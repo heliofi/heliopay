@@ -49,8 +49,8 @@ export const useHelioProvider = () => {
     setPaymentDetails(result || {});
   };
 
-  const initCluster = (cluster: Cluster) => {
-    setCluster(cluster);
+  const initCluster = (initialCluster: Cluster) => {
+    setCluster(initialCluster);
   };
 
   return {

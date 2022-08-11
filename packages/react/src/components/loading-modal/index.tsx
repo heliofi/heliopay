@@ -19,7 +19,7 @@ export const LoadingModal = ({ onHide }: InheritedModalProps) =>
         </StyledLoadingWrapper>
         <StyledLoadingLink
           href="https://docs.hel.io/"
-          target={'_blank'}
+          target="_blank"
           rel="noreferrer"
         >
           Need help?
