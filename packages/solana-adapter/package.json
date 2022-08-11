@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/solana-adapter",
-  "version": "0.2.0",
+  "version": "0.4.2",
   "description": "API to interact with Helio Finances program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,8 @@
     "build": "tsc",
     "watch": "yarn build -w",
     "lint": "eslint .",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "test": "yarn run ts-mocha -t 1000000 test/*.ts"
   },
   "repository": {
     "type": "git",
