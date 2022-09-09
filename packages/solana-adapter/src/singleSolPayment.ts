@@ -32,7 +32,7 @@ const prepareSplitPaymentsValues = (
   return { remainingAmounts, remainingAccounts };
 };
 
-export const singleSolPaymentSC = async (
+export const singleSolPayment = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean,
