@@ -1,12 +1,9 @@
 import { SystemProgram, PublicKey } from '@solana/web3.js';
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
-  TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { WithdrawRequest } from './types';
+import { feeWalletKey } from './config';
 
 export const withdraw = async (
   program: Program<HelioIdl>,
@@ -18,18 +15,19 @@ export const withdraw = async (
   );
   const mint = req.mintAddress!;
 
-  const recipientAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.recipient
   );
 
-  const paymentAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.payment
+  );
+
+  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    feeWalletKey
   );
 
   return program.rpc.withdraw({
@@ -39,6 +37,8 @@ export const withdraw = async (
       paymentAccount: req.payment,
       paymentTokenAccount: paymentAssociatedTokenAddress,
       pdaSigner: pda,
+      feeAccount: feeWalletKey,
+      feeTokenAccount: feeTokenAccountAddress,
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     },

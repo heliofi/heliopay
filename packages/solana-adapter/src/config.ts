@@ -7,6 +7,6 @@ export const txOpts: anchor.web3.ConfirmOptions = {
   maxRetries: 3,
 };
 
-const feeWalletKey = new PublicKey(
+export const feeWalletKey = new PublicKey(
   'FudPMePeNqmnjMX19zEKDfGXpbp6HAdW6ZGprB5gYRTZ'
 );

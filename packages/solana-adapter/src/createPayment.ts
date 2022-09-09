@@ -1,44 +1,40 @@
-import {
-  SystemProgram,
-  PublicKey,
-  SYSVAR_RENT_PUBKEY,
-  TransactionInstruction,
-} from '@solana/web3.js';
+import { SystemProgram, PublicKey, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
+  getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
+import { feeWalletKey } from './config';
 
 export const createPayment = async (
   program: Program<HelioIdl>,
-  req: CreatePaymentStateRequest
+  req: CreatePaymentStateRequest,
+  payFees: boolean
 ): Promise<string> => {
   const mint = req.mintAddress!;
-  // Associated token accounts
-  const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+
+  const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.sender
   );
 
-  const recipientAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.recipient
   );
 
-  const paymentAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.paymentAccount.publicKey
+  );
+
+  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    feeWalletKey
   );
 
   // eslint-disable-next-line
@@ -46,19 +42,6 @@ export const createPayment = async (
     [req.paymentAccount.publicKey.toBytes()],
     program.programId
   );
-
-  // Create payment token acc in same transaction, SC can do it also but trying to save compute budget for program
-  const instructions: TransactionInstruction[] = [];
-  const createAssociatedTokenAccountInstruction =
-    Token.createAssociatedTokenAccountInstruction(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      mint,
-      paymentAssociatedTokenAddress,
-      req.paymentAccount.publicKey, // Sender owner for now, authority transfered to PDA in program
-      req.sender
-    );
-  instructions.push(createAssociatedTokenAccountInstruction);
 
   return program.rpc.createPayment(
     new BN(req.amount),
@@ -74,13 +57,14 @@ export const createPayment = async (
         recipientTokenAccount: recipientAssociatedTokenAddress,
         paymentAccount: req.paymentAccount.publicKey,
         paymentTokenAccount: paymentAssociatedTokenAddress,
+        feeAccount: feeWalletKey,
+        feeTokenAccount: feeTokenAccountAddress,
         mint,
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       },
-      instructions,
       signers: [req.paymentAccount],
     }
   );
