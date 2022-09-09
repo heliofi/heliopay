@@ -3,6 +3,7 @@ import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { Account, SinglePaymentRequest } from './types';
 import './config';
+import { feeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
@@ -34,6 +35,7 @@ const prepareSplitPaymentsValues = (
 export const singleSolPaymentSC = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
+  payFees: boolean,
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
 ): Promise<string> => {
@@ -42,12 +44,18 @@ export const singleSolPaymentSC = async (
     accounts
   );
 
-  return program.rpc.singleSolPayment(new BN(req.amount), remainingAmounts, {
-    accounts: {
-      sender: req.sender,
-      recipient: req.recipient,
-      systemProgram: SystemProgram.programId,
-    },
-    remainingAccounts,
-  });
+  return program.rpc.singleSolPayment(
+    new BN(req.amount),
+    payFees,
+    remainingAmounts,
+    {
+      accounts: {
+        sender: req.sender,
+        recipient: req.recipient,
+        feeAccount: feeWalletKey,
+        systemProgram: SystemProgram.programId,
+      },
+      remainingAccounts,
+    }
+  );
 };
