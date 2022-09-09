@@ -1,13 +1,14 @@
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
+  getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { Account, SinglePaymentRequest } from './types';
 import './config';
+import { feeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
@@ -41,26 +42,28 @@ const prepareSplitPaymentsValues = (
   return { remainingAmounts, remainingAccounts };
 };
 
-export const singlePaymentSC = async (
+export const singlePayment = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
+  payFees: boolean,
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
 ): Promise<string> => {
   const mint = req.mintAddress;
 
-  const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.sender
   );
 
-  const recipientAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
+  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.recipient
+  );
+
+  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    feeWalletKey
   );
 
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
@@ -68,18 +71,25 @@ export const singlePaymentSC = async (
     accounts
   );
 
-  return program.rpc.singlePayment(new BN(req.amount), remainingAmounts, {
-    accounts: {
-      sender: req.sender,
-      senderTokenAccount: senderAssociatedTokenAddress,
-      recipient: req.recipient,
-      recipientTokenAccount: recipientAssociatedTokenAddress,
-      mint,
-      rent: SYSVAR_RENT_PUBKEY,
-      tokenProgram: TOKEN_PROGRAM_ID,
-      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: SystemProgram.programId,
-    },
-    remainingAccounts,
-  });
+  return program.rpc.singlePayment(
+    new BN(req.amount),
+    payFees,
+    remainingAmounts,
+    {
+      accounts: {
+        sender: req.sender,
+        senderTokenAccount: senderAssociatedTokenAddress,
+        recipient: req.recipient,
+        recipientTokenAccount: recipientAssociatedTokenAddress,
+        mint,
+        feeAccount: feeWalletKey,
+        feeTokenAccount: feeTokenAccountAddress,
+        rent: SYSVAR_RENT_PUBKEY,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+      },
+      remainingAccounts,
+    }
+  );
 };
