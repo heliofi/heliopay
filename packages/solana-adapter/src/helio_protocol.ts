@@ -1,540 +1,627 @@
 export default {
-  "version": "0.0.0",
-  "name": "helio_protocol",
-  "instructions": [
+  version: '0.0.0',
+  name: 'helio_protocol',
+  instructions: [
     {
-      "name": "createPayment",
-      "accounts": [
+      name: 'createPayment',
+      accounts: [
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": true
+          name: 'sender',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "senderTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'senderTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "paymentAccount",
-          "isMut": true,
-          "isSigner": true
+          name: 'paymentAccount',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "paymentTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'paymentTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipientTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
+          name: 'recipient',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeAccount',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'mint',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'rent',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'associatedTokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "amount",
-          "type": "u64"
+          name: 'amount',
+          type: 'u64',
         },
         {
-          "name": "startAt",
-          "type": "u64"
+          name: 'startAt',
+          type: 'u64',
         },
         {
-          "name": "endAt",
-          "type": "u64"
+          name: 'endAt',
+          type: 'u64',
         },
         {
-          "name": "interval",
-          "type": "u64"
+          name: 'interval',
+          type: 'u64',
         },
         {
-          "name": "bump",
-          "type": "u8"
-        }
-      ]
+          name: 'bump',
+          type: 'u8',
+        },
+        {
+          name: 'payFees',
+          type: 'bool',
+        },
+      ],
     },
     {
-      "name": "createSolPayment",
-      "accounts": [
+      name: 'createSolPayment',
+      accounts: [
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": true
+          name: 'sender',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
+          name: 'recipient',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "solPaymentAccount",
-          "isMut": true,
-          "isSigner": true
+          name: 'solPaymentAccount',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "amount",
-          "type": "u64"
+          name: 'amount',
+          type: 'u64',
         },
         {
-          "name": "startAt",
-          "type": "u64"
+          name: 'startAt',
+          type: 'u64',
         },
         {
-          "name": "endAt",
-          "type": "u64"
+          name: 'endAt',
+          type: 'u64',
         },
         {
-          "name": "interval",
-          "type": "u64"
-        }
-      ]
+          name: 'interval',
+          type: 'u64',
+        },
+        {
+          name: 'payFees',
+          type: 'bool',
+        },
+      ],
     },
     {
-      "name": "cancelPayment",
-      "accounts": [
+      name: 'cancelPayment',
+      accounts: [
         {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
+          name: 'signer',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": false
+          name: 'sender',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "senderTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'senderTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipient",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipientTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "paymentAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'paymentAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "paymentTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'paymentTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "pdaSigner",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeAccount',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'pdaSigner',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": []
+      args: [],
     },
     {
-      "name": "cancelSolPayment",
-      "accounts": [
+      name: 'cancelSolPayment',
+      accounts: [
         {
-          "name": "signer",
-          "isMut": true,
-          "isSigner": true
+          name: 'signer',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": false
+          name: 'sender',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipient",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "solPaymentAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'solPaymentAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'feeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": []
+      args: [],
     },
     {
-      "name": "withdraw",
-      "accounts": [
+      name: 'withdraw',
+      accounts: [
         {
-          "name": "recipient",
-          "isMut": true,
-          "isSigner": true
+          name: 'recipient',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipientTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "paymentAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'paymentAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "paymentTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'paymentTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "pdaSigner",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeAccount',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'pdaSigner',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": []
+      args: [],
     },
     {
-      "name": "withdrawSol",
-      "accounts": [
+      name: 'withdrawSol',
+      accounts: [
         {
-          "name": "recipient",
-          "isMut": true,
-          "isSigner": true
+          name: 'recipient',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "solPaymentAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'solPaymentAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'feeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": []
+      args: [],
     },
     {
-      "name": "singlePayment",
-      "accounts": [
+      name: 'singlePayment',
+      accounts: [
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": true
+          name: 'sender',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "senderTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'senderTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipientTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeTokenAccount',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
+          name: 'recipient',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          name: 'feeAccount',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'mint',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
+          name: 'rent',
+          isMut: false,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'associatedTokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "amount",
-          "type": "u64"
+          name: 'amount',
+          type: 'u64',
         },
         {
-          "name": "remainingAmounts",
-          "type": {
-            "vec": "u64"
-          }
-        }
-      ]
+          name: 'payFees',
+          type: 'bool',
+        },
+        {
+          name: 'remainingAmounts',
+          type: {
+            vec: 'u64',
+          },
+        },
+      ],
     },
     {
-      "name": "singleSolPayment",
-      "accounts": [
+      name: 'singleSolPayment',
+      accounts: [
         {
-          "name": "sender",
-          "isMut": true,
-          "isSigner": true
+          name: 'sender',
+          isMut: true,
+          isSigner: true,
         },
         {
-          "name": "recipient",
-          "isMut": true,
-          "isSigner": false
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
+          name: 'feeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
       ],
-      "args": [
+      args: [
         {
-          "name": "amount",
-          "type": "u64"
+          name: 'amount',
+          type: 'u64',
         },
         {
-          "name": "remainingAmounts",
-          "type": {
-            "vec": "u64"
-          }
-        }
-      ]
-    }
+          name: 'payFees',
+          type: 'bool',
+        },
+        {
+          name: 'remainingAmounts',
+          type: {
+            vec: 'u64',
+          },
+        },
+      ],
+    },
   ],
-  "accounts": [
+  accounts: [
     {
-      "name": "PaymentAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: 'PaymentAccount',
+      type: {
+        kind: 'struct',
+        fields: [
           {
-            "name": "amount",
-            "type": "u64"
+            name: 'amount',
+            type: 'u64',
           },
           {
-            "name": "withdrawal",
-            "type": "u64"
+            name: 'withdrawal',
+            type: 'u64',
           },
           {
-            "name": "startAt",
-            "type": "u64"
+            name: 'startAt',
+            type: 'u64',
           },
           {
-            "name": "endAt",
-            "type": "u64"
+            name: 'endAt',
+            type: 'u64',
           },
           {
-            "name": "interval",
-            "type": "u64"
+            name: 'interval',
+            type: 'u64',
           },
           {
-            "name": "senderKey",
-            "type": "publicKey"
+            name: 'senderKey',
+            type: 'publicKey',
           },
           {
-            "name": "senderTokens",
-            "type": "publicKey"
+            name: 'senderTokens',
+            type: 'publicKey',
           },
           {
-            "name": "recipientKey",
-            "type": "publicKey"
+            name: 'recipientKey',
+            type: 'publicKey',
           },
           {
-            "name": "recipientTokens",
-            "type": "publicKey"
+            name: 'recipientTokens',
+            type: 'publicKey',
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            name: 'mint',
+            type: 'publicKey',
           },
           {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
+            name: 'bump',
+            type: 'u8',
+          },
+          {
+            name: 'payFees',
+            type: 'bool',
+          },
+        ],
+      },
     },
     {
-      "name": "SolPaymentAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: 'SolPaymentAccount',
+      type: {
+        kind: 'struct',
+        fields: [
           {
-            "name": "amount",
-            "type": "u64"
+            name: 'amount',
+            type: 'u64',
           },
           {
-            "name": "withdrawal",
-            "type": "u64"
+            name: 'withdrawal',
+            type: 'u64',
           },
           {
-            "name": "startAt",
-            "type": "u64"
+            name: 'startAt',
+            type: 'u64',
           },
           {
-            "name": "endAt",
-            "type": "u64"
+            name: 'endAt',
+            type: 'u64',
           },
           {
-            "name": "interval",
-            "type": "u64"
+            name: 'interval',
+            type: 'u64',
           },
           {
-            "name": "senderKey",
-            "type": "publicKey"
+            name: 'senderKey',
+            type: 'publicKey',
           },
           {
-            "name": "recipientKey",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
+            name: 'recipientKey',
+            type: 'publicKey',
+          },
+          {
+            name: 'payFees',
+            type: 'bool',
+          },
+        ],
+      },
+    },
   ],
-  "types": [
+  types: [
     {
-      "name": "HelioError",
-      "type": {
-        "kind": "enum",
-        "variants": [
+      name: 'HelioError',
+      type: {
+        kind: 'enum',
+        variants: [
           {
-            "name": "InsufficientBalance"
+            name: 'InsufficientBalance',
           },
           {
-            "name": "InvalidChronology"
+            name: 'InvalidChronology',
           },
           {
-            "name": "InvalidAmount"
+            name: 'InvalidAmount',
           },
           {
-            "name": "InvalidPeriod"
+            name: 'InvalidPeriod',
           },
           {
-            "name": "EmptyAccount"
+            name: 'EmptyAccount',
           },
           {
-            "name": "CancelAuthority"
+            name: 'CancelAuthority',
           },
           {
-            "name": "InvalidNumber"
+            name: 'InvalidNumber',
           },
           {
-            "name": "InvalidTokenAccount"
+            name: 'InvalidTokenAccount',
           },
           {
-            "name": "InvalidSplitPaymentData"
+            name: 'InvalidSplitPaymentData',
           },
           {
-            "name": "InvalidPaymentTokenAccount"
+            name: 'InvalidPaymentTokenAccount',
           },
           {
-            "name": "InvalidPDASigner"
+            name: 'InvalidPDASigner',
           },
           {
-            "name": "General"
-          }
-        ]
-      }
-    }
+            name: 'InvalidFeeAccount',
+          },
+          {
+            name: 'General',
+          },
+        ],
+      },
+    },
   ],
-  "events": [
+  events: [
     {
-      "name": "SinglePaymentEvent",
-      "fields": [
+      name: 'SinglePaymentEvent',
+      fields: [
         {
-          "name": "amount",
-          "type": "u64",
-          "index": false
+          name: 'transferAmount',
+          type: 'u64',
+          index: false,
         },
         {
-          "name": "sender",
-          "type": "publicKey",
-          "index": false
+          name: 'fee',
+          type: 'u64',
+          index: false,
         },
         {
-          "name": "recipient",
-          "type": "publicKey",
-          "index": false
+          name: 'sender',
+          type: 'publicKey',
+          index: false,
         },
         {
-          "name": "label",
-          "type": "string",
-          "index": true
-        }
-      ]
-    }
+          name: 'recipient',
+          type: 'publicKey',
+          index: false,
+        },
+        {
+          name: 'label',
+          type: 'string',
+          index: true,
+        },
+      ],
+    },
   ],
-  "metadata": {
-    "address": "3KPRuKWxV6PtneZXbokMBwdF4T9brCFx7FcmKJ2tPqqt"
-  }
-}
+  metadata: {
+    address: 'C36Zn8LWyGkkd8BgfzBJ3DxkEjk45xRr91ZVzWCjHgFv',
+  },
+};
