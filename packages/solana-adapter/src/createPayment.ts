@@ -49,6 +49,7 @@ export const createPayment = async (
     new BN(req.endAt),
     new BN(req.interval),
     bump,
+    payFees,
     {
       accounts: {
         sender: req.sender,
