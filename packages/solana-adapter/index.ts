@@ -6,6 +6,7 @@ export * from './src/withdraw';
 export * from './src/withdrawSol';
 export * from './src/singlePayment';
 export * from './src/singlePaymentSC';
+export * from './src/getSinglePaymentSignedTx ';
 export * from './src/singleSolPaymentSC';
 export * from './src/program';
 export * from './src/types';
