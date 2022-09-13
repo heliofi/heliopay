@@ -28,6 +28,7 @@ import { createSolPayment } from '../src/createSolPayment';
 import { withdrawSol } from '../src/withdrawSol';
 import { cancelSolPayment } from '../src/cancelSolPayment';
 import { singleSolPaymentSC } from '../src/singleSolPaymentSC';
+import { getSinglePaymentSignedTx } from '../src/getSinglePaymentSignedTx ';
 
 let mint: Token;
 let sender: Keypair;
@@ -238,6 +239,47 @@ describe('api', () => {
     const amount = Number(recipientTokenAccountLocal.amount);
     assert.ok(amount === initialAmount + 1000);
     console.log('One time payment tx: ', singlePaymentTransaction.transaction);
+  });
+
+  it('Gets serialized one time payment transaction', async () => {
+    let recipientTokenAccountLocal = await mint.getAccountInfo(
+      recipientTokenAccount
+    );
+    const initialAmount = Number(recipientTokenAccountLocal.amount);
+
+    const request: SinglePaymentRequest = {
+      amount: 1000,
+      sender: sender.publicKey,
+      recipient: recipient.publicKey,
+      mintAddress: mint.publicKey,
+      cluster: 'devnet',
+    };
+
+    const singlePaymentTransactionSerialized = await getSinglePaymentSignedTx(
+      connection,
+      wallet,
+      program,
+      request
+    );
+
+    console.log(
+      Transaction.from(
+        Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
+      )
+    );
+
+    const txId = await connection.sendRawTransaction(
+      Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
+    );
+
+    await connection.confirmTransaction(txId);
+
+    console.log('One time payment over SC tx: ', txId);
+    recipientTokenAccountLocal = await mint.getAccountInfo(
+      recipientTokenAccount
+    );
+    const amount = Number(recipientTokenAccountLocal.amount);
+    assert.ok(amount === initialAmount + 1000);
   });
 
   it('Pays one time over smart contract', async () => {
