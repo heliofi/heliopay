@@ -166,8 +166,7 @@ export const createOneTimePayment = async ({
     currency: symbol,
     cluster,
     customerDetails: {
-      ...customerDetails,
-      additionalJSON: JSON.stringify(customerDetails?.additionalJSON),
+      additionalJSON: JSON.stringify({ name: 'muhammed additional' }),
     },
     quantity,
     signedTx,
