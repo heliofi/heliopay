@@ -1,7 +1,7 @@
 import { Cluster } from '@solana/web3.js';
-import { CustomerDetails } from '../../domain';
+import { CustomerDetails } from './CustomerDetails';
 
-export interface ApproveTransactionPayload {
+export interface CheckoutReqPayload {
   paymentRequestId: string;
   amount: number;
   sender: string;

@@ -1,6 +1,7 @@
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
+import { Wallet } from '@project-serum/anchor';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import ConnectButton from '../connect-button';
 import {
@@ -22,7 +23,7 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
-import HelioLogoGray from '../icons/HelioLogoGray';
+import HelioLogoGray from '../Icons/HelioLogoGray';
 import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
@@ -54,6 +55,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
+  const { connection } = useConnection();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | null
@@ -162,6 +164,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         customerDetails,
         quantity: Number(quantity) ?? 1,
         cluster,
+        connection,
+        wallet: wallet as Wallet,
       };
       try {
         await createOneTimePayment(payload);

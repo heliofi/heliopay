@@ -5,4 +5,5 @@ export interface CustomerDetails {
   fullName?: string;
   country?: string;
   deliveryAddress?: string;
+  additionalJSON?: string;
 }

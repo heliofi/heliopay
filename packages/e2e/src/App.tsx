@@ -11,7 +11,7 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    'c5d4dd5d-d880-4b9f-a918-efb931a3aa1e'
+    'ed0dee2d-b41c-486e-8f02-1ac6909dfc5d'
   );
 
   const getListCurrencies = () => {
@@ -50,7 +50,7 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC', 'SOL', 'DUST', 'BOO', 'HALO']}
+        supportedCurrencies={['USDC']}
         totalAmount={0.145}
       />
     </>

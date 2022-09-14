@@ -3,9 +3,10 @@ import {
   SinglePaymentRequest,
   singlePaymentSC,
   singleSolPaymentSC,
+  getSinglePaymentSignedTx,
 } from '@heliofi/solana-adapter';
-import { Program } from '@project-serum/anchor';
-import { Cluster, PublicKey } from '@solana/web3.js';
+import { Program, Wallet } from '@project-serum/anchor';
+import { Cluster, Connection, PublicKey } from '@solana/web3.js';
 
 import {
   CustomerDetails,
@@ -19,6 +20,7 @@ import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { getHelioApiBaseUrl } from '../helio-api/HelioApiAdapter';
+import { CheckoutReqPayload } from '../../domain/model/CheckoutRequestPayload';
 
 const SOL_SYMBOL = 'SOL';
 
@@ -34,9 +36,11 @@ interface Props {
   customerDetails?: CustomerDetails;
   quantity?: number;
   cluster: Cluster;
+  connection: Connection;
+  wallet: Wallet;
 }
 
-const approveTransaction = async (
+export const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
   const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
@@ -57,7 +61,28 @@ const approveTransaction = async (
   throw new Error(result.message);
 };
 
-const sendTransaction = async (
+export const checkoutTransaction = async (
+  reqBody: CheckoutReqPayload
+): Promise<string> => {
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const res = await fetch(`${HELIO_BASE_API_URL}/checkout/breakpoint`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(reqBody),
+  });
+  const result = await res.json();
+  if (res.status === HttpCodes.SUCCESS && result.content != null) {
+    return result.content;
+  }
+  if (res.status === HttpCodes.FAILED_DEPENDENCY) {
+    throw new VerificationError(result.message);
+  }
+  throw new Error(result.message);
+};
+
+export const signTransaction = async (
   symbol: string,
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
@@ -72,7 +97,7 @@ const sendTransaction = async (
   }
 };
 
-const retryCallback = async (
+export const retryCallback = async (
   callback: () => Promise<void>,
   count: number,
   delay: number,
@@ -106,53 +131,64 @@ export const createOneTimePayment = async ({
   onSuccess,
   onError,
   onPending,
+  connection,
+  wallet,
   cluster,
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
-  const signature = await sendTransaction(
-    symbol,
-    {
-      amount,
-      sender: anchorProvider.provider.wallet.publicKey,
-      recipient: new PublicKey(recipientPK),
-      mintAddress: new PublicKey(mintAddress),
-      cluster,
-    },
-    anchorProvider
+
+  const request: SinglePaymentRequest = {
+    amount,
+    sender: anchorProvider.provider.wallet.publicKey,
+    recipient: new PublicKey(recipientPK),
+    mintAddress: new PublicKey(mintAddress),
+    cluster,
+  };
+
+  const signedTx = await getSinglePaymentSignedTx(
+    connection,
+    wallet,
+    anchorProvider,
+    request
   );
 
-  if (signature === undefined) {
-    onError?.({ errorMessage: 'Failed to send transaction' });
+  if (!signedTx) {
+    onError?.({ errorMessage: 'Failed to sign transaction' });
     return;
   }
 
-  const approveTransactionPayload: ApproveTransactionPayload = {
-    transactionSignature: signature,
+  const transactionPayload: CheckoutReqPayload = {
     paymentRequestId,
     amount,
     sender: anchorProvider.provider.wallet.publicKey.toBase58(),
     recipient: recipientPK,
     currency: symbol,
     cluster,
-    customerDetails,
+    customerDetails: {
+      ...customerDetails,
+      additionalJSON: JSON.stringify(customerDetails?.additionalJSON),
+    },
     quantity,
+    signedTx,
   };
 
   try {
-    approveTransactionPayload.transactionSignature = signature;
-    const content = await approveTransaction(approveTransactionPayload);
-    onSuccess?.({ transaction: signature, content });
+    const content = await checkoutTransaction(transactionPayload);
+    console.log({ content });
+    onSuccess?.({ transaction: signedTx, content });
   } catch (e) {
     const errorHandler = (message: string) => {
-      onError?.({ errorMessage: message, transaction: signature });
+      onError?.({ errorMessage: message, transaction: signedTx });
     };
+
+    console.log({ error: e });
     if (e instanceof VerificationError) {
-      onPending?.({ transaction: signature });
+      onPending?.({ transaction: signedTx });
       await retryCallback(
         async () => {
-          const content = await approveTransaction(approveTransactionPayload);
-          onSuccess?.({ transaction: signature, content });
+          const content = await checkoutTransaction(transactionPayload);
+          onSuccess?.({ transaction: signedTx, content });
         },
         20,
         5_000,
