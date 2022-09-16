@@ -40,6 +40,7 @@ interface HeliopayContainerProps {
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
+  additionalJSON?: Object;
 }
 
 const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -52,6 +53,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   payButtonTitle = 'Pay',
   supportedCurrencies,
   totalAmount,
+  additionalJSON,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -161,7 +163,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
         onPending,
-        customerDetails,
+        customerDetails: {
+          ...customerDetails,
+          additionalJSON,
+        },
         quantity: Number(quantity) ?? 1,
         cluster,
         connection,

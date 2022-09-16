@@ -165,23 +165,19 @@ export const createOneTimePayment = async ({
     recipient: recipientPK,
     currency: symbol,
     cluster,
-    customerDetails: {
-      additionalJSON: JSON.stringify(customerDetails),
-    },
+    customerDetails,
     quantity,
     signedTx,
   };
 
   try {
     const content = await checkoutTransaction(transactionPayload);
-    console.log({ content });
     onSuccess?.({ transaction: signedTx, content });
   } catch (e) {
     const errorHandler = (message: string) => {
       onError?.({ errorMessage: message, transaction: signedTx });
     };
 
-    console.log({ error: e });
     if (e instanceof VerificationError) {
       onPending?.({ transaction: signedTx });
       await retryCallback(

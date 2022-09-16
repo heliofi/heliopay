@@ -11,6 +11,8 @@ import HelioPayContainer from '../heliopay-container';
 import { defaultTheme } from '../../theme';
 import { deepMerge } from '../../utils';
 
+import './style.scss';
+
 interface HelioPayProps {
   paymentRequestId: string;
   onSuccess?: (event: SuccessPaymentEvent) => void;
@@ -22,6 +24,7 @@ interface HelioPayProps {
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
+  additionalJSON?: Object;
 }
 
 export const HelioPay = ({
@@ -35,6 +38,7 @@ export const HelioPay = ({
   payButtonTitle,
   supportedCurrencies,
   totalAmount,
+  additionalJSON,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -56,6 +60,7 @@ export const HelioPay = ({
           payButtonTitle={payButtonTitle}
           supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
+          additionalJSON={additionalJSON}
         />
       </SolanaProvider>
     </ThemeProvider>

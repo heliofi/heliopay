@@ -52,6 +52,9 @@ const App = () => {
         }}
         supportedCurrencies={['USDC']}
         totalAmount={0.145}
+        additionalJSON={{
+          'test': 'test',
+        }}
       />
     </>
   );
