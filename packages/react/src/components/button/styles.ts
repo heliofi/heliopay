@@ -16,5 +16,6 @@ export const StyledButton = styled.button`
   user-select: none;
   &:disabled {
     cursor: not-allowed;
+    opacity: 0.6;
   }
 `;

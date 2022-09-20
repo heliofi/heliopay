@@ -22,10 +22,10 @@ const App = () => {
       .catch((err) => {
         // console.log(err);
       });
-  }
+  };
 
   useEffect(() => {
-    getListCurrencies()
+    getListCurrencies();
   }, []);
 
   return (
@@ -38,6 +38,7 @@ const App = () => {
       <HelioPay
         cluster="devnet"
         paymentRequestId={paymentId}
+        disabled
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);
         }}
@@ -53,7 +54,7 @@ const App = () => {
         supportedCurrencies={['USDC']}
         totalAmount={0.145}
         additionalJSON={{
-          'test': 'test',
+          test: 'test',
         }}
       />
     </>

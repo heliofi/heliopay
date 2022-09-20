@@ -23,6 +23,7 @@ interface HelioPayProps {
   supportedCurrencies?: string[];
   totalAmount?: number;
   additionalJSON?: Object;
+  disabled?: boolean;
 }
 
 export const HelioPay = ({
@@ -37,6 +38,7 @@ export const HelioPay = ({
   supportedCurrencies,
   totalAmount,
   additionalJSON,
+  disabled = false,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -49,6 +51,7 @@ export const HelioPay = ({
     <ThemeProvider theme={currentTheme}>
       <SolanaProvider cluster={cluster}>
         <HelioPayContainer
+          disabled={disabled}
           paymentRequestId={paymentRequestId}
           onStartPayment={onStartPayment}
           onSuccess={onSuccess}

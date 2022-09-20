@@ -41,6 +41,7 @@ interface HeliopayContainerProps {
   supportedCurrencies?: string[];
   totalAmount?: number;
   additionalJSON?: Object;
+  disabled?: boolean;
 }
 
 const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -54,6 +55,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   supportedCurrencies,
   totalAmount,
   additionalJSON,
+  disabled = false,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -203,7 +205,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         });
                       }
                     }}
-                    disabled={!paymentDetails?.id}
+                    disabled={disabled || !paymentDetails?.id}
                   >
                     {payButtonTitle}
                   </Button>
