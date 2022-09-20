@@ -11,6 +11,8 @@ import HelioPayContainer from '../heliopay-container';
 import { defaultTheme } from '../../theme';
 import { deepMerge } from '../../utils';
 
+import './style.scss';
+
 interface HelioPayProps {
   paymentRequestId: string;
   onSuccess?: (event: SuccessPaymentEvent) => void;

@@ -19,7 +19,7 @@ export const createPayment = async (
   req: CreatePaymentStateRequest
 ): Promise<string> => {
   const mint = req.mintAddress!;
-  // Associated token accounts
+  // Associated token account
   const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
