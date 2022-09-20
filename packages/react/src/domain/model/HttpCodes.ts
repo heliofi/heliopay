@@ -3,4 +3,5 @@ export enum HttpCodes {
   NOT_FOUNT = 404,
   BAD_REQUEST = 400,
   FAILED_DEPENDENCY = 424,
+  NOT_AUTH = 403,
 }
