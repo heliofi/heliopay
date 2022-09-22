@@ -63,7 +63,11 @@ export const approveTransaction = async (
 
 export const checkoutTransaction = async (
   reqBody: CheckoutReqPayload
-): Promise<string> => {
+): Promise<{
+  content?: string;
+  transactionSignature?: string;
+  message?: string;
+}> => {
   const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
   const res = await fetch(`${HELIO_BASE_API_URL}/checkout/breakpoint`, {
     method: 'POST',
@@ -73,8 +77,8 @@ export const checkoutTransaction = async (
     body: JSON.stringify(reqBody),
   });
   const result = await res.json();
-  if (res.status === HttpCodes.SUCCESS && result.content != null) {
-    return result.content;
+  if (res.status === HttpCodes.SUCCESS) {
+    return result;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
     throw new VerificationError(result.message);
@@ -171,8 +175,11 @@ export const createOneTimePayment = async ({
   };
 
   try {
-    const content = await checkoutTransaction(transactionPayload);
-    onSuccess?.({ transaction: signedTx, content });
+    const paymentResult = await checkoutTransaction(transactionPayload);
+    onSuccess?.({
+      transaction: paymentResult?.transactionSignature ?? '',
+      content: paymentResult?.content ?? '',
+    });
   } catch (e) {
     const errorHandler = (message: string) => {
       onError?.({ errorMessage: message, transaction: signedTx });
@@ -182,8 +189,11 @@ export const createOneTimePayment = async ({
       onPending?.({ transaction: signedTx });
       await retryCallback(
         async () => {
-          const content = await checkoutTransaction(transactionPayload);
-          onSuccess?.({ transaction: signedTx, content });
+          const paymentResult = await checkoutTransaction(transactionPayload);
+          onSuccess?.({
+            transaction: paymentResult?.transactionSignature ?? '',
+            content: paymentResult?.content ?? '',
+          });
         },
         20,
         5_000,

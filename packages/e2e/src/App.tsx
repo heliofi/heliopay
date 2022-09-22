@@ -38,7 +38,6 @@ const App = () => {
       <HelioPay
         cluster="devnet"
         paymentRequestId={paymentId}
-        disabled
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);
         }}
@@ -52,9 +51,25 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC']}
-        totalAmount={0.145}
+        totalAmount={1}
         additionalJSON={{
-          test: 'test',
+          eventId: 429029,
+          tickets: [
+            {
+              ticketId: 273465,
+              properties: {
+                firstName: 'u',
+                lastName: 'u',
+                email: 'u@gmail.com',
+                company: 'u',
+                country: 'Andorra',
+                event_info: 'Designer (UI, Product)',
+                tshirt_size: 'Medium',
+                ticket_refunds: true,
+                ticket_transfers: true,
+              },
+            },
+          ],
         }}
       />
     </>
