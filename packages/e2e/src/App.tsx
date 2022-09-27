@@ -11,7 +11,7 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    'ed0dee2d-b41c-486e-8f02-1ac6909dfc5d'
+    '37d1a550-385a-4a23-9b49-9537600b1ea8'
   );
 
   const getListCurrencies = () => {
