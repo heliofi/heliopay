@@ -6,7 +6,7 @@
   },
   "scripts": {
     "release": "yarn build && lerna publish",
-    "build": "(cd packages/react && yarn build) && (cd packages/solana-adapter && yarn build)"
+    "build": "(cd packages/solana-adapter && yarn build) && (cd packages/react && yarn build)"
   },
   "workspaces": ["packages/*"],
   "publishConfig": {

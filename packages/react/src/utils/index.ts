@@ -39,3 +39,5 @@ export const removeUndefinedFields = (obj: Record<string, unknown>) => {
   });
   return newObj;
 };
+
+export const test = "";

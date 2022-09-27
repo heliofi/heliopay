@@ -2546,30 +2546,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.4.tgz#031c27df0948981a7046b0723a7b3a52a8ff9396"
   integrity sha512-5idPlSIp0IBlk7hPT4xqGgB3rvNTKEnbaOUhSbDJfvbDrA/v9KDFuuduhNz4fBulBiCqDi+MxxvYN1cvgzyS7g==
 
-"@heliofi/react@0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@heliofi/react/-/react-0.2.8.tgz#abb7c300583b25016b61cb71cd3e2161444828d9"
-  integrity sha512-uzovsCVbk4KqoZSsdQtr6R2roMkESOdIK4zifPVSEAmzgWGIDNy7x15BonuJCVoW3G8lyrmyfsBRFUuhhxww2w==
-  dependencies:
-    "@heliofi/helio-icons" "^1.0.4"
-    "@heliofi/solana-adapter" "^0.2.0"
-    "@project-serum/anchor" "^0.21.0"
-    "@solana/wallet-adapter-base" "^0.9.5"
-    "@solana/wallet-adapter-react" "^0.15.5"
-    "@solana/wallet-adapter-react-ui" "^0.9.7"
-    "@solana/wallet-adapter-wallets" "^0.16.1"
-    "@solana/web3.js" "^1.44.0"
-    aws-amplify "^4.3.16"
-    crypto-js "^4.1.1"
-    downshift "^6.1.7"
-    formik "^2.2.9"
-    jest "^28.1.1"
-    react "^18.2.0"
-    react-dom "^18.2.0"
-    styled-components "^5.3.5"
-    ts-jest "^28.0.5"
-    yup "^0.32.11"
-
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.5.tgz#2cbaf9a89460da24b5ca6531b8bbfc23e1df50c7"
