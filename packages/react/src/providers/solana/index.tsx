@@ -9,12 +9,13 @@ import {
   SlopeWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { Cluster, clusterApiUrl } from '@solana/web3.js';
+import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
 import { ClusterType } from '../../domain';
 
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
+import { getClusterEndpoint } from './clusterEndpoint';
 
 export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
   children,
@@ -24,7 +25,7 @@ export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
     cluster === ClusterType.Devnet
       ? WalletAdapterNetwork.Devnet
       : WalletAdapterNetwork.Mainnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const endpoint = useMemo(() => getClusterEndpoint(network), [network]);
 
   const wallets = useMemo(
     () => [
