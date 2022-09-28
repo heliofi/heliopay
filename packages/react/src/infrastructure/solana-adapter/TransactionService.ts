@@ -112,6 +112,18 @@ export const createOneTimePayment = async ({
     .mintAddress as string;
 
   console.log(2, { mintAddress });
+  console.log(
+    7,
+    symbol,
+    {
+      amount,
+      sender: anchorProvider.provider.wallet.publicKey,
+      recipient: new PublicKey(recipientPK),
+      mintAddress: new PublicKey(mintAddress),
+      cluster,
+    },
+    anchorProvider
+  );
   const signature = await sendTransaction(
     symbol,
     {
