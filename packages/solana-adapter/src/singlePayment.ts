@@ -50,7 +50,6 @@ export const singlePayment = async (
   transaction.feePayer = wallet.publicKey;
   transaction.recentBlockhash = await blockHash.blockhash;
 
-  
   // Sign and prepare
   const signed = await wallet.signTransaction(transaction);
   const tx = await sendAndConfirmRawTransaction(connection, signed.serialize());
