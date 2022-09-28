@@ -12,11 +12,9 @@ export const StyledRow = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 4px;
-  max-width: 270px;
 `;
 
 export const StyledLeft = styled.div`
-  max-width: 160px;
   flex: 1;
 `;
 

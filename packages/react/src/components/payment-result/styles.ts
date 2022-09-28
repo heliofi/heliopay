@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { rgba } from '../../utils';
 
 export const StyledResultWrapper = styled.div``;
 
@@ -36,7 +37,8 @@ export const StyledResultIcon = styled.div<{ error: boolean }>`
   height: 120px;
   border-radius: 50%;
   margin-bottom: 16px;
-  background: ${({ error }) => (error ? '#FEE3E3' : '#FFF4ED')};
+  background: ${({ error, theme }) =>
+    error ? '#FEE3E3' : rgba(theme.colors.primary, 0.1)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,6 +46,12 @@ export const StyledResultIcon = styled.div<{ error: boolean }>`
   svg {
     width: 80px;
     height: 80px;
+
+    fill: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
+  }
+
+  path {
+    fill: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
   }
 `;
 
@@ -53,7 +61,7 @@ export const StyledResultTitle = styled.div<{ error: boolean }>`
   font-size: 14px;
   line-height: 125%;
   margin-bottom: 4px;
-  color: ${({ error }) => (error ? '#f87272' : '#8E522E')};
+  color: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
 `;
 
 export const StyledResultText = styled.div`
@@ -65,14 +73,14 @@ export const StyledResultText = styled.div`
   margin-bottom: 4px;
 `;
 
-export const StyledResultLink = styled.div`
+export const StyledResultLink = styled.div<{ error?: boolean }>`
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
   text-align: center;
   text-decoration-line: underline;
-  color: #f76c1b;
+  color: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
   cursor: pointer;
   text-underline-offset: 2px;
 

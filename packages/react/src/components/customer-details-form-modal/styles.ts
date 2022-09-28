@@ -1,16 +1,17 @@
 import styled from 'styled-components';
+import { rgba } from '../../utils';
 
 export const StyledFormWrapper = styled.div``;
 
 export const StyledPrice = styled.div`
-  background: #fff4ed;
+  background: ${({ theme }) => rgba(theme.colors.primary, 0.05)};
   border-radius: 8px;
   padding: 15px;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
-  color: #8e522e;
+  color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 20px;
   b {
     font-weight: 600;
