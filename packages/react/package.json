@@ -15,7 +15,7 @@
   "dependencies": {
     "@aws-amplify/api-graphql": "^2.3.12",
     "@heliofi/helio-icons": "^1.0.4",
-    "@heliofi/solana-adapter": "0.2.8",
+    "@heliofi/solana-adapter": "0.4.3",
     "@project-serum/anchor": "^0.21.0",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.5",
