@@ -164,8 +164,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         cluster,
       };
       try {
+        console.log(0, { payload });
         await createOneTimePayment(payload);
       } catch (error) {
+        console.log(1, { error });
         handleErrorPayment({
           errorMessage: String(error),
         });
@@ -204,7 +206,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
               )}
             </StyledLeft>
             <StyledRight>
-              Powered by
+              Powered by111
               <StyledLogoContainer>
                 <StyledLogo>
                   <HelioLogoGray />

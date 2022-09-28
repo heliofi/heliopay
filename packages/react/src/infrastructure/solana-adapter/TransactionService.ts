@@ -110,6 +110,8 @@ export const createOneTimePayment = async ({
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
+
+  console.log(2, { mintAddress });
   const signature = await sendTransaction(
     symbol,
     {
@@ -121,6 +123,7 @@ export const createOneTimePayment = async ({
     },
     anchorProvider
   );
+  console.log(3, { signature });
 
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction' });
@@ -139,11 +142,15 @@ export const createOneTimePayment = async ({
     quantity,
   };
 
+  console.log(4, { approveTransactionPayload });
+
   try {
     approveTransactionPayload.transactionSignature = signature;
     const content = await approveTransaction(approveTransactionPayload);
+    console.log(5, { content });
     onSuccess?.({ transaction: signature, content });
   } catch (e) {
+    console.log(6, { e });
     const errorHandler = (message: string) => {
       onError?.({ errorMessage: message, transaction: signature });
     };
