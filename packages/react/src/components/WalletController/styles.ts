@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { rgba } from '../../utils';
 
 export const StyledMenuWrapper = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ export const StyledMenuItem = styled.div`
   transition: all 0.3s ease-in-out;
 
   &:hover {
-    background: #fff8f4;
+    background: ${({ theme }) => rgba(theme.colors.primary, 0.05)};
   }
 `;
 
@@ -50,7 +51,7 @@ export const StyledMenuLabel = styled.div`
   font-weight: 400;
   font-size: 12px;
   line-height: 125%;
-  color: #f76c1b;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const StyledDropdownButton = styled.div`
