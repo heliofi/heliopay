@@ -62,6 +62,7 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
+  console.log(8, { symbol, request, provider });
   try {
     if (symbol === SOL_SYMBOL) {
       return await singleSolPaymentSC(provider, request);
