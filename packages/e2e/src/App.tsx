@@ -37,6 +37,11 @@ const App = () => {
       />
       <HelioPay
         cluster="devnet"
+        theme={{
+          colors: {
+            primary: '#770d5a',
+          }
+        }}
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);

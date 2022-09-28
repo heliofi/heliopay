@@ -1,5 +1,5 @@
 import { WarningTriangleIcon } from '@heliofi/helio-icons';
-import CheckMarkIcon from '../Icons/CheckMarkIcon';
+import CheckMarkIcon from '../icons/CheckMarkIcon';
 import ExplorerLink from '../explorer-link';
 import {
   StyledResultBox,
@@ -42,7 +42,7 @@ const PaymentResult = ({ result }: Props) => {
           </StyledResultText>
           <StyledResultText>{result?.errorMessage}</StyledResultText>
           {hasError ? (
-            <StyledResultLink onClick={() => window.location.reload()}>
+            <StyledResultLink error onClick={() => window.location.reload()}>
               Try again
             </StyledResultLink>
           ) : (
