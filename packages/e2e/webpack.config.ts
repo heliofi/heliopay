@@ -48,6 +48,9 @@ const webpackConfig = (env): Configuration => ({
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            "React": "react",
+         }),
         new HtmlWebpackPlugin({
             template: "./public/index.html"
         }),
