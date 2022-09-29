@@ -71,6 +71,7 @@ const sendTransaction = async (
     console.log('symbol !== SOL_SYMBOL', { provider, request });
     return await singlePaymentSC(provider, request);
   } catch (e) {
+    console.log(1234, { e });
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
 };
