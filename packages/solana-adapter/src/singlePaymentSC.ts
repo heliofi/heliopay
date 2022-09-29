@@ -48,6 +48,7 @@ export const singlePaymentSC = async (
   accounts: Array<PublicKey> = []
 ): Promise<string> => {
   const mint = req.mintAddress;
+  console.log('singlePaymentSC', program, req, amounts, accounts, mint);
 
   const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -56,6 +57,8 @@ export const singlePaymentSC = async (
     req.sender
   );
 
+  console.log('senderAssociatedTokenAddress', senderAssociatedTokenAddress);
+
   const recipientAssociatedTokenAddress = await Token.getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
@@ -63,10 +66,17 @@ export const singlePaymentSC = async (
     req.recipient
   );
 
+  console.log(
+    'recipientAssociatedTokenAddress',
+    recipientAssociatedTokenAddress
+  );
+
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
   );
+
+  console.log({ remainingAmounts, remainingAccounts });
 
   return program.rpc.singlePayment(new BN(req.amount), remainingAmounts, {
     accounts: {
