@@ -35,7 +35,7 @@ const prepareSplitPaymentsValues = (
 export const singleSolPayment = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
-  payFees: boolean,
+  payFees: boolean = true,
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
 ): Promise<string> => {

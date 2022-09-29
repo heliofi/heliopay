@@ -21,7 +21,7 @@ export const getSignedCreatePaymentTx = async (
   wallet: Wallet,
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
-  payFees: boolean
+  payFees: boolean = true
 ): Promise<string> => {
   const mint = req.mintAddress!;
 

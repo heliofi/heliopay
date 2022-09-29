@@ -12,7 +12,7 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 export const createPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
-  payFees: boolean
+  payFees: boolean = true
 ): Promise<string> => {
   const mint = req.mintAddress!;
 

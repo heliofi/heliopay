@@ -262,11 +262,7 @@ describe('api', () => {
       cluster: 'devnet',
     };
 
-    const singlePaymentTransaction = await singlePayment(
-      program,
-      request,
-      true
-    );
+    const singlePaymentTransaction = await singlePayment(program, request);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
     recipientTokenAccountLocal = await getAccount(

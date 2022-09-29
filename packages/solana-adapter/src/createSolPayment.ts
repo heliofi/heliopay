@@ -8,7 +8,7 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 export const createSolPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
-  payFees: boolean
+  payFees: boolean = true
 ): Promise<string> => {
   return program.rpc.createSolPayment(
     new BN(req.amount),
