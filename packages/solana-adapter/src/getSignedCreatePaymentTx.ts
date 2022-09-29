@@ -14,7 +14,7 @@ import {
 import { BN, Program, Wallet } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const getSignedCreatePaymentTx = async (
   connection: Connection,
@@ -40,9 +40,14 @@ export const getSignedCreatePaymentTx = async (
     req.paymentAccount.publicKey
   );
 
-  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
     mint,
-    feeWalletKey
+    helioFeeWalletKey
+  );
+
+  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    daoFeeWalletKey
   );
 
   // eslint-disable-next-line
@@ -66,8 +71,10 @@ export const getSignedCreatePaymentTx = async (
         recipientTokenAccount: recipientAssociatedTokenAddress,
         paymentAccount: req.paymentAccount.publicKey,
         paymentTokenAccount: paymentAssociatedTokenAddress,
-        feeAccount: feeWalletKey,
-        feeTokenAccount: feeTokenAccountAddress,
+        helioFeeAccount: helioFeeWalletKey,
+        helioFeeTokenAccount: helioFeeTokenAccountAddress,
+        daoFeeAccount: daoFeeWalletKey,
+        daoFeeTokenAccount: daoFeeTokenAccountAddress,
         mint,
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,

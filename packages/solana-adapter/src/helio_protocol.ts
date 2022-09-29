@@ -31,7 +31,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeTokenAccount',
+          name: 'helioFeeTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeTokenAccount',
           isMut: true,
           isSigner: false,
         },
@@ -41,7 +46,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'helioFeeAccount',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: false,
           isSigner: false,
         },
@@ -184,12 +194,22 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeTokenAccount',
+          name: 'helioFeeTokenAccount',
           isMut: true,
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'daoFeeTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'helioFeeAccount',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: false,
           isSigner: false,
         },
@@ -235,7 +255,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'helioFeeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: true,
           isSigner: false,
         },
@@ -271,12 +296,22 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeTokenAccount',
+          name: 'helioFeeTokenAccount',
           isMut: true,
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'daoFeeTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'helioFeeAccount',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: false,
           isSigner: false,
         },
@@ -312,7 +347,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'helioFeeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: true,
           isSigner: false,
         },
@@ -343,7 +383,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeTokenAccount',
+          name: 'helioFeeTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeTokenAccount',
           isMut: true,
           isSigner: false,
         },
@@ -353,7 +398,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'helioFeeAccount',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: false,
           isSigner: false,
         },
@@ -414,7 +464,12 @@ export default {
           isSigner: false,
         },
         {
-          name: 'feeAccount',
+          name: 'helioFeeAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: true,
           isSigner: false,
         },

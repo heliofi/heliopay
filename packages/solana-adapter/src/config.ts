@@ -7,6 +7,10 @@ export const txOpts: anchor.web3.ConfirmOptions = {
   maxRetries: 3,
 };
 
-export const feeWalletKey = new PublicKey(
+export const helioFeeWalletKey = new PublicKey(
   'FudPMePeNqmnjMX19zEKDfGXpbp6HAdW6ZGprB5gYRTZ'
+);
+
+export const daoFeeWalletKey = new PublicKey(
+  'JBGUGPmKUEHCpxGGoMowQxoV4c7HyqxEnyrznVPxftqk'
 );

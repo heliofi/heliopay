@@ -3,7 +3,7 @@ import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { Account, SinglePaymentRequest } from './types';
 import './config';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
@@ -52,7 +52,8 @@ export const singleSolPayment = async (
       accounts: {
         sender: req.sender,
         recipient: req.recipient,
-        feeAccount: feeWalletKey,
+        helioFeeAccount: helioFeeWalletKey,
+        daoFeeAccount: daoFeeWalletKey,
         systemProgram: SystemProgram.programId,
       },
       remainingAccounts,

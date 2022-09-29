@@ -8,7 +8,7 @@ import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { Account, SinglePaymentRequest } from './types';
 import './config';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
@@ -61,9 +61,14 @@ export const singlePayment = async (
     req.recipient
   );
 
-  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
     mint,
-    feeWalletKey
+    helioFeeWalletKey
+  );
+
+  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    daoFeeWalletKey
   );
 
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
@@ -82,8 +87,10 @@ export const singlePayment = async (
         recipient: req.recipient,
         recipientTokenAccount: recipientAssociatedTokenAddress,
         mint,
-        feeAccount: feeWalletKey,
-        feeTokenAccount: feeTokenAccountAddress,
+        helioFeeAccount: helioFeeWalletKey,
+        helioFeeTokenAccount: helioFeeTokenAccountAddress,
+        daoFeeAccount: daoFeeWalletKey,
+        daoFeeTokenAccount: daoFeeTokenAccountAddress,
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

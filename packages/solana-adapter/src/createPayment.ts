@@ -4,11 +4,10 @@ import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const createPayment = async (
   program: Program<HelioIdl>,
@@ -32,9 +31,14 @@ export const createPayment = async (
     req.paymentAccount.publicKey
   );
 
-  const feeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
     mint,
-    feeWalletKey
+    helioFeeWalletKey
+  );
+
+  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+    mint,
+    daoFeeWalletKey
   );
 
   // eslint-disable-next-line
@@ -58,8 +62,10 @@ export const createPayment = async (
         recipientTokenAccount: recipientAssociatedTokenAddress,
         paymentAccount: req.paymentAccount.publicKey,
         paymentTokenAccount: paymentAssociatedTokenAddress,
-        feeAccount: feeWalletKey,
-        feeTokenAccount: feeTokenAccountAddress,
+        helioFeeAccount: helioFeeWalletKey,
+        helioFeeTokenAccount: helioFeeTokenAccountAddress,
+        daoFeeAccount: daoFeeWalletKey,
+        daoFeeTokenAccount: daoFeeTokenAccountAddress,
         mint,
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,

@@ -3,7 +3,7 @@ import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
 import './config';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const createSolPayment = async (
   program: Program<HelioIdl>,
@@ -21,7 +21,8 @@ export const createSolPayment = async (
         sender: req.sender,
         recipient: req.recipient,
         solPaymentAccount: req.paymentAccount.publicKey,
-        feeAccount: feeWalletKey,
+        helioFeeAccount: helioFeeWalletKey,
+        daoFeeAccount: daoFeeWalletKey,
         systemProgram: SystemProgram.programId,
       },
       signers: [req.paymentAccount],

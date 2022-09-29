@@ -3,7 +3,7 @@ import { Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
 import './config';
-import { feeWalletKey } from './config';
+import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const cancelSolPayment = async (
   program: Program<HelioIdl>,
@@ -15,7 +15,8 @@ export const cancelSolPayment = async (
       sender: req.sender,
       recipient: req.recipient,
       solPaymentAccount: req.payment,
-      feeAccount: feeWalletKey,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
       systemProgram: SystemProgram.programId,
     },
   });
