@@ -52,6 +52,9 @@ const webpackConfig = (env): Configuration => ({
             template: "./public/index.html"
         }),
         new webpack.ProvidePlugin({
+            "React": "react",
+         }),
+        new webpack.ProvidePlugin({
             process: "process/browser"
         }),
         new webpack.DefinePlugin({

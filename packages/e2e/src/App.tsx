@@ -11,11 +11,11 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    'ed0dee2d-b41c-486e-8f02-1ac6909dfc5d'
+    '6335937a2d7e2da5e52a8841'
   );
 
   const getListCurrencies = () => {
-    HelioApiAdapter.listCurrencies('devnet')
+    HelioApiAdapter.listCurrencies()
       .then((res) => {
         // console.log(2, res);
       })

@@ -43,7 +43,8 @@ interface Props {
 export const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const HELIO_BASE_API_URL = 'https://api.hel.io/v1';
+
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
@@ -139,6 +140,8 @@ export const createOneTimePayment = async ({
   wallet,
   cluster,
 }: Props): Promise<void> => {
+  try {
+
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
 
@@ -174,7 +177,6 @@ export const createOneTimePayment = async ({
     signedTx,
   };
 
-  try {
     const paymentResult = await checkoutTransaction(transactionPayload);
     onSuccess?.({
       transaction: paymentResult?.transactionSignature ?? '',

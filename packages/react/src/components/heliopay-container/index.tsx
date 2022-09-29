@@ -109,11 +109,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [paymentRequestId, mainCluster]);
 
-  const getCurrency = (currency?: string): Currency => {
+  const getCurrency = (currency?: string | null): Currency => {
     if (!currency) {
       throw new Error('Unknown currency');
     }
-    return currencyList.find((c: any) => c.symbol === currency);
+    return currencyList.find((c) => c.symbol === currency);
   };
 
   const isCustomerDetailsRequired = (): boolean => {
@@ -148,13 +148,19 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     currency,
     quantity,
     customerDetails,
-  }: any) => {
+  }: {
+    amount: number;
+    currency: Currency;
+    quantity: number;
+    customerDetails: any;
+  }) => {
+    
     if (helioProvider) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey;
-      const { symbol } = getCurrency(currency);
+      const recipient = paymentDetails?.wallet?.publicKey;
+      const { symbol } = getCurrency(currency.symbol);
       if (symbol == null) throw new Error('Unknown currency symbol');
       const payload = {
         anchorProvider: helioProvider,

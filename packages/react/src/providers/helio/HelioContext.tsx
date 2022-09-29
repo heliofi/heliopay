@@ -43,8 +43,7 @@ export const useHelioProvider = () => {
       throw new Error('Please provide a cluster');
     }
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
-      paymentRequestId,
-      cluster
+      paymentRequestId
     );
     setPaymentDetails(result || {});
   };
