@@ -65,7 +65,7 @@ const sendTransaction = async (
   console.log(92, { symbol, request, provider });
   try {
     if (symbol === SOL_SYMBOL) {
-      console.log('symbol === SOL_SYMBOL', { provider, request });
+      console.log('symbol === SOL_SYMBOLa', { provider, request });
       return await singleSolPaymentSC(provider, request);
     }
     console.log('symbol !== SOL_SYMBOL', { provider, request });
