@@ -9,6 +9,7 @@ export const createSolPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest
 ): Promise<string> => {
+  
   return program.rpc.createSolPayment(
     new BN(req.amount),
     new BN(req.startAt),
