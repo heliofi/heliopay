@@ -37,10 +37,15 @@ export const singleSolPaymentSC = async (
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
 ): Promise<string> => {
+  console.log('creating sol payment');
+
+  
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
-  );
+    );
+
+  console.log(req, remainingAccounts, remainingAmounts);
 
   return program.rpc.singleSolPayment(new BN(req.amount), remainingAmounts, {
     accounts: {

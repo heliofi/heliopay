@@ -11,11 +11,11 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    'c5d4dd5d-d880-4b9f-a918-efb931a3aa1e'
+    '633650b92d7e2da5e52a8d79'
   );
 
   const getListCurrencies = () => {
-    HelioApiAdapter.listCurrencies('devnet')
+    HelioApiAdapter.listCurrencies()
       .then((res) => {
         // console.log(2, res);
       })
@@ -50,8 +50,8 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC', 'SOL', 'DUST', 'BOO', 'HALO']}
-        totalAmount={0.145}
+        supportedCurrencies={['SOL']}
+        totalAmount={0.01}
       />
     </>
   );

@@ -18,6 +18,7 @@ export const createPayment = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest
 ): Promise<string> => {
+  
   const mint = req.mintAddress!;
   // Associated token accounts
   const senderAssociatedTokenAddress = await Token.getAssociatedTokenAddress(

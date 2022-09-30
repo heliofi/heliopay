@@ -1,13 +1,15 @@
 import { Cluster } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
+import { Currency } from '../../domain';
+import { PaymentRequestPublic } from '../../domain/model/PaymentRequestPublic';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 
 export const HelioContext = createContext<{
-  currencyList: any[];
+  currencyList: Currency[] | [];
   setCurrencyList: (currencyList: any[]) => void;
-  paymentDetails: any;
-  setPaymentDetails: (paymentDetails: any) => void;
+  paymentDetails: PaymentRequestPublic | null;
+  setPaymentDetails: (paymentDetails: PaymentRequestPublic | null) => void;
   cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
 }>({
@@ -31,7 +33,7 @@ export const useHelioProvider = () => {
 
   const getCurrencyList = async () => {
     if (cluster) {
-      const result = await HelioApiAdapter.listCurrencies(cluster);
+      const result = await HelioApiAdapter.listCurrencies();
       setCurrencyList(result || []);
       CurrencyService.setCurrencies(result);
     }
@@ -43,8 +45,7 @@ export const useHelioProvider = () => {
       throw new Error('Please provide a cluster');
     }
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
-      paymentRequestId,
-      cluster
+      paymentRequestId
     );
     setPaymentDetails(result || {});
   };

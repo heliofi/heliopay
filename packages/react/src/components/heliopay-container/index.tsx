@@ -79,9 +79,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [cluster]);
 
   const generateAllowedCurrencies = () => {
-    const allowedCurrenciesTemp = currencyList.filter((currency) =>
-      supportedCurrencies?.includes(currency.symbol)
-    );
+    const allowedCurrenciesTemp = currencyList.filter((currency) => {
+      if (currency?.symbol != null) {
+        supportedCurrencies?.includes(currency?.symbol)
+      }
+    });
     setAllowedCurrencies(allowedCurrenciesTemp);
   };
 
@@ -103,25 +105,17 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [paymentRequestId, mainCluster]);
 
-  const getCurrency = (currency?: string): Currency => {
-    if (!currency) {
-      throw new Error('Unknown currency');
-    }
-    return currencyList.find((c: any) => c.symbol === currency);
-  };
-
   const isCustomerDetailsRequired = (): boolean => {
-    if (!paymentDetails) return false;
+    if (!paymentDetails || paymentDetails.features == null) return false;
     return (
-      paymentDetails.requireEmail ||
-      paymentDetails.requireFullName ||
-      paymentDetails.requireDiscordUsername ||
-      paymentDetails.requireTwitterUsername ||
-      paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress ||
-      paymentDetails.canChangeQuantity ||
-      paymentDetails.canChangePrice ||
-      supportedCurrencies?.length
+      paymentDetails.features.requireEmail ||
+      paymentDetails.features.requireFullName ||
+      paymentDetails.features.requireDiscordUsername ||
+      paymentDetails.features.requireTwitterUsername ||
+      paymentDetails.features.requireCountry ||
+      paymentDetails.features.requireDeliveryAddress ||
+      paymentDetails.features.canChangeQuantity ||
+      paymentDetails.features.canChangePrice
     );
   };
 
@@ -142,18 +136,22 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     currency,
     quantity,
     customerDetails,
-  }: any) => {
-    if (helioProvider) {
+  }: {
+    amount: number;
+    currency: Currency;
+    quantity: number;
+    customerDetails?: any;
+  }) => {
+    if (helioProvider && paymentDetails != null) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey;
-      const { symbol } = getCurrency(currency);
-      if (symbol == null) throw new Error('Unknown currency symbol');
+      const recipient = paymentDetails.wallet?.publicKey;
+      if (currency.symbol == null) throw new Error('Unknown currency symbol');
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
-        symbol,
+        symbol: currency.symbol,
         amount: amount * (quantity || 1),
         paymentRequestId,
         onSuccess: handleSuccessPayment,
@@ -183,14 +181,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <div>
                   <Button
                     onClick={() => {
+                      console.log(paymentDetails?.normalizedPrice);
                       if (isCustomerDetailsRequired()) {
                         setShowFormModal(true);
-                      } else {
+                      } else if (paymentDetails != null) {
                         submitPayment({
-                          amount: paymentDetails?.normalizedPrice,
+                          amount: Number(paymentDetails?.normalizedPrice),
                           quantity: 1,
                           customerDetails: undefined,
-                          currency: paymentDetails?.currency,
+                          currency: paymentDetails.currency,
                         });
                       }
                     }}

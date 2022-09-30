@@ -1,14 +1,14 @@
 export interface Currency {
-  symbol?: string | null;
-  name?: string | null;
-  mintAddress?: string | null;
-  decimals?: number | null;
-  coinMarketCapId?: number | null;
-  type: string;
-  sign?: string | null;
+  symbol?: string;
+  name?: string;
+  mintAddress?: string;
+  decimals?: number;
+  coinMarketCapId?: number;
+  type?: string;
+  sign?: string;
   order: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface FiatCurrency {

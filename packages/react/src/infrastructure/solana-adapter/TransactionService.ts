@@ -39,7 +39,8 @@ interface Props {
 const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const HELIO_BASE_API_URL = 'https://api.hel.io/v1';
+
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
@@ -62,6 +63,7 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
+
   try {
     if (symbol === SOL_SYMBOL) {
       return await singleSolPaymentSC(provider, request);
