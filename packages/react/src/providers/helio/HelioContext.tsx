@@ -31,7 +31,7 @@ export const useHelioProvider = () => {
 
   const getCurrencyList = async () => {
     if (cluster) {
-      const result = await HelioApiAdapter.listCurrencies(cluster);
+      const result = await HelioApiAdapter.listCurrencies();
       setCurrencyList(result || []);
       CurrencyService.setCurrencies(result);
     }
@@ -44,7 +44,6 @@ export const useHelioProvider = () => {
     }
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
       paymentRequestId,
-      cluster
     );
     setPaymentDetails(result || {});
   };
