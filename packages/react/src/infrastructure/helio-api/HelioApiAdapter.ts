@@ -26,12 +26,14 @@ export const getHelioApiBaseUrl = (cluster: Cluster) => {
   }
 };
 
-const HELIO_BASE_API_URL = 'https://api.hel.io/v1';
 
 export const HelioApiAdapter = {
   async getPaymentRequestByIdPublic(
     id: string,
-  ): Promise<any> {
+    cluster: Cluster
+    ): Promise<any> {
+
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
     const url = `${HELIO_BASE_API_URL}/paylink/${id}/public`;
     const paymentResult = await (
       await fetch(url, {
@@ -44,7 +46,10 @@ export const HelioApiAdapter = {
     return paymentResult;
   },
 
-  async listCurrencies(): Promise<Currency[]> {
+  async listCurrencies(
+    cluster : Cluster
+  ): Promise<Currency[]> {
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
     const url = `${HELIO_BASE_API_URL}/currency`;
 
     const currencies = await (
