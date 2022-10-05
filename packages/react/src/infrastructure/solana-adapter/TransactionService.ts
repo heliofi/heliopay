@@ -122,8 +122,6 @@ export const createOneTimePayment = async ({
     anchorProvider
   );
 
-  console.log(signature);
-
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction' });
     return;
