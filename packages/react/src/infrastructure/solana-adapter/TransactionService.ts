@@ -144,7 +144,6 @@ export const createOneTimePayment = async ({
     const content = await approveTransaction(approveTransactionPayload);
     onSuccess?.({ transaction: signature, content });
   } catch (e) {
-    console.log("error at final step");
     const errorHandler = (message: string) => {
       onError?.({ errorMessage: message, transaction: signature });
     };
