@@ -43,7 +43,7 @@ interface Props {
 export const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
+  const HELIO_BASE_API_URL = 'https://api.hel.io/v1';
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
@@ -52,11 +52,11 @@ export const approveTransaction = async (
     body: JSON.stringify(reqBody),
   });
   const result = await res.json();
-  if (res.status === HttpCodes.SUCCESS && result.content != null) {
+  if ((res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED_SUCCESS) && result.content != null) {
     return result.content;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
-    throw new VerificationError(result.message);
+    throw new VerificationError(`Error comfirming transaction integrity, ${result.message}`);
   }
   throw new Error(result.message);
 };
@@ -69,7 +69,7 @@ export const checkoutTransaction = async (
   message?: string;
 }> => {
   const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
-  const res = await fetch(`${HELIO_BASE_API_URL}/checkout/breakpoint`, {
+  const res = await fetch(`${HELIO_BASE_API_URL}/breakpoint/checkout`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -77,7 +77,7 @@ export const checkoutTransaction = async (
     body: JSON.stringify(reqBody),
   });
   const result = await res.json();
-  if (res.status === HttpCodes.SUCCESS) {
+  if ((res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED_SUCCESS)) {
     return result;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
@@ -175,7 +175,9 @@ export const createOneTimePayment = async ({
   };
 
   try {
+    console.log("sending");
     const paymentResult = await checkoutTransaction(transactionPayload);
+    console.log(paymentResult);
     onSuccess?.({
       transaction: paymentResult?.transactionSignature ?? '',
       content: paymentResult?.content ?? '',

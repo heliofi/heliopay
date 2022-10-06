@@ -11,11 +11,11 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    'ed0dee2d-b41c-486e-8f02-1ac6909dfc5d'
+    '633e9e9b3ede004cd0b17d09'
   );
 
   const getListCurrencies = () => {
-    HelioApiAdapter.listCurrencies('devnet')
+    HelioApiAdapter.listCurrencies('mainnet-beta')
       .then((res) => {
         // console.log(2, res);
       })
@@ -36,7 +36,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="devnet"
+        cluster="mainnet-beta"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);

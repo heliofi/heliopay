@@ -91,31 +91,31 @@ const CustomerDetailsFormModal = ({
   const isCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
     return (
-      paymentDetails.requireEmail ||
-      paymentDetails.requireFullName ||
-      paymentDetails.requireDiscordUsername ||
-      paymentDetails.requireTwitterUsername ||
-      paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress
+      paymentDetails.features.requireEmail ||
+      paymentDetails.features.requireFullName ||
+      paymentDetails.features.requireDiscordUsername ||
+      paymentDetails.features.requireTwitterUsername ||
+      paymentDetails.features.requireCountry ||
+      paymentDetails.features.requireDeliveryAddress
     );
   };
   const initialValues = {
-    requireEmail: paymentDetails.requireEmail,
-    requireDiscordUsername: paymentDetails.requireDiscordUsername,
-    requireFullName: paymentDetails.requireFullName,
-    requireTwitterUsername: paymentDetails.requireTwitterUsername,
-    requireCountry: paymentDetails.requireCountry,
-    requireDeliveryAddress: paymentDetails.requireDeliveryAddress,
-    canChangePrice: paymentDetails.canChangePrice,
-    canChangeQuantity: paymentDetails.canChangeQuantity,
+    requireEmail: paymentDetails.features.requireEmail,
+    requireDiscordUsername: paymentDetails.features.requireDiscordUsername,
+    requireFullName: paymentDetails.features.requireFullName,
+    requireTwitterUsername: paymentDetails.features.requireTwitterUsername,
+    requireCountry: paymentDetails.features.requireCountry,
+    requireDeliveryAddress: paymentDetails.features.requireDeliveryAddress,
+    canChangePrice: paymentDetails.features.canChangePrice,
+    canChangeQuantity: paymentDetails.features.canChangeQuantity,
     fullName: undefined,
     email: undefined,
     discordUsername: undefined,
     twitterUsername: undefined,
     country: undefined,
     deliveryAddress: undefined,
-    quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
-    customPrice: paymentDetails.canChangePrice ? undefined : normalizedPrice,
+    quantity: paymentDetails.features.canChangeQuantity ? 1 : undefined,
+    customPrice: paymentDetails.features.canChangePrice ? undefined : normalizedPrice,
     canSelectCurrency,
     currency: canSelectCurrency ? undefined : paymentDetails.currency,
   };
@@ -135,10 +135,10 @@ const CustomerDetailsFormModal = ({
     onSubmit({
       customerDetails: clearDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(values.currency),
+        getCurrency(values.currency.symbol),
         values.canChangePrice
           ? values.customPrice
-          : totalAmount || normalizedPrice
+          : totalAmount ?? normalizedPrice
       ),
       quantity: values.quantity || 1,
       currency: values.currency || paymentDetails?.currency,
@@ -164,7 +164,7 @@ const CustomerDetailsFormModal = ({
             initialValues={initialValues}
             onSubmit={handleSubmit}
           >
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue  }) => (
               <Form>
                 <div>
                   {values.canChangePrice ? (

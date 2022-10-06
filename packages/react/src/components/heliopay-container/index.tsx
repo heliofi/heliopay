@@ -148,13 +148,18 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     currency,
     quantity,
     customerDetails,
-  }: any) => {
-    if (helioProvider) {
+  }: {
+    amount: number;
+    currency: Currency;
+    quantity: number;
+    customerDetails?: any;
+  }) => {
+    if (helioProvider && currency?.symbol != null) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.owner?.wallets?.items?.[0]?.publicKey;
-      const { symbol } = getCurrency(currency);
+      const recipient = paymentDetails?.wallet?.publicKey;
+      const { symbol } = getCurrency(currency.symbol);
       if (symbol == null) throw new Error('Unknown currency symbol');
       const payload = {
         anchorProvider: helioProvider,
@@ -167,7 +172,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onPending,
         customerDetails: {
           ...customerDetails,
-          additionalJSON,
+          additionalJSON: JSON.stringify(additionalJSON),
         },
         quantity: Number(quantity) ?? 1,
         cluster,
@@ -205,7 +210,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         });
                       }
                     }}
-                    disabled={disabled || !paymentDetails?.id}
+                    disabled={false}
                   >
                     {payButtonTitle}
                   </Button>
