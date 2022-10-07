@@ -3,8 +3,8 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 export const getClusterEndpoint = (network: string): string => {
   switch (network) {
     case WalletAdapterNetwork.Mainnet:
-      return 'https://ssc-dao.genesysgo.net/';
+      return 'https://wiser-fittest-river.solana-mainnet.quiknode.pro/';
     default:
-      return 'https://devnet.genesysgo.net/';
+      return 'https://evocative-light-card.solana-devnet.quiknode.pro/';
   }
 };

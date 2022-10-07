@@ -210,7 +210,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         });
                       }
                     }}
-                    disabled={false}
+                    disabled={disabled || !paymentDetails?.id}
                   >
                     {payButtonTitle}
                   </Button>
