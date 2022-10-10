@@ -37,9 +37,10 @@ interface Props {
 }
 
 const approveTransaction = async (
+  cluster: Cluster,
   reqBody: ApproveTransactionPayload
 ): Promise<string> => {
-  const HELIO_BASE_API_URL = 'https://api.hel.io/v1';
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
@@ -143,7 +144,7 @@ export const createOneTimePayment = async ({
 
   try {
     approveTransactionPayload.transactionSignature = signature;
-    const content = await approveTransaction(approveTransactionPayload);
+    const content = await approveTransaction(cluster, approveTransactionPayload);
     onSuccess?.({ transaction: signature, content });
   } catch (e) {
     console.log("error at final step");
@@ -154,7 +155,7 @@ export const createOneTimePayment = async ({
       onPending?.({ transaction: signature });
       await retryCallback(
         async () => {
-          const content = await approveTransaction(approveTransactionPayload);
+          const content = await approveTransaction(cluster, approveTransactionPayload);
           onSuccess?.({ transaction: signature, content });
         },
         20,
