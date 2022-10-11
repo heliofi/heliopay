@@ -49,11 +49,17 @@ const approveTransaction = async (
     body: JSON.stringify(reqBody),
   });
   const result = await res.json();
-  if ((res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED_SUCCESS) && result.content != null) {
+  if (
+    (res.status === HttpCodes.SUCCESS ||
+      res.status === HttpCodes.CREATED_SUCCESS) &&
+    result.content != null
+  ) {
     return result.content;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
-    throw new VerificationError(`Error comfirming transaction integrity, ${result.message}`);
+    throw new VerificationError(
+      `Error comfirming transaction integrity, ${result.message}`
+    );
   }
   throw new Error(result.message);
 };
@@ -142,7 +148,10 @@ export const createOneTimePayment = async ({
 
   try {
     approveTransactionPayload.transactionSignature = signature;
-    const content = await approveTransaction(cluster, approveTransactionPayload);
+    const content = await approveTransaction(
+      cluster,
+      approveTransactionPayload
+    );
     onSuccess?.({ transaction: signature, content });
   } catch (e) {
     const errorHandler = (message: string) => {
@@ -152,7 +161,10 @@ export const createOneTimePayment = async ({
       onPending?.({ transaction: signature });
       await retryCallback(
         async () => {
-          const content = await approveTransaction(cluster, approveTransactionPayload);
+          const content = await approveTransaction(
+            cluster,
+            approveTransactionPayload
+          );
           onSuccess?.({ transaction: signature, content });
         },
         20,

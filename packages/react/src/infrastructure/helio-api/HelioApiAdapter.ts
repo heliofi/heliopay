@@ -31,7 +31,6 @@ export const HelioApiAdapter = {
     id: string,
     cluster: Cluster
   ): Promise<any> {
-    console.log({ id });
     const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
     const url = `${HELIO_BASE_API_URL}/paylink/${id}/public`;
     const paymentResult = await (
