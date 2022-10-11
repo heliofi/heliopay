@@ -123,8 +123,6 @@ export const createOneTimePayment = async ({
     anchorProvider
   );
 
-  console.log(signature);
-
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction' });
     return;
@@ -147,7 +145,6 @@ export const createOneTimePayment = async ({
     const content = await approveTransaction(cluster, approveTransactionPayload);
     onSuccess?.({ transaction: signature, content });
   } catch (e) {
-    console.log("error at final step");
     const errorHandler = (message: string) => {
       onError?.({ errorMessage: message, transaction: signature });
     };

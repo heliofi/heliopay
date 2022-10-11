@@ -44,7 +44,7 @@ export const useHelioProvider = () => {
     }
     const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
       paymentRequestId,
-      cluster,
+      cluster
     );
     setPaymentDetails(result || {});
   };
