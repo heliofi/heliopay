@@ -11,7 +11,7 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '634422185db9656d2b1af4ee'
+    '634588e442ea1859d6fd9afc'
   );
 
   return (
@@ -42,7 +42,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC']}
-        totalAmount={2}
+        totalAmount={0.1}
       />
     </>
   );
