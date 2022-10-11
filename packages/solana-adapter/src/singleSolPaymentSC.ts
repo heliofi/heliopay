@@ -40,8 +40,7 @@ export const singleSolPaymentSC = async (
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
-  );
-
+    );
   return program.rpc.singleSolPayment(new BN(req.amount), remainingAmounts, {
     accounts: {
       sender: req.sender,
