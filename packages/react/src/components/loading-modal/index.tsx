@@ -15,7 +15,7 @@ export const LoadingModal = ({ onHide }: InheritedModalProps) =>
       <Modal onHide={onHide} icon={<HelioIcon />} animateIcon>
         <StyledLoadingWrapper>
           <StyledLoadingTitle>Processing..</StyledLoadingTitle>
-          <StyledLoadingText>Approving trasnsaction</StyledLoadingText>
+          <StyledLoadingText>Approving transaction</StyledLoadingText>
         </StyledLoadingWrapper>
         <StyledLoadingLink
           href="https://docs.hel.io/"
