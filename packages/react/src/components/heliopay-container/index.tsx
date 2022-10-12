@@ -134,10 +134,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     quantity: number;
     customerDetails?: any;
   }) => {
-    console.log({ amount, currency, quantity, customerDetails });
-    console.log({ helioProvider, currency: currency?.symbol });
     if (helioProvider && currency?.symbol != null) {
-      console.log('creating payment');
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);

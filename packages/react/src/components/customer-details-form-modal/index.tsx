@@ -123,7 +123,6 @@ const CustomerDetailsFormModal = ({
     };
 
     const clearDetails = removeUndefinedFields(details);
-    console.log({ clearDetails });
 
     onSubmit({
       customerDetails: clearDetails,
