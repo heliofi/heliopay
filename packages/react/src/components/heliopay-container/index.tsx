@@ -66,6 +66,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     getPaymentDetails,
     initCluster,
     cluster: mainCluster,
+    isCustomerDetailsRequired,
   } = useHelioProvider();
 
   const [showFormModal, setShowFormModal] = useState(false);
@@ -110,21 +111,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
-  const isCustomerDetailsRequired = (): boolean => {
-    if (!paymentDetails) return false;
-    return (
-      paymentDetails.requireEmail ||
-      paymentDetails.requireFullName ||
-      paymentDetails.requireDiscordUsername ||
-      paymentDetails.requireTwitterUsername ||
-      paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress ||
-      paymentDetails.canChangeQuantity ||
-      paymentDetails.canChangePrice ||
-      supportedCurrencies?.length
-    );
-  };
-
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
     onSuccess?.(event);
     setResult(event);
@@ -148,7 +134,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     quantity: number;
     customerDetails?: any;
   }) => {
+    console.log({ amount, currency, quantity, customerDetails });
+    console.log({ helioProvider, currency: currency?.symbol });
     if (helioProvider && currency?.symbol != null) {
+      console.log('creating payment');
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
@@ -188,7 +177,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <div>
                   <Button
                     onClick={() => {
-                      if (isCustomerDetailsRequired()) {
+                      if (
+                        isCustomerDetailsRequired ||
+                        supportedCurrencies?.length
+                      ) {
                         setShowFormModal(true);
                       } else {
                         submitPayment({

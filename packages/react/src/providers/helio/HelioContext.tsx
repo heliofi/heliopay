@@ -1,5 +1,5 @@
 import { Cluster } from '@solana/web3.js';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 
@@ -10,6 +10,8 @@ export const HelioContext = createContext<{
   setPaymentDetails: (paymentDetails: any) => void;
   cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
+  isCustomerDetailsRequired: boolean;
+  setIsCustomerDetailsRequired: (isCustomerDetailsRequired: boolean) => void;
 }>({
   currencyList: [],
   setCurrencyList: () => {},
@@ -17,6 +19,8 @@ export const HelioContext = createContext<{
   setPaymentDetails: () => {},
   cluster: null,
   setCluster: () => {},
+  isCustomerDetailsRequired: false,
+  setIsCustomerDetailsRequired: () => {},
 });
 
 export const useHelioProvider = () => {
@@ -27,6 +31,8 @@ export const useHelioProvider = () => {
     setPaymentDetails,
     cluster,
     setCluster,
+    isCustomerDetailsRequired,
+    setIsCustomerDetailsRequired,
   } = useContext(HelioContext);
 
   const getCurrencyList = async () => {
@@ -35,6 +41,20 @@ export const useHelioProvider = () => {
       setCurrencyList(result || []);
       CurrencyService.setCurrencies(result);
     }
+  };
+
+  const checkCustomerDetailsRequired = () => {
+    if (!paymentDetails) return false;
+    return (
+      paymentDetails.features?.requireEmail ||
+      paymentDetails.features?.requireFullName ||
+      paymentDetails.features?.requireDiscordUsername ||
+      paymentDetails.features?.requireTwitterUsername ||
+      paymentDetails.features?.requireCountry ||
+      paymentDetails.features?.requireDeliveryAddress ||
+      paymentDetails.features?.canChangeQuantity ||
+      paymentDetails.features?.canChangePrice
+    );
   };
 
   const getPaymentDetails = async (paymentRequestId: string) => {
@@ -49,6 +69,10 @@ export const useHelioProvider = () => {
     setPaymentDetails(result || {});
   };
 
+  useEffect(() => {
+    setIsCustomerDetailsRequired(checkCustomerDetailsRequired());
+  }, [paymentDetails]);
+
   const initCluster = (initialCluster: Cluster) => {
     setCluster(initialCluster);
   };
@@ -60,5 +84,6 @@ export const useHelioProvider = () => {
     getPaymentDetails,
     cluster,
     initCluster,
+    isCustomerDetailsRequired,
   };
 };

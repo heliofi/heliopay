@@ -8,6 +8,8 @@ export const HelioProvider: FC<{
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [cluster, setCluster] = useState<Cluster | null>(null);
+  const [isCustomerDetailsRequired, setIsCustomerDetailsRequired] =
+    useState(false);
   const helioProviderValue = useMemo(
     () => ({
       currencyList,
@@ -16,6 +18,8 @@ export const HelioProvider: FC<{
       setPaymentDetails,
       cluster,
       setCluster,
+      isCustomerDetailsRequired,
+      setIsCustomerDetailsRequired,
     }),
     [
       currencyList,
@@ -24,6 +28,8 @@ export const HelioProvider: FC<{
       setPaymentDetails,
       cluster,
       setCluster,
+      isCustomerDetailsRequired,
+      setIsCustomerDetailsRequired,
     ]
   );
 

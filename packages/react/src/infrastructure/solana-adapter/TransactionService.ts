@@ -69,6 +69,7 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
+  console.log({ request, provider, symbol });
   try {
     if (symbol === SOL_SYMBOL) {
       return await singleSolPaymentSC(provider, request);
@@ -128,6 +129,21 @@ export const createOneTimePayment = async ({
     },
     anchorProvider
   );
+  console.log({
+    signature,
+    mintAddress,
+    anchorProvider,
+    recipientPK,
+    symbol,
+    amount,
+    paymentRequestId,
+    customerDetails,
+    quantity,
+    onSuccess,
+    onError,
+    onPending,
+    cluster,
+  });
 
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction' });

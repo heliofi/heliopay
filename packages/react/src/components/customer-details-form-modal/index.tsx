@@ -38,7 +38,8 @@ const CustomerDetailsFormModal = ({
   allowedCurrencies,
   totalAmount,
 }: Props) => {
-  const { currencyList, paymentDetails } = useHelioProvider();
+  const { currencyList, paymentDetails, isCustomerDetailsRequired } =
+    useHelioProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
 
@@ -65,7 +66,7 @@ const CustomerDetailsFormModal = ({
     if (allowedCurrencies?.length === 1) {
       setActiveCurrency(allowedCurrencies[0]);
     } else if (!canSelectCurrency) {
-      setActiveCurrency(getCurrency(paymentDetails?.currency));
+      setActiveCurrency(getCurrency(paymentDetails?.currency?.symbol));
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
@@ -76,7 +77,7 @@ const CustomerDetailsFormModal = ({
     ) {
       setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
-          getCurrency(paymentDetails?.currency),
+          getCurrency(paymentDetails?.currency?.symbol),
           paymentDetails?.normalizedPrice
         )
       );
@@ -88,17 +89,6 @@ const CustomerDetailsFormModal = ({
     return totalPrice || price;
   };
 
-  const isCustomerDetailsRequired = (): boolean => {
-    if (!paymentDetails) return false;
-    return (
-      paymentDetails?.features.requireEmail ||
-      paymentDetails?.features.requireFullName ||
-      paymentDetails?.features.requireDiscordUsername ||
-      paymentDetails?.features.requireTwitterUsername ||
-      paymentDetails?.features.requireCountry ||
-      paymentDetails?.features.requireDeliveryAddress
-    );
-  };
   const initialValues = {
     requireEmail: paymentDetails?.features.requireEmail,
     requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
@@ -119,7 +109,7 @@ const CustomerDetailsFormModal = ({
       ? undefined
       : normalizedPrice,
     canSelectCurrency,
-    currency: canSelectCurrency ? undefined : paymentDetails?.currency,
+    currency: canSelectCurrency ? undefined : paymentDetails?.currency?.symbol,
   };
 
   const handleSubmit = (values: any) => {
@@ -133,6 +123,7 @@ const CustomerDetailsFormModal = ({
     };
 
     const clearDetails = removeUndefinedFields(details);
+    console.log({ clearDetails });
 
     onSubmit({
       customerDetails: clearDetails,
@@ -143,7 +134,7 @@ const CustomerDetailsFormModal = ({
           : totalAmount ?? normalizedPrice
       ),
       quantity: values.quantity || 1,
-      currency: values.currency || paymentDetails?.currency,
+      currency: getCurrency(values.currency || paymentDetails?.currency),
     });
   };
 
@@ -230,7 +221,7 @@ const CustomerDetailsFormModal = ({
                       label="Quantity"
                     />
                   )}
-                  {isCustomerDetailsRequired() && (
+                  {isCustomerDetailsRequired && (
                     <>
                       <StyledFormTitle>Information required</StyledFormTitle>
                       <StyledFormText>
