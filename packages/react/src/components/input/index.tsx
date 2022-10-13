@@ -1,3 +1,4 @@
+import { FormikProps, FormikValues } from 'formik';
 import { ChangeEvent, FC, useState } from 'react';
 
 import InputContainer, { InputContainerProps } from '../input-container';
@@ -16,6 +17,7 @@ type InputProps = {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   inputClassName?: string;
   label?: string;
+  component?: React.ComponentType<FormikProps<FormikValues>> | React.ReactNode;
 };
 
 const Input: FC<InputProps & InputContainerProps> = ({
@@ -31,6 +33,7 @@ const Input: FC<InputProps & InputContainerProps> = ({
   onChange,
   inputClassName = '',
   label,
+  component
 }) => {
   const [focus, setFocus] = useState(false);
 
@@ -58,11 +61,12 @@ const Input: FC<InputProps & InputContainerProps> = ({
             disabled={disabled}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
+            component={component}
           />
         ) : (
           <StyledField
             id={fieldId}
-            component={fieldAs}
+            component={fieldAs || component}
             type="text"
             name={fieldName}
             placeholder={placeholder}

@@ -20,6 +20,7 @@ import { removeUndefinedFields } from '../../utils';
 import { Currency, CustomerDetails } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
+import PhoneNumberInput from '../phoneNumberInput';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -104,6 +105,7 @@ const CustomerDetailsFormModal = ({
     twitterUsername: undefined,
     country: undefined,
     deliveryAddress: undefined,
+    phoneNumber: undefined,
     quantity: paymentDetails?.features.canChangeQuantity ? 1 : undefined,
     customPrice: paymentDetails?.features.canChangePrice
       ? undefined
@@ -261,6 +263,16 @@ const CustomerDetailsFormModal = ({
                       fieldName="discordUsername"
                       placeholder="Helio#1234"
                       label="Discord username"
+                    />
+                  )}
+
+                  {paymentDetails?.features?.requirePhoneNumber && (
+                    <PhoneNumberInput
+                      fieldId="phoneNumber"
+                      label="Phone number"
+                      onChange={(value) => {
+                        setFieldValue('phoneNumber', value);
+                      }}
                     />
                   )}
 
