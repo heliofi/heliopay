@@ -1,6 +1,6 @@
 {
   "name": "e2e",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "main": "index.js",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@heliofi/react": "^1.0.1",
+    "@heliofi/react": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
