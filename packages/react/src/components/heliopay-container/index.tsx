@@ -28,6 +28,7 @@ import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
+import { useAddressProvider } from '../../providers/address/AddressContext';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -54,6 +55,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
+  const { getCountry } = useAddressProvider();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | null
@@ -78,6 +80,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   useEffect(() => {
     initCluster(cluster);
   }, [cluster]);
+
+  useEffect(() => {
+    if (
+      paymentDetails?.features?.requireDeliveryAddress &&
+      paymentDetails?.features?.requireCountry
+    ) {
+      getCountry();
+    }
+  }, [paymentDetails]);
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter((currency) =>

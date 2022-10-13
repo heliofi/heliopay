@@ -25,6 +25,8 @@ export const StyledModalContainer = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 20px rgba(156, 163, 175, 0.15);
   border-radius: 8px;
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 export const StyledModalHeader = styled.div`

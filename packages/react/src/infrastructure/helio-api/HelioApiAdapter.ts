@@ -2,6 +2,9 @@ import { Cluster } from '@solana/web3.js';
 import { ClusterType, Currency } from '../../domain';
 import { configDev, configProd } from '../config';
 
+const DEV_ADDRESS_SERVICE_BASE_URL = 'http://localhost:3000';
+const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
+
 export const getAwsConfig = (cluster: Cluster) => {
   switch (cluster) {
     case ClusterType.Testnet:
@@ -26,6 +29,18 @@ export const getHelioApiBaseUrl = (cluster: Cluster) => {
   }
 };
 
+export const getAddressApiBaseUrl = (cluster: Cluster) => {
+  switch (cluster) {
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
+      return DEV_ADDRESS_SERVICE_BASE_URL;
+    case ClusterType.Mainnet:
+      return PROD_ADDRESS_SERVICE_BASE_URL;
+    default:
+      return PROD_ADDRESS_SERVICE_BASE_URL;
+  }
+};
+
 export const HelioApiAdapter = {
   async getPaymentRequestByIdPublic(
     id: string,
@@ -42,6 +57,56 @@ export const HelioApiAdapter = {
       })
     ).json();
     return paymentResult;
+  },
+
+  async getCountry(cluster: Cluster): Promise<any> {
+    const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
+    const url = `${ADDRESS_API_BASE_URL}/api/getCountry`;
+    const result = await (
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    ).json();
+    return result;
+  },
+
+  async findAddress(
+    query: string,
+    country_code: string,
+    cluster: Cluster
+  ): Promise<any> {
+    const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
+    const url = `${ADDRESS_API_BASE_URL}/api/findAddress?query=${query}&country=${country_code}`;
+    const result = await (
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    ).json();
+    return result;
+  },
+
+  async retrieveAddress(
+    address_id: string,
+    country_code: string,
+    cluster: Cluster
+  ): Promise<any> {
+    const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
+    const url = `${ADDRESS_API_BASE_URL}/api/retrieveAddress?id=${address_id}&country=${country_code}`;
+    const result = await (
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    ).json();
+    return result;
   },
 
   async listCurrencies(cluster: Cluster): Promise<Currency[]> {
