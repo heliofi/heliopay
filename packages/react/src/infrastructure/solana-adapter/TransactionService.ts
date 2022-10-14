@@ -1,8 +1,8 @@
 import {
   HelioIdl,
   SinglePaymentRequest,
-  singlePaymentSC,
-  singleSolPaymentSC,
+  singlePayment,
+  singleSolPayment,
 } from '@heliofi/solana-adapter';
 import { Program } from '@project-serum/anchor';
 import { Cluster, PublicKey } from '@solana/web3.js';
@@ -71,9 +71,9 @@ const sendTransaction = async (
 ): Promise<string | undefined> => {
   try {
     if (symbol === SOL_SYMBOL) {
-      return await singleSolPaymentSC(provider, request);
+      return await singleSolPayment(provider, request, false);
     }
-    return await singlePaymentSC(provider, request);
+    return await singlePayment(provider, request, false);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
@@ -121,7 +121,7 @@ export const createOneTimePayment = async ({
     symbol,
     {
       amount,
-      sender: anchorProvider.provider.wallet.publicKey,
+      sender: anchorProvider.provider.publicKey as PublicKey,
       recipient: new PublicKey(recipientPK),
       mintAddress: new PublicKey(mintAddress),
       cluster,
@@ -138,7 +138,7 @@ export const createOneTimePayment = async ({
     transactionSignature: signature,
     paymentRequestId,
     amount,
-    sender: anchorProvider.provider.wallet.publicKey.toBase58(),
+    sender: anchorProvider?.provider?.publicKey?.toBase58() as string,
     recipient: recipientPK,
     currency: symbol,
     cluster,

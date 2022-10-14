@@ -1,5 +1,5 @@
 import { IDL, PROGRAM_ID } from '@heliofi/solana-adapter';
-import { Program, Provider } from '@project-serum/anchor';
+import { AnchorProvider as Provider, Program } from '@project-serum/anchor';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { ConfirmOptions } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo } from 'react';

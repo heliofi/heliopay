@@ -160,13 +160,13 @@ const CustomerDetailsFormModal = ({
     onSubmit({
       customerDetails: clearDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(values.currency.symbol),
+        getCurrency(values.currency || paymentDetails?.currency.symbol),
         values.canChangePrice
           ? values.customPrice
-          : totalAmount ?? normalizedPrice
+          : totalAmount || normalizedPrice
       ),
       quantity: values.quantity || 1,
-      currency: getCurrency(values.currency || paymentDetails?.currency),
+      currency: getCurrency(values.currency || paymentDetails?.currency.symbol),
     });
   };
 
