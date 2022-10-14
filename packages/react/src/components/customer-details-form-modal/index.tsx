@@ -364,7 +364,7 @@ const CustomerDetailsFormModal = ({
                           fieldId="productValue"
                           fieldName="productValue"
                           placeholder="Insert data here..."
-                          label="paymentDetails?.product.name"
+                          label={paymentDetails?.product.name}
                           labelSuffix={
                             <>
                               {productDetailsDescriptionShown && (
