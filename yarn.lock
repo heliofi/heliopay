@@ -2553,10 +2553,10 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
-"@heliofi/helio-icons@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.4.tgz#031c27df0948981a7046b0723a7b3a52a8ff9396"
-  integrity sha512-5idPlSIp0IBlk7hPT4xqGgB3rvNTKEnbaOUhSbDJfvbDrA/v9KDFuuduhNz4fBulBiCqDi+MxxvYN1cvgzyS7g==
+"@heliofi/helio-icons@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
+  integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
 "@heliofi/solana-adapter@^1.1.0-alpha":
   version "1.1.0-alpha"

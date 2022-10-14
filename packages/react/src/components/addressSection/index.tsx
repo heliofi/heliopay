@@ -1,4 +1,4 @@
-import { PageSearchIcon } from '@heliofi/helio-icons';
+import { SearchIcon } from '@heliofi/helio-icons';
 import { useSelect } from 'downshift';
 import { useEffect } from 'react';
 import { useAddressProvider } from '../../providers/address/AddressContext';
@@ -79,7 +79,7 @@ const AddressSection = ({
               onClick={() => onChangePostcode(areaCodeValue)}
               type="button"
             >
-              <PageSearchIcon />
+              <SearchIcon />
             </Button>
           </StyledButton>
         </StyledAreaCode>
