@@ -153,6 +153,11 @@ const CustomerDetailsFormModal = ({
       twitterUsername: values.twitterUsername,
       country: values.country?.label,
       deliveryAddress: values.deliveryAddress,
+      city: values.city,
+      street: values.street,
+      streetNumber: values.streetNumber,
+      areaCode: values.areaCode,
+      phoneNumber: values.phoneNumber,
     };
 
     const clearDetails = removeUndefinedFields(details);

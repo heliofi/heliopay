@@ -2,6 +2,7 @@ import { ErrorMessage } from 'formik';
 import styled from 'styled-components';
 
 export const StyledWrapper = styled.div`
+  margin-bottom: 12px;
   :root {
     --PhoneInput-color--focus: #03b2cb;
     --PhoneInputInternationalIconPhone-opacity: 0.8;
