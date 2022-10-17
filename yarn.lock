@@ -2558,10 +2558,10 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
-"@heliofi/solana-adapter@1.1.0-alpha":
-  version "1.1.0-alpha"
-  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-1.1.0-alpha.tgz#f754226333378557e8b33cb50e54ca817f1e0d17"
-  integrity sha512-Mj10GiwWEHqPAZRIFOv+wl6nWgSfXr8y0t3SGS7idxVAh4VqEOq063/XPHkJJiA1FgmNqPM5EhPZd/6Yglza6Q==
+"@heliofi/solana-adapter@^1.1.2-alpha":
+  version "1.1.2-alpha"
+  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-1.1.2-alpha.tgz#1bd2f7f4b67234966e800bb822f32189bcfdaffa"
+  integrity sha512-pFOtKUzfDVVTjtoqCA4DjNbifvqXMsgSGrrOM9ma4zQWlkwBuClfv6AK739WgsEdnwM0KI3O6QqAQ6Dvgi3w7Q==
   dependencies:
     "@project-serum/anchor" "^0.25.0"
     "@solana/spl-token" "^0.2.0"
