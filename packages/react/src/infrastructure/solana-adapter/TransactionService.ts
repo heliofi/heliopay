@@ -19,6 +19,7 @@ import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { getHelioApiBaseUrl } from '../helio-api/HelioApiAdapter';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 const SOL_SYMBOL = 'SOL';
 
@@ -32,6 +33,7 @@ interface Props {
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   customerDetails?: CustomerDetails;
+  productDetails?: ProductDetails;
   quantity?: number;
   cluster: Cluster;
 }
@@ -131,6 +133,7 @@ export const createOneTimePayment = async ({
   amount,
   paymentRequestId,
   customerDetails,
+  productDetails,
   quantity,
   onSuccess,
   onError,
@@ -158,6 +161,9 @@ export const createOneTimePayment = async ({
     return;
   }
 
+  const finalProductDetails =
+    Object.keys(productDetails || {}).length === 0 ? undefined : productDetails;
+
   const approveTransactionPayload: ApproveTransactionPayload = {
     transactionSignature: signature,
     paymentRequestId,
@@ -168,6 +174,7 @@ export const createOneTimePayment = async ({
     cluster,
     customerDetails,
     quantity,
+    productDetails: finalProductDetails,
   };
 
   try {

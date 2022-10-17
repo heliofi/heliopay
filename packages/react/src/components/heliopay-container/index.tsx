@@ -6,6 +6,7 @@ import ConnectButton from '../connect-button';
 import {
   ClusterType,
   Currency,
+  CustomerDetails,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -29,6 +30,7 @@ import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
 import { useAddressProvider } from '../../providers/address/AddressContext';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -139,11 +141,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     currency,
     quantity,
     customerDetails,
+    productDetails,
   }: {
     amount: number;
     currency: Currency;
     quantity: number;
-    customerDetails?: any;
+    customerDetails?: CustomerDetails;
+    productDetails?: ProductDetails;
   }) => {
     if (helioProvider && currency?.symbol != null) {
       onStartPayment?.();
@@ -162,6 +166,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onError: handleErrorPayment,
         onPending,
         customerDetails,
+        productDetails,
         quantity: Number(quantity) ?? 1,
         cluster,
       };

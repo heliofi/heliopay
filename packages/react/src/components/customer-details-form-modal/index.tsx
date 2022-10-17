@@ -29,11 +29,13 @@ import PhoneNumberInput from '../phoneNumberInput';
 import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
     amount: number;
     customerDetails?: CustomerDetails;
+    productDetails?: ProductDetails;
     quantity: number;
     currency: Currency;
   }) => void;
@@ -121,6 +123,7 @@ const CustomerDetailsFormModal = ({
     requirePhoneNumber: paymentDetails?.features.requirePhoneNumber,
     requireCountry: paymentDetails?.features.requireCountry,
     requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
+    requireProductDetails: paymentDetails?.features.requireProductDetails,
     canChangePrice: paymentDetails?.features.canChangePrice,
     canChangeQuantity: paymentDetails?.features.canChangeQuantity,
     fullName: undefined,
@@ -160,10 +163,17 @@ const CustomerDetailsFormModal = ({
       phoneNumber: values.phoneNumber,
     };
 
+    const productDetails = {
+      name: paymentDetails.product?.name,
+      value: values.productValue,
+    };
+
     const clearDetails = removeUndefinedFields(details);
+    const clearProductDetails = removeUndefinedFields(productDetails);
 
     onSubmit({
       customerDetails: clearDetails,
+      productDetails: clearProductDetails,
       amount: TokenConversionService.convertToMinimalUnits(
         getCurrency(values.currency || paymentDetails?.currency.symbol),
         values.canChangePrice
