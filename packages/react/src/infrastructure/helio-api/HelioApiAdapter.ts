@@ -2,7 +2,7 @@ import { Cluster } from '@solana/web3.js';
 import { ClusterType, Currency } from '../../domain';
 import { configDev, configProd } from '../config';
 
-const DEV_ADDRESS_SERVICE_BASE_URL = 'http://localhost:3000';
+const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.hel.io';
 const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
 
 export const getAwsConfig = (cluster: Cluster) => {
