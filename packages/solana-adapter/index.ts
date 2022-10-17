@@ -9,3 +9,4 @@ export * from './src/singleSolPayment';
 export * from './src/program';
 export * from './src/types';
 export * from './src/config';
+export * from './src/getSinglePaymentSignedTx';
