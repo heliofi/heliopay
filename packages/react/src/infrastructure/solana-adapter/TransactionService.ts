@@ -157,7 +157,7 @@ export const createOneTimePayment = async ({
   );
 
   if (signature === undefined) {
-    onError?.({ errorMessage: 'Failed to send transaction' });
+    onError?.({ errorMessage: 'Failed to send transaction.' });
     return;
   }
 
