@@ -7,7 +7,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
 }
-//test
+
 const Button = ({ children, ...props }: ButtonProps) => (
   <StyledButton {...props}>{children}</StyledButton>
 );
