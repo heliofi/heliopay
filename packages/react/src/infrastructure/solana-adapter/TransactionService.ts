@@ -1,9 +1,9 @@
 import {
   HelioIdl,
   SinglePaymentRequest,
-  singlePaymentSC,
-  singleSolPaymentSC,
-  getSinglePaymentSignedTx,
+  singlePayment,
+  singleSolPayment,
+  getSinglePaymentSignedTx
 } from '@heliofi/solana-adapter';
 import { Program, Wallet } from '@project-serum/anchor';
 import { Cluster, Connection, PublicKey } from '@solana/web3.js';
@@ -13,7 +13,7 @@ import {
   ErrorPaymentEvent,
   HttpCodes,
   PendingPaymentEvent,
-  SuccessPaymentEvent,
+  SuccessPaymentEvent
 } from '../../domain';
 import { TransactionTimeoutError } from './TransactionTimeoutError';
 import { VerificationError } from './VerificationError';
@@ -47,16 +47,22 @@ export const approveTransaction = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
+      'content-type': 'application/json'
     },
-    body: JSON.stringify(reqBody),
+    body: JSON.stringify(reqBody)
   });
   const result = await res.json();
-  if ((res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED_SUCCESS) && result.content != null) {
+  if (
+    (res.status === HttpCodes.SUCCESS ||
+      res.status === HttpCodes.CREATED_SUCCESS) &&
+    result.content != null
+  ) {
     return result.content;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
-    throw new VerificationError(`Error comfirming transaction integrity, ${result.message}`);
+    throw new VerificationError(
+      `Error comfirming transaction integrity, ${result.message}`
+    );
   }
   throw new Error(result.message);
 };
@@ -72,12 +78,15 @@ export const checkoutTransaction = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/breakpoint/checkout`, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
+      'content-type': 'application/json'
     },
-    body: JSON.stringify(reqBody),
+    body: JSON.stringify(reqBody)
   });
   const result = await res.json();
-  if ((res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED_SUCCESS)) {
+  if (
+    res.status === HttpCodes.SUCCESS ||
+    res.status === HttpCodes.CREATED_SUCCESS
+  ) {
     return result;
   }
   if (res.status === HttpCodes.FAILED_DEPENDENCY) {
@@ -93,9 +102,9 @@ export const signTransaction = async (
 ): Promise<string | undefined> => {
   try {
     if (symbol === SOL_SYMBOL) {
-      return await singleSolPaymentSC(provider, request);
+      return await singleSolPayment(provider, request, true); //True to sign fees
     }
-    return await singlePaymentSC(provider, request);
+    return await singlePayment(provider, request, true);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
@@ -137,24 +146,25 @@ export const createOneTimePayment = async ({
   onPending,
   connection,
   wallet,
-  cluster,
+  cluster
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
 
   const request: SinglePaymentRequest = {
     amount,
-    sender: anchorProvider.provider.wallet.publicKey,
+    sender: anchorProvider.provider.publicKey as PublicKey,
     recipient: new PublicKey(recipientPK),
     mintAddress: new PublicKey(mintAddress),
-    cluster,
+    cluster
   };
 
   const signedTx = await getSinglePaymentSignedTx(
     connection,
     wallet,
     anchorProvider,
-    request
+    request,
+    true
   );
 
   if (!signedTx) {
@@ -165,22 +175,22 @@ export const createOneTimePayment = async ({
   const transactionPayload: CheckoutReqPayload = {
     paymentRequestId,
     amount,
-    sender: anchorProvider.provider.wallet.publicKey.toBase58(),
+    sender: anchorProvider?.provider?.publicKey?.toBase58() as string,
     recipient: recipientPK,
     currency: symbol,
     cluster,
     customerDetails,
     quantity,
-    signedTx,
+    signedTx
   };
 
   try {
-    console.log("sending");
+    console.log('sending');
     const paymentResult = await checkoutTransaction(transactionPayload);
     console.log(paymentResult);
     onSuccess?.({
       transaction: paymentResult?.transactionSignature ?? '',
-      content: paymentResult?.content ?? '',
+      content: paymentResult?.content ?? ''
     });
   } catch (e) {
     const errorHandler = (message: string) => {
@@ -194,7 +204,7 @@ export const createOneTimePayment = async ({
           const paymentResult = await checkoutTransaction(transactionPayload);
           onSuccess?.({
             transaction: paymentResult?.transactionSignature ?? '',
-            content: paymentResult?.content ?? '',
+            content: paymentResult?.content ?? ''
           });
         },
         20,
