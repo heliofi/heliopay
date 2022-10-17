@@ -65,7 +65,7 @@ const CustomerDetailsFormModal = ({
     if (allowedCurrencies?.length === 1) {
       setActiveCurrency(allowedCurrencies[0]);
     } else if (!canSelectCurrency) {
-      setActiveCurrency(getCurrency(paymentDetails.currency));
+      setActiveCurrency(getCurrency(paymentDetails?.currency));
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
@@ -76,8 +76,8 @@ const CustomerDetailsFormModal = ({
     ) {
       setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
-          getCurrency(paymentDetails.currency),
-          paymentDetails.normalizedPrice
+          getCurrency(paymentDetails?.currency),
+          paymentDetails?.normalizedPrice
         )
       );
     }
@@ -91,33 +91,35 @@ const CustomerDetailsFormModal = ({
   const isCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
     return (
-      paymentDetails.requireEmail ||
-      paymentDetails.requireFullName ||
-      paymentDetails.requireDiscordUsername ||
-      paymentDetails.requireTwitterUsername ||
-      paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress
+      paymentDetails?.features.requireEmail ||
+      paymentDetails?.features.requireFullName ||
+      paymentDetails?.features.requireDiscordUsername ||
+      paymentDetails?.features.requireTwitterUsername ||
+      paymentDetails?.features.requireCountry ||
+      paymentDetails?.features.requireDeliveryAddress
     );
   };
   const initialValues = {
-    requireEmail: paymentDetails.requireEmail,
-    requireDiscordUsername: paymentDetails.requireDiscordUsername,
-    requireFullName: paymentDetails.requireFullName,
-    requireTwitterUsername: paymentDetails.requireTwitterUsername,
-    requireCountry: paymentDetails.requireCountry,
-    requireDeliveryAddress: paymentDetails.requireDeliveryAddress,
-    canChangePrice: paymentDetails.canChangePrice,
-    canChangeQuantity: paymentDetails.canChangeQuantity,
+    requireEmail: paymentDetails?.features.requireEmail,
+    requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
+    requireFullName: paymentDetails?.features.requireFullName,
+    requireTwitterUsername: paymentDetails?.features.requireTwitterUsername,
+    requireCountry: paymentDetails?.features.requireCountry,
+    requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
+    canChangePrice: paymentDetails?.features.canChangePrice,
+    canChangeQuantity: paymentDetails?.features.canChangeQuantity,
     fullName: undefined,
     email: undefined,
     discordUsername: undefined,
     twitterUsername: undefined,
     country: undefined,
     deliveryAddress: undefined,
-    quantity: paymentDetails.canChangeQuantity ? 1 : undefined,
-    customPrice: paymentDetails.canChangePrice ? undefined : normalizedPrice,
+    quantity: paymentDetails?.features.canChangeQuantity ? 1 : undefined,
+    customPrice: paymentDetails?.features.canChangePrice
+      ? undefined
+      : normalizedPrice,
     canSelectCurrency,
-    currency: canSelectCurrency ? undefined : paymentDetails.currency,
+    currency: canSelectCurrency ? undefined : paymentDetails?.currency,
   };
 
   const handleSubmit = (values: any) => {
@@ -135,10 +137,10 @@ const CustomerDetailsFormModal = ({
     onSubmit({
       customerDetails: clearDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(values.currency),
+        getCurrency(values.currency.symbol),
         values.canChangePrice
           ? values.customPrice
-          : totalAmount || normalizedPrice
+          : totalAmount ?? normalizedPrice
       ),
       quantity: values.quantity || 1,
       currency: values.currency || paymentDetails?.currency,
@@ -164,7 +166,7 @@ const CustomerDetailsFormModal = ({
             initialValues={initialValues}
             onSubmit={handleSubmit}
           >
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue, isValid }) => (
               <Form>
                 <div>
                   {values.canChangePrice ? (
@@ -218,7 +220,7 @@ const CustomerDetailsFormModal = ({
                       }}
                     />
                   )}
-                  {paymentDetails?.canChangeQuantity && (
+                  {paymentDetails?.features?.canChangeQuantity && (
                     <NumberInput
                       fieldId="quantity"
                       fieldName="quantity"
@@ -237,7 +239,7 @@ const CustomerDetailsFormModal = ({
                       </StyledFormText>
                     </>
                   )}
-                  {paymentDetails.requireFullName && (
+                  {paymentDetails?.features.requireFullName && (
                     <Input
                       fieldId="fullName"
                       fieldName="fullName"
@@ -245,8 +247,7 @@ const CustomerDetailsFormModal = ({
                       label="Full name"
                     />
                   )}
-
-                  {paymentDetails.requireEmail && (
+                  {paymentDetails?.features.requireEmail && (
                     <Input
                       fieldId="email"
                       fieldName="email"
@@ -255,7 +256,7 @@ const CustomerDetailsFormModal = ({
                     />
                   )}
 
-                  {paymentDetails.requireTwitterUsername && (
+                  {paymentDetails?.features.requireTwitterUsername && (
                     <Input
                       fieldId="twitterUsername"
                       fieldName="twitterUsername"
@@ -264,7 +265,7 @@ const CustomerDetailsFormModal = ({
                     />
                   )}
 
-                  {paymentDetails.requireDiscordUsername && (
+                  {paymentDetails?.features.requireDiscordUsername && (
                     <Input
                       fieldId="discordUsername"
                       fieldName="discordUsername"
@@ -273,7 +274,7 @@ const CustomerDetailsFormModal = ({
                     />
                   )}
 
-                  {paymentDetails.requireCountry && (
+                  {paymentDetails?.features.requireCountry && (
                     <SelectBox
                       options={countryOptions}
                       placeholder="Select country"
@@ -287,7 +288,7 @@ const CustomerDetailsFormModal = ({
                     />
                   )}
 
-                  {paymentDetails.requireDeliveryAddress && (
+                  {paymentDetails?.features.requireDeliveryAddress && (
                     <Input
                       fieldId="deliveryAddress"
                       fieldName="deliveryAddress"
@@ -296,7 +297,9 @@ const CustomerDetailsFormModal = ({
                       label="Shipping address"
                     />
                   )}
-                  <Button type="submit">PAY</Button>
+                  <Button disabled={!isValid} type="submit">
+                    PAY
+                  </Button>
                 </div>
               </Form>
             )}

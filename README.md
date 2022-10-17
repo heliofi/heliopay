@@ -44,6 +44,7 @@ const App = () => {
 | onError    | function | no       |            | triggered event when error |
 | onPending    | function | no       |            | triggered event when pending |
 | onStartPayment    | function | no       |            | triggered event on start payment |
+| theme    | object | no       |            | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
 
 ### 2. Dynamic payment with embedded button
 

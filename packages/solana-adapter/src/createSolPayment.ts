@@ -10,6 +10,7 @@ export const createSolPayment = async (
   req: CreatePaymentStateRequest,
   payFees: boolean = true
 ): Promise<string> => {
+  
   return program.rpc.createSolPayment(
     new BN(req.amount),
     new BN(req.startAt),
