@@ -94,7 +94,7 @@ try {
     "you public key registered with helio team that recives transacitons";
 
   const baseUrl = "https://dev.api.hel.io";
-  const endpoint = `/payment-state/signature/${transactionSignature}?publicKey=${publicKey}`;
+  const endpoint = `/v1/transactions/signature/${transactionSignature}?publicKey=${publickey}`;
 
   const response = await fetch(`${baseUrl}${endpoint}`, {
     method: "GET",
