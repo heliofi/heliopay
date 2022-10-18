@@ -1,15 +1,24 @@
-import { SystemProgram, PublicKey, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
+import {
+  Connection,
+  SystemProgram,
+  PublicKey,
+  Transaction,
+  SYSVAR_RENT_PUBKEY,
+} from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { BN, Program } from '@project-serum/anchor';
+
+import { BN, Program, Wallet } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
-export const createPayment = async (
+export const getSignedCreatePaymentTx = async (
+  connection: Connection,
+  wallet: Wallet,
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
   payFees: boolean = true
@@ -47,7 +56,7 @@ export const createPayment = async (
     program.programId
   );
 
-  return program.rpc.createPayment(
+  const tx = program.transaction.createPayment(
     new BN(req.amount),
     new BN(req.startAt),
     new BN(req.endAt),
@@ -75,4 +84,10 @@ export const createPayment = async (
       signers: [req.paymentAccount],
     }
   );
+
+  tx.feePayer = wallet.publicKey;
+  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+  const signedTx = await wallet.signTransaction(tx);
+
+  return JSON.stringify(signedTx.serialize());
 };
