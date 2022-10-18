@@ -121,8 +121,8 @@ Example:
 import {
   HelioIdl,
   SinglePaymentRequest,
-  singlePaymentSC,
-  singleSolPaymentSC,
+  singlePayment,
+  singleSolPayment,
 } from "@heliofi/solana-adapter";
 import { Cluster, PublicKey } from "@solana/web3.js";
 
@@ -131,11 +131,12 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
+  const isHelioX = true
   try {
     if (symbol === "SOL") {
-      return await singleSolPaymentSC(provider, request);
+      return await singleSolPayment(provider, request, !isHelioX);
     }
-    return await singlePaymentSC(provider, request);
+    return await singlePayment(provider, request, !isHelioX);
   } catch (e) {
     // hangle error
   }
@@ -145,7 +146,7 @@ const signature = await sendTransaction(
   symbol,
   {
     amount,
-    sender: anchorProvider.provider.wallet.publicKey,
+    sender: anchorProvider.provider.publicKey as PublicKey,
     recipient: new PublicKey(recipientPK),
     mintAddress: new PublicKey(mintAddress),
     cluster,
