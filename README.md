@@ -1,7 +1,6 @@
 ## Installation
 
-```yarn add @heliofi/react```
-
+`yarn add @heliofi/react`
 
 ## Components
 
@@ -10,101 +9,107 @@
 A container that fetches payment information as well as performs payment on Solana blockchain validates it via Helio API.
 
 ```ts
-import { HelioPay } from '@heliofi/react';
-
-const App = () => {
-    return (
-        <div>
-            <HelioPay
-                cluster="devnet"
-                paymentRequestId={"your_paylink_id"}
-                onSuccess={function (event: SuccessPaymentEvent): void {
-                    console.log('onSuccess', event);
-                }}
-                onError={function (event: ErrorPaymentEvent): void {
-                    console.log('onError', event);
-                }}
-                onPending={function (event: PendingPaymentEvent): void {
-                    console.log('onPending', event);
-                }}
-                onStartPayment={function (): void {
-                    console.log('onStartPayment');
-                }}
-        />
-      </div>
-    )
-}
-```
-
-| Property | Type   | Required | Default value | Description  |
-| :------- | :----- | :------- | :------------ | :----------- |
-| cluster    | string | yes      |         | **available values;** devnet, mainnet-beta, testnet |
-| paymentRequestId    | string | yes       |            | Your paylink ID |
-| onSuccess    | function | no       |            | triggered event when success |
-| onError    | function | no       |            | triggered event when error |
-| onPending    | function | no       |            | triggered event when pending |
-| onStartPayment    | function | no       |            | triggered event on start payment |
-| theme    | object | no       |            | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-
-### 2. Dynamic payment with embedded button
-
-Heliopay button also supports dynamic payment options where you can use embedded button in carting for example.
-In the example below if you provide totalAmount and the currency to the button, the user will perform the payments with those specifications.
-```ts
-import { HelioPay } from '@heliofi/react';
+import { HelioPay } from "@heliofi/react";
 
 const App = () => {
   return (
     <div>
       <HelioPay
         cluster="devnet"
-          paymentRequestId={"your_paylink_id"}
-          supportedCurrencies={["SOL"]}
-          totalAmount={0.01}
-          onSuccess={(event: SuccessPaymentEvent): void => {
-            console.log("onSuccess", event);
-            /**
-             * The success event signature looks as follows:
-             * {
-             *    content: string;
-             *    transaction: string;
-             * }
-             * The transaction can be used to verify the payment with helio api
-             * */
-          }}
+        paymentRequestId={"your_paylink_id"}
+        onSuccess={function (event: SuccessPaymentEvent): void {
+          console.log("onSuccess", event);
+        }}
+        onError={function (event: ErrorPaymentEvent): void {
+          console.log("onError", event);
+        }}
+        onPending={function (event: PendingPaymentEvent): void {
+          console.log("onPending", event);
+        }}
+        onStartPayment={function (): void {
+          console.log("onStartPayment");
+        }}
       />
-    </div>)
-}
+    </div>
+  );
+};
 ```
+
+| Property         | Type     | Required | Default value | Description                                                                                |
+| :--------------- | :------- | :------- | :------------ | :----------------------------------------------------------------------------------------- |
+| cluster          | string   | yes      |               | **available values;** devnet, mainnet-beta, testnet                                        |
+| paymentRequestId | string   | yes      |               | Your paylink ID                                                                            |
+| onSuccess        | function | no       |               | triggered event when success                                                               |
+| onError          | function | no       |               | triggered event when error                                                                 |
+| onPending        | function | no       |               | triggered event when pending                                                               |
+| onStartPayment   | function | no       |               | triggered event on start payment                                                           |
+| theme            | object   | no       |               | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
+totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
+| supportedCurrencies | string array | no | | currencies you want to support.
+
+### 2. Dynamic payment with embedded button
+
+Heliopay button also supports dynamic payment options where you can use embedded button in carting for example.
+In the example below if you provide totalAmount and the currency to the button, the user will perform the payments with those specifications.
+
+```ts
+import { HelioPay } from "@heliofi/react";
+
+const App = () => {
+  return (
+    <div>
+      <HelioPay
+        cluster="devnet"
+        paymentRequestId={"your_paylink_id"}
+        supportedCurrencies={["SOL"]}
+        totalAmount={0.01}
+        onSuccess={(event: SuccessPaymentEvent): void => {
+          console.log("onSuccess", event);
+          /**
+           * The success event signature looks as follows:
+           * {
+           *    content: string;
+           *    transaction: string;
+           * }
+           * The transaction can be used to verify the payment with helio api
+           * */
+        }}
+      />
+    </div>
+  );
+};
+```
+
 You can verify the payment using helio api for development and for production accordingly:
-`https://test.api.hel.io` and `https://prod.api.hel.io`.
+`https://dev.api.hel.io` and `https://api.hel.io`.
 
 In order to validate the payment you need to register your public key with Helio team, and you will receive api secret token.
 After which call the endpoint like in the example below:
 
 ```ts
 try {
-  const transactionSignature = 'solana blockchain transaction signature';
-  const token = 'token from helio team';
-  const publicKey = 'you public key registered with helio team that recives transacitons';
-  
-  const baseUrl = 'https://test.api.hel.io';
-  const endpoint = `/payment-state/signature/${transactionSignature}?publicKey=${publicKey}`
-  
+  const transactionSignature = "solana blockchain transaction signature";
+  const token = "token from helio team";
+  const publicKey =
+    "you public key registered with helio team that recives transacitons";
+
+  const baseUrl = "https://dev.api.hel.io";
+  const endpoint = `/payment-state/signature/${transactionSignature}?publicKey=${publicKey}`;
+
   const response = await fetch(`${baseUrl}${endpoint}`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
     },
   });
   return response.json();
 } catch (e) {
-  throw new Error('Unable to get transactions data from backend!');
+  throw new Error("Unable to get transactions data from backend!");
 }
 ```
 
-The example above shows verification process for devnet, you can replace the base url with `https://prod.api.hel.io` for prod.
+The example above shows verification process for devnet, you can replace the base url with `https://api.hel.io` for prod.
 
 ### 3. Dynamic payment without embedded button
 
@@ -118,8 +123,8 @@ import {
   SinglePaymentRequest,
   singlePaymentSC,
   singleSolPaymentSC,
-} from '@heliofi/solana-adapter';
-import { Cluster, PublicKey } from '@solana/web3.js';
+} from "@heliofi/solana-adapter";
+import { Cluster, PublicKey } from "@solana/web3.js";
 
 const sendTransaction = async (
   symbol: string,
@@ -127,7 +132,7 @@ const sendTransaction = async (
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
   try {
-    if (symbol === 'SOL') {
+    if (symbol === "SOL") {
       return await singleSolPaymentSC(provider, request);
     }
     return await singlePaymentSC(provider, request);
@@ -152,14 +157,14 @@ const signature = await sendTransaction(
 The signature for SinglePaymentRequest looks as follows:
 
 ```ts
-import { Cluster, PublicKey } from '@solana/web3.js';
+import { Cluster, PublicKey } from "@solana/web3.js";
 
 export type SinglePaymentRequest = {
-    amount: number;
-    sender: PublicKey;
-    recipient: PublicKey;
-    mintAddress: PublicKey;
-    cluster: Cluster;
+  amount: number;
+  sender: PublicKey;
+  recipient: PublicKey;
+  mintAddress: PublicKey;
+  cluster: Cluster;
 };
 ```
 
@@ -191,9 +196,9 @@ const approveTransaction = async (
   reqBody: ApproveTransactionPayload
 ): Promise<Response> => {
   const res = await fetch(`${getHelioApiBaseUrl()}/approve-transaction`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
+      "content-type": "application/json",
     },
     body: JSON.stringify(reqBody),
   });
@@ -204,16 +209,15 @@ const usdcCoefficient = 1000000;
 const amount = 0.1 * usdcCoefficient; // in this case you are paying 0.1 USDC
 
 approveTransaction({
-  "transactionSignature": signature,
-  "paymentRequestId":"test request id",
-  "amount":amount, 
-  "sender":"sender_id",
-  "recipient":"recipient_id",
-  "currency":"USDC",
-  "cluster":"devnet",
-  "quantity":1
-})
-
+  transactionSignature: signature,
+  paymentRequestId: "test request id",
+  amount: amount,
+  sender: "sender_id",
+  recipient: "recipient_id",
+  currency: "USDC",
+  cluster: "devnet",
+  quantity: 1,
+});
 ```
 
 Please note that the API will check with the blockchain to validate the signature of the transaction.
@@ -226,16 +230,20 @@ If the transaction has status confirmed or finalized the API will return success
 If the transaction is valid the return object has the following signature:
 
 `HTTP 200`
+
 ```ts
 {
-  content: string
+  content: string;
 }
 ```
+
 The secret content that is revealed upon valid payment.
 
 ### Retry logic
+
 If you get the error `HTTP 424` you can resubmit the transaction again with interval before it's accepted.
 Below is an example of using retry logic:
+
 ```ts
 export class VerificationError extends Error {
   constructor(message?: string) {
@@ -251,7 +259,7 @@ const retryCallback = async (
   onError: (message: string) => void
 ): Promise<void> => {
   if (count < 0) {
-    onError('Unable to verify the transaction.');
+    onError("Unable to verify the transaction.");
     return;
   }
   try {
@@ -282,9 +290,9 @@ const approveTransaction = async (
 ): Promise<string> => {
   const HELIO_BASE_API_URL = getHelioApiBaseUrl(reqBody.cluster);
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
+      "content-type": "application/json",
     },
     body: JSON.stringify(reqBody),
   });
