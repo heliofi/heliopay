@@ -129,9 +129,9 @@ import { Cluster, PublicKey } from "@solana/web3.js";
 const sendTransaction = async (
   symbol: string,
   request: SinglePaymentRequest,
-  provider: Program<HelioIdl>
+  provider: Program<HelioIdl>,
+  isHelioX: boolean,
 ): Promise<string | undefined> => {
-  const isHelioX = true; // The transaction is also checked on the backend to verify if the user is a heliox member or not
   try {
     if (symbol === "SOL") {
       return await singleSolPayment(provider, request, !isHelioX);
@@ -142,6 +142,32 @@ const sendTransaction = async (
   }
 };
 
+
+const checkHelioX = async (
+  recipientPK: string,
+): Promise<{ isHelioX: boolean }> => {
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+  const res = await fetch(`${HELIO_BASE_API_URL}/wallet/${recipientPK}`, {
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  const result = await res.json();
+  if (res.status === HttpCodes.SUCCESS) {
+    return {
+      isHelioX: result.isHelioX,
+    };
+  }
+  return {
+    isHelioX: false,
+  };
+};
+
+
+const isHelioX = await checkHelioX(recipientPK) // The transaction is also checked on the backend to verify if the user is a heliox member or not
+
+
 const signature = await sendTransaction(
   symbol,
   {
@@ -151,7 +177,8 @@ const signature = await sendTransaction(
     mintAddress: new PublicKey(mintAddress),
     cluster,
   },
-  anchorProvider
+  anchorProvider,
+  isHelioX
 );
 ```
 
