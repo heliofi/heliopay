@@ -164,7 +164,7 @@ export const createOneTimePayment = async ({
     wallet,
     anchorProvider,
     request,
-    true
+    false // Sign fees
   );
 
   if (!signedTx) {
