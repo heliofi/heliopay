@@ -12,6 +12,7 @@ import {
 import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
 import { ClusterType } from '../../domain';
+import { AddressProvider } from '../address';
 
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
@@ -41,7 +42,9 @@ export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
           <AnchorProvider>
-            <HelioProvider>{children}</HelioProvider>
+            <HelioProvider>
+              <AddressProvider>{children}</AddressProvider>
+            </HelioProvider>
           </AnchorProvider>
         </WalletModalProvider>
       </WalletProvider>

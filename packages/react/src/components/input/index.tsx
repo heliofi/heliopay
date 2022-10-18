@@ -1,3 +1,4 @@
+import { FormikProps, FormikValues } from 'formik';
 import { ChangeEvent, FC, useState } from 'react';
 
 import InputContainer, { InputContainerProps } from '../input-container';
@@ -6,6 +7,7 @@ import {
   StyledField,
   StyledInput,
   StyledLabel,
+  StyledLabelContainer,
 } from './styles';
 
 type InputProps = {
@@ -14,8 +16,11 @@ type InputProps = {
   fieldName: string;
   disabled?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (event: ChangeEvent<HTMLInputElement>) => void;
   inputClassName?: string;
   label?: string;
+  component?: React.ComponentType<FormikProps<FormikValues>> | React.ReactNode;
+  labelSuffix?: React.ReactNode | string;
 };
 
 const Input: FC<InputProps & InputContainerProps> = ({
@@ -29,14 +34,22 @@ const Input: FC<InputProps & InputContainerProps> = ({
   inactive,
   disabled,
   onChange,
+  onFocus,
   inputClassName = '',
   label,
+  labelSuffix,
+  component,
 }) => {
   const [focus, setFocus] = useState(false);
 
   return (
     <StyledInput>
-      {label && <StyledLabel htmlFor={fieldId}>{label}</StyledLabel>}
+      {label && (
+        <StyledLabelContainer>
+          <StyledLabel htmlFor={fieldId}>{label}</StyledLabel>
+          {labelSuffix}
+        </StyledLabelContainer>
+      )}
       <InputContainer
         placeholder={placeholder}
         prefix={prefix}
@@ -56,19 +69,26 @@ const Input: FC<InputProps & InputContainerProps> = ({
               onChange?.(event)
             }
             disabled={disabled}
-            onFocus={() => setFocus(true)}
+            onFocus={(event: ChangeEvent<HTMLInputElement>) => {
+              setFocus(true);
+              onFocus?.(event);
+            }}
             onBlur={() => setFocus(false)}
+            component={component}
           />
         ) : (
           <StyledField
             id={fieldId}
-            component={fieldAs}
+            component={fieldAs || component}
             type="text"
             name={fieldName}
             placeholder={placeholder}
             className={inputClassName}
             disabled={disabled}
-            onFocus={() => setFocus(true)}
+            onFocus={(event: ChangeEvent<HTMLInputElement>) => {
+              setFocus(true);
+              onFocus?.(event);
+            }}
             onBlur={() => setFocus(false)}
           />
         )}

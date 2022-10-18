@@ -6,6 +6,7 @@ import ConnectButton from '../connect-button';
 import {
   ClusterType,
   Currency,
+  CustomerDetails,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -28,6 +29,8 @@ import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
+import { useAddressProvider } from '../../providers/address/AddressContext';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -54,6 +57,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
+  const { getCountry } = useAddressProvider();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | null
@@ -66,6 +70,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     getPaymentDetails,
     initCluster,
     cluster: mainCluster,
+    isCustomerDetailsRequired,
   } = useHelioProvider();
 
   const [showFormModal, setShowFormModal] = useState(false);
@@ -77,6 +82,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   useEffect(() => {
     initCluster(cluster);
   }, [cluster]);
+
+  useEffect(() => {
+    if (
+      paymentDetails?.features?.requireDeliveryAddress &&
+      paymentDetails?.features?.requireCountry
+    ) {
+      getCountry();
+    }
+  }, [paymentDetails]);
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter((currency) =>
@@ -110,21 +124,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
-  const isCustomerDetailsRequired = (): boolean => {
-    if (!paymentDetails) return false;
-    return (
-      paymentDetails.requireEmail ||
-      paymentDetails.requireFullName ||
-      paymentDetails.requireDiscordUsername ||
-      paymentDetails.requireTwitterUsername ||
-      paymentDetails.requireCountry ||
-      paymentDetails.requireDeliveryAddress ||
-      paymentDetails.canChangeQuantity ||
-      paymentDetails.canChangePrice ||
-      supportedCurrencies?.length
-    );
-  };
-
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
     onSuccess?.(event);
     setResult(event);
@@ -142,11 +141,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     currency,
     quantity,
     customerDetails,
+    productDetails,
   }: {
     amount: number;
     currency: Currency;
     quantity: number;
-    customerDetails?: any;
+    customerDetails?: CustomerDetails;
+    productDetails?: ProductDetails;
   }) => {
     if (helioProvider && currency?.symbol != null) {
       onStartPayment?.();
@@ -165,6 +166,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onError: handleErrorPayment,
         onPending,
         customerDetails,
+        productDetails,
         quantity: Number(quantity) ?? 1,
         cluster,
       };
@@ -188,7 +190,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <div>
                   <Button
                     onClick={() => {
-                      if (isCustomerDetailsRequired()) {
+                      if (
+                        isCustomerDetailsRequired ||
+                        supportedCurrencies?.length
+                      ) {
                         setShowFormModal(true);
                       } else {
                         submitPayment({

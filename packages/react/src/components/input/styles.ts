@@ -48,3 +48,9 @@ export const StyledLabel = styled.label`
   color: #9ca3af;
   display: block;
 `;
+
+export const StyledLabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;

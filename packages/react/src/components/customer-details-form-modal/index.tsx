@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import { Form, Formik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { InfoIcon } from '@heliofi/helio-icons';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Modal, InheritedModalProps } from '../modal';
 import validationSchema from '../heliopay-container/validation-schema';
@@ -13,18 +14,28 @@ import {
   StyledFormText,
   StyledFormTitle,
   StyledPrice,
+  StyledProductTooltip,
+  StyledProductTooltipIcon,
+  StyledProductTooltipText,
+  StyledProductWrapper,
 } from './styles';
-import SelectBox from '../selectbox';
+import SelectBox, { Option } from '../selectbox';
 import { countries } from '../../domain/constants/countries';
 import { removeUndefinedFields } from '../../utils';
 import { Currency, CustomerDetails } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
+import PhoneNumberInput from '../phoneNumberInput';
+import { useAddressProvider } from '../../providers/address/AddressContext';
+import AddressSection from '../addressSection';
+import { ProductInputType } from '../../domain/model/Product';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
     amount: number;
     customerDetails?: CustomerDetails;
+    productDetails?: ProductDetails;
     quantity: number;
     currency: Currency;
   }) => void;
@@ -38,9 +49,17 @@ const CustomerDetailsFormModal = ({
   allowedCurrencies,
   totalAmount,
 }: Props) => {
-  const { currencyList, paymentDetails } = useHelioProvider();
+  const { currencyList, paymentDetails, isCustomerDetailsRequired } =
+    useHelioProvider();
+  const { country } = useAddressProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
+  const [selectValue, setSelectValue] = useState({
+    label: '',
+    value: '',
+  });
+  const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
+    useState(false);
 
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
@@ -51,9 +70,9 @@ const CustomerDetailsFormModal = ({
     icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
   }));
 
-  const countryOptions = countries.map((country) => ({
-    label: country.name,
-    value: country.code,
+  const countryOptions = countries.map((countryItem) => ({
+    label: countryItem.name,
+    value: countryItem.code,
   }));
 
   const getCurrency = (currency?: string) => {
@@ -65,7 +84,7 @@ const CustomerDetailsFormModal = ({
     if (allowedCurrencies?.length === 1) {
       setActiveCurrency(allowedCurrencies[0]);
     } else if (!canSelectCurrency) {
-      setActiveCurrency(getCurrency(paymentDetails?.currency));
+      setActiveCurrency(getCurrency(paymentDetails?.currency?.symbol));
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
@@ -76,7 +95,7 @@ const CustomerDetailsFormModal = ({
     ) {
       setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
-          getCurrency(paymentDetails?.currency),
+          getCurrency(paymentDetails?.currency?.symbol),
           paymentDetails?.normalizedPrice
         )
       );
@@ -88,38 +107,45 @@ const CustomerDetailsFormModal = ({
     return totalPrice || price;
   };
 
-  const isCustomerDetailsRequired = (): boolean => {
-    if (!paymentDetails) return false;
-    return (
-      paymentDetails?.features.requireEmail ||
-      paymentDetails?.features.requireFullName ||
-      paymentDetails?.features.requireDiscordUsername ||
-      paymentDetails?.features.requireTwitterUsername ||
-      paymentDetails?.features.requireCountry ||
-      paymentDetails?.features.requireDeliveryAddress
-    );
+  const stringToOptions = (value: string): Option[] => {
+    const options = value.split(',');
+    return options.map((option) => ({
+      label: option,
+      value: option,
+    }));
   };
+
   const initialValues = {
     requireEmail: paymentDetails?.features.requireEmail,
     requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
     requireFullName: paymentDetails?.features.requireFullName,
     requireTwitterUsername: paymentDetails?.features.requireTwitterUsername,
+    requirePhoneNumber: paymentDetails?.features.requirePhoneNumber,
     requireCountry: paymentDetails?.features.requireCountry,
     requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
+    requireProductDetails: paymentDetails?.features.requireProductDetails,
     canChangePrice: paymentDetails?.features.canChangePrice,
     canChangeQuantity: paymentDetails?.features.canChangeQuantity,
     fullName: undefined,
     email: undefined,
     discordUsername: undefined,
     twitterUsername: undefined,
-    country: undefined,
+    country: country
+      ? { label: country.country_name, value: country.country_code }
+      : undefined,
+    areaCode: '',
     deliveryAddress: undefined,
+    city: undefined,
+    street: undefined,
+    streetNumber: undefined,
+    phoneNumber: undefined,
     quantity: paymentDetails?.features.canChangeQuantity ? 1 : undefined,
     customPrice: paymentDetails?.features.canChangePrice
       ? undefined
       : normalizedPrice,
     canSelectCurrency,
-    currency: canSelectCurrency ? undefined : paymentDetails?.currency,
+    currency: canSelectCurrency ? undefined : paymentDetails?.currency?.symbol,
+    productValue: undefined,
   };
 
   const handleSubmit = (values: any) => {
@@ -128,23 +154,46 @@ const CustomerDetailsFormModal = ({
       email: values.email,
       discordUsername: values.discordUsername,
       twitterUsername: values.twitterUsername,
-      country: values.country,
+      country: values.country?.label,
       deliveryAddress: values.deliveryAddress,
+      city: values.city,
+      street: values.street,
+      streetNumber: values.streetNumber,
+      areaCode: values.areaCode,
+      phoneNumber: values.phoneNumber,
+    };
+
+    const productDetails = {
+      name: paymentDetails.product?.name,
+      value: values.productValue,
     };
 
     const clearDetails = removeUndefinedFields(details);
+    const clearProductDetails = removeUndefinedFields(productDetails);
 
     onSubmit({
       customerDetails: clearDetails,
+      productDetails: clearProductDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(values.currency.symbol),
+        getCurrency(values.currency || paymentDetails?.currency.symbol),
         values.canChangePrice
           ? values.customPrice
-          : totalAmount ?? normalizedPrice
+          : totalAmount || normalizedPrice
       ),
       quantity: values.quantity || 1,
-      currency: values.currency || paymentDetails?.currency,
+      currency: getCurrency(values.currency || paymentDetails?.currency.symbol),
     });
+  };
+
+  const changeSelectValue = (
+    selectObject: Option,
+    setFieldValue: (formikId: string, value: string) => void
+  ) => {
+    setSelectValue({
+      label: selectObject.label,
+      value: selectObject.value as string,
+    });
+    setFieldValue('productValue', selectObject.value as string);
   };
 
   const symbol = activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay';
@@ -166,7 +215,7 @@ const CustomerDetailsFormModal = ({
             initialValues={initialValues}
             onSubmit={handleSubmit}
           >
-            {({ values, setFieldValue, isValid }) => (
+            {({ values, setFieldValue }) => (
               <Form>
                 <div>
                   {values.canChangePrice ? (
@@ -230,7 +279,7 @@ const CustomerDetailsFormModal = ({
                       label="Quantity"
                     />
                   )}
-                  {isCustomerDetailsRequired() && (
+                  {isCustomerDetailsRequired && (
                     <>
                       <StyledFormTitle>Information required</StyledFormTitle>
                       <StyledFormText>
@@ -274,32 +323,83 @@ const CustomerDetailsFormModal = ({
                     />
                   )}
 
+                  {paymentDetails?.features?.requirePhoneNumber && (
+                    <PhoneNumberInput
+                      fieldId="phoneNumber"
+                      fieldName="phoneNumber"
+                      label="Phone number"
+                      onChange={(value) => {
+                        setFieldValue('phoneNumber', value);
+                      }}
+                    />
+                  )}
                   {paymentDetails?.features.requireCountry && (
                     <SelectBox
                       options={countryOptions}
                       placeholder="Select country"
-                      value={values.country}
+                      value={values.country?.label}
                       showValidations
                       fieldName="country"
                       label="Country"
-                      onChange={(option) =>
-                        setFieldValue('country', option.label)
-                      }
+                      onChange={(option) => setFieldValue('country', option)}
                     />
                   )}
 
                   {paymentDetails?.features.requireDeliveryAddress && (
-                    <Input
-                      fieldId="deliveryAddress"
-                      fieldName="deliveryAddress"
-                      fieldAs="textarea"
-                      placeholder="Shipping address"
-                      label="Shipping address"
+                    <AddressSection
+                      setFieldValue={setFieldValue}
+                      areaCodeValue={values.areaCode}
+                      countryCode={values.country?.value}
                     />
                   )}
-                  <Button disabled={!isValid} type="submit">
-                    PAY
-                  </Button>
+                  {paymentDetails?.features?.requireProductDetails &&
+                    paymentDetails?.product != null &&
+                    (paymentDetails?.product?.type ===
+                    ProductInputType.SELECTOR ? (
+                      <SelectBox
+                        value={selectValue.value}
+                        label={paymentDetails?.product.name}
+                        placeholder="Select"
+                        fieldName="productValue"
+                        onChange={(value) =>
+                          changeSelectValue(value, setFieldValue)
+                        }
+                        options={stringToOptions(
+                          paymentDetails?.product?.description
+                        )}
+                      />
+                    ) : (
+                      <StyledProductWrapper className="relative">
+                        <Input
+                          fieldId="productValue"
+                          fieldName="productValue"
+                          placeholder="Insert data here..."
+                          label={paymentDetails?.product.name}
+                          labelSuffix={
+                            <>
+                              {productDetailsDescriptionShown && (
+                                <StyledProductTooltip className="absolute right-0 -top-[35px]">
+                                  <StyledProductTooltipText className="mr-0 ml-auto w-fit max-w-full overflow-hidden rounded bg-black p-2 text-[11px] text-h20">
+                                    {paymentDetails?.product.description}
+                                  </StyledProductTooltipText>
+                                </StyledProductTooltip>
+                              )}
+                              <StyledProductTooltipIcon
+                                onMouseLeave={() =>
+                                  setProductDetailsDescriptionShown(false)
+                                }
+                                onMouseEnter={() =>
+                                  setProductDetailsDescriptionShown(true)
+                                }
+                              >
+                                <InfoIcon />
+                              </StyledProductTooltipIcon>
+                            </>
+                          }
+                        />
+                      </StyledProductWrapper>
+                    ))}
+                  <Button type="submit">PAY</Button>
                 </div>
               </Form>
             )}

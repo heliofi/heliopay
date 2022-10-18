@@ -1,8 +1,8 @@
 import {
   HelioIdl,
   SinglePaymentRequest,
-  singlePaymentSC,
-  singleSolPaymentSC,
+  singlePayment,
+  singleSolPayment,
 } from '@heliofi/solana-adapter';
 import { Program } from '@project-serum/anchor';
 import { Cluster, PublicKey } from '@solana/web3.js';
@@ -19,6 +19,7 @@ import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { getHelioApiBaseUrl } from '../helio-api/HelioApiAdapter';
+import { ProductDetails } from '../../domain/model/ProductDetails';
 
 const SOL_SYMBOL = 'SOL';
 
@@ -32,6 +33,7 @@ interface Props {
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   customerDetails?: CustomerDetails;
+  productDetails?: ProductDetails;
   quantity?: number;
   cluster: Cluster;
 }
@@ -64,16 +66,38 @@ const approveTransaction = async (
   throw new Error(result.message);
 };
 
+const checkHelioX = async (
+  recipientPK: string,
+  cluster: Cluster
+): Promise<{ isHelioX: boolean }> => {
+  const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+  const res = await fetch(`${HELIO_BASE_API_URL}/wallet/${recipientPK}`, {
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  const result = await res.json();
+  if (res.status === HttpCodes.SUCCESS) {
+    return {
+      isHelioX: result.isHelioX,
+    };
+  }
+  return {
+    isHelioX: false,
+  };
+};
 const sendTransaction = async (
   symbol: string,
   request: SinglePaymentRequest,
-  provider: Program<HelioIdl>
+  provider: Program<HelioIdl>,
+  isHeliox: boolean
 ): Promise<string | undefined> => {
   try {
     if (symbol === SOL_SYMBOL) {
-      return await singleSolPaymentSC(provider, request);
+      return await singleSolPayment(provider, request, !isHeliox);
     }
-    return await singlePaymentSC(provider, request);
+    return await singlePayment(provider, request, !isHeliox);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
@@ -109,6 +133,7 @@ export const createOneTimePayment = async ({
   amount,
   paymentRequestId,
   customerDetails,
+  productDetails,
   quantity,
   onSuccess,
   onError,
@@ -117,33 +142,39 @@ export const createOneTimePayment = async ({
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
+  const { isHelioX } = await checkHelioX(recipientPK, cluster);
   const signature = await sendTransaction(
     symbol,
     {
       amount,
-      sender: anchorProvider.provider.wallet.publicKey,
+      sender: anchorProvider.provider.publicKey as PublicKey,
       recipient: new PublicKey(recipientPK),
       mintAddress: new PublicKey(mintAddress),
       cluster,
     },
-    anchorProvider
+    anchorProvider,
+    isHelioX
   );
 
   if (signature === undefined) {
-    onError?.({ errorMessage: 'Failed to send transaction' });
+    onError?.({ errorMessage: 'Failed to send transaction.' });
     return;
   }
+
+  const finalProductDetails =
+    Object.keys(productDetails || {}).length === 0 ? undefined : productDetails;
 
   const approveTransactionPayload: ApproveTransactionPayload = {
     transactionSignature: signature,
     paymentRequestId,
     amount,
-    sender: anchorProvider.provider.wallet.publicKey.toBase58(),
+    sender: anchorProvider?.provider?.publicKey?.toBase58() as string,
     recipient: recipientPK,
     currency: symbol,
     cluster,
     customerDetails,
     quantity,
+    productDetails: finalProductDetails,
   };
 
   try {
