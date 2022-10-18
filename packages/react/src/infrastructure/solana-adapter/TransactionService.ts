@@ -102,9 +102,9 @@ export const signTransaction = async (
 ): Promise<string | undefined> => {
   try {
     if (symbol === SOL_SYMBOL) {
-      return await singleSolPayment(provider, request, true); //True to sign fees
+      return await singleSolPayment(provider, request, false); //True to sign fees
     }
-    return await singlePayment(provider, request, true);
+    return await singlePayment(provider, request, false);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
