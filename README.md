@@ -131,7 +131,7 @@ const sendTransaction = async (
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>
 ): Promise<string | undefined> => {
-  const isHelioX = true
+  const isHelioX = true; // The transaction is also checked on the backend to verify if the user is a heliox member or not
   try {
     if (symbol === "SOL") {
       return await singleSolPayment(provider, request, !isHelioX);
