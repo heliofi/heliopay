@@ -147,7 +147,7 @@ const checkHelioX = async (
   recipientPK: string,
 ): Promise<{ isHelioX: boolean }> => {
   const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
-  const res = await fetch(`${HELIO_BASE_API_URL}/wallet/${recipientPK}`, {
+  const res = await fetch(`${HELIO_BASE_API_URL}/v1/wallet/${recipientPK}`, {
     method: 'GET',
     headers: {
       'content-type': 'application/json',
