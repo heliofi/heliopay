@@ -1,24 +1,22 @@
-import { Connection, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
-import { BN, Program, Wallet } from '@project-serum/anchor';
+import { Connection, SystemProgram, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { Program, Wallet } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { SinglePaymentRequest } from './types';
-import './config';
+import { CancelPaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 import { signTransaction } from './utils';
 
-export const getSinglePaymentSignedTx = async (
+export const getCancelPaymentSignedTx = async (
   connection: Connection,
   wallet: Wallet,
   program: Program<HelioIdl>,
-  req: SinglePaymentRequest,
-  payFees: boolean = true
+  req: CancelPaymentRequest
 ): Promise<string> => {
-  const mint = req.mintAddress;
+  const [pda] = await PublicKey.findProgramAddress(
+    [req.payment.toBytes()],
+    program.programId
+  );
+  const mint = req.mintAddress!;
 
   const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
@@ -28,6 +26,11 @@ export const getSinglePaymentSignedTx = async (
   const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
     req.recipient
+  );
+
+  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
+    mint,
+    req.payment
   );
 
   const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
@@ -41,20 +44,21 @@ export const getSinglePaymentSignedTx = async (
   );
 
   const transaction = await program.methods
-    .singlePayment(new BN(req.amount), payFees, [], {
+    .cancelPayment({
       accounts: {
+        signer: req.sender,
         sender: req.sender,
         senderTokenAccount: senderAssociatedTokenAddress,
         recipient: req.recipient,
         recipientTokenAccount: recipientAssociatedTokenAddress,
-        mint,
+        paymentAccount: req.payment,
+        paymentTokenAccount: paymentAssociatedTokenAddress,
+        pdaSigner: pda,
         helioFeeAccount: helioFeeWalletKey,
         helioFeeTokenAccount: helioFeeTokenAccountAddress,
         daoFeeAccount: daoFeeWalletKey,
         daoFeeTokenAccount: daoFeeTokenAccountAddress,
-        rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       },
     })
