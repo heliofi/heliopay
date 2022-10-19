@@ -39,11 +39,8 @@ export const getSinglePaymentSignedTx = async (
     daoFeeWalletKey
   );
 
-  const tx = program.transaction.singlePayment(
-    new BN(req.amount),
-    payFees,
-    [],
-    {
+  const transaction = await program.methods
+    .singlePayment(new BN(req.amount), payFees, [], {
       accounts: {
         sender: req.sender,
         senderTokenAccount: senderAssociatedTokenAddress,
@@ -59,12 +56,14 @@ export const getSinglePaymentSignedTx = async (
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       },
-    }
-  );
+    })
+    .transaction();
 
-  tx.feePayer = wallet.publicKey;
-  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-  const signedTx = await wallet.signTransaction(tx);
+  transaction.feePayer = wallet.publicKey;
+  transaction.recentBlockhash = (
+    await connection.getLatestBlockhash()
+  ).blockhash;
+  const signedTransaction = await wallet.signTransaction(transaction);
 
-  return JSON.stringify(signedTx.serialize());
+  return JSON.stringify(signedTransaction.serialize());
 };
