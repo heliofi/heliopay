@@ -33,6 +33,7 @@ import { withdrawSol } from '../src/withdrawSol';
 import { cancelSolPayment } from '../src/cancelSolPayment';
 import { singleSolPayment } from '../src/singleSolPayment';
 import { getSinglePaymentSignedTx } from '../src/getSinglePaymentSignedTx';
+import { getSingleSolPaymentSignedTx } from '../src/getSingleSolPaymentSignedTx';
 
 let provider: anchor.AnchorProvider;
 let mint;
@@ -341,6 +342,98 @@ describe('api', () => {
       'final amount:',
       amount
     );
+  });
+
+  it('Pays SOL one time over smart contract', async () => {
+    const request: SinglePaymentRequest = {
+      amount: 1e6,
+      sender: sender.publicKey,
+      recipient: recipient.publicKey,
+      mintAddress: mint,
+      cluster: 'devnet',
+    };
+
+    const recipientBalanceBefore = await connection.getBalance(
+      recipient.publicKey
+    );
+
+    const singleSolPaymentTransactionSerialized =
+      await getSingleSolPaymentSignedTx(
+        connection,
+        wallet,
+        program,
+        request,
+        true
+      );
+
+    const txId = await connection.sendRawTransaction(
+      Buffer.from(JSON.parse(singleSolPaymentTransactionSerialized).data)
+    );
+
+    await connection.confirmTransaction(txId);
+    await sleep(20 * 1000); // Wait 20 secs for devnet
+    const recipientBalance = await connection.getBalance(recipient.publicKey);
+    console.log(
+      'One time payment over SC tx: ',
+      txId,
+      'Recipient balance before:',
+      recipientBalanceBefore,
+      'Recipient balance: ',
+      recipientBalance
+    );
+    assert.ok(
+      recipientBalance === recipientBalanceBefore + 1e6 * (1 - baseFee)
+    );
+  });
+
+  it('Splits onetime SOL payment', async () => {
+    const request: SinglePaymentRequest = {
+      amount: 1e6,
+      sender: sender.publicKey,
+      recipient: recipient.publicKey,
+      mintAddress: mint,
+      cluster: 'devnet',
+    };
+
+    const remainingAccounts = Array<PublicKey>();
+    const remainingAmounts = Array<number>();
+    for (let i = 0; i < 10; i++) {
+      remainingAmounts.push(5e5);
+      remainingAccounts.push(recipient.publicKey);
+    }
+
+    const recipientBalanceBefore = await connection.getBalance(
+      recipient.publicKey
+    );
+
+    const singleSolPaymentTransactionSerialized =
+      await getSingleSolPaymentSignedTx(
+        connection,
+        wallet,
+        program,
+        request,
+        false,
+        remainingAmounts,
+        remainingAccounts
+      );
+
+    const txId = await connection.sendRawTransaction(
+      Buffer.from(JSON.parse(singleSolPaymentTransactionSerialized).data)
+    );
+
+    await connection.confirmTransaction(txId);
+
+    await sleep(20 * 1000); // Wait 20 secs for devnet
+    const recipientBalance = await connection.getBalance(recipient.publicKey);
+    console.log(
+      'One time payment over SC tx: ',
+      txId,
+      'Recipient before: ',
+      recipientBalanceBefore,
+      ' recipient balance: ',
+      recipientBalance
+    );
+    assert.ok(recipientBalance === recipientBalanceBefore + 6e6);
   });
 
   // it('Pays one time over smart contract', async () => {

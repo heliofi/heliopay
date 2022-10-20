@@ -1,7 +1,12 @@
-import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  AccountMeta,
+  Connection,
+  PublicKey,
+  SystemProgram,
+} from '@solana/web3.js';
 import { BN, Program, Wallet } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { Account, SinglePaymentRequest } from './types';
+import { SinglePaymentRequest } from './types';
 import './config';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 import { signTransaction } from './utils';
@@ -9,7 +14,7 @@ import { signTransaction } from './utils';
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
-): { remainingAmounts: Array<BN>; remainingAccounts: Array<Account> } => {
+): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
   if (!amounts.length) {
     if (accounts.length > 0) {
       throw new Error('Remaining accounts when no amounts!');
@@ -48,16 +53,15 @@ export const getSingleSolPaymentSignedTx = async (
   );
 
   const transaction = await program.methods
-    .singlePaymentSol(new BN(req.amount), payFees, remainingAmounts, {
-      accounts: {
-        sender: req.sender,
-        recipient: req.recipient,
-        helioFeeAccount: helioFeeWalletKey,
-        daoFeeAccount: daoFeeWalletKey,
-        systemProgram: SystemProgram.programId,
-      },
-      remainingAccounts,
+    .singleSolPayment(new BN(req.amount), payFees, remainingAmounts)
+    .accounts({
+      sender: req.sender,
+      recipient: req.recipient,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
+      systemProgram: SystemProgram.programId,
     })
+    .remainingAccounts(remainingAccounts)
     .transaction();
 
   return signTransaction(transaction, wallet, connection);
