@@ -32,6 +32,7 @@ import { createSolPayment } from '../src/createSolPayment';
 import { withdrawSol } from '../src/withdrawSol';
 import { cancelSolPayment } from '../src/cancelSolPayment';
 import { singleSolPayment } from '../src/singleSolPayment';
+import { getSinglePaymentSignedTx } from '../src/getSinglePaymentSignedTx';
 
 let provider: anchor.AnchorProvider;
 let mint;
@@ -145,110 +146,111 @@ describe('api', () => {
     assert.ok(Number(recipientTokensInfo.amount) === 0);
   });
 
-  it('Creates payment', async () => {
-    paymentAccount = new Keypair();
-    const startAt = Math.floor(new Date().getTime() / 1000) + 1;
-    const endAt = startAt + 100;
-    const request: CreatePaymentStateRequest = {
-      amount: 100000,
-      startAt,
-      endAt,
-      interval: 50,
-      mintAddress: mint,
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      paymentAccount,
-    };
+  // it('Creates payment', async () => {
+  //   paymentAccount = new Keypair();
+  //   const startAt = Math.floor(new Date().getTime() / 1000) + 1;
+  //   const endAt = startAt + 100;
+  //   const request: CreatePaymentStateRequest = {
+  //     amount: 100000,
+  //     startAt,
+  //     endAt,
+  //     interval: 50,
+  //     mintAddress: mint,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     paymentAccount,
+  //   };
 
-    const paymentTransaction = await createPayment(program, request, true);
-    console.log('Create tx: ', paymentTransaction);
+  //   const paymentTransaction = await createPayment(program, request, true);
+  //   console.log('Create tx: ', paymentTransaction);
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
-    const paymentAccountLocal: any = await program.account.paymentAccount.fetch(
-      paymentAccount.publicKey
-    );
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const paymentAccountLocal: any = await program.account.paymentAccount.fetch(
+  //     paymentAccount.publicKey
+  //   );
 
-    // Check that the values in the payment escrow account match what we expect.
-    assert.ok(paymentAccountLocal.senderKey.equals(provider.wallet.publicKey));
-    assert.ok(paymentAccountLocal.senderTokens.equals(senderTokenAccount));
-    assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
-    assert.ok(
-      paymentAccountLocal.recipientTokens.equals(recipientTokenAccount)
-    );
-    assert.ok(paymentAccountLocal.amount.toNumber() === 100000);
-    assert.ok(paymentAccountLocal.interval.toNumber() === 50);
-    assert.ok(paymentAccountLocal.payFees);
-  }).timeout(40000);
+  //   // Check that the values in the payment escrow account match what we expect.
+  //   assert.ok(paymentAccountLocal.senderKey.equals(provider.wallet.publicKey));
+  //   assert.ok(paymentAccountLocal.senderTokens.equals(senderTokenAccount));
+  //   assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
+  //   assert.ok(
+  //     paymentAccountLocal.recipientTokens.equals(recipientTokenAccount)
+  //   );
+  //   assert.ok(paymentAccountLocal.amount.toNumber() === 100000);
+  //   assert.ok(paymentAccountLocal.interval.toNumber() === 50);
+  //   assert.ok(paymentAccountLocal.payFees);
+  // }).timeout(40000);
 
-  it('Withdraws', async () => {
-    const request: WithdrawRequest = {
-      recipient: recipient.publicKey,
-      payment: paymentAccount.publicKey,
-      mintAddress: mint,
-    };
+  // it('Withdraws', async () => {
+  //   const request: WithdrawRequest = {
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //     mintAddress: mint,
+  //   };
 
-    //  Sign with recipient wallet
-    let walletRecipient: Wallet = new Wallet(recipient);
-    let provider = new anchor.AnchorProvider(
-      connection,
-      walletRecipient,
-      txOpts
-    );
-    let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
+  //   //  Sign with recipient wallet
+  //   let walletRecipient: Wallet = new Wallet(recipient);
+  //   let provider = new anchor.AnchorProvider(
+  //     connection,
+  //     walletRecipient,
+  //     txOpts
+  //   );
+  //   let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
 
-    const withdrawTransaction = await withdraw(program, request);
-    console.log('withdraw tx: ', withdrawTransaction);
+  //   const withdrawTransaction = await withdraw(program, request);
+  //   console.log('withdraw tx: ', withdrawTransaction);
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
-    const recipientTokenAccountLocal = await getAccount(
-      provider.connection,
-      recipientTokenAccount
-    );
-    console.log(
-      'rec tokens amount: ',
-      Number(recipientTokenAccountLocal.amount)
-    );
-    assert.ok(
-      Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
-    );
-  });
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   console.log(
+  //     'rec tokens amount: ',
+  //     Number(recipientTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(
+  //     Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
+  //   );
+  // });
 
-  it('Cancels payment', async () => {
-    await sleep(30 * 1000); // Wait 20 secs for devnet next block
-    const request: CancelPaymentRequest = {
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      payment: paymentAccount.publicKey,
-      mintAddress: mint,
-    };
+  // it('Cancels payment', async () => {
+  //   await sleep(30 * 1000); // Wait 20 secs for devnet next block
+  //   const request: CancelPaymentRequest = {
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //     mintAddress: mint,
+  //   };
 
-    const cancelTransaction = await cancelPayment(program, request);
-    await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
-    console.log('cancel tx: ', cancelTransaction);
-    const senderTokenAccountLocal = await getAccount(
-      provider.connection,
-      senderTokenAccount
-    );
-    console.log(
-      'sender tokens amount: ',
-      Number(senderTokenAccountLocal.amount)
-    );
-    assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
-    const recipientTokenAccountLocal = await getAccount(
-      provider.connection,
-      recipientTokenAccount
-    );
-    console.log(
-      'rec tokens amount: ',
-      Number(recipientTokenAccountLocal.amount)
-    );
-    assert.ok(
-      Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
-    );
-  });
+  //   const cancelTransaction = await cancelPayment(program, request);
+  //   await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
+  //   console.log('cancel tx: ', cancelTransaction);
+  //   const senderTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     senderTokenAccount
+  //   );
+  //   console.log(
+  //     'sender tokens amount: ',
+  //     Number(senderTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
+  //   const recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   console.log(
+  //     'rec tokens amount: ',
+  //     Number(recipientTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(
+  //     Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
+  //   );
+  // });
 
   it('Gets serialized one time payment transaction', async () => {
-    let recipientTokenAccountLocal = await mint.getAccountInfo(
+    let recipientTokenAccountLocal = await getAccount(
+      connection,
       recipientTokenAccount
     );
     const initialAmount = Number(recipientTokenAccountLocal.amount);
@@ -257,7 +259,7 @@ describe('api', () => {
       amount: 1000,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
-      mintAddress: mint.publicKey,
+      mintAddress: mint,
       cluster: 'devnet',
     };
 
@@ -265,14 +267,11 @@ describe('api', () => {
       connection,
       wallet,
       program,
-      request
+      request,
+      false
     );
 
-    console.log(
-      Transaction.from(
-        Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
-      )
-    );
+    // console.log('serialized: ', singlePaymentTransactionSerialized);
 
     const txId = await connection.sendRawTransaction(
       Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
@@ -281,38 +280,13 @@ describe('api', () => {
     await connection.confirmTransaction(txId);
 
     console.log('One time payment over SC tx: ', txId);
-    recipientTokenAccountLocal = await mint.getAccountInfo(
-      recipientTokenAccount
-    );
-    const amount = Number(recipientTokenAccountLocal.amount);
-    assert.ok(amount === initialAmount + 1000);
-  });
-
-  it('Pays one time over smart contract', async () => {
-    let recipientTokenAccountLocal = await getAccount(
-      provider.connection,
-      recipientTokenAccount
-    );
-    const initialAmount = Number(recipientTokenAccountLocal.amount);
-
-    const request: SinglePaymentRequest = {
-      amount: 10000,
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      mintAddress: mint,
-      cluster: 'devnet',
-    };
-
-    const singlePaymentTransaction = await singlePayment(program, request);
-
-    await sleep(20 * 1000); // Wait 20 secs for devnet
     recipientTokenAccountLocal = await getAccount(
-      provider.connection,
+      connection,
       recipientTokenAccount
     );
     const amount = Number(recipientTokenAccountLocal.amount);
-    assert.ok(amount === initialAmount + 10000 * (1 - baseFee));
-    console.log('One time payment over SC tx: ', singlePaymentTransaction);
+    console.log(amount, ' ', initialAmount);
+    assert.ok(amount === initialAmount + 1000);
   });
 
   it('Splits one time payment', async () => {
@@ -337,7 +311,9 @@ describe('api', () => {
       mintAddress: mint,
       cluster: 'devnet',
     };
-    const singlePaymentTransaction = await singlePayment(
+    const singlePaymentTransactionSerialized = await getSinglePaymentSignedTx(
+      connection,
+      wallet,
       program,
       request,
       false,
@@ -345,6 +321,11 @@ describe('api', () => {
       remainingAccounts
     );
 
+    const txId = await connection.sendRawTransaction(
+      Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
+    );
+
+    await connection.confirmTransaction(txId);
     await sleep(20 * 1000); // Wait 20 secs for devnet
     recipientTokenAccountLocal = await getAccount(
       provider.connection,
@@ -354,7 +335,7 @@ describe('api', () => {
     assert.ok(amount === initialAmount + 3000); // to same account
     console.log(
       'Split one time payment tx: ',
-      singlePaymentTransaction,
+      txId,
       'initial amount: ',
       initialAmount,
       'final amount:',
@@ -362,167 +343,282 @@ describe('api', () => {
     );
   });
 
-  it('Creates SOL payment', async () => {
-    paymentAccount = new Keypair();
-    const startAt = Math.floor(new Date().getTime() / 1000) + 1;
-    const endAt = startAt + 200;
-    const request: CreatePaymentStateRequest = {
-      amount: 1e6,
-      startAt,
-      endAt,
-      interval: 100,
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      paymentAccount,
-    };
-    const senderBalanceBefore = await connection.getBalance(sender.publicKey);
+  // it('Pays one time over smart contract', async () => {
+  //   let recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   const initialAmount = Number(recipientTokenAccountLocal.amount);
 
-    const paymentTransaction = await createSolPayment(program, request, false);
-    console.log('Create sol tx: ', paymentTransaction);
+  //   const request: SinglePaymentRequest = {
+  //     amount: 10000,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     mintAddress: mint,
+  //     cluster: 'devnet',
+  //   };
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const singlePaymentTransaction = await singlePayment(program, request);
 
-    const paymentAccountLocal: any =
-      await program.account.solPaymentAccount.fetch(paymentAccount.publicKey);
-    console.log('Escrow payment account: ', paymentAccountLocal);
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   const amount = Number(recipientTokenAccountLocal.amount);
+  //   assert.ok(amount === initialAmount + 10000 * (1 - baseFee));
+  //   console.log('One time payment over SC tx: ', singlePaymentTransaction);
+  // });
 
-    // Check that the values in the payment escrow account match what we expect.
-    assert.ok(paymentAccountLocal.senderKey.equals(sender.publicKey));
-    assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
-    assert.ok(paymentAccountLocal.amount.toNumber() === 1e6);
-    assert.ok(paymentAccountLocal.interval.toNumber() === 100);
-    assert.ok(paymentAccountLocal.withdrawal.toNumber() === 0);
-    assert.ok(paymentAccountLocal.payFees === false);
-    // Check balance of payment account
-    const paymentAccountBalance = await connection.getBalance(
-      paymentAccount.publicKey
-    );
-    console.log('Payment bal', paymentAccountBalance); // amount + rent
-    assert.ok(paymentAccountBalance > 1e6);
-    const senderBalance = await connection.getBalance(sender.publicKey);
-    paymentSOLBalance = paymentAccountLocal.amount.toNumber();
-    assert.ok(senderBalanceBefore > senderBalance + 1e6); // sender balance = old balance - amount - tx fee - rent
-  }).timeout(40000);
+  // it('Splits one time payment', async () => {
+  //   let recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   const initialAmount = Number(recipientTokenAccountLocal.amount);
 
-  it('Withdraws SOL', async () => {
-    let walletRecipient: Wallet = new Wallet(recipient);
-    let provider = new anchor.AnchorProvider(
-      connection,
-      walletRecipient,
-      txOpts
-    );
-    let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
-    const request: WithdrawRequest = {
-      recipient: recipient.publicKey,
-      payment: paymentAccount.publicKey,
-    };
-    const recipientBalanceBefore = await connection.getBalance(
-      recipient.publicKey
-    );
-    const withdrawTransaction = await withdrawSol(program, request);
-    console.log('withdraw sol tx: ', withdrawTransaction);
+  //   const remainingAccounts = Array<PublicKey>();
+  //   const remainingAmounts = Array<number>();
+  //   for (let i = 0; i < 4; i++) {
+  //     remainingAmounts.push(500);
+  //     remainingAccounts.push(recipient.publicKey);
+  //     remainingAccounts.push(recipientTokenAccount);
+  //   }
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
-    const recipientBalance = await connection.getBalance(recipient.publicKey);
-    console.log('rec balance: ', recipientBalance);
-    assert.ok(
-      recipientBalance < recipientBalanceBefore + 5e5 &&
-        recipientBalance > recipientBalanceBefore + 4.5e5
-    );
-  });
+  //   const request: SinglePaymentRequest = {
+  //     amount: 1000,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     mintAddress: mint,
+  //     cluster: 'devnet',
+  //   };
+  //   const singlePaymentTransaction = await singlePayment(
+  //     program,
+  //     request,
+  //     false,
+  //     remainingAmounts,
+  //     remainingAccounts
+  //   );
 
-  it('Cancels SOL payment', async () => {
-    const sendersBalanceBefore = await connection.getBalance(sender.publicKey);
-    const request: CancelPaymentRequest = {
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      payment: paymentAccount.publicKey,
-    };
-    await sleep(15 * 1000);
-    const cancelTransaction = await cancelSolPayment(program, request);
-    await sleep(20 * 1000);
-    console.log('cancel sol tx: ', cancelTransaction);
-    const sendersBalance = await connection.getBalance(sender.publicKey);
-    console.log(
-      'Senders balance before:',
-      sendersBalanceBefore,
-      'Senders balance: ',
-      sendersBalance
-    );
-    assert.ok(sendersBalance >= sendersBalanceBefore + paymentSOLBalance / 2); // get back rent, half amount, deduct fees
-  });
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   const amount = Number(recipientTokenAccountLocal.amount);
+  //   assert.ok(amount === initialAmount + 3000); // to same account
+  //   console.log(
+  //     'Split one time payment tx: ',
+  //     singlePaymentTransaction,
+  //     'initial amount: ',
+  //     initialAmount,
+  //     'final amount:',
+  //     amount
+  //   );
+  // });
 
-  it('Pays SOL one time over smart contract', async () => {
-    const request: SinglePaymentRequest = {
-      amount: 1e6,
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      mintAddress: mint,
-      cluster: 'devnet',
-    };
+  // it('Creates SOL payment', async () => {
+  //   paymentAccount = new Keypair();
+  //   const startAt = Math.floor(new Date().getTime() / 1000) + 1;
+  //   const endAt = startAt + 200;
+  //   const request: CreatePaymentStateRequest = {
+  //     amount: 1e6,
+  //     startAt,
+  //     endAt,
+  //     interval: 100,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     paymentAccount,
+  //   };
+  //   const senderBalanceBefore = await connection.getBalance(sender.publicKey);
 
-    const recipientBalanceBefore = await connection.getBalance(
-      recipient.publicKey
-    );
+  //   const paymentTransaction = await createSolPayment(program, request, false);
+  //   console.log('Create sol tx: ', paymentTransaction);
 
-    const singlePaymentTransaction = await singleSolPayment(
-      program,
-      request,
-      true
-    );
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
-    const recipientBalance = await connection.getBalance(recipient.publicKey);
-    console.log(
-      'One time payment over SC tx: ',
-      singlePaymentTransaction,
-      'Recipient balance before:',
-      recipientBalanceBefore,
-      'Recipient balance: ',
-      recipientBalance
-    );
-    assert.ok(
-      recipientBalance === recipientBalanceBefore + 1e6 * (1 - baseFee)
-    );
-  });
+  //   const paymentAccountLocal: any =
+  //     await program.account.solPaymentAccount.fetch(paymentAccount.publicKey);
+  //   console.log('Escrow payment account: ', paymentAccountLocal);
 
-  it('Splits onetime SOL payment', async () => {
-    const request: SinglePaymentRequest = {
-      amount: 1e6,
-      sender: sender.publicKey,
-      recipient: recipient.publicKey,
-      mintAddress: mint,
-      cluster: 'devnet',
-    };
+  //   // Check that the values in the payment escrow account match what we expect.
+  //   assert.ok(paymentAccountLocal.senderKey.equals(sender.publicKey));
+  //   assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
+  //   assert.ok(paymentAccountLocal.amount.toNumber() === 1e6);
+  //   assert.ok(paymentAccountLocal.interval.toNumber() === 100);
+  //   assert.ok(paymentAccountLocal.withdrawal.toNumber() === 0);
+  //   assert.ok(paymentAccountLocal.payFees === false);
+  //   // Check balance of payment account
+  //   const paymentAccountBalance = await connection.getBalance(
+  //     paymentAccount.publicKey
+  //   );
+  //   console.log('Payment bal', paymentAccountBalance); // amount + rent
+  //   assert.ok(paymentAccountBalance > 1e6);
+  //   const senderBalance = await connection.getBalance(sender.publicKey);
+  //   paymentSOLBalance = paymentAccountLocal.amount.toNumber();
+  //   assert.ok(senderBalanceBefore > senderBalance + 1e6); // sender balance = old balance - amount - tx fee - rent
+  // }).timeout(40000);
 
-    const remainingAccounts = Array<PublicKey>();
-    const remainingAmounts = Array<number>();
-    for (let i = 0; i < 10; i++) {
-      remainingAmounts.push(5e5);
-      remainingAccounts.push(recipient.publicKey);
-    }
+  // it('Withdraws SOL', async () => {
+  //   let walletRecipient: Wallet = new Wallet(recipient);
+  //   let provider = new anchor.AnchorProvider(
+  //     connection,
+  //     walletRecipient,
+  //     txOpts
+  //   );
+  //   let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
+  //   const request: WithdrawRequest = {
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //   };
+  //   const recipientBalanceBefore = await connection.getBalance(
+  //     recipient.publicKey
+  //   );
+  //   const withdrawTransaction = await withdrawSol(program, request);
+  //   console.log('withdraw sol tx: ', withdrawTransaction);
 
-    const recipientBalanceBefore = await connection.getBalance(
-      recipient.publicKey
-    );
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const recipientBalance = await connection.getBalance(recipient.publicKey);
+  //   console.log('rec balance: ', recipientBalance);
+  //   assert.ok(
+  //     recipientBalance < recipientBalanceBefore + 5e5 &&
+  //       recipientBalance > recipientBalanceBefore + 4.5e5
+  //   );
+  // });
 
-    const singlePaymentTransaction = await singleSolPayment(
-      program,
-      request,
-      false,
-      remainingAmounts,
-      remainingAccounts
-    );
+  // it('Cancels SOL payment', async () => {
+  //   const sendersBalanceBefore = await connection.getBalance(sender.publicKey);
+  //   const request: CancelPaymentRequest = {
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //   };
+  //   await sleep(15 * 1000);
+  //   const cancelTransaction = await cancelSolPayment(program, request);
+  //   await sleep(20 * 1000);
+  //   console.log('cancel sol tx: ', cancelTransaction);
+  //   const sendersBalance = await connection.getBalance(sender.publicKey);
+  //   console.log(
+  //     'Senders balance before:',
+  //     sendersBalanceBefore,
+  //     'Senders balance: ',
+  //     sendersBalance
+  //   );
+  //   assert.ok(sendersBalance >= sendersBalanceBefore + paymentSOLBalance / 2); // get back rent, half amount, deduct fees
+  // });
 
-    await sleep(20 * 1000); // Wait 20 secs for devnet
-    const recipientBalance = await connection.getBalance(recipient.publicKey);
-    console.log(
-      'Recipient before: ',
-      recipientBalanceBefore,
-      ' recipient balance: ',
-      recipientBalance
-    );
-    assert.ok(recipientBalance === recipientBalanceBefore + 6e6);
-    console.log('One time payment over SC tx: ', singlePaymentTransaction);
-  });
+  // it('Pays SOL one time over smart contract', async () => {
+  //   const request: SinglePaymentRequest = {
+  //     amount: 1e6,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     mintAddress: mint,
+  //     cluster: 'devnet',
+  //   };
+
+  //   const recipientBalanceBefore = await connection.getBalance(
+  //     recipient.publicKey
+  //   );
+
+  //   const singlePaymentTransaction = await singleSolPayment(
+  //     program,
+  //     request,
+  //     true
+  //   );
+
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const recipientBalance = await connection.getBalance(recipient.publicKey);
+  //   console.log(
+  //     'One time payment over SC tx: ',
+  //     singlePaymentTransaction,
+  //     'Recipient balance before:',
+  //     recipientBalanceBefore,
+  //     'Recipient balance: ',
+  //     recipientBalance
+  //   );
+  //   assert.ok(
+  //     recipientBalance === recipientBalanceBefore + 1e6 * (1 - baseFee)
+  //   );
+  // });
+
+  // it('Splits onetime SOL payment', async () => {
+  //   const request: SinglePaymentRequest = {
+  //     amount: 1e6,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     mintAddress: mint,
+  //     cluster: 'devnet',
+  //   };
+
+  //   const remainingAccounts = Array<PublicKey>();
+  //   const remainingAmounts = Array<number>();
+  //   for (let i = 0; i < 10; i++) {
+  //     remainingAmounts.push(5e5);
+  //     remainingAccounts.push(recipient.publicKey);
+  //   }
+
+  //   const recipientBalanceBefore = await connection.getBalance(
+  //     recipient.publicKey
+  //   );
+
+  //   const singlePaymentTransaction = await singleSolPayment(
+  //     program,
+  //     request,
+  //     false,
+  //     remainingAmounts,
+  //     remainingAccounts
+  //   );
+
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const recipientBalance = await connection.getBalance(recipient.publicKey);
+  //   console.log(
+  //     'Recipient before: ',
+  //     recipientBalanceBefore,
+  //     ' recipient balance: ',
+  //     recipientBalance
+  //   );
+  //   assert.ok(recipientBalance === recipientBalanceBefore + 6e6);
+  //   console.log('One time payment over SC tx: ', singlePaymentTransaction);
+  // });
+
+  // it('Gets serialized stream create transaction', async () => {
+  //   let recipientTokenAccountLocal = await mint.getAccountInfo(
+  //     recipientTokenAccount
+  //   );
+  //   const initialAmount = Number(recipientTokenAccountLocal.amount);
+
+  //   const request: SinglePaymentRequest = {
+  //     amount: 1000,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     mintAddress: mint.publicKey,
+  //     cluster: 'devnet',
+  //   };
+
+  //   const singlePaymentTransactionSerialized = await getCreate
+  //     connection,
+  //     wallet,
+  //     program,
+  //     request
+  //   );
+
+  //   console.log(
+  //     Transaction.from(
+  //       Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
+  //     )
+  //   );
+
+  //   const txId = await connection.sendRawTransaction(
+  //     Buffer.from(JSON.parse(singlePaymentTransactionSerialized).data)
+  //   );
+
+  //   await connection.confirmTransaction(txId);
+
+  //   console.log('One time payment over SC tx: ', txId);
+  //   recipientTokenAccountLocal = await mint.getAccountInfo(
+  //     recipientTokenAccount
+  //   );
+  //   const amount = Number(recipientTokenAccountLocal.amount);
+  //   assert.ok(amount === initialAmount + 1000);
+  // });
 });
