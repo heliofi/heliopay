@@ -13,16 +13,15 @@ export const getCancelSolPaymentSignedTx = async (
   req: CancelPaymentRequest
 ): Promise<string> => {
   const transaction = await program.methods
-    .cancelSolPayment({
-      accounts: {
-        signer: req.sender,
-        sender: req.sender,
-        recipient: req.recipient,
-        solPaymentAccount: req.payment,
-        helioFeeAccount: helioFeeWalletKey,
-        daoFeeAccount: daoFeeWalletKey,
-        systemProgram: SystemProgram.programId,
-      },
+    .cancelSolPayment()
+    .accounts({
+      signer: req.sender,
+      sender: req.sender,
+      recipient: req.recipient,
+      solPaymentAccount: req.payment,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
+      systemProgram: SystemProgram.programId,
     })
     .transaction();
 

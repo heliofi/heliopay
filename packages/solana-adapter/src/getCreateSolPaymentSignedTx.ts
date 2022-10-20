@@ -19,20 +19,17 @@ export const getCreateSolPaymentSignedTx = async (
       new BN(req.startAt),
       new BN(req.endAt),
       new BN(req.interval),
-      payFees,
-      {
-        accounts: {
-          sender: req.sender,
-          recipient: req.recipient,
-          solPaymentAccount: req.paymentAccount.publicKey,
-          helioFeeAccount: helioFeeWalletKey,
-          daoFeeAccount: daoFeeWalletKey,
-          systemProgram: SystemProgram.programId,
-        },
-        signers: [req.paymentAccount],
-      }
+      payFees
     )
+    .accounts({
+      sender: req.sender,
+      recipient: req.recipient,
+      solPaymentAccount: req.paymentAccount.publicKey,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
+      systemProgram: SystemProgram.programId,
+    })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return signTransaction(transaction, wallet, connection, req.paymentAccount);
 };

@@ -12,14 +12,13 @@ export const getWithdrawSolSignedTx = async (
   req: WithdrawRequest
 ): Promise<string> => {
   const transaction = await program.methods
-    .withdrawSol({
-      accounts: {
-        recipient: req.recipient,
-        solPaymentAccount: req.payment,
-        helioFeeAccount: helioFeeWalletKey,
-        daoFeeAccount: daoFeeWalletKey,
-        systemProgram: SystemProgram.programId,
-      },
+    .withdrawSol()
+    .accounts({
+      recipient: req.recipient,
+      solPaymentAccount: req.payment,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
+      systemProgram: SystemProgram.programId,
     })
     .transaction();
 

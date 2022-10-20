@@ -329,57 +329,179 @@ describe('api', () => {
   //   assert.ok(recipientBalance === recipientBalanceBefore + 6e6);
   // });
 
-  it('Creates payment from serialized transaction', async () => {
+  // it('Gets create payment serialized transaction', async () => {
+  //   paymentAccount = new Keypair();
+  //   const startAt = Math.floor(new Date().getTime() / 1000) + 1;
+  //   const endAt = startAt + 100;
+  //   const request: CreatePaymentStateRequest = {
+  //     amount: 100000,
+  //     startAt,
+  //     endAt,
+  //     interval: 50,
+  //     mintAddress: mint,
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     paymentAccount,
+  //   };
+
+  //   const paymentTransaction = await getCreatePaymentSignedTx(
+  //     connection,
+  //     wallet,
+  //     program,
+  //     request,
+  //     true
+  //   );
+
+  //   const txId = await sendAndConfirm(paymentTransaction);
+  //   console.log('Create tx: ', txId);
+
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const paymentAccountLocal: any = await program.account.paymentAccount.fetch(
+  //     paymentAccount.publicKey
+  //   );
+
+  //   // Check that the values in the payment escrow account match what we expect.
+  //   assert.ok(paymentAccountLocal.senderKey.equals(provider.wallet.publicKey));
+  //   assert.ok(paymentAccountLocal.senderTokens.equals(senderTokenAccount));
+  //   assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
+  //   assert.ok(
+  //     paymentAccountLocal.recipientTokens.equals(recipientTokenAccount)
+  //   );
+  //   assert.ok(paymentAccountLocal.amount.toNumber() === 100000);
+  //   assert.ok(paymentAccountLocal.interval.toNumber() === 50);
+  //   assert.ok(paymentAccountLocal.payFees);
+  // }).timeout(40000);
+
+  // it('Gets withdraw transaction', async () => {
+  //   const request: WithdrawRequest = {
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //     mintAddress: mint,
+  //   };
+
+  //   //  Sign with recipient wallet
+  //   let walletRecipient: Wallet = new Wallet(recipient);
+  //   let provider = new anchor.AnchorProvider(
+  //     connection,
+  //     walletRecipient,
+  //     txOpts
+  //   );
+  //   let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
+
+  //   const withdrawTransaction = await getWithdrawSignedTx(
+  //     connection,
+  //     walletRecipient,
+  //     program,
+  //     request
+  //   );
+  //   const txId = await sendAndConfirm(withdrawTransaction);
+  //   console.log('withdraw tx: ', txId);
+
+  //   await sleep(20 * 1000); // Wait 20 secs for devnet
+  //   const recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   console.log(
+  //     'rec tokens amount: ',
+  //     Number(recipientTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(
+  //     Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
+  //   );
+  // });
+
+  // it('Gets cancel payment transaction', async () => {
+  //   await sleep(30 * 1000); // Wait 20 secs for devnet next block
+  //   const request: CancelPaymentRequest = {
+  //     sender: sender.publicKey,
+  //     recipient: recipient.publicKey,
+  //     payment: paymentAccount.publicKey,
+  //     mintAddress: mint,
+  //   };
+
+  //   const cancelTransaction = await getCancelPaymentSignedTx(
+  //     connection,
+  //     wallet,
+  //     program,
+  //     request
+  //   );
+  //   const txId = await sendAndConfirm(cancelTransaction);
+  //   await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
+  //   console.log('cancel tx: ', txId);
+  //   const senderTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     senderTokenAccount
+  //   );
+  //   console.log(
+  //     'sender tokens amount: ',
+  //     Number(senderTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
+  //   const recipientTokenAccountLocal = await getAccount(
+  //     provider.connection,
+  //     recipientTokenAccount
+  //   );
+  //   console.log(
+  //     'rec tokens amount: ',
+  //     Number(recipientTokenAccountLocal.amount)
+  //   );
+  //   assert.ok(
+  //     Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
+  //   );
+  // });
+
+  it('Gets SOL payment create transaction', async () => {
     paymentAccount = new Keypair();
     const startAt = Math.floor(new Date().getTime() / 1000) + 1;
-    const endAt = startAt + 100;
+    const endAt = startAt + 200;
     const request: CreatePaymentStateRequest = {
-      amount: 100000,
+      amount: 1e6,
       startAt,
       endAt,
-      interval: 50,
-      mintAddress: mint,
+      interval: 100,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       paymentAccount,
     };
+    const senderBalanceBefore = await connection.getBalance(sender.publicKey);
 
-    const paymentTransaction = await getCreatePaymentSignedTx(
+    const paymentTransaction = await getCreateSolPaymentSignedTx(
       connection,
       wallet,
       program,
       request,
-      true
+      false
     );
 
     const txId = await sendAndConfirm(paymentTransaction);
-    console.log('Create tx: ', txId);
+    console.log('Create sol tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
-    const paymentAccountLocal: any = await program.account.paymentAccount.fetch(
-      paymentAccount.publicKey
-    );
+
+    const paymentAccountLocal: any =
+      await program.account.solPaymentAccount.fetch(paymentAccount.publicKey);
+    console.log('Escrow payment account: ', paymentAccountLocal);
 
     // Check that the values in the payment escrow account match what we expect.
-    assert.ok(paymentAccountLocal.senderKey.equals(provider.wallet.publicKey));
-    assert.ok(paymentAccountLocal.senderTokens.equals(senderTokenAccount));
+    assert.ok(paymentAccountLocal.senderKey.equals(sender.publicKey));
     assert.ok(paymentAccountLocal.recipientKey.equals(recipient.publicKey));
-    assert.ok(
-      paymentAccountLocal.recipientTokens.equals(recipientTokenAccount)
+    assert.ok(paymentAccountLocal.amount.toNumber() === 1e6);
+    assert.ok(paymentAccountLocal.interval.toNumber() === 100);
+    assert.ok(paymentAccountLocal.withdrawal.toNumber() === 0);
+    assert.ok(paymentAccountLocal.payFees === false);
+    // Check balance of payment account
+    const paymentAccountBalance = await connection.getBalance(
+      paymentAccount.publicKey
     );
-    assert.ok(paymentAccountLocal.amount.toNumber() === 100000);
-    assert.ok(paymentAccountLocal.interval.toNumber() === 50);
-    assert.ok(paymentAccountLocal.payFees);
+    console.log('Payment bal', paymentAccountBalance); // amount + rent
+    assert.ok(paymentAccountBalance > 1e6);
+    const senderBalance = await connection.getBalance(sender.publicKey);
+    paymentSOLBalance = paymentAccountLocal.amount.toNumber();
+    assert.ok(senderBalanceBefore > senderBalance + 1e6); // sender balance = old balance - amount - tx fee - rent
   }).timeout(40000);
 
-  it('Withdraws', async () => {
-    const request: WithdrawRequest = {
-      recipient: recipient.publicKey,
-      payment: paymentAccount.publicKey,
-      mintAddress: mint,
-    };
-
-    //  Sign with recipient wallet
+  it('Gets withdraw SOL transaction', async () => {
     let walletRecipient: Wallet = new Wallet(recipient);
     let provider = new anchor.AnchorProvider(
       connection,
@@ -387,68 +509,59 @@ describe('api', () => {
       txOpts
     );
     let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
-
-    const withdrawTransaction = await getWithdrawSignedTx(
+    const request: WithdrawRequest = {
+      recipient: recipient.publicKey,
+      payment: paymentAccount.publicKey,
+    };
+    const recipientBalanceBefore = await connection.getBalance(
+      recipient.publicKey
+    );
+    const withdrawTransaction = await getWithdrawSolSignedTx(
       connection,
       walletRecipient,
       program,
       request
     );
+
     const txId = await sendAndConfirm(withdrawTransaction);
-    console.log('withdraw tx: ', txId);
+    console.log('withdraw sol tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
-    const recipientTokenAccountLocal = await getAccount(
-      provider.connection,
-      recipientTokenAccount
-    );
-    console.log(
-      'rec tokens amount: ',
-      Number(recipientTokenAccountLocal.amount)
-    );
+    const recipientBalance = await connection.getBalance(recipient.publicKey);
+    console.log('rec balance: ', recipientBalance);
     assert.ok(
-      Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
+      recipientBalance < recipientBalanceBefore + 5e5 &&
+        recipientBalance > recipientBalanceBefore + 4.5e5
     );
   });
 
-  it('Cancels payment', async () => {
-    await sleep(30 * 1000); // Wait 20 secs for devnet next block
+  it('Gets cancel SOL payment transaction', async () => {
+    const sendersBalanceBefore = await connection.getBalance(sender.publicKey);
     const request: CancelPaymentRequest = {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       payment: paymentAccount.publicKey,
-      mintAddress: mint,
     };
-
-    const cancelTransaction = await getCancelPaymentSignedTx(
+    await sleep(15 * 1000);
+    const cancelTransaction = await getCancelSolPaymentSignedTx(
       connection,
       wallet,
       program,
       request
     );
+
     const txId = await sendAndConfirm(cancelTransaction);
-    await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
-    console.log('cancel tx: ', txId);
-    const senderTokenAccountLocal = await getAccount(
-      provider.connection,
-      senderTokenAccount
-    );
+    console.log('cancel sol tx: ', txId);
+    await sleep(20 * 1000);
+
+    const sendersBalance = await connection.getBalance(sender.publicKey);
     console.log(
-      'sender tokens amount: ',
-      Number(senderTokenAccountLocal.amount)
+      'Senders balance before:',
+      sendersBalanceBefore,
+      'Senders balance: ',
+      sendersBalance
     );
-    assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
-    const recipientTokenAccountLocal = await getAccount(
-      provider.connection,
-      recipientTokenAccount
-    );
-    console.log(
-      'rec tokens amount: ',
-      Number(recipientTokenAccountLocal.amount)
-    );
-    assert.ok(
-      Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
-    );
+    assert.ok(sendersBalance >= sendersBalanceBefore + paymentSOLBalance / 2); // get back rent, half amount, deduct fees
   });
 
   // it('Creates payment', async () => {
