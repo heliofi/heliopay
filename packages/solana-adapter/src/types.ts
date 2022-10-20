@@ -40,3 +40,9 @@ export type SingleTransactionProps = {
   currency?: string;
   cluster: string;
 };
+
+export interface Account {
+  pubkey: PublicKey;
+  isWritable: boolean;
+  isSigner: boolean;
+}

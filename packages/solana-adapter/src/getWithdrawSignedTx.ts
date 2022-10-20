@@ -39,20 +39,19 @@ export const getWithdrawSignedTx = async (
   );
 
   const transaction = await program.methods
-    .withdraw({
-      accounts: {
-        recipient: req.recipient,
-        recipientTokenAccount: recipientAssociatedTokenAddress,
-        paymentAccount: req.payment,
-        paymentTokenAccount: paymentAssociatedTokenAddress,
-        pdaSigner: pda,
-        helioFeeAccount: helioFeeWalletKey,
-        helioFeeTokenAccount: helioFeeTokenAccountAddress,
-        daoFeeAccount: daoFeeWalletKey,
-        daoFeeTokenAccount: daoFeeTokenAccountAddress,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      },
+    .withdraw()
+    .accounts({
+      recipient: req.recipient,
+      recipientTokenAccount: recipientAssociatedTokenAddress,
+      paymentAccount: req.payment,
+      paymentTokenAccount: paymentAssociatedTokenAddress,
+      pdaSigner: pda,
+      helioFeeAccount: helioFeeWalletKey,
+      helioFeeTokenAccount: helioFeeTokenAccountAddress,
+      daoFeeAccount: daoFeeWalletKey,
+      daoFeeTokenAccount: daoFeeTokenAccountAddress,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      systemProgram: SystemProgram.programId,
     })
     .transaction();
 

@@ -44,23 +44,22 @@ export const getCancelPaymentSignedTx = async (
   );
 
   const transaction = await program.methods
-    .cancelPayment({
-      accounts: {
-        signer: req.sender,
-        sender: req.sender,
-        senderTokenAccount: senderAssociatedTokenAddress,
-        recipient: req.recipient,
-        recipientTokenAccount: recipientAssociatedTokenAddress,
-        paymentAccount: req.payment,
-        paymentTokenAccount: paymentAssociatedTokenAddress,
-        pdaSigner: pda,
-        helioFeeAccount: helioFeeWalletKey,
-        helioFeeTokenAccount: helioFeeTokenAccountAddress,
-        daoFeeAccount: daoFeeWalletKey,
-        daoFeeTokenAccount: daoFeeTokenAccountAddress,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-      },
+    .cancelPayment()
+    .accounts({
+      signer: req.sender,
+      sender: req.sender,
+      senderTokenAccount: senderAssociatedTokenAddress,
+      recipient: req.recipient,
+      recipientTokenAccount: recipientAssociatedTokenAddress,
+      paymentAccount: req.payment,
+      paymentTokenAccount: paymentAssociatedTokenAddress,
+      pdaSigner: pda,
+      helioFeeAccount: helioFeeWalletKey,
+      helioFeeTokenAccount: helioFeeTokenAccountAddress,
+      daoFeeAccount: daoFeeWalletKey,
+      daoFeeTokenAccount: daoFeeTokenAccountAddress,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      systemProgram: SystemProgram.programId,
     })
     .transaction();
 
