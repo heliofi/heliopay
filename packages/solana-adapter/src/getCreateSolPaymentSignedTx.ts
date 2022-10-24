@@ -1,5 +1,6 @@
 import { Connection, SystemProgram } from '@solana/web3.js';
-import { BN, Program, Wallet } from '@project-serum/anchor';
+import { BN, Program } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
 import './config';
@@ -8,7 +9,7 @@ import { signTransaction } from './utils';
 
 export const getCreateSolPaymentSignedTx = async (
   connection: Connection,
-  wallet: Wallet,
+  wallet: AnchorWallet,
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
   payFees: boolean = true

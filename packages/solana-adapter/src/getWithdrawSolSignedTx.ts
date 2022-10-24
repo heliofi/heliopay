@@ -1,5 +1,6 @@
 import { Connection, SystemProgram } from '@solana/web3.js';
-import { Program, Wallet } from '@project-serum/anchor';
+import { Program } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { WithdrawRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
@@ -7,7 +8,7 @@ import { signTransaction } from './utils';
 
 export const getWithdrawSolSignedTx = async (
   connection: Connection,
-  wallet: Wallet,
+  wallet: AnchorWallet,
   program: Program<HelioIdl>,
   req: WithdrawRequest
 ): Promise<string> => {

@@ -1,6 +1,7 @@
 import { Connection, SystemProgram, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Program, Wallet } from '@project-serum/anchor';
+import { Program } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
@@ -8,7 +9,7 @@ import { signTransaction } from './utils';
 
 export const getCancelPaymentSignedTx = async (
   connection: Connection,
-  wallet: Wallet,
+  wallet: AnchorWallet,
   program: Program<HelioIdl>,
   req: CancelPaymentRequest
 ): Promise<string> => {

@@ -1,9 +1,10 @@
 import { Wallet } from '@project-serum/anchor';
 import { Connection, Transaction, Keypair } from '@solana/web3.js';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 
 export async function signTransaction(
   transaction: Transaction,
-  wallet: Wallet,
+  wallet: AnchorWallet,
   connection: Connection,
   otherSigner?: Keypair
 ): Promise<string> {

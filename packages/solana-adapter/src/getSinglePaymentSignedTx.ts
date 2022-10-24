@@ -10,7 +10,8 @@ import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { BN, Program, Wallet } from '@project-serum/anchor';
+import { BN, Program } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import './config';
@@ -19,7 +20,7 @@ import { signTransaction } from './utils';
 
 export const getSinglePaymentSignedTx = async (
   connection: Connection,
-  wallet: Wallet,
+  wallet: AnchorWallet,
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean = true,
