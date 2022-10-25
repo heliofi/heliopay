@@ -3,6 +3,7 @@ import {
   SystemProgram,
   PublicKey,
   SYSVAR_RENT_PUBKEY,
+  Signer,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -83,7 +84,6 @@ export const getCreatePaymentSignedTx = async (
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })
-    .signers([req.paymentAccount])
     .transaction();
 
   return signTransaction(transaction, wallet, connection);
