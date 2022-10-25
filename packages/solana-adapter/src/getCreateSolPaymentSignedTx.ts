@@ -30,7 +30,8 @@ export const getCreateSolPaymentSignedTx = async (
       daoFeeAccount: daoFeeWalletKey,
       systemProgram: SystemProgram.programId,
     })
+    .signers([req.paymentAccount])
     .transaction();
 
-  return signTransaction(transaction, wallet, connection, req.paymentAccount);
+  return signTransaction(transaction, wallet, connection);
 };

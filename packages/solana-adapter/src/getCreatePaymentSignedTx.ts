@@ -83,7 +83,8 @@ export const getCreatePaymentSignedTx = async (
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })
+    .signers([req.paymentAccount])
     .transaction();
 
-  return signTransaction(transaction, wallet, connection, req.paymentAccount);
+  return signTransaction(transaction, wallet, connection);
 };
