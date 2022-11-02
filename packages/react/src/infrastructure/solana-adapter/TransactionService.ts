@@ -2,26 +2,35 @@ import {
   HelioIdl,
   SinglePaymentRequest,
   singlePayment,
-  singleSolPayment,
+  singleSolPayment
 } from '@heliofi/solana-adapter';
 import { Program } from '@project-serum/anchor';
 import { Cluster, PublicKey } from '@solana/web3.js';
-
+import { SplitWallet } from '@heliofi/common';
 import {
   CustomerDetails,
   ErrorPaymentEvent,
   HttpCodes,
   PendingPaymentEvent,
-  SuccessPaymentEvent,
+  SuccessPaymentEvent
 } from '../../domain';
 import { TransactionTimeoutError } from './TransactionTimeoutError';
 import { VerificationError } from './VerificationError';
 import { ApproveTransactionPayload } from './ApproveTransactionPayload';
 import { CurrencyService } from '../../domain/services/CurrencyService';
-import { getHelioApiBaseUrl } from '../helio-api/HelioApiAdapter';
+import {
+  getHelioApiBaseUrl,
+  HelioApiAdapter
+} from '../helio-api/HelioApiAdapter';
 import { ProductDetails } from '../../domain/model/ProductDetails';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 const SOL_SYMBOL = 'SOL';
+
+type PaylinkRequest = SinglePaymentRequest & {
+  splitRevenue?: boolean;
+  splitWallets?: SplitWallet[];
+};
 
 interface Props {
   anchorProvider: Program<HelioIdl>;
@@ -36,6 +45,7 @@ interface Props {
   productDetails?: ProductDetails;
   quantity?: number;
   cluster: Cluster;
+  accounts?: any;
 }
 
 const approveTransaction = async (
@@ -46,9 +56,9 @@ const approveTransaction = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
+      'content-type': 'application/json'
     },
-    body: JSON.stringify(reqBody),
+    body: JSON.stringify(reqBody)
   });
   const result = await res.json();
   if (
@@ -74,30 +84,55 @@ const checkHelioX = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/wallet/${recipientPK}`, {
     method: 'GET',
     headers: {
-      'content-type': 'application/json',
-    },
+      'content-type': 'application/json'
+    }
   });
   const result = await res.json();
   if (res.status === HttpCodes.SUCCESS) {
     return {
-      isHelioX: result.isHelioX,
+      isHelioX: result.isHelioX
     };
   }
   return {
-    isHelioX: false,
+    isHelioX: false
   };
 };
+
 const sendTransaction = async (
   symbol: string,
   request: SinglePaymentRequest,
   provider: Program<HelioIdl>,
-  isHeliox: boolean
+  isHeliox: boolean,
+  splitRevenue: boolean,
+  amounts?: number[],
+  accounts?: PublicKey[]
 ): Promise<string | undefined> => {
   try {
-    if (symbol === SOL_SYMBOL) {
-      return await singleSolPayment(provider, request, !isHeliox);
+    if (splitRevenue && amounts && accounts) {
+      if (symbol === SOL_SYMBOL) {
+        return await singleSolPayment(
+          provider,
+          request,
+          !isHeliox,
+          amounts,
+          accounts
+        );
+      }
+      console.log('paying');
+      console.log(request);
+      return await singlePayment(
+        provider,
+        request,
+        !isHeliox,
+        amounts,
+        accounts
+      );
+    } else {
+      if (symbol === SOL_SYMBOL) {
+        return await singleSolPayment(provider, request, !isHeliox);
+      }
+      return await singlePayment(provider, request, !isHeliox);
     }
-    return await singlePayment(provider, request, !isHeliox);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
@@ -126,6 +161,46 @@ const retryCallback = async (
   }
 };
 
+const calculateSplitAmounts = async (
+  request: PaylinkRequest,
+  isDefaultTransaction = false
+): Promise<{
+  amounts: number[];
+  firstAmount: number;
+  accounts: PublicKey[];
+}> => {
+  const amounts: number[] = [];
+  const accounts: PublicKey[] = [];
+  let firstAmount = 0;
+  let index = 0;
+
+  for (const wallet of request.splitWallets as SplitWallet[]) {
+    if (wallet.sharePercent === 0) continue;
+
+    const amount = (request.amount * wallet.sharePercent) / 100;
+    const recipient = new PublicKey(wallet.address);
+
+    if (index === 0) {
+      firstAmount = amount;
+      request.recipient = recipient;
+    } else {
+      amounts.push(amount);
+      accounts.push(recipient);
+
+      if (isDefaultTransaction) {
+        const recipientTokenAccount = await getAssociatedTokenAddress(
+          request.mintAddress,
+          recipient
+        );
+        accounts.push(recipientTokenAccount);
+      }
+    }
+    index++;
+  }
+
+  return { firstAmount, amounts, accounts };
+};
+
 export const createOneTimePayment = async ({
   anchorProvider,
   recipientPK,
@@ -138,22 +213,67 @@ export const createOneTimePayment = async ({
   onSuccess,
   onError,
   onPending,
-  cluster,
+  cluster
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
+  const request = await HelioApiAdapter.getPaymentRequestByIdPublic(
+    paymentRequestId,
+    cluster
+  );
+  request.mintAddress = new PublicKey(
+    CurrencyService.getCurrencyBySymbol(symbol).mintAddress as string
+  );
+
   const { isHelioX } = await checkHelioX(recipientPK, cluster);
-  const signature = await sendTransaction(
-    symbol,
-    {
+
+  const sendTransactionPayload: {
+    symbol: string;
+    request: SinglePaymentRequest;
+    anchorProvider: Program<HelioIdl>;
+    isHelioX: boolean;
+    isSplitRevenue: boolean;
+    amounts?: number[];
+    accounts?: PublicKey[];
+  } = {
+    symbol: symbol,
+    request: {
       amount,
       sender: anchorProvider.provider.publicKey as PublicKey,
       recipient: new PublicKey(recipientPK),
       mintAddress: new PublicKey(mintAddress),
-      cluster,
+      cluster
     },
-    anchorProvider,
-    isHelioX
+
+    anchorProvider: anchorProvider,
+    isHelioX: isHelioX,
+    isSplitRevenue: !!request?.features?.splitRevenue
+  };
+
+  if (
+    request?.features?.splitRevenue &&
+    request?.splitWallets &&
+    request?.splitWallets.length > 0
+  ) {
+    const { firstAmount, amounts, accounts } = await calculateSplitAmounts(
+      {
+        ...sendTransactionPayload.request,
+        splitWallets: request.splitWallets
+      },
+      true
+    );
+    sendTransactionPayload.amounts = amounts;
+    sendTransactionPayload.accounts = accounts;
+  }
+
+  const signature = await sendTransaction(
+    sendTransactionPayload.symbol,
+    sendTransactionPayload.request,
+    sendTransactionPayload.anchorProvider,
+    sendTransactionPayload.isHelioX,
+    sendTransactionPayload.isSplitRevenue,
+    sendTransactionPayload?.amounts,
+    sendTransactionPayload?.accounts
   );
 
   if (signature === undefined) {
@@ -174,7 +294,7 @@ export const createOneTimePayment = async ({
     cluster,
     customerDetails,
     quantity,
-    productDetails: finalProductDetails,
+    productDetails: finalProductDetails
   };
 
   try {
