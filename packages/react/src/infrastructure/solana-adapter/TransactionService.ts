@@ -118,8 +118,6 @@ const sendTransaction = async (
           accounts
         );
       }
-      console.log('paying');
-      console.log(request);
       return await singlePayment(
         provider,
         request,
@@ -264,6 +262,7 @@ export const createOneTimePayment = async ({
     );
     sendTransactionPayload.amounts = amounts;
     sendTransactionPayload.accounts = accounts;
+    sendTransactionPayload.request.amount = firstAmount;
   }
 
   const signature = await sendTransaction(
@@ -294,7 +293,9 @@ export const createOneTimePayment = async ({
     cluster,
     customerDetails,
     quantity,
-    productDetails: finalProductDetails
+    productDetails: finalProductDetails,
+    splitRevenue: !!request?.features?.splitRevenue,
+    splitWallets: request?.splitWallets
   };
 
   try {
