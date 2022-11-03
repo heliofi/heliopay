@@ -14,6 +14,7 @@ export type InputContainerProps = {
   prefix?: React.ReactNode | string;
   suffix?: React.ReactNode | string;
   focus?: boolean;
+  children?: React.ReactNode;
 };
 
 const InputContainer: FC<InputContainerProps> = ({
