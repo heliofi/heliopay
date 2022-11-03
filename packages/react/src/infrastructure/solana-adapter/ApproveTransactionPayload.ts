@@ -1,3 +1,4 @@
+import { SplitWallet } from '@heliofi/common';
 import { Cluster } from '@solana/web3.js';
 import { CustomerDetails } from '../../domain';
 import { ProductDetails } from '../../domain/model/ProductDetails';
@@ -13,4 +14,6 @@ export interface ApproveTransactionPayload {
   customerDetails?: CustomerDetails;
   productDetails?: ProductDetails;
   quantity?: number;
+  splitRevenue?: boolean;
+  splitWallets?: SplitWallet[];
 }

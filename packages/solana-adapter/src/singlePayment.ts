@@ -2,7 +2,7 @@ import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
@@ -29,12 +29,12 @@ const prepareSplitPaymentsValues = (
     remainingAccounts.push({
       pubkey: accounts[2 * i],
       isWritable: false,
-      isSigner: false,
+      isSigner: false
     });
     remainingAccounts.push({
       pubkey: accounts[2 * i + 1],
       isWritable: true,
-      isSigner: false,
+      isSigner: false
     });
   }
 
@@ -93,9 +93,9 @@ export const singlePayment = async (
         rent: SYSVAR_RENT_PUBKEY,
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
+        systemProgram: SystemProgram.programId
       },
-      remainingAccounts,
+      remainingAccounts
     }
   );
 };

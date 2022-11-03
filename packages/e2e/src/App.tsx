@@ -11,7 +11,7 @@ import './styles/style.scss';
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '6349349de4aa86e1c31b46d6'
+    '6363d5b96ac96866e3bec508'
   );
 
   return (
@@ -22,7 +22,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="mainnet-beta"
+        cluster="devnet"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);
