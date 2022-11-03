@@ -1,15 +1,20 @@
-import { SystemProgram } from '@solana/web3.js';
+import { Connection, SystemProgram } from '@solana/web3.js';
 import { Program } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
+import { signTransaction } from './utils';
 
-export const cancelSolPayment = async (
+export const getCancelSolPaymentSignedTx = async (
+  connection: Connection,
+  wallet: AnchorWallet,
   program: Program<HelioIdl>,
   req: CancelPaymentRequest
-): Promise<string> =>
-  program.rpc.cancelSolPayment({
-    accounts: {
+): Promise<string> => {
+  const transaction = await program.methods
+    .cancelSolPayment()
+    .accounts({
       signer: req.sender,
       sender: req.sender,
       recipient: req.recipient,
@@ -17,5 +22,8 @@ export const cancelSolPayment = async (
       helioFeeAccount: helioFeeWalletKey,
       daoFeeAccount: daoFeeWalletKey,
       systemProgram: SystemProgram.programId,
-    },
-  });
+    })
+    .transaction();
+
+  return signTransaction(transaction, wallet, connection);
+};
