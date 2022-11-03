@@ -19,22 +19,22 @@ export const getWithdrawSignedTx = async (
   );
   const mint = req.mintAddress!;
 
-  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const recipientTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.recipient
   );
 
-  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const paymentTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.payment
   );
 
-  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     helioFeeWalletKey
   );
 
-  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const daoFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     daoFeeWalletKey
   );
@@ -43,14 +43,14 @@ export const getWithdrawSignedTx = async (
     .withdraw()
     .accounts({
       recipient: req.recipient,
-      recipientTokenAccount: recipientAssociatedTokenAddress,
+      recipientTokenAccount,
       paymentAccount: req.payment,
-      paymentTokenAccount: paymentAssociatedTokenAddress,
+      paymentTokenAccount,
       pdaSigner: pda,
       helioFeeAccount: helioFeeWalletKey,
-      helioFeeTokenAccount: helioFeeTokenAccountAddress,
+      helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
-      daoFeeTokenAccount: daoFeeTokenAccountAddress,
+      daoFeeTokenAccount,
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })

@@ -8,7 +8,6 @@ import { BN, Program } from '@project-serum/anchor';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
-import './config';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 import { signTransaction } from './utils';
 

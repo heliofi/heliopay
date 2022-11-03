@@ -14,9 +14,40 @@ import { BN, Program } from '@project-serum/anchor';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
-import './config';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 import { signTransaction } from './utils';
+
+const prepareSplitPaymentsValues = (
+  amounts: Array<number> = [],
+  accounts: Array<PublicKey> = []
+): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
+  if (!amounts.length) {
+    if (accounts.length > 0) {
+      throw new Error('Remaining accounts when no amounts!');
+    }
+  } else if (2 * amounts.length !== accounts.length) {
+    throw new Error('Remaining accounts not matching amounts!');
+  }
+
+  const remainingAmounts = [];
+  const remainingAccounts = [];
+
+  for (let i = 0; i < amounts.length; i++) {
+    remainingAmounts.push(new BN(amounts[i]));
+    remainingAccounts.push({
+      pubkey: accounts[2 * i],
+      isWritable: false,
+      isSigner: false,
+    });
+    remainingAccounts.push({
+      pubkey: accounts[2 * i + 1],
+      isWritable: true,
+      isSigner: false,
+    });
+  }
+
+  return { remainingAmounts, remainingAccounts };
+};
 
 export const getSinglePaymentSignedTx = async (
   connection: Connection,
@@ -75,36 +106,4 @@ export const getSinglePaymentSignedTx = async (
     .transaction();
 
   return signTransaction(transaction, wallet, connection);
-};
-
-const prepareSplitPaymentsValues = (
-  amounts: Array<number> = [],
-  accounts: Array<PublicKey> = []
-): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
-  if (!amounts.length) {
-    if (accounts.length > 0) {
-      throw new Error('Remaining accounts when no amounts!');
-    }
-  } else if (2 * amounts.length !== accounts.length) {
-    throw new Error('Remaining accounts not matching amounts!');
-  }
-
-  const remainingAmounts = [];
-  const remainingAccounts = [];
-
-  for (let i = 0; i < amounts.length; i++) {
-    remainingAmounts.push(new BN(amounts[i]));
-    remainingAccounts.push({
-      pubkey: accounts[2 * i],
-      isWritable: false,
-      isSigner: false,
-    });
-    remainingAccounts.push({
-      pubkey: accounts[2 * i + 1],
-      isWritable: true,
-      isSigner: false,
-    });
-  }
-
-  return { remainingAmounts, remainingAccounts };
 };

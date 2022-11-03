@@ -2,7 +2,6 @@ import { SystemProgram } from '@solana/web3.js';
 import { Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
-import './config';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const cancelSolPayment = async (

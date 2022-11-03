@@ -1,21 +1,30 @@
-import { Wallet } from '@project-serum/anchor/dist/cjs/index';
+import * as nacl from 'tweetnacl';
 import { Connection, Transaction, Keypair } from '@solana/web3.js';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 
 export async function signTransaction(
-  transaction: Transaction,
+  transactionParam: Transaction,
   wallet: AnchorWallet,
   connection: Connection,
   otherSigner?: Keypair
 ): Promise<string> {
+  const transaction: Transaction = transactionParam;
   transaction.feePayer = wallet.publicKey;
   transaction.recentBlockhash = (
     await connection.getLatestBlockhash()
   ).blockhash;
-  let signedTransaction = await wallet.signTransaction(transaction);
+  const signedTransaction = await wallet.signTransaction(transaction);
   if (otherSigner) {
-    const otherWallet = new Wallet(otherSigner);
-    signedTransaction = await otherWallet.signTransaction(signedTransaction);
+    const transactionDataToSign = signedTransaction.serializeMessage();
+
+    const otherSignature = nacl.sign.detached(
+      transactionDataToSign,
+      otherSigner.secretKey
+    );
+    signedTransaction.addSignature(
+      otherSigner.publicKey,
+      Buffer.from(otherSignature)
+    );
   }
   return JSON.stringify(signedTransaction.serialize());
 }

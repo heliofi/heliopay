@@ -2,7 +2,6 @@ import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { Account, SinglePaymentRequest } from './types';
-import './config';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (

@@ -3,7 +3,6 @@ import {
   SystemProgram,
   PublicKey,
   SYSVAR_RENT_PUBKEY,
-  Signer,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -26,33 +25,29 @@ export const getCreatePaymentSignedTx = async (
 ): Promise<string> => {
   const mint = req.mintAddress!;
 
-  const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
-    req.sender
-  );
+  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
 
-  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const recipientTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.recipient
   );
 
-  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const paymentTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.paymentAccount.publicKey
   );
 
-  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     helioFeeWalletKey
   );
 
-  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const daoFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     daoFeeWalletKey
   );
 
-  // eslint-disable-next-line
-  const [_pda, bump] = await PublicKey.findProgramAddress(
+  const [, bump] = await PublicKey.findProgramAddress(
     [req.paymentAccount.publicKey.toBytes()],
     program.programId
   );
@@ -69,15 +64,15 @@ export const getCreatePaymentSignedTx = async (
     )
     .accounts({
       sender: req.sender,
-      senderTokenAccount: senderAssociatedTokenAddress,
+      senderTokenAccount,
       recipient: req.recipient,
-      recipientTokenAccount: recipientAssociatedTokenAddress,
+      recipientTokenAccount,
       paymentAccount: req.paymentAccount.publicKey,
-      paymentTokenAccount: paymentAssociatedTokenAddress,
+      paymentTokenAccount,
       helioFeeAccount: helioFeeWalletKey,
-      helioFeeTokenAccount: helioFeeTokenAccountAddress,
+      helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
-      daoFeeTokenAccount: daoFeeTokenAccountAddress,
+      daoFeeTokenAccount,
       mint,
       rent: SYSVAR_RENT_PUBKEY,
       tokenProgram: TOKEN_PROGRAM_ID,
@@ -86,5 +81,5 @@ export const getCreatePaymentSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return signTransaction(transaction, wallet, connection, req.paymentAccount);
 };
