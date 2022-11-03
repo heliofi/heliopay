@@ -24,6 +24,13 @@ export type WithdrawRequest = {
   mintAddress?: PublicKey;
 };
 
+export type TopupRequest = {
+  amount: number;
+  sender: PublicKey;
+  payment: PublicKey;
+  mintAddress: PublicKey;
+};
+
 export type SinglePaymentRequest = {
   amount: number;
   sender: PublicKey;
