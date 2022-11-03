@@ -23,6 +23,7 @@ import {
   CancelPaymentRequest,
   SinglePaymentRequest,
   WithdrawRequest,
+  TopupRequest,
 } from '../src/types';
 
 import {
@@ -42,6 +43,7 @@ import {
   getCancelSolPaymentSignedTx,
   getWithdrawSignedTx,
   getWithdrawSolSignedTx,
+  getTopupSignedTx,
 } from '../';
 
 let provider: anchor.AnchorProvider;
@@ -373,84 +375,131 @@ describe('api', () => {
     assert.ok(paymentAccountLocal.payFees);
   }).timeout(40000);
 
-  // it('Gets withdraw transaction', async () => {
-  //   const request: WithdrawRequest = {
-  //     recipient: recipient.publicKey,
-  //     payment: paymentAccount.publicKey,
-  //     mintAddress: mint,
-  //   };
+  it('Gets withdraw transaction', async () => {
+    const request: WithdrawRequest = {
+      recipient: recipient.publicKey,
+      payment: paymentAccount.publicKey,
+      mintAddress: mint,
+    };
 
-  //   //  Sign with recipient wallet
-  //   let walletRecipient: Wallet = new Wallet(recipient);
-  //   let provider = new anchor.AnchorProvider(
-  //     connection,
-  //     walletRecipient,
-  //     txOpts
-  //   );
-  //   let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
+    //  Sign with recipient wallet
+    let walletRecipient: Wallet = new Wallet(recipient);
+    let provider = new anchor.AnchorProvider(
+      connection,
+      walletRecipient,
+      txOpts
+    );
+    let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
 
-  //   const withdrawTransaction = await getWithdrawSignedTx(
-  //     connection,
-  //     walletRecipient,
-  //     program,
-  //     request
-  //   );
-  //   const txId = await sendAndConfirm(withdrawTransaction);
-  //   console.log('withdraw tx: ', txId);
+    const withdrawTransaction = await getWithdrawSignedTx(
+      connection,
+      walletRecipient,
+      program,
+      request
+    );
+    const txId = await sendAndConfirm(withdrawTransaction);
+    console.log('withdraw tx: ', txId);
 
-  //   await sleep(20 * 1000); // Wait 20 secs for devnet
-  //   const recipientTokenAccountLocal = await getAccount(
-  //     provider.connection,
-  //     recipientTokenAccount
-  //   );
-  //   console.log(
-  //     'rec tokens amount: ',
-  //     Number(recipientTokenAccountLocal.amount)
-  //   );
-  //   assert.ok(
-  //     Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
-  //   );
-  // });
+    await sleep(20 * 1000); // Wait 20 secs for devnet
+    const recipientTokenAccountLocal = await getAccount(
+      provider.connection,
+      recipientTokenAccount
+    );
+    console.log(
+      'rec tokens amount: ',
+      Number(recipientTokenAccountLocal.amount)
+    );
+    assert.ok(
+      Number(recipientTokenAccountLocal.amount) === 50000 * (1 - baseFee)
+    );
+  });
 
-  // it('Gets cancel payment transaction', async () => {
-  //   await sleep(30 * 1000); // Wait 20 secs for devnet next block
-  //   const request: CancelPaymentRequest = {
-  //     sender: sender.publicKey,
-  //     recipient: recipient.publicKey,
-  //     payment: paymentAccount.publicKey,
-  //     mintAddress: mint,
-  //   };
+  it('Gets topup transaction', async () => {
+    let _senderTokenAccountLocal = await getAccount(
+      provider.connection,
+      senderTokenAccount
+    );
+    const sendersPriorBalance = _senderTokenAccountLocal.amount;
+    let paymentAccountLocal = await program.account.paymentAccount.fetch(
+      paymentAccount.publicKey
+    );
 
-  //   const cancelTransaction = await getCancelPaymentSignedTx(
-  //     connection,
-  //     wallet,
-  //     program,
-  //     request
-  //   );
-  //   const txId = await sendAndConfirm(cancelTransaction);
-  //   await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
-  //   console.log('cancel tx: ', txId);
-  //   const senderTokenAccountLocal = await getAccount(
-  //     provider.connection,
-  //     senderTokenAccount
-  //   );
-  //   console.log(
-  //     'sender tokens amount: ',
-  //     Number(senderTokenAccountLocal.amount)
-  //   );
-  //   assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
-  //   const recipientTokenAccountLocal = await getAccount(
-  //     provider.connection,
-  //     recipientTokenAccount
-  //   );
-  //   console.log(
-  //     'rec tokens amount: ',
-  //     Number(recipientTokenAccountLocal.amount)
-  //   );
-  //   assert.ok(
-  //     Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
-  //   );
-  // });
+    const paymentAccountAmountPrior = Number(paymentAccountLocal.amount);
+    const paymentAccountEndatPrior = Number(paymentAccountLocal.endAt);
+
+    const topupAmount = 50000;
+    const request: TopupRequest = {
+      amount: topupAmount,
+      sender: sender.publicKey,
+      payment: paymentAccount.publicKey,
+      mintAddress: mint,
+    };
+
+    const topupTransaction = await getTopupSignedTx(
+      connection,
+      wallet,
+      program,
+      request
+    );
+    const txId = await sendAndConfirm(topupTransaction);
+    await sleep(10 * 1000); // Wait 10 secs for devnet to show real data
+    console.log('Topup tx: ', txId);
+    _senderTokenAccountLocal = await getAccount(
+      provider.connection,
+      senderTokenAccount
+    );
+    const sendersBalance = _senderTokenAccountLocal.amount;
+    console.log('Sender balance: ', sendersBalance);
+    assert.ok(sendersBalance === sendersPriorBalance - 50000n);
+    paymentAccountLocal = await program.account.paymentAccount.fetch(
+      paymentAccount.publicKey
+    );
+
+    const paymentAccountAmount = Number(paymentAccountLocal.amount);
+    const paymentAccountEndat = Number(paymentAccountLocal.endAt);
+    assert.ok(paymentAccountAmount === paymentAccountAmountPrior + topupAmount);
+    assert.ok(paymentAccountEndat === paymentAccountEndatPrior + 50);
+  });
+
+  it('Gets cancel payment transaction', async () => {
+    await sleep(30 * 1000); // Wait 20 secs for devnet next block
+    const request: CancelPaymentRequest = {
+      sender: sender.publicKey,
+      recipient: recipient.publicKey,
+      payment: paymentAccount.publicKey,
+      mintAddress: mint,
+    };
+
+    const cancelTransaction = await getCancelPaymentSignedTx(
+      connection,
+      wallet,
+      program,
+      request
+    );
+    const txId = await sendAndConfirm(cancelTransaction);
+    await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
+    console.log('cancel tx: ', txId);
+    const senderTokenAccountLocal = await getAccount(
+      provider.connection,
+      senderTokenAccount
+    );
+    console.log(
+      'sender tokens amount: ',
+      Number(senderTokenAccountLocal.amount)
+    );
+    assert.ok(Number(senderTokenAccountLocal.amount) === 900000);
+    const recipientTokenAccountLocal = await getAccount(
+      provider.connection,
+      recipientTokenAccount
+    );
+    console.log(
+      'rec tokens amount: ',
+      Number(recipientTokenAccountLocal.amount)
+    );
+    assert.ok(
+      Number(recipientTokenAccountLocal.amount) === 100000 * (1 - baseFee)
+    );
+  });
 
   // it('Gets SOL payment create transaction', async () => {
   //   paymentAccount = new Keypair();
