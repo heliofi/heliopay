@@ -28,7 +28,7 @@ export type TopupRequest = {
   amount: number;
   sender: PublicKey;
   payment: PublicKey;
-  mintAddress: PublicKey;
+  mintAddress?: PublicKey;
 };
 
 export type SinglePaymentRequest = {
