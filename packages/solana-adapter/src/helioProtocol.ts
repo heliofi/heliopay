@@ -750,6 +750,6 @@ export default {
     },
   ],
   metadata: {
-    address: '3KPRuKWxV6PtneZXbokMBwdF4T9brCFx7FcmKJ2tPqqt',
+    address: 'ENicYBBNZQ91toN7ggmTxnDGZW14uv9UkumN7XBGeYJ4',
   },
 };
