@@ -44,6 +44,7 @@ import {
   getWithdrawSignedTx,
   getWithdrawSolSignedTx,
   getTopupSignedTx,
+  getTopupSolSignedTx,
 } from '../';
 
 let provider: anchor.AnchorProvider;
@@ -180,8 +181,6 @@ describe('api', () => {
       request,
       false
     );
-
-    // console.log('serialized: ', singlePaymentTransactionSerialized);
 
     const txId = await sendAndConfirm(singlePaymentTransactionSerialized);
 
@@ -568,7 +567,7 @@ describe('api', () => {
       mintAddress: mint,
     };
 
-    const topupTransaction = await getTopupSignedTx(
+    const topupTransaction = await getTopupSolSignedTx(
       connection,
       wallet,
       program,
@@ -579,8 +578,13 @@ describe('api', () => {
     console.log('Topup tx: ', txId);
 
     const senderBalance = await connection.getBalance(sender.publicKey);
-    console.log('Sender balance: ', senderBalance);
-    assert.ok(senderBalance === sendersPriorBalance - 1e6);
+    console.log(
+      'Sender balance: ',
+      senderBalance,
+      ' prior: ',
+      sendersPriorBalance
+    );
+    assert.ok(senderBalance <= sendersPriorBalance - 1e6);
     solPaymentAccountLocal = await program.account.solPaymentAccount.fetch(
       paymentAccount.publicKey
     );

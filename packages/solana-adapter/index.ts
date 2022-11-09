@@ -18,3 +18,4 @@ export * from './src/getCancelSolPaymentSignedTx';
 export * from './src/getWithdrawSignedTx';
 export * from './src/getWithdrawSolSignedTx';
 export * from './src/getTopupSignedTx';
+export * from './src/getTopupSolSignedTx';

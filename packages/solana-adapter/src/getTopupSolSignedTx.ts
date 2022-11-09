@@ -1,6 +1,5 @@
-import { Connection, PublicKey } from '@solana/web3.js';
-import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Program } from '@project-serum/anchor';
+import { Connection } from '@solana/web3.js';
+import { BN, Program } from '@project-serum/anchor';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
@@ -13,7 +12,7 @@ export const getTopupSolSignedTx = async (
   req: TopupRequest
 ): Promise<string> => {
   const transaction = await program.methods
-    .topupSol()
+    .topupSol(new BN(req.amount))
     .accounts({
       sender: req.sender,
       solPaymentAccount: req.payment,
