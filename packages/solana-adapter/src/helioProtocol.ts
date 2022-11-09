@@ -496,6 +496,73 @@ export default {
         },
       ],
     },
+    {
+      name: 'topup',
+      accounts: [
+        {
+          name: 'sender',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'senderTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'paymentAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'paymentTokenAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'pdaSigner',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'topupAmount',
+          type: 'u64',
+        },
+      ],
+    },
+    {
+      name: 'topupSol',
+      accounts: [
+        {
+          name: 'sender',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'solPaymentAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'topupAmount',
+          type: 'u64',
+        },
+      ],
+    },
   ],
   accounts: [
     {
@@ -638,6 +705,12 @@ export default {
             name: 'InvalidFeeAccount',
           },
           {
+            name: 'StreamExpired',
+          },
+          {
+            name: 'InvalidTopupAmount',
+          },
+          {
             name: 'General',
           },
         ],
@@ -677,6 +750,6 @@ export default {
     },
   ],
   metadata: {
-    address: '3KPRuKWxV6PtneZXbokMBwdF4T9brCFx7FcmKJ2tPqqt',
+    address: 'ENicYBBNZQ91toN7ggmTxnDGZW14uv9UkumN7XBGeYJ4',
   },
 };
