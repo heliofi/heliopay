@@ -258,7 +258,7 @@ export const createOneTimePayment = async ({
         ...sendTransactionPayload.request,
         splitWallets: request.splitWallets
       },
-      true
+      symbol !== SOL_SYMBOL
     );
     sendTransactionPayload.amounts = amounts;
     sendTransactionPayload.accounts = accounts;
