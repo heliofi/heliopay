@@ -8,10 +8,11 @@ import {
 } from '@heliofi/react';
 
 import './styles/style.scss';
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '6363d5b96ac96866e3bec508'
+    '636a4ace0142fa94a6e1c764'
   );
 
   return (
@@ -36,8 +37,8 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC']}
-        totalAmount={0.1}
+        supportedCurrencies={['SOL']}
+        totalAmount={0.01}
       />
     </>
   );
