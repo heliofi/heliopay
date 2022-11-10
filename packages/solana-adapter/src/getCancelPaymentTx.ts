@@ -5,7 +5,7 @@ import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
-export const cancelPayment = async (
+export const getCancelPaymentTx = async (
   program: Program<HelioIdl>,
   req: CancelPaymentRequest
 ): Promise<string> => {
@@ -15,47 +15,47 @@ export const cancelPayment = async (
   );
   const mint = req.mintAddress!;
 
-  const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
-    req.sender
-  );
+  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
 
-  const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const recipientTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.recipient
   );
 
-  const paymentAssociatedTokenAddress = await getAssociatedTokenAddress(
+  const paymentTokenAccount = await getAssociatedTokenAddress(
     mint,
     req.payment
   );
 
-  const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const helioFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     helioFeeWalletKey
   );
 
-  const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
+  const daoFeeTokenAccount = await getAssociatedTokenAddress(
     mint,
     daoFeeWalletKey
   );
 
-  return program.rpc.cancelPayment({
-    accounts: {
+  const transaction = await program.methods
+    .cancelPayment()
+    .accounts({
       signer: req.sender,
       sender: req.sender,
-      senderTokenAccount: senderAssociatedTokenAddress,
+      senderTokenAccount,
       recipient: req.recipient,
-      recipientTokenAccount: recipientAssociatedTokenAddress,
+      recipientTokenAccount,
       paymentAccount: req.payment,
-      paymentTokenAccount: paymentAssociatedTokenAddress,
+      paymentTokenAccount,
       pdaSigner: pda,
       helioFeeAccount: helioFeeWalletKey,
-      helioFeeTokenAccount: helioFeeTokenAccountAddress,
+      helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
-      daoFeeTokenAccount: daoFeeTokenAccountAddress,
+      daoFeeTokenAccount,
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
-    },
-  });
+    })
+    .transaction();
+
+  return JSON.stringify(transaction);
 };

@@ -1,24 +1,15 @@
-import {
-  Connection,
-  SystemProgram,
-  PublicKey,
-  SYSVAR_RENT_PUBKEY,
-} from '@solana/web3.js';
+import { SystemProgram, PublicKey, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
-export const getCreatePaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
   payFees: boolean = true
@@ -81,5 +72,5 @@ export const getCreatePaymentSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection, req.paymentAccount);
+  return JSON.stringify(transaction);
 };

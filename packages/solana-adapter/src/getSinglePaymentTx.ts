@@ -1,6 +1,5 @@
 import {
   AccountMeta,
-  Connection,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
@@ -11,11 +10,9 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<number> = [],
@@ -49,9 +46,7 @@ const prepareSplitPaymentsValues = (
   return { remainingAmounts, remainingAccounts };
 };
 
-export const getSinglePaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getSinglePaymentTx = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean = true,
@@ -105,5 +100,5 @@ export const getSinglePaymentSignedTx = async (
     .remainingAccounts(remainingAccounts)
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return JSON.stringify(transaction);
 };
