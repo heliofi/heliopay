@@ -1,4 +1,9 @@
-import { AccountMeta, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  AccountMeta,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
@@ -37,7 +42,7 @@ export const getSingleSolPaymentTx = async (
   payFees: boolean = true,
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
-): Promise<string> => {
+): Promise<Transaction> => {
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
@@ -55,5 +60,5 @@ export const getSingleSolPaymentTx = async (
     .remainingAccounts(remainingAccounts)
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

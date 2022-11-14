@@ -1,4 +1,4 @@
-import { SystemProgram, PublicKey } from '@solana/web3.js';
+import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
@@ -8,7 +8,7 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 export const getWithdrawTx = async (
   program: Program<HelioIdl>,
   req: WithdrawRequest
-): Promise<string> => {
+): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
     program.programId
@@ -52,5 +52,5 @@ export const getWithdrawTx = async (
     })
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

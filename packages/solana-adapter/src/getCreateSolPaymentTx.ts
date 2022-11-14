@@ -1,4 +1,4 @@
-import { SystemProgram } from '@solana/web3.js';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentStateRequest } from './types';
@@ -8,7 +8,7 @@ export const getCreateSolPaymentTx = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
   payFees: boolean = true
-): Promise<string> => {
+): Promise<Transaction> => {
   const transaction = await program.methods
     .createSolPayment(
       new BN(req.amount),
@@ -27,5 +27,5 @@ export const getCreateSolPaymentTx = async (
     })
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

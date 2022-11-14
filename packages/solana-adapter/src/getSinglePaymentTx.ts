@@ -3,6 +3,7 @@ import {
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
+  Transaction,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -52,7 +53,7 @@ export const getSinglePaymentTx = async (
   payFees: boolean = true,
   amounts: Array<number> = [],
   accounts: Array<PublicKey> = []
-): Promise<string> => {
+): Promise<Transaction> => {
   const mint = req.mintAddress;
 
   const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
@@ -100,5 +101,5 @@ export const getSinglePaymentTx = async (
     .remainingAccounts(remainingAccounts)
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

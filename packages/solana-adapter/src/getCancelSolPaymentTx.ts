@@ -1,4 +1,4 @@
-import { SystemProgram } from '@solana/web3.js';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 import { Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
@@ -7,7 +7,7 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 export const getCancelSolPaymentTx = async (
   program: Program<HelioIdl>,
   req: CancelPaymentRequest
-): Promise<string> => {
+): Promise<Transaction> => {
   const transaction = await program.methods
     .cancelSolPayment()
     .accounts({
@@ -21,5 +21,5 @@ export const getCancelSolPaymentTx = async (
     })
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

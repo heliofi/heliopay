@@ -1,4 +1,9 @@
-import { SystemProgram, PublicKey, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
+import {
+  SystemProgram,
+  PublicKey,
+  SYSVAR_RENT_PUBKEY,
+  Transaction,
+} from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
@@ -13,7 +18,7 @@ export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
   req: CreatePaymentStateRequest,
   payFees: boolean = true
-): Promise<string> => {
+): Promise<Transaction> => {
   const mint = req.mintAddress!;
 
   const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
@@ -72,5 +77,5 @@ export const getCreatePaymentTx = async (
     })
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };

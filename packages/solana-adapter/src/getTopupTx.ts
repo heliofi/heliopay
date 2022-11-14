@@ -1,4 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, Transaction } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
@@ -7,7 +7,7 @@ import { TopupRequest } from './types';
 export const getTopupTx = async (
   program: Program<HelioIdl>,
   req: TopupRequest
-): Promise<string> => {
+): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
     program.programId
@@ -33,5 +33,5 @@ export const getTopupTx = async (
     })
     .transaction();
 
-  return JSON.stringify(transaction);
+  return transaction;
 };
