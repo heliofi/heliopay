@@ -11,3 +11,4 @@ export * from './src/getWithdrawTx';
 export * from './src/getWithdrawSolTx';
 export * from './src/getTopupTx';
 export * from './src/getTopupSolTx';
+export * from './src/utils';

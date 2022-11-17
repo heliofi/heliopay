@@ -27,16 +27,17 @@ import {
 } from '../src/types';
 
 import {
-  getSinglePaymentSignedTx,
-  getSingleSolPaymentSignedTx,
-  getCreatePaymentSignedTx,
-  getCreateSolPaymentSignedTx,
-  getCancelPaymentSignedTx,
-  getCancelSolPaymentSignedTx,
-  getWithdrawSignedTx,
-  getWithdrawSolSignedTx,
-  getTopupSignedTx,
-  getTopupSolSignedTx,
+  getSinglePaymentTx,
+  getSingleSolPaymentTx,
+  getCreatePaymentTx,
+  getCreateSolPaymentTx,
+  getCancelPaymentTx,
+  getCancelSolPaymentTx,
+  getWithdrawTx,
+  getWithdrawSolTx,
+  getTopupTx,
+  getTopupSolTx,
+  signTransaction,
 } from '../';
 
 let provider: anchor.AnchorProvider;
@@ -50,8 +51,6 @@ let connection: Connection;
 let program: Program<HelioIdl>;
 let wallet: Wallet;
 let paymentSOLBalance: number; // to save for cancel
-let paymentStatePaymentRequestId: string; // to create payment state we need payment request
-let userPaymentRequestsId: string;
 const baseFee = 0.0035;
 
 async function sleep(time: number) {
@@ -166,15 +165,17 @@ describe('api', () => {
       cluster: 'devnet',
     };
 
-    const singlePaymentTransactionSerialized = await getSinglePaymentSignedTx(
-      connection,
-      wallet,
+    const singlePaymentTransaction = await getSinglePaymentTx(
       program,
       request,
       false
     );
 
-    const txId = await sendAndConfirm(singlePaymentTransactionSerialized);
+    const txId = await sendAndConfirm(
+      singlePaymentTransaction,
+      wallet,
+      connection
+    );
 
     console.log('One time payment over SC tx: ', txId);
     recipientTokenAccountLocal = await getAccount(
@@ -196,8 +197,6 @@ describe('api', () => {
     const remainingAccounts = Array<PublicKey>();
     const remainingAmounts = Array<number>();
     for (let i = 0; i < 4; i++) {
-      const newRecipient = new Keypair();
-      remainingAmounts.push(500);
       remainingAccounts.push(recipient.publicKey);
       remainingAccounts.push(recipientTokenAccount);
     }
@@ -209,9 +208,7 @@ describe('api', () => {
       mintAddress: mint,
       cluster: 'devnet',
     };
-    const singlePaymentTransactionSerialized = await getSinglePaymentSignedTx(
-      connection,
-      wallet,
+    const singlePaymentTransaction = await getSinglePaymentTx(
       program,
       request,
       false,
@@ -219,7 +216,11 @@ describe('api', () => {
       remainingAccounts
     );
 
-    const txId = await sendAndConfirm(singlePaymentTransactionSerialized);
+    const txId = await sendAndConfirm(
+      singlePaymentTransaction,
+      wallet,
+      connection
+    );
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
     recipientTokenAccountLocal = await getAccount(
@@ -251,16 +252,17 @@ describe('api', () => {
       recipient.publicKey
     );
 
-    const singleSolPaymentTransactionSerialized =
-      await getSingleSolPaymentSignedTx(
-        connection,
-        wallet,
-        program,
-        request,
-        true
-      );
+    const singleSolPaymentTransaction = await getSingleSolPaymentTx(
+      program,
+      request,
+      true
+    );
 
-    const txId = await sendAndConfirm(singleSolPaymentTransactionSerialized);
+    const txId = await sendAndConfirm(
+      singleSolPaymentTransaction,
+      wallet,
+      connection
+    );
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
     const recipientBalance = await connection.getBalance(recipient.publicKey);
@@ -297,18 +299,19 @@ describe('api', () => {
       recipient.publicKey
     );
 
-    const singleSolPaymentTransactionSerialized =
-      await getSingleSolPaymentSignedTx(
-        connection,
-        wallet,
-        program,
-        request,
-        false,
-        remainingAmounts,
-        remainingAccounts
-      );
+    const singleSolPaymentTransaction = await getSingleSolPaymentTx(
+      program,
+      request,
+      false,
+      remainingAmounts,
+      remainingAccounts
+    );
 
-    const txId = await sendAndConfirm(singleSolPaymentTransactionSerialized);
+    const txId = await sendAndConfirm(
+      singleSolPaymentTransaction,
+      wallet,
+      connection
+    );
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
     const recipientBalance = await connection.getBalance(recipient.publicKey);
@@ -338,15 +341,9 @@ describe('api', () => {
       paymentAccount,
     };
 
-    const paymentTransaction = await getCreatePaymentSignedTx(
-      connection,
-      wallet,
-      program,
-      request,
-      true
-    );
+    const paymentTransaction = await getCreatePaymentTx(program, request, true);
 
-    const txId = await sendAndConfirm(paymentTransaction);
+    const txId = await sendAndConfirm(paymentTransaction, wallet, connection);
     console.log('Create tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
@@ -382,13 +379,12 @@ describe('api', () => {
     );
     let program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
 
-    const withdrawTransaction = await getWithdrawSignedTx(
-      connection,
+    const withdrawTransaction = await getWithdrawTx(program, request);
+    const txId = await sendAndConfirm(
+      withdrawTransaction,
       walletRecipient,
-      program,
-      request
+      connection
     );
-    const txId = await sendAndConfirm(withdrawTransaction);
     console.log('withdraw tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
@@ -426,13 +422,8 @@ describe('api', () => {
       mintAddress: mint,
     };
 
-    const topupTransaction = await getTopupSignedTx(
-      connection,
-      wallet,
-      program,
-      request
-    );
-    const txId = await sendAndConfirm(topupTransaction);
+    const topupTransaction = await getTopupTx(program, request);
+    const txId = await sendAndConfirm(topupTransaction, wallet, connection);
     await sleep(10 * 1000); // Wait 10 secs for devnet to show real data
     console.log('Topup tx: ', txId);
     _senderTokenAccountLocal = await getAccount(
@@ -461,13 +452,8 @@ describe('api', () => {
       mintAddress: mint,
     };
 
-    const cancelTransaction = await getCancelPaymentSignedTx(
-      connection,
-      wallet,
-      program,
-      request
-    );
-    const txId = await sendAndConfirm(cancelTransaction);
+    const cancelTransaction = await getCancelPaymentTx(program, request);
+    const txId = await sendAndConfirm(cancelTransaction, wallet, connection);
     await sleep(20 * 1000); // Wait 10 secs for devnet to show real data
     console.log('cancel tx: ', txId);
     const senderTokenAccountLocal = await getAccount(
@@ -507,15 +493,13 @@ describe('api', () => {
     };
     const senderBalanceBefore = await connection.getBalance(sender.publicKey);
 
-    const paymentTransaction = await getCreateSolPaymentSignedTx(
-      connection,
-      wallet,
+    const paymentTransaction = await getCreateSolPaymentTx(
       program,
       request,
       false
     );
 
-    const txId = await sendAndConfirm(paymentTransaction);
+    const txId = await sendAndConfirm(paymentTransaction, wallet, connection);
     console.log('Create sol tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
@@ -559,13 +543,8 @@ describe('api', () => {
       mintAddress: mint,
     };
 
-    const topupTransaction = await getTopupSolSignedTx(
-      connection,
-      wallet,
-      program,
-      request
-    );
-    const txId = await sendAndConfirm(topupTransaction);
+    const topupTransaction = await getTopupSolTx(program, request);
+    const txId = await sendAndConfirm(topupTransaction, wallet, connection);
     await sleep(10 * 1000); // Wait 10 secs for devnet to show real data
     console.log('Topup tx: ', txId);
 
@@ -602,14 +581,13 @@ describe('api', () => {
     const recipientBalanceBefore = await connection.getBalance(
       recipient.publicKey
     );
-    const withdrawTransaction = await getWithdrawSolSignedTx(
-      connection,
-      walletRecipient,
-      program,
-      request
-    );
+    const withdrawTransaction = await getWithdrawSolTx(program, request);
 
-    const txId = await sendAndConfirm(withdrawTransaction);
+    const txId = await sendAndConfirm(
+      withdrawTransaction,
+      walletRecipient,
+      connection
+    );
     console.log('withdraw sol tx: ', txId);
 
     await sleep(20 * 1000); // Wait 20 secs for devnet
@@ -629,14 +607,9 @@ describe('api', () => {
       payment: paymentAccount.publicKey,
     };
     await sleep(15 * 1000);
-    const cancelTransaction = await getCancelSolPaymentSignedTx(
-      connection,
-      wallet,
-      program,
-      request
-    );
+    const cancelTransaction = await getCancelSolPaymentTx(program, request);
 
-    const txId = await sendAndConfirm(cancelTransaction);
+    const txId = await sendAndConfirm(cancelTransaction, wallet, connection);
     console.log('cancel sol tx: ', txId);
     await sleep(20 * 1000);
 
@@ -651,9 +624,18 @@ describe('api', () => {
   });
 });
 
-async function sendAndConfirm(serializedTx: string) {
+async function sendAndConfirm(
+  transaction: Transaction,
+  wallet: Wallet,
+  connection: Connection
+) {
+  const signedTransaction = await signTransaction(
+    transaction,
+    wallet,
+    connection
+  );
   const txId = await connection.sendRawTransaction(
-    Buffer.from(JSON.parse(serializedTx).data)
+    Buffer.from(JSON.parse(signedTransaction).data)
   );
 
   await connection.confirmTransaction(txId);
