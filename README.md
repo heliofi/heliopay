@@ -2,11 +2,17 @@
 
 `yarn add @heliofi/react`
 
-## Components
+## Embed Helio Components
 
-### 1. HelioPay
+You can embed Helio components for the the following 3 use cases:
 
-A container that fetches payment information as well as performs payment on Solana blockchain validates it via Helio API.
+* Embed a Pay Link or Pay Stream with the Helio Pay button (REACT)
+* Embed a Dynamic payment with the Helio Pay button (REACT)
+* Process Dynamic payments WITHOUT the Helio Pay button (used in your own cart application)
+
+### 1. Embed a Pay Link or Pay Stream with the Helio Pay button
+
+Use this option if you want to put the Helio Pay Button on your site for Links and Streams
 
 ```ts
 import { HelioPay } from "@heliofi/react";
@@ -34,6 +40,7 @@ const App = () => {
   );
 };
 ```
+#### Properties table for the Helio components
 
 | Property         | Type     | Required | Default value | Description                                                                                |
 | :--------------- | :------- | :------- | :------------ | :----------------------------------------------------------------------------------------- |
@@ -47,10 +54,12 @@ const App = () => {
 totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
 | supportedCurrencies | string array | no | | currencies you want to support.
 
-### 2. Dynamic payment with embedded button
+### 2. Embed a Dynamic payment with the Helio Pay button
 
-Heliopay button also supports dynamic payment options where you can use embedded button in carting for example.
-In the example below if you provide totalAmount and the currency to the button, the user will perform the payments with those specifications.
+The Helio pay button also supports a "dynamic" payment options where you can pass a currency and a value through to our standard Helio Pay button.
+This is useful for custom checkout pages that want to have more than one item on the page where a total can be calculated and passed through for payment.
+
+In the example below if you provide totalAmount and the currency to the button, the user will perform the payments with those values.
 
 ```ts
 import { HelioPay } from "@heliofi/react";
@@ -80,11 +89,12 @@ const App = () => {
 };
 ```
 
-You can verify the payment using helio api for development and for production accordingly:
-`https://dev.api.hel.io` and `https://api.hel.io`.
+Verify the payment using the Helio API - further details at https://docs.hel.io/developers/helio-api-key
+Devnet and Mainnet are currently supported.
 
-In order to validate the payment you need to register your public key with Helio team, and you will receive api secret token.
-After which call the endpoint like in the example below:
+For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
+
+Once you have access to the API you can call the endpoint per the following example:
 
 ```ts
 try {
@@ -93,7 +103,7 @@ try {
   const publicKey =
     "you public key registered with helio team that recives transacitons";
 
-  const baseUrl = "https://dev.api.hel.io";
+  const baseUrl = "https://api.hel.io";
   const endpoint = `/v1/transactions/signature/${transactionSignature}?publicKey=${publickey}`;
 
   const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -109,13 +119,14 @@ try {
 }
 ```
 
-The example above shows verification process for devnet, you can replace the base url with `https://api.hel.io` for prod.
+### 3. Process Dynamic payments WITHOUT the Helio Pay button
 
-### 3. Dynamic payment without embedded button
+If you wish to build your own checkout cart or app then you can pass values through to Helio Pay without using the pay button at all.
+This option is best for existing sites that have a custom checkout already or you want to build the best experience for your site.
 
-If you choose to not use embedded button you can still use Helio api for registering payment.
 Please note that the blockchain transaction has to go through our smart contract. In order to achieve that you can use our @heliofi/solana-adapter package.
-Example:
+
+Here is an example of what is required for this option:
 
 ```ts
 import {
@@ -165,7 +176,7 @@ const checkHelioX = async (
 };
 
 
-const isHelioX = await checkHelioX(recipientPK) // The transaction is also checked on the backend to verify if the user is a heliox member or not
+const isHelioX = await checkHelioX(recipientPK) // The transaction is also checked on the backend to verify if the user is a heliox holder
 
 
 const signature = await sendTransaction(
@@ -182,7 +193,7 @@ const signature = await sendTransaction(
 );
 ```
 
-The signature for SinglePaymentRequest looks as follows:
+The signature returned for a SinglePaymentRequest will look as follows:
 
 ```ts
 import { Cluster, PublicKey } from "@solana/web3.js";
@@ -196,10 +207,9 @@ export type SinglePaymentRequest = {
 };
 ```
 
-After performing the transaction you can proceed by submitting it to our api.
-For that you can directly call our `approve-transaction` api endpoint with request body as follows.
+After performing the transaction you can proceed by submitting it to our API
 
-Approve transaction request body has the following signature:
+For that you can directly call our Submit Transaction API endpoint (POST: /v1/transaction/submit) with the request body as follows:
 
 ```ts
 export interface ApproveTransactionPayload {
@@ -249,7 +259,7 @@ approveTransaction({
 ```
 
 Please note that the API will check with the blockchain to validate the signature of the transaction.
-If the transaction has status confirmed or finalized the API will return success, otherwise will throw one of the following error codes.
+If the transaction has status confirmed or finalized the API will return success, otherwise it will throw one of the following error codes.
 
 `HTTP 400` - invalid request body
 
@@ -265,12 +275,13 @@ If the transaction is valid the return object has the following signature:
 }
 ```
 
-The secret content that is revealed upon valid payment.
+For example, if the 'content' value was required, this is revealed upon valid payment.
 
 ### Retry logic
 
 If you get the error `HTTP 424` you can resubmit the transaction again with interval before it's accepted.
-Below is an example of using retry logic:
+
+Below is an example of using the retry logic:
 
 ```ts
 export class VerificationError extends Error {
