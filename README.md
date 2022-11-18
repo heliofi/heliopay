@@ -209,7 +209,7 @@ export type SinglePaymentRequest = {
 
 After performing the transaction you can proceed by submitting it to our API
 
-For that you can directly call our `approve-transaction` API endpoint with the request body as follows:
+For that you can directly call our Submit Transaction API endpoint (POST: /v1/transaction/submit) with the request body as follows:
 
 ```ts
 export interface ApproveTransactionPayload {
