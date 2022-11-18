@@ -109,7 +109,6 @@ const sendTransaction = async (
 ): Promise<string | undefined> => {
   try {
     if (splitRevenue && amounts && accounts) {
-      console.log('if split revenue 22');
       if (symbol === SOL_SYMBOL) {
         return await singleSolPayment(
           provider,
@@ -128,13 +127,10 @@ const sendTransaction = async (
       );
     }
     if (symbol === SOL_SYMBOL) {
-      console.log('if sol 22');
       return await singleSolPayment(provider, request, !isHeliox);
     }
-    console.log('if not sol 22');
     return await singlePayment(provider, request, !isHeliox);
   } catch (e) {
-    console.log('error 22', e);
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
 };
@@ -251,14 +247,12 @@ export const createOneTimePayment = async ({
     isSplitRevenue: !!request?.features?.splitRevenue,
   };
 
-  console.log({ sendTransactionPayload });
 
   if (
     request?.features?.splitRevenue &&
     request?.splitWallets &&
     request?.splitWallets.length > 0
   ) {
-    console.log('if split');
     const { firstAmount, amounts, accounts } = await calculateSplitAmounts(
       {
         ...sendTransactionPayload.request,
@@ -281,7 +275,6 @@ export const createOneTimePayment = async ({
     sendTransactionPayload?.accounts
   );
 
-  console.log({ signature });
 
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction.' });
@@ -291,7 +284,6 @@ export const createOneTimePayment = async ({
   const finalProductDetails =
     Object.keys(productDetails || {}).length === 0 ? undefined : productDetails;
 
-  console.log({ finalProductDetails });
 
   const approveTransactionPayload: ApproveTransactionPayload = {
     transactionSignature: signature,
@@ -307,7 +299,6 @@ export const createOneTimePayment = async ({
     splitRevenue: !!request?.features?.splitRevenue,
     splitWallets: request?.splitWallets,
   };
-  console.log({ approveTransactionPayload });
 
   try {
     approveTransactionPayload.transactionSignature = signature;

@@ -37,7 +37,7 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['SOL']}
+        supportedCurrencies={['USDC']}
         totalAmount={0.01}
       />
     </>
