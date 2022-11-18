@@ -4,7 +4,7 @@
 
 ## Embed Helio Components
 
-You can embed Helio components for the the following 3 use cases:
+You can embed Helio components for the following 3 use cases:
 
 * Embed a Pay Link or Pay Stream with the Helio Pay button (REACT)
 * Embed a Dynamic payment with the Helio Pay button (REACT)
