@@ -86,6 +86,7 @@ const checkHelioX = async (
     headers: {
       'content-type': 'application/json',
     },
+    
   });
   const result = await res.json();
   if (res.status === HttpCodes.SUCCESS) {
