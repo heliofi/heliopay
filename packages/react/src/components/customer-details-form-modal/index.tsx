@@ -115,6 +115,10 @@ const CustomerDetailsFormModal = ({
     }));
   };
 
+  const initialCurrency = paymentDetails?.dynamic
+    ? allowedCurrencies?.[0].symbol
+    : paymentDetails?.currency?.symbol;
+
   const initialValues = {
     requireEmail: paymentDetails?.features.requireEmail,
     requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
@@ -144,7 +148,7 @@ const CustomerDetailsFormModal = ({
       ? undefined
       : normalizedPrice,
     canSelectCurrency,
-    currency: canSelectCurrency ? undefined : paymentDetails?.currency?.symbol,
+    currency: canSelectCurrency ? undefined : initialCurrency,
     productValue: undefined,
   };
 
