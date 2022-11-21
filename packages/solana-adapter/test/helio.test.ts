@@ -158,7 +158,7 @@ describe('api', () => {
     const initialAmount = Number(recipientTokenAccountLocal.amount);
 
     const request: SinglePaymentRequest = {
-      amount: 1000,
+      amount: String(1000),
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
@@ -195,14 +195,14 @@ describe('api', () => {
     const initialAmount = Number(recipientTokenAccountLocal.amount);
 
     const remainingAccounts = Array<PublicKey>();
-    const remainingAmounts = Array<number>();
+    const remainingAmounts = Array<string>();
     for (let i = 0; i < 4; i++) {
       remainingAccounts.push(recipient.publicKey);
       remainingAccounts.push(recipientTokenAccount);
     }
 
     const request: SinglePaymentRequest = {
-      amount: 1000,
+      amount: String(1000),
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
@@ -241,7 +241,7 @@ describe('api', () => {
 
   it('Pays SOL one time with serialized transaction', async () => {
     const request: SinglePaymentRequest = {
-      amount: 1e6,
+      amount: String(1e6),
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
@@ -281,7 +281,7 @@ describe('api', () => {
 
   it('Splits onetime SOL payment - serialized', async () => {
     const request: SinglePaymentRequest = {
-      amount: 1e6,
+      amount: String(1e6),
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,

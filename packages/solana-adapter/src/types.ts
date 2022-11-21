@@ -32,7 +32,7 @@ export type TopupRequest = {
 };
 
 export type SinglePaymentRequest = {
-  amount: number;
+  amount: string;
   sender: PublicKey;
   recipient: PublicKey;
   mintAddress: PublicKey;
@@ -41,7 +41,7 @@ export type SinglePaymentRequest = {
 
 export type SingleTransactionProps = {
   transactionSignature: string;
-  amount: number;
+  amount: string;
   sender: string;
   recipient: string;
   currency?: string;
