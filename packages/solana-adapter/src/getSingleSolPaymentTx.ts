@@ -10,7 +10,7 @@ import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
   if (!amounts.length) {
@@ -40,7 +40,7 @@ export const getSingleSolPaymentTx = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean = true,
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): Promise<Transaction> => {
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
