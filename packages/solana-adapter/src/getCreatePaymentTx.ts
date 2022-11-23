@@ -11,12 +11,12 @@ import {
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { CreatePaymentStateRequest } from './types';
+import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
-  req: CreatePaymentStateRequest,
+  req: CreatePaymentRequest,
   payFees: boolean = true
 ): Promise<Transaction> => {
   const mint = req.mintAddress!;

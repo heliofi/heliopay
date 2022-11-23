@@ -1,12 +1,12 @@
 import { SystemProgram, Transaction } from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { CreatePaymentStateRequest } from './types';
+import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const getCreateSolPaymentTx = async (
   program: Program<HelioIdl>,
-  req: CreatePaymentStateRequest,
+  req: CreatePaymentRequest,
   payFees: boolean = true
 ): Promise<Transaction> => {
   const transaction = await program.methods

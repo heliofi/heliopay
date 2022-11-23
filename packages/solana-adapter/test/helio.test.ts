@@ -19,7 +19,7 @@ import { describe } from 'mocha';
 import { HelioIdl, IDL, PROGRAM_ID } from '../src/program';
 import { txOpts } from '../src/config';
 import {
-  CreatePaymentStateRequest,
+  CreatePaymentRequest,
   CancelPaymentRequest,
   SinglePaymentRequest,
   WithdrawRequest,
@@ -162,7 +162,6 @@ describe('api', () => {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
-      cluster: 'devnet',
     };
 
     const singlePaymentTransaction = await getSinglePaymentTx(
@@ -206,7 +205,6 @@ describe('api', () => {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
-      cluster: 'devnet',
     };
     const singlePaymentTransaction = await getSinglePaymentTx(
       program,
@@ -245,7 +243,6 @@ describe('api', () => {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
-      cluster: 'devnet',
     };
 
     const recipientBalanceBefore = await connection.getBalance(
@@ -285,13 +282,12 @@ describe('api', () => {
       sender: sender.publicKey,
       recipient: recipient.publicKey,
       mintAddress: mint,
-      cluster: 'devnet',
     };
 
     const remainingAccounts = Array<PublicKey>();
-    const remainingAmounts = Array<number>();
+    const remainingAmounts = Array<string>();
     for (let i = 0; i < 10; i++) {
-      remainingAmounts.push(5e5);
+      remainingAmounts.push(String(5e5));
       remainingAccounts.push(recipient.publicKey);
     }
 
@@ -330,7 +326,7 @@ describe('api', () => {
     paymentAccount = new Keypair();
     const startAt = Math.floor(new Date().getTime() / 1000) + 1;
     const endAt = startAt + 100;
-    const request: CreatePaymentStateRequest = {
+    const request: CreatePaymentRequest = {
       amount: 100000,
       startAt,
       endAt,
@@ -482,7 +478,7 @@ describe('api', () => {
     paymentAccount = new Keypair();
     const startAt = Math.floor(new Date().getTime() / 1000) + 1;
     const endAt = startAt + 200;
-    const request: CreatePaymentStateRequest = {
+    const request: CreatePaymentRequest = {
       amount: 1e6,
       startAt,
       endAt,
