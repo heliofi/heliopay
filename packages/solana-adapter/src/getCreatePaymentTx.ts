@@ -30,7 +30,7 @@ export const getCreatePaymentTx = async (
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
     mint,
-    req.paymentAccount.publicKey
+    req.paymentAccount
   );
 
   const helioFeeTokenAccount = await getAssociatedTokenAddress(
@@ -44,7 +44,7 @@ export const getCreatePaymentTx = async (
   );
 
   const [, bump] = await PublicKey.findProgramAddress(
-    [req.paymentAccount.publicKey.toBytes()],
+    [req.paymentAccount.toBytes()],
     program.programId
   );
 
@@ -63,7 +63,7 @@ export const getCreatePaymentTx = async (
       senderTokenAccount,
       recipient: req.recipient,
       recipientTokenAccount,
-      paymentAccount: req.paymentAccount.publicKey,
+      paymentAccount: req.paymentAccount,
       paymentTokenAccount,
       helioFeeAccount: helioFeeWalletKey,
       helioFeeTokenAccount,

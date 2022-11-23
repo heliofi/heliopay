@@ -1,4 +1,4 @@
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 
 export type CreatePaymentRequest = {
   amount: string;
@@ -7,7 +7,7 @@ export type CreatePaymentRequest = {
   interval: number;
   sender: PublicKey;
   recipient: PublicKey;
-  paymentAccount: Keypair;
+  paymentAccount: PublicKey;
   mintAddress?: PublicKey;
 };
 

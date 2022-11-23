@@ -20,7 +20,7 @@ export const getCreateSolPaymentTx = async (
     .accounts({
       sender: req.sender,
       recipient: req.recipient,
-      solPaymentAccount: req.paymentAccount.publicKey,
+      solPaymentAccount: req.paymentAccount,
       helioFeeAccount: helioFeeWalletKey,
       daoFeeAccount: daoFeeWalletKey,
       systemProgram: SystemProgram.programId,
