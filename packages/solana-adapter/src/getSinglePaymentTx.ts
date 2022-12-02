@@ -82,7 +82,7 @@ export const getSinglePaymentTx = async (
   );
 
   const transaction = await program.methods
-    .singlePayment(new BN(req.amount.toString()), payFees, remainingAmounts)
+    .singlePayment(new BN(req.amount), payFees, remainingAmounts)
     .accounts({
       sender: req.sender,
       senderTokenAccount: senderAssociatedTokenAddress,
