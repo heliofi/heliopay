@@ -2,7 +2,7 @@ import {
   HelioIdl,
   SinglePaymentRequest,
   singlePayment,
-  singleSolPayment
+  singleSolPayment,
 } from '@heliofi/solana-adapter';
 import { Program } from '@project-serum/anchor';
 import { Cluster, PublicKey } from '@solana/web3.js';
@@ -12,7 +12,7 @@ import {
   ErrorPaymentEvent,
   HttpCodes,
   PendingPaymentEvent,
-  SuccessPaymentEvent
+  SuccessPaymentEvent,
 } from '../../domain';
 import { TransactionTimeoutError } from './TransactionTimeoutError';
 import { VerificationError } from './VerificationError';
@@ -20,7 +20,7 @@ import { ApproveTransactionPayload } from './ApproveTransactionPayload';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import {
   getHelioApiBaseUrl,
-  HelioApiAdapter
+  HelioApiAdapter,
 } from '../helio-api/HelioApiAdapter';
 import { ProductDetails } from '../../domain/model/ProductDetails';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
@@ -56,9 +56,9 @@ const approveTransaction = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/approve-transaction`, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(reqBody)
+    body: JSON.stringify(reqBody),
   });
   const result = await res.json();
   if (
@@ -84,17 +84,18 @@ const checkHelioX = async (
   const res = await fetch(`${HELIO_BASE_API_URL}/wallet/${recipientPK}`, {
     method: 'GET',
     headers: {
-      'content-type': 'application/json'
-    }
+      'content-type': 'application/json',
+    },
+    
   });
   const result = await res.json();
   if (res.status === HttpCodes.SUCCESS) {
     return {
-      isHelioX: result.isHelioX
+      isHelioX: result.isHelioX,
     };
   }
   return {
-    isHelioX: false
+    isHelioX: false,
   };
 };
 
@@ -125,12 +126,11 @@ const sendTransaction = async (
         amounts,
         accounts
       );
-    } else {
-      if (symbol === SOL_SYMBOL) {
-        return await singleSolPayment(provider, request, !isHeliox);
-      }
-      return await singlePayment(provider, request, !isHeliox);
     }
+    if (symbol === SOL_SYMBOL) {
+      return await singleSolPayment(provider, request, !isHeliox);
+    }
+    return await singlePayment(provider, request, !isHeliox);
   } catch (e) {
     return new TransactionTimeoutError(String(e)).extractSignature();
   }
@@ -211,7 +211,7 @@ export const createOneTimePayment = async ({
   onSuccess,
   onError,
   onPending,
-  cluster
+  cluster,
 }: Props): Promise<void> => {
   const mintAddress = CurrencyService.getCurrencyBySymbol(symbol)
     .mintAddress as string;
@@ -234,19 +234,20 @@ export const createOneTimePayment = async ({
     amounts?: number[];
     accounts?: PublicKey[];
   } = {
-    symbol: symbol,
+    symbol,
     request: {
       amount,
       sender: anchorProvider.provider.publicKey as PublicKey,
       recipient: new PublicKey(recipientPK),
       mintAddress: new PublicKey(mintAddress),
-      cluster
+      cluster,
     },
 
-    anchorProvider: anchorProvider,
-    isHelioX: isHelioX,
-    isSplitRevenue: !!request?.features?.splitRevenue
+    anchorProvider,
+    isHelioX,
+    isSplitRevenue: !!request?.features?.splitRevenue,
   };
+
 
   if (
     request?.features?.splitRevenue &&
@@ -256,9 +257,9 @@ export const createOneTimePayment = async ({
     const { firstAmount, amounts, accounts } = await calculateSplitAmounts(
       {
         ...sendTransactionPayload.request,
-        splitWallets: request.splitWallets
+        splitWallets: request.splitWallets,
       },
-      true
+      symbol !== SOL_SYMBOL
     );
     sendTransactionPayload.amounts = amounts;
     sendTransactionPayload.accounts = accounts;
@@ -275,6 +276,7 @@ export const createOneTimePayment = async ({
     sendTransactionPayload?.accounts
   );
 
+
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction.' });
     return;
@@ -282,6 +284,7 @@ export const createOneTimePayment = async ({
 
   const finalProductDetails =
     Object.keys(productDetails || {}).length === 0 ? undefined : productDetails;
+
 
   const approveTransactionPayload: ApproveTransactionPayload = {
     transactionSignature: signature,
@@ -295,7 +298,7 @@ export const createOneTimePayment = async ({
     quantity,
     productDetails: finalProductDetails,
     splitRevenue: !!request?.features?.splitRevenue,
-    splitWallets: request?.splitWallets
+    splitWallets: request?.splitWallets,
   };
 
   try {
