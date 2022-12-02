@@ -1,13 +1,14 @@
 import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Program } from '@project-serum/anchor';
+import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
 import { CancelPaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const getCancelPaymentTx = async (
   program: Program<HelioIdl>,
-  req: CancelPaymentRequest
+  req: CancelPaymentRequest,
+  fee: number = 0
 ): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
@@ -38,7 +39,7 @@ export const getCancelPaymentTx = async (
   );
 
   const transaction = await program.methods
-    .cancelPayment()
+    .cancelPayment(new BN(fee))
     .accounts({
       signer: req.sender,
       sender: req.sender,
