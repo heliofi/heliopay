@@ -229,7 +229,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'cancelSolPayment',
@@ -270,7 +275,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'withdraw',
@@ -331,7 +341,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'withdrawSol',
@@ -362,7 +377,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'singlePayment',
@@ -439,8 +459,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'payFees',
-          type: 'bool',
+          name: 'baseFee',
+          type: 'u64',
         },
         {
           name: 'remainingAmounts',
@@ -485,8 +505,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'payFees',
-          type: 'bool',
+          name: 'baseFee',
+          type: 'u64',
         },
         {
           name: 'remainingAmounts',
@@ -709,6 +729,9 @@ export default {
           },
           {
             name: 'InvalidTopupAmount',
+          },
+          {
+            name: 'InvalidFee',
           },
           {
             name: 'General',
