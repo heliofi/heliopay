@@ -1,28 +1,24 @@
 import {
-  Connection,
   SystemProgram,
   PublicKey,
   SYSVAR_RENT_PUBKEY,
+  Transaction,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { CreatePaymentStateRequest } from './types';
+import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
-export const getCreatePaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
-  req: CreatePaymentStateRequest,
+  req: CreatePaymentRequest,
   payFees: boolean = true
-): Promise<string> => {
+): Promise<Transaction> => {
   const mint = req.mintAddress!;
 
   const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
@@ -34,7 +30,7 @@ export const getCreatePaymentSignedTx = async (
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
     mint,
-    req.paymentAccount.publicKey
+    req.paymentAccount
   );
 
   const helioFeeTokenAccount = await getAssociatedTokenAddress(
@@ -48,7 +44,7 @@ export const getCreatePaymentSignedTx = async (
   );
 
   const [, bump] = await PublicKey.findProgramAddress(
-    [req.paymentAccount.publicKey.toBytes()],
+    [req.paymentAccount.toBytes()],
     program.programId
   );
 
@@ -67,7 +63,7 @@ export const getCreatePaymentSignedTx = async (
       senderTokenAccount,
       recipient: req.recipient,
       recipientTokenAccount,
-      paymentAccount: req.paymentAccount.publicKey,
+      paymentAccount: req.paymentAccount,
       paymentTokenAccount,
       helioFeeAccount: helioFeeWalletKey,
       helioFeeTokenAccount,
@@ -81,5 +77,5 @@ export const getCreatePaymentSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection, req.paymentAccount);
+  return transaction;
 };

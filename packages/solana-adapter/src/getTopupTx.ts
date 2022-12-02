@@ -1,17 +1,13 @@
-import { Connection, PublicKey } from '@solana/web3.js';
+import { PublicKey, Transaction } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
-import { signTransaction } from './utils';
 
-export const getTopupSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getTopupTx = async (
   program: Program<HelioIdl>,
   req: TopupRequest
-): Promise<string> => {
+): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
     program.programId
@@ -37,5 +33,5 @@ export const getTopupSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return transaction;
 };

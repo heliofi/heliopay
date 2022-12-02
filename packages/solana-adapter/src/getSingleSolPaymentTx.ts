@@ -1,13 +1,18 @@
-import { PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  AccountMeta,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioIdl } from './program';
-import { Account, SinglePaymentRequest } from './types';
+import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 const prepareSplitPaymentsValues = (
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
-): { remainingAmounts: Array<BN>; remainingAccounts: Array<Account> } => {
+): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
   if (!amounts.length) {
     if (accounts.length > 0) {
       throw new Error('Remaining accounts when no amounts!');
@@ -31,31 +36,29 @@ const prepareSplitPaymentsValues = (
   return { remainingAmounts, remainingAccounts };
 };
 
-export const singleSolPayment = async (
+export const getSingleSolPaymentTx = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean = true,
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
-): Promise<string> => {
+): Promise<Transaction> => {
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
   );
 
-  return program.rpc.singleSolPayment(
-    new BN(req.amount),
-    payFees,
-    remainingAmounts,
-    {
-      accounts: {
-        sender: req.sender,
-        recipient: req.recipient,
-        helioFeeAccount: helioFeeWalletKey,
-        daoFeeAccount: daoFeeWalletKey,
-        systemProgram: SystemProgram.programId,
-      },
-      remainingAccounts,
-    }
-  );
+  const transaction = await program.methods
+    .singleSolPayment(new BN(req.amount), payFees, remainingAmounts)
+    .accounts({
+      sender: req.sender,
+      recipient: req.recipient,
+      helioFeeAccount: helioFeeWalletKey,
+      daoFeeAccount: daoFeeWalletKey,
+      systemProgram: SystemProgram.programId,
+    })
+    .remainingAccounts(remainingAccounts)
+    .transaction();
+
+  return transaction;
 };

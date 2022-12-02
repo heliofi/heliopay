@@ -1,16 +1,12 @@
-import { Connection } from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { Transaction } from '@solana/web3.js';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
-import { signTransaction } from './utils';
 
-export const getTopupSolSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getTopupSolTx = async (
   program: Program<HelioIdl>,
   req: TopupRequest
-): Promise<string> => {
+): Promise<Transaction> => {
   const transaction = await program.methods
     .topupSol(new BN(req.amount))
     .accounts({
@@ -19,5 +15,5 @@ export const getTopupSolSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return transaction;
 };

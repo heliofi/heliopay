@@ -1,25 +1,19 @@
-import { Connection, SystemProgram, PublicKey } from '@solana/web3.js';
+import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
-import { CancelPaymentRequest } from './types';
+import { WithdrawRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
-export const getCancelPaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getWithdrawTx = async (
   program: Program<HelioIdl>,
-  req: CancelPaymentRequest
-): Promise<string> => {
+  req: WithdrawRequest
+): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
     program.programId
   );
   const mint = req.mintAddress!;
-
-  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
 
   const recipientTokenAccount = await getAssociatedTokenAddress(
     mint,
@@ -42,11 +36,8 @@ export const getCancelPaymentSignedTx = async (
   );
 
   const transaction = await program.methods
-    .cancelPayment()
+    .withdraw()
     .accounts({
-      signer: req.sender,
-      sender: req.sender,
-      senderTokenAccount,
       recipient: req.recipient,
       recipientTokenAccount,
       paymentAccount: req.payment,
@@ -61,5 +52,5 @@ export const getCancelPaymentSignedTx = async (
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return transaction;
 };

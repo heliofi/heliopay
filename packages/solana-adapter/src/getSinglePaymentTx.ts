@@ -1,9 +1,9 @@
 import {
   AccountMeta,
-  Connection,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
+  Transaction,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -11,14 +11,12 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
 const prepareSplitPaymentsValues = (
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): { remainingAmounts: Array<BN>; remainingAccounts: Array<AccountMeta> } => {
   if (!amounts.length) {
@@ -49,15 +47,13 @@ const prepareSplitPaymentsValues = (
   return { remainingAmounts, remainingAccounts };
 };
 
-export const getSinglePaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getSinglePaymentTx = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
   payFees: boolean = true,
-  amounts: Array<number> = [],
+  amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
-): Promise<string> => {
+): Promise<Transaction> => {
   const mint = req.mintAddress;
 
   const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
@@ -86,7 +82,7 @@ export const getSinglePaymentSignedTx = async (
   );
 
   const transaction = await program.methods
-    .singlePayment(new BN(req.amount), payFees, remainingAmounts)
+    .singlePayment(new BN(req.amount.toString()), payFees, remainingAmounts)
     .accounts({
       sender: req.sender,
       senderTokenAccount: senderAssociatedTokenAddress,
@@ -105,5 +101,5 @@ export const getSinglePaymentSignedTx = async (
     .remainingAccounts(remainingAccounts)
     .transaction();
 
-  return signTransaction(transaction, wallet, connection);
+  return transaction;
 };

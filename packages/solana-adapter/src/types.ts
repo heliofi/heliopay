@@ -1,13 +1,13 @@
-import { Cluster, Keypair, PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 
-export type CreatePaymentStateRequest = {
-  amount: number;
-  startAt: number;
-  endAt: number;
+export type CreatePaymentRequest = {
+  amount: string;
+  startAt: string;
+  endAt: string;
   interval: number;
   sender: PublicKey;
   recipient: PublicKey;
-  paymentAccount: Keypair;
+  paymentAccount: PublicKey;
   mintAddress?: PublicKey;
 };
 
@@ -25,27 +25,25 @@ export type WithdrawRequest = {
 };
 
 export type TopupRequest = {
-  amount: number;
+  amount: string;
   sender: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
 };
 
 export type SinglePaymentRequest = {
-  amount: number;
+  amount: string;
   sender: PublicKey;
   recipient: PublicKey;
   mintAddress: PublicKey;
-  cluster: Cluster;
 };
 
 export type SingleTransactionProps = {
   transactionSignature: string;
-  amount: number;
+  amount: string;
   sender: string;
   recipient: string;
   currency?: string;
-  cluster: string;
 };
 
 export interface Account {

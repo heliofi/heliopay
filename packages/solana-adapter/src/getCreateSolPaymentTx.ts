@@ -1,18 +1,14 @@
-import { Connection, SystemProgram } from '@solana/web3.js';
+import { SystemProgram, Transaction } from '@solana/web3.js';
 import { BN, Program } from '@project-serum/anchor';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { HelioIdl } from './program';
-import { CreatePaymentStateRequest } from './types';
+import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { signTransaction } from './utils';
 
-export const getCreateSolPaymentSignedTx = async (
-  connection: Connection,
-  wallet: AnchorWallet,
+export const getCreateSolPaymentTx = async (
   program: Program<HelioIdl>,
-  req: CreatePaymentStateRequest,
+  req: CreatePaymentRequest,
   payFees: boolean = true
-): Promise<string> => {
+): Promise<Transaction> => {
   const transaction = await program.methods
     .createSolPayment(
       new BN(req.amount),
@@ -24,12 +20,12 @@ export const getCreateSolPaymentSignedTx = async (
     .accounts({
       sender: req.sender,
       recipient: req.recipient,
-      solPaymentAccount: req.paymentAccount.publicKey,
+      solPaymentAccount: req.paymentAccount,
       helioFeeAccount: helioFeeWalletKey,
       daoFeeAccount: daoFeeWalletKey,
       systemProgram: SystemProgram.programId,
     })
     .transaction();
 
-  return signTransaction(transaction, wallet, connection, req.paymentAccount);
+  return transaction;
 };
