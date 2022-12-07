@@ -1,9 +1,14 @@
 import { Cluster } from '@solana/web3.js';
 import { ClusterType, Currency } from '../../domain';
+import { LivePriceResponse } from '../../domain/model/TokenConversion';
 import { configDev, configProd } from '../config';
 
 const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.hel.io';
 const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
+
+type FetchOptions = RequestInit & {
+  clearContentType?: boolean;
+};
 
 export const getAwsConfig = (cluster: Cluster) => {
   switch (cluster) {
@@ -122,5 +127,60 @@ export const HelioApiAdapter = {
       })
     ).json();
     return currencies || [];
+  },
+
+  async getLivePrice(
+    amount: number,
+    to: string,
+    from: string,
+    cluster: Cluster
+  ): Promise<LivePriceResponse> {
+    let queryParams = '';
+    queryParams += `&amount=${amount}`;
+    queryParams += `&to=${to}`;
+    queryParams += `&from=${from}`;
+
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+    const url = `${HELIO_BASE_API_URL}/token-quoting?${queryParams}`;
+
+    const livePrice = await (
+      await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    ).json();
+
+    return livePrice;
+  },
+
+  async publicRequest<T>({
+    endpoint,
+    cluster,
+    options = {},
+    shouldParseJson = true,
+  }: {
+    endpoint: string;
+    cluster: Cluster;
+    options: FetchOptions;
+    shouldParseJson?: boolean;
+  }): Promise<T> {
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+    const url = `${HELIO_BASE_API_URL}${endpoint}`;
+    const contentType = !options.clearContentType
+      ? { 'Content-Type': 'application/json' }
+      : null;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        ...contentType,
+      },
+    });
+    if (shouldParseJson) {
+      return (await response.json()) as T;
+    }
+    return (await response.text()) as any;
   },
 };

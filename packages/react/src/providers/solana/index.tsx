@@ -16,6 +16,7 @@ import { AddressProvider } from '../address';
 
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
+import { TokenConversionProvider } from '../token-conversion';
 import { getClusterEndpoint } from './clusterEndpoint';
 
 export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
@@ -43,7 +44,9 @@ export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
         <WalletModalProvider>
           <AnchorProvider>
             <HelioProvider>
-              <AddressProvider>{children}</AddressProvider>
+              <TokenConversionProvider>
+                <AddressProvider>{children}</AddressProvider>
+              </TokenConversionProvider>
             </HelioProvider>
           </AnchorProvider>
         </WalletModalProvider>

@@ -30,6 +30,7 @@ import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
 import { ProductDetails } from '../../domain/model/ProductDetails';
+import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -60,6 +61,8 @@ const CustomerDetailsFormModal = ({
   });
   const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
     useState(false);
+
+  const { getTokenPrice } = useTokenConversion();
 
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
@@ -93,6 +96,16 @@ const CustomerDetailsFormModal = ({
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
+      if (
+        paymentDetails?.fixedCurrency &&
+        paymentDetails?.features?.requireFixedCurrency
+      ) {
+        getTokenPrice({
+          from: paymentDetails?.fixedCurrency.currency,
+          to: paymentDetails?.currency?.symbol,
+          amount: paymentDetails?.fixedCurrency.price,
+        });
+      }
       setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
           getCurrency(paymentDetails?.currency?.symbol),

@@ -62,8 +62,7 @@ const approveTransaction = async (
   });
   const result = await res.json();
   if (
-    (res.status === HttpCodes.SUCCESS ||
-      res.status === HttpCodes.CREATED_SUCCESS) &&
+    (res.status === HttpCodes.SUCCESS || res.status === HttpCodes.CREATED) &&
     result.content != null
   ) {
     return result.content;
@@ -86,7 +85,6 @@ const checkHelioX = async (
     headers: {
       'content-type': 'application/json',
     },
-    
   });
   const result = await res.json();
   if (res.status === HttpCodes.SUCCESS) {
@@ -248,7 +246,6 @@ export const createOneTimePayment = async ({
     isSplitRevenue: !!request?.features?.splitRevenue,
   };
 
-
   if (
     request?.features?.splitRevenue &&
     request?.splitWallets &&
@@ -276,7 +273,6 @@ export const createOneTimePayment = async ({
     sendTransactionPayload?.accounts
   );
 
-
   if (signature === undefined) {
     onError?.({ errorMessage: 'Failed to send transaction.' });
     return;
@@ -284,7 +280,6 @@ export const createOneTimePayment = async ({
 
   const finalProductDetails =
     Object.keys(productDetails || {}).length === 0 ? undefined : productDetails;
-
 
   const approveTransactionPayload: ApproveTransactionPayload = {
     transactionSignature: signature,

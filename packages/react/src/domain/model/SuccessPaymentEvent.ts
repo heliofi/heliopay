@@ -1,6 +1,7 @@
 import { PaymentEvent } from './PaymentEvent';
 
-export interface SuccessPaymentEvent extends PaymentEvent {
-  content: string;
+export interface SuccessPaymentEvent<T> extends PaymentEvent {
+  data: T;
   transaction: string;
+  paymentPK?: string;
 }
