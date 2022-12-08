@@ -222,6 +222,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [dynamicRateToken, paymentDetails]);
 
+
+
   const handleSuccessPayment = (
     event: SuccessPaymentEvent<ApproveTransactionResponse>
   ) => {
