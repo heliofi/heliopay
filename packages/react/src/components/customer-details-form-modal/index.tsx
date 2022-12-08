@@ -96,33 +96,8 @@ const CustomerDetailsFormModal = ({
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
-  // useEffect(() => {
-  //   if (
-  //     paymentDetails?.currency != null &&
-  //     paymentDetails?.normalizedPrice != null
-  //   ) {
-  //     if (
-  //       paymentDetails?.fixedCurrency &&
-  //       paymentDetails?.features?.requireFixedCurrency
-  //     ) {
-  //       getTokenPrice({
-  //         from: paymentDetails?.fixedCurrency.currency,
-  //         to: paymentDetails?.currency?.symbol,
-  //         amount: paymentDetails?.fixedCurrency.price,
-  //       });
-  //     }
-  //     setNormalizedPrice(
-  //       TokenConversionService.convertFromMinimalUnits(
-  //         getCurrency(paymentDetails?.currency?.symbol),
-  //         paymentDetails?.normalizedPrice
-  //       )
-  //     );
-  //   }
-  // }, [paymentDetails]);
-
   const formatTotalPrice = (price: number, quantity = 1): number => {
     const totalPrice = Number((price * quantity).toFixed(3));
-    console.log({ totalPrice, price, quantity });
     return totalPrice || price;
   };
 
