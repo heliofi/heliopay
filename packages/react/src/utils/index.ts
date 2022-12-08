@@ -69,3 +69,5 @@ export const isEmpty = (obj?: {}) =>
 
 export const fromBigintToStringForSerialization = (value: bigint): string =>
   String(value);
+
+export const now = () => (Date.now ? Date.now() : +new Date());

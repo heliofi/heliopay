@@ -37,6 +37,7 @@ import {
 import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import { JWTService } from '../../domain/services/JWTService';
+import { now } from '../../utils';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -67,7 +68,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const { getCountry } = useAddressProvider();
 
-  const { getTokenPrice, dynamicRateToken } = useTokenConversion();
+  const { getTokenPrice, dynamicRateToken, tokenExpiration } =
+    useTokenConversion();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent<ApproveTransactionResponse> | ErrorPaymentEvent | null
@@ -101,6 +103,42 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     );
     setAllowedCurrencies(allowedCurrenciesTemp);
   };
+
+  const delay = (cb: () => void, ms: number) => {
+    // eslint-disable-next-line no-new
+    new Promise((Resolve) => {
+      setTimeout(() => {
+        Resolve(cb());
+      }, ms);
+    });
+  };
+
+  const nowMS = now();
+  const expirationMS = tokenExpiration ? tokenExpiration * 1000 : 0;
+
+  useEffect(() => {
+    if (
+      tokenExpiration &&
+      paymentDetails?.fixedCurrency?.price &&
+      paymentDetails?.currency &&
+      paymentDetails?.fixedCurrency?.price &&
+      expirationMS > nowMS
+    ) {
+      delay(() => {
+        getTokenPrice({
+          from: paymentDetails?.fixedCurrency,
+          to: paymentDetails?.currency?.symbol,
+          amount: paymentDetails?.fixedCurrency?.price,
+        });
+      }, 1000);
+    }
+  }, [
+    tokenExpiration,
+    paymentDetails?.fixedCurrency,
+    paymentDetails?.currency,
+    paymentDetails?.fixedCurrency,
+    expirationMS,
+  ]);
 
   useEffect(() => {
     if (mainCluster) {
@@ -185,8 +223,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [dynamicRateToken, paymentDetails]);
 
   useEffect(() => {
-    console.log({ actualPrice });
-  }, [actualPrice]);
+    console.log({ actualPrice, tokenExpiration });
+  }, [actualPrice, tokenExpiration]);
 
   const handleSuccessPayment = (
     event: SuccessPaymentEvent<ApproveTransactionResponse>
