@@ -2556,6 +2556,19 @@
     jsonwebtoken "^8.5.1"
     tweetnacl "^1.0.3"
 
+"@heliofi/solana-adapter@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-2.0.7.tgz#8ccacc3c2d83e6c7a7f8ab9d7399421af0d0b230"
+  integrity sha512-hy0LP7otaoBSex1C2TZj8FC0qrRPt3KCPg1UYSHw+aSkBq964YhVZyDxqFAUZz9JnU4q7gemQovJ+2/vgbawVg==
+  dependencies:
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/spl-token" "^0.2.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    jsonwebtoken "^8.5.1"
+    tweetnacl "^1.0.3"
+
 "@humanwhocodes/config-array@^0.11.6":
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.7.tgz#38aec044c6c828f6ed51d5d7ae3d9b9faf6dbb0f"

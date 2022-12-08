@@ -39,7 +39,7 @@ export const getCancelPaymentTx = async (
   );
 
   const transaction = await program.methods
-    .cancelPayment(new BN(fee))
+    .cancelPayment()
     .accounts({
       signer: req.sender,
       sender: req.sender,

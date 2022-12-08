@@ -38,7 +38,7 @@ export const getWithdrawTx = async (
   );
 
   const transaction = await program.methods
-    .withdraw(new BN(fee))
+    .withdraw()
     .accounts({
       signer: otherSigner || req.recipient,
       recipient: req.recipient,

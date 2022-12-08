@@ -10,7 +10,7 @@ export const getCancelSolPaymentTx = async (
   fee: number = 0
 ): Promise<Transaction> => {
   const transaction = await program.methods
-    .cancelSolPayment(new BN(fee))
+    .cancelSolPayment()
     .accounts({
       signer: req.sender,
       sender: req.sender,

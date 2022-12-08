@@ -229,12 +229,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
     {
       name: 'cancelSolPayment',
@@ -275,12 +270,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
     {
       name: 'withdraw',
@@ -346,12 +336,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
     {
       name: 'withdrawSol',
@@ -387,12 +372,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
     {
       name: 'singlePayment',
@@ -469,8 +449,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'baseFee',
-          type: 'u64',
+          name: 'payFees',
+          type: 'bool',
         },
         {
           name: 'remainingAmounts',
@@ -515,8 +495,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'baseFee',
-          type: 'u64',
+          name: 'payFees',
+          type: 'bool',
         },
         {
           name: 'remainingAmounts',
@@ -741,9 +721,6 @@ export default {
             name: 'InvalidTopupAmount',
           },
           {
-            name: 'InvalidFee',
-          },
-          {
             name: 'UnauthorizedSigner',
           },
           {
@@ -786,6 +763,6 @@ export default {
     },
   ],
   metadata: {
-    address: 'ENicYBBNZQ91toN7ggmTxnDGZW14uv9UkumN7XBGeYJ4',
+    address: '3KPRuKWxV6PtneZXbokMBwdF4T9brCFx7FcmKJ2tPqqt',
   },
 };

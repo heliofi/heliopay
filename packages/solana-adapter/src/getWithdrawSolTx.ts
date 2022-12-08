@@ -11,7 +11,7 @@ export const getWithdrawSolTx = async (
   otherSigner?: PublicKey
 ): Promise<Transaction> => {
   const transaction = await program.methods
-    .withdrawSol(new BN(fee))
+    .withdrawSol()
     .accounts({
       signer: otherSigner || req.recipient,
       recipient: req.recipient,
