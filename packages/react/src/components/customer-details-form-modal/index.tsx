@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { InfoIcon } from '@heliofi/helio-icons';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Modal, InheritedModalProps } from '../modal';
@@ -21,7 +22,7 @@ import {
 } from './styles';
 import SelectBox, { Option } from '../selectbox';
 import { countries } from '../../domain/constants/countries';
-import { removeUndefinedFields } from '../../utils';
+import { now, removeUndefinedFields } from '../../utils';
 import { Currency, CustomerDetails } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
@@ -31,6 +32,7 @@ import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
 import { ProductDetails } from '../../domain/model/ProductDetails';
 import { CurrencyService } from '../../domain/services/CurrencyService';
+import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -69,6 +71,9 @@ const CustomerDetailsFormModal = ({
   const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
     useState(false);
 
+  const { tokenExpiration, dynamicRateLoading: priceLoading } =
+    useTokenConversion();
+
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
 
@@ -82,6 +87,15 @@ const CustomerDetailsFormModal = ({
     label: countryItem.name,
     value: countryItem.code,
   }));
+
+  const expirationMS = tokenExpiration ? tokenExpiration * 1000 : 0;
+
+  const isTokenConversionValid: boolean =
+    fixedPrice != null &&
+    activeCurrency != null &&
+    fixedCurrency != null &&
+    requireFixedCurrency == true &&
+    tokenExpiration != null;
 
   const getCurrency = (currency?: string) => {
     if (!currency) return null;
@@ -97,7 +111,7 @@ const CustomerDetailsFormModal = ({
   }, [paymentDetails?.currency, canSelectCurrency]);
 
   const formatTotalPrice = (price: number, quantity = 1): number => {
-    const totalPrice = Number((price * quantity).toFixed(3));
+    const totalPrice = Number((price * quantity).toFixed(4));
     return totalPrice || price;
   };
 
@@ -234,34 +248,36 @@ const CustomerDetailsFormModal = ({
                         )
                       }
                     />
+                  ) : priceLoading ? (
+                    <StyledPrice>Updating...</StyledPrice>
                   ) : (
                     <StyledPrice>
-                      Total price:{' '}
-                      <b>
-                        {
-                          CurrencyService.getCurrencyBySymbol(
-                            activeCurrency?.symbol as string
-                          ).symbolPrefix
-                        }
-                        {formatTotalPrice(
-                          totalAmount || normalizedPrice,
-                          values.quantity
-                        )}{' '}
-                        {activeCurrency?.symbol}
-                        {fixedPrice != null &&
-                          requireFixedCurrency === true &&
-                          fixedCurrency != null && (
+                      <div>
+                        Total price:{' '}
+                        <b>
+                          {activeCurrency &&
+                            CurrencyService.getCurrencyBySymbol(
+                              activeCurrency?.symbol as string
+                            )?.symbolPrefix}
+                          {formatTotalPrice(
+                            totalAmount || normalizedPrice,
+                            values.quantity
+                          )}{' '}
+                          {activeCurrency?.symbol}
+                          {fixedPrice && requireFixedCurrency && fixedCurrency && (
                             <span>
                               {' '}
                               (
                               {
                                 CurrencyService.getCurrencyBySymbol(
                                   fixedCurrency as string
-                                ).symbolPrefix
+                                )?.symbolPrefix
                               }
                               {formatTotalPrice(
                                 TokenConversionService.convertFromMinimalUnits(
-                                  fixedCurrency,
+                                  CurrencyService.getCurrencyBySymbol(
+                                    fixedCurrency as string
+                                  ),
                                   fixedPrice
                                 ),
                                 values.quantity
@@ -269,7 +285,23 @@ const CustomerDetailsFormModal = ({
                               {fixedCurrency})
                             </span>
                           )}
-                      </b>
+                        </b>
+                      </div>
+                      {!priceLoading && isTokenConversionValid && (
+                        <CountdownCircleTimer
+                          isPlaying
+                          duration={(expirationMS - now()) / 1000}
+                          colors="#F76C1B"
+                          trailColor="#FFEAD2"
+                          size={16}
+                          strokeWidth={3}
+                          onComplete={() => {
+                            return {
+                              shouldRepeat: true,
+                            };
+                          }}
+                        />
+                      )}
                     </StyledPrice>
                   )}
                   {canSelectCurrency && (

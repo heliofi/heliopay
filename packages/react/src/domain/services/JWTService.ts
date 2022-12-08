@@ -4,6 +4,6 @@ export class JWTService {
     exp: number;
     iat: number;
   } {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString());
   }
 }

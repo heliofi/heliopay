@@ -126,11 +126,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     ) {
       delay(() => {
         getTokenPrice({
-          from: paymentDetails?.fixedCurrency,
+          from: paymentDetails?.fixedCurrency?.currency,
           to: paymentDetails?.currency?.symbol,
           amount: paymentDetails?.fixedCurrency?.price,
         });
-      }, 1000);
+      }, expirationMS - nowMS);
     }
   }, [
     tokenExpiration,
@@ -221,10 +221,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       }
     }
   }, [dynamicRateToken, paymentDetails]);
-
-  useEffect(() => {
-    console.log({ actualPrice, tokenExpiration });
-  }, [actualPrice, tokenExpiration]);
 
   const handleSuccessPayment = (
     event: SuccessPaymentEvent<ApproveTransactionResponse>

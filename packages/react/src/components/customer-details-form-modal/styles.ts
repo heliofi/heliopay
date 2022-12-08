@@ -11,6 +11,9 @@ export const StyledPrice = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 20px;
   b {
