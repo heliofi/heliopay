@@ -75,7 +75,8 @@
       "prettier/prettier": "error",
       "react/react-in-jsx-scope": "off",
       "react/jsx-props-no-spreading": "off",
-      "object-shorthand": "off"
+      "object-shorthand": "off",
+      "no-nested-ternary": "off"
     },
     "extends": [
       "@heliofi/eslint-config-helio/react",

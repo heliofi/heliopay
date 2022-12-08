@@ -94,7 +94,7 @@ const CustomerDetailsFormModal = ({
     fixedPrice != null &&
     activeCurrency != null &&
     fixedCurrency != null &&
-    requireFixedCurrency == true &&
+    requireFixedCurrency === true &&
     tokenExpiration != null;
 
   const getCurrency = (currency?: string) => {
@@ -295,11 +295,9 @@ const CustomerDetailsFormModal = ({
                           trailColor="#FFEAD2"
                           size={16}
                           strokeWidth={3}
-                          onComplete={() => {
-                            return {
-                              shouldRepeat: true,
-                            };
-                          }}
+                          onComplete={() => ({
+                            shouldRepeat: true,
+                          })}
                         />
                       )}
                     </StyledPrice>
