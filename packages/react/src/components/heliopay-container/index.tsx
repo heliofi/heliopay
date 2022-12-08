@@ -222,6 +222,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [dynamicRateToken, paymentDetails]);
 
+  useEffect(() => {
+    console.log({ actualPrice, tokenExpiration });
+  }, [actualPrice, tokenExpiration]);
+
   const handleSuccessPayment = (
     event: SuccessPaymentEvent<ApproveTransactionResponse>
   ) => {
