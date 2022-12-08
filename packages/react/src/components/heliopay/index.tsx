@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';

@@ -25,6 +25,7 @@
     "@solana/wallet-adapter-wallets": "^0.16.1",
     "@solana/web3.js": "^1.44.0",
     "aws-amplify": "^4.3.16",
+    "class-transformer": "^0.5.1",
     "crypto-js": "^4.1.1",
     "downshift": "^6.1.7",
     "formik": "^2.2.9",
