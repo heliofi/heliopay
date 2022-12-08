@@ -1,5 +1,5 @@
+import { Currency, CurrencyType } from '@heliofi/common';
 import { DefaultCurrencies } from '../constants/currency';
-import { Currency } from '../model';
 
 export class CurrencyService {
   private static currencies: Currency[];
@@ -12,12 +12,25 @@ export class CurrencyService {
     return parseFloat(String(amount)).toFixed(decimals);
   }
 
+  static getCurrencySymbols(currencies: Currency[]): string[] {
+    return currencies.map((currency) => currency.symbol);
+  }
+
   static setPeggedCurrency(amount: string | number, currency: string): string {
-    return (CurrencyService.getCurrencyBySymbol(currency).sign || '') + amount;
+    return (
+      (CurrencyService.getCurrencyBySymbol(currency).symbolPrefix || '') +
+      amount
+    );
   }
 
   static setCurrencies(currencies: Currency[]) {
     CurrencyService.currencies = currencies;
+  }
+
+  static getCurrenciesByType(type: CurrencyType): Currency[] {
+    return CurrencyService.currencies.filter(
+      (currency) => currency.type === type
+    );
   }
 
   static getCurrencyBySymbol(symbol: string): Currency {
@@ -28,6 +41,14 @@ export class CurrencyService {
       throw new Error(`Unable to find currency: ${currency}`);
     }
     return currency;
+  }
+
+  static getSplTokens(): string[] {
+    return CurrencyService.getCurrenciesByType(CurrencyType.DIGITAL)
+      .filter(
+        (currency) => currency.symbol !== CurrencyService.getSolCurrencySymbol()
+      )
+      .map((currency) => currency.symbol);
   }
 
   static getDefaultCurrencySymbol(): string {

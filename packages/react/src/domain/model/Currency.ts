@@ -1,4 +1,7 @@
+import { ReactNode } from 'react';
+
 export interface Currency {
+  symbolPrefix: ReactNode;
   symbol?: string | null;
   name?: string | null;
   mintAddress?: string | null;

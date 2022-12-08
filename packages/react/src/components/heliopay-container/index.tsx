@@ -36,6 +36,7 @@ import {
 } from '../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService';
 import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
+import { JWTService } from '../../domain/services/JWTService';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -88,7 +89,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     null
   );
 
-  const [normalizedPrice, setNormalizedPrice] = useState(0);
+  const [actualPrice, setActualPrice] = useState(0);
 
   useEffect(() => {
     initCluster(cluster);
@@ -148,7 +149,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           amount: paymentDetails?.fixedCurrency.price,
         });
       }
-      setNormalizedPrice(
+      setActualPrice(
         TokenConversionService.convertFromMinimalUnits(
           getCurrency(paymentDetails?.currency?.symbol),
           paymentDetails?.normalizedPrice
@@ -156,6 +157,36 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       );
     }
   }, [paymentDetails]);
+
+  useEffect(() => {
+    if (
+      paymentDetails?.currency != null &&
+      paymentDetails?.normalizedPrice != null
+    ) {
+      if (paymentDetails?.features?.requireFixedCurrency && dynamicRateToken) {
+        const decodedRateToken = JWTService.decodeToken(dynamicRateToken);
+        const dynamicPrice = decodedRateToken.rate;
+
+        setActualPrice(
+          TokenConversionService.convertFromMinimalUnits(
+            paymentDetails.currency,
+            dynamicPrice
+          )
+        );
+      } else {
+        setActualPrice(
+          TokenConversionService.convertFromMinimalUnits(
+            paymentDetails?.currency,
+            paymentDetails?.normalizedPrice
+          )
+        );
+      }
+    }
+  }, [dynamicRateToken, paymentDetails]);
+
+  useEffect(() => {
+    console.log({ actualPrice });
+  }, [actualPrice]);
 
   const handleSuccessPayment = (
     event: SuccessPaymentEvent<ApproveTransactionResponse>
@@ -279,7 +310,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           onSubmit={submitPayment}
           allowedCurrencies={allowedCurrencies}
           totalAmount={totalAmount}
-          normalizedPrice={normalizedPrice}
+          normalizedPrice={actualPrice}
+          requireFixedCurrency={paymentDetails?.features?.requireFixedCurrency}
+          fixedPrice={paymentDetails?.fixedCurrency?.price}
+          fixedCurrency={paymentDetails?.fixedCurrency?.currency}
         />
       )}
 

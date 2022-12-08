@@ -5,6 +5,7 @@ import {
   PendingPaymentEvent,
   SuccessPaymentEvent,
   HelioApiAdapter,
+  ApproveTransactionResponse,
 } from '@heliofi/react';
 
 import './styles/style.scss';
@@ -25,7 +26,7 @@ const App = () => {
       <HelioPay
         cluster="devnet"
         paymentRequestId={paymentId}
-        onSuccess={function (event: SuccessPaymentEvent): void {
+        onSuccess={function (event: SuccessPaymentEvent<ApproveTransactionResponse>): void {
           console.log('onSuccess', event);
         }}
         onError={function (event: ErrorPaymentEvent): void {
@@ -37,8 +38,6 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC']}
-        totalAmount={0.01}
       />
     </>
   );

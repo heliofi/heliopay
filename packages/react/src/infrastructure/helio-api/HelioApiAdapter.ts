@@ -1,5 +1,6 @@
+import { Currency } from '@heliofi/common';
 import { Cluster } from '@solana/web3.js';
-import { ClusterType, Currency } from '../../domain';
+import { ClusterType } from '../../domain';
 import { LivePriceResponse } from '../../domain/model/TokenConversion';
 import { configDev, configProd } from '../config';
 

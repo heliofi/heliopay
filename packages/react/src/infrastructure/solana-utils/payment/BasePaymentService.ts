@@ -173,7 +173,7 @@ export abstract class BasePaymentService<
           transaction: payload.signedTransaction,
         });
       };
-      onPending({ transaction: payload.signedTransaction });
+      onPending?.({ transaction: payload.signedTransaction });
       await this.executeCommand(async () => {
         const response = await this.approveTransaction(payload);
         this.onSuccess(response, payload, onSuccess);

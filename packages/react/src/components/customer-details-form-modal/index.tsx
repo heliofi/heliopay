@@ -30,6 +30,7 @@ import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
 import { ProductDetails } from '../../domain/model/ProductDetails';
+import { CurrencyService } from '../../domain/services/CurrencyService';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -42,6 +43,9 @@ interface Props extends InheritedModalProps {
   allowedCurrencies?: Currency[] | null;
   totalAmount?: number;
   normalizedPrice: number;
+  requireFixedCurrency?: boolean;
+  fixedPrice?: number;
+  fixedCurrency?: string;
 }
 
 const CustomerDetailsFormModal = ({
@@ -50,6 +54,9 @@ const CustomerDetailsFormModal = ({
   allowedCurrencies,
   totalAmount,
   normalizedPrice,
+  fixedPrice,
+  fixedCurrency,
+  requireFixedCurrency,
 }: Props) => {
   const { currencyList, paymentDetails, isCustomerDetailsRequired } =
     useHelioProvider();
@@ -115,6 +122,7 @@ const CustomerDetailsFormModal = ({
 
   const formatTotalPrice = (price: number, quantity = 1): number => {
     const totalPrice = Number((price * quantity).toFixed(3));
+    console.log({ totalPrice, price, quantity });
     return totalPrice || price;
   };
 
@@ -255,11 +263,37 @@ const CustomerDetailsFormModal = ({
                     <StyledPrice>
                       Total price:{' '}
                       <b>
+                        {
+                          CurrencyService.getCurrencyBySymbol(
+                            activeCurrency?.symbol as string
+                          ).symbolPrefix
+                        }
                         {formatTotalPrice(
                           totalAmount || normalizedPrice,
                           values.quantity
                         )}{' '}
                         {activeCurrency?.symbol}
+                        {fixedPrice != null &&
+                          requireFixedCurrency === true &&
+                          fixedCurrency != null && (
+                            <span>
+                              {' '}
+                              (
+                              {
+                                CurrencyService.getCurrencyBySymbol(
+                                  fixedCurrency as string
+                                ).symbolPrefix
+                              }
+                              {formatTotalPrice(
+                                TokenConversionService.convertFromMinimalUnits(
+                                  fixedCurrency,
+                                  fixedPrice
+                                ),
+                                values.quantity
+                              )}{' '}
+                              {fixedCurrency})
+                            </span>
+                          )}
                       </b>
                     </StyledPrice>
                   )}

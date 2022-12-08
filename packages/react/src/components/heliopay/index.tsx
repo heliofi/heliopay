@@ -10,10 +10,11 @@ import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopay-container';
 import { defaultTheme } from '../../theme';
 import { deepMerge } from '../../utils';
+import { ApproveTransactionResponse } from '../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService';
 
 interface HelioPayProps {
   paymentRequestId: string;
-  onSuccess?: (event: SuccessPaymentEvent) => void;
+  onSuccess?: (event: SuccessPaymentEvent<ApproveTransactionResponse>) => void;
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;

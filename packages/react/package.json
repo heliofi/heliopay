@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aws-amplify/api-graphql": "^2.3.12",
-    "@heliofi/common": "^0.1.114",
+    "@heliofi/common": "0.1.112",
     "@heliofi/helio-icons": "^1.0.5",
     "@heliofi/solana-adapter": "^2.0.7",
     "@project-serum/anchor": "^0.25.0",
