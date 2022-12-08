@@ -8,7 +8,8 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 export const getWithdrawTx = async (
   program: Program<HelioIdl>,
   req: WithdrawRequest,
-  fee: number = 0
+  fee: number = 0,
+  otherSigner?: PublicKey
 ): Promise<Transaction> => {
   const [pda] = await PublicKey.findProgramAddress(
     [req.payment.toBytes()],
@@ -39,6 +40,7 @@ export const getWithdrawTx = async (
   const transaction = await program.methods
     .withdraw(new BN(fee))
     .accounts({
+      signer: otherSigner || req.recipient,
       recipient: req.recipient,
       recipientTokenAccount,
       paymentAccount: req.payment,

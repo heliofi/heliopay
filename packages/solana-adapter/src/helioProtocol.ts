@@ -286,9 +286,14 @@ export default {
       name: 'withdraw',
       accounts: [
         {
-          name: 'recipient',
+          name: 'signer',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
           name: 'recipientTokenAccount',
@@ -352,9 +357,14 @@ export default {
       name: 'withdrawSol',
       accounts: [
         {
-          name: 'recipient',
+          name: 'signer',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
           name: 'solPaymentAccount',
@@ -732,6 +742,9 @@ export default {
           },
           {
             name: 'InvalidFee',
+          },
+          {
+            name: 'UnauthorizedSigner',
           },
           {
             name: 'General',
