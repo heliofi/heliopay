@@ -5,22 +5,22 @@ import { useHelioProvider } from '../helio/HelioContext';
 import { JWTService } from '../../domain/services/JWTService';
 
 export const TokenConversionContext = createContext<{
-  dynamicRateToken: string | null;
-  setDynamicRateToken: (token: string | null) => void;
-  dynamicRate: number | null;
-  setDynamicRate: (rate: number | null) => void;
+  dynamicRateToken: string | undefined;
+  setDynamicRateToken: (token: string | undefined) => void;
+  dynamicRate: number | undefined;
+  setDynamicRate: (rate: number | undefined) => void;
   dynamicRateLoading: boolean;
   setDynamicRateLoading: (loading: boolean) => void;
-  tokenExpiration: number | null;
-  setTokenExpiration: (expiration: number | null) => void;
+  tokenExpiration: number | undefined;
+  setTokenExpiration: (expiration: number | undefined) => void;
 }>({
-  dynamicRateToken: null,
+  dynamicRateToken: undefined,
   setDynamicRateToken: () => {},
-  dynamicRate: null,
+  dynamicRate: undefined,
   setDynamicRate: () => {},
   dynamicRateLoading: false,
   setDynamicRateLoading: () => {},
-  tokenExpiration: null,
+  tokenExpiration: undefined,
   setTokenExpiration: () => {},
 });
 

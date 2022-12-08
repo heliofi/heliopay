@@ -1,4 +1,4 @@
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
@@ -27,14 +27,19 @@ import HelioLogoGray from '../icons/HelioLogoGray';
 import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
-import { createOneTimePayment } from '../../infrastructure';
 import PaymentResult from '../payment-result';
 import { useAddressProvider } from '../../providers/address/AddressContext';
 import { ProductDetails } from '../../domain/model/ProductDetails';
+import {
+  ApproveTransactionResponse,
+  PaylinkSubmitService,
+} from '../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService';
+import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
+import { TokenConversionService } from '../../domain/services/TokenConversionService';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
-  onSuccess?: (event: SuccessPaymentEvent) => void;
+  onSuccess?: (event: SuccessPaymentEvent<ApproveTransactionResponse>) => void;
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
@@ -57,10 +62,14 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
+  const connectionProvider = useConnection();
+
   const { getCountry } = useAddressProvider();
 
+  const { getTokenPrice, dynamicRateToken } = useTokenConversion();
+
   const [result, setResult] = useState<
-    SuccessPaymentEvent | ErrorPaymentEvent | null
+    SuccessPaymentEvent<ApproveTransactionResponse> | ErrorPaymentEvent | null
   >(null);
 
   const {
@@ -79,18 +88,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     null
   );
 
+  const [normalizedPrice, setNormalizedPrice] = useState(0);
+
   useEffect(() => {
     initCluster(cluster);
   }, [cluster]);
-
-  useEffect(() => {
-    if (
-      paymentDetails?.features?.requireDeliveryAddress &&
-      paymentDetails?.features?.requireCountry
-    ) {
-      getCountry();
-    }
-  }, [paymentDetails]);
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter((currency) =>
@@ -124,7 +126,40 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     return currencyList.find((c: any) => c.symbol === currency);
   };
 
-  const handleSuccessPayment = (event: SuccessPaymentEvent) => {
+  useEffect(() => {
+    if (
+      paymentDetails?.features?.requireDeliveryAddress &&
+      paymentDetails?.features?.requireCountry
+    ) {
+      getCountry();
+    }
+
+    if (
+      paymentDetails?.currency != null &&
+      paymentDetails?.normalizedPrice != null
+    ) {
+      if (
+        paymentDetails?.fixedCurrency &&
+        paymentDetails?.features?.requireFixedCurrency
+      ) {
+        getTokenPrice({
+          from: paymentDetails?.fixedCurrency.currency,
+          to: paymentDetails?.currency?.symbol,
+          amount: paymentDetails?.fixedCurrency.price,
+        });
+      }
+      setNormalizedPrice(
+        TokenConversionService.convertFromMinimalUnits(
+          getCurrency(paymentDetails?.currency?.symbol),
+          paymentDetails?.normalizedPrice
+        )
+      );
+    }
+  }, [paymentDetails]);
+
+  const handleSuccessPayment = (
+    event: SuccessPaymentEvent<ApproveTransactionResponse>
+  ) => {
     onSuccess?.(event);
     setResult(event);
     setShowLoadingModal(false);
@@ -149,29 +184,33 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     customerDetails?: CustomerDetails;
     productDetails?: ProductDetails;
   }) => {
-    if (helioProvider && currency?.symbol != null) {
+    if (helioProvider && currency?.symbol != null && wallet) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
       const recipient = paymentDetails?.wallet?.publicKey;
       const { symbol } = getCurrency(currency.symbol);
       if (symbol == null) throw new Error('Unknown currency symbol');
-      const payload = {
-        anchorProvider: helioProvider,
-        recipientPK: recipient,
-        symbol,
-        amount: amount * (quantity || 1),
-        paymentRequestId,
-        onSuccess: handleSuccessPayment,
-        onError: handleErrorPayment,
-        onPending,
-        customerDetails,
-        productDetails,
-        quantity: Number(quantity) ?? 1,
-        cluster,
-      };
       try {
-        await createOneTimePayment(payload);
+        await new PaylinkSubmitService().handleTransaction({
+          anchorProvider: helioProvider,
+          recipientPK: recipient,
+          symbol: symbol,
+          amount: amount * (quantity || 1),
+          paymentRequestId,
+          onSuccess: handleSuccessPayment,
+          onError: handleErrorPayment,
+          onPending: onPending,
+          customerDetails: customerDetails,
+          quantity: Number(quantity),
+          productDetails: productDetails,
+          splitRevenue: paymentDetails?.features?.splitRevenue,
+          splitWallets: paymentDetails?.splitWallets,
+          wallet: wallet,
+          connection: connectionProvider.connection,
+          rateToken: dynamicRateToken,
+          cluster: cluster,
+        });
       } catch (error) {
         handleErrorPayment({
           errorMessage: String(error),
@@ -240,6 +279,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           onSubmit={submitPayment}
           allowedCurrencies={allowedCurrencies}
           totalAmount={totalAmount}
+          normalizedPrice={normalizedPrice}
         />
       )}
 

@@ -11,7 +11,7 @@ import {
 export interface BasePaymentProps<T> {
   onSuccess: (event: SuccessPaymentEvent<T>) => void;
   onError: (event: ErrorPaymentEvent) => void;
-  onPending: (event: PendingPaymentEvent) => void;
+  onPending?: (event: PendingPaymentEvent) => void;
   symbol: string;
   anchorProvider: Program<HelioIdl>;
   wallet: AnchorWallet;

@@ -30,7 +30,6 @@ import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
 import { ProductDetails } from '../../domain/model/ProductDetails';
-import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -42,6 +41,7 @@ interface Props extends InheritedModalProps {
   }) => void;
   allowedCurrencies?: Currency[] | null;
   totalAmount?: number;
+  normalizedPrice: number;
 }
 
 const CustomerDetailsFormModal = ({
@@ -49,11 +49,11 @@ const CustomerDetailsFormModal = ({
   onSubmit,
   allowedCurrencies,
   totalAmount,
+  normalizedPrice,
 }: Props) => {
   const { currencyList, paymentDetails, isCustomerDetailsRequired } =
     useHelioProvider();
   const { country } = useAddressProvider();
-  const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [selectValue, setSelectValue] = useState({
     label: '',
@@ -61,8 +61,6 @@ const CustomerDetailsFormModal = ({
   });
   const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
     useState(false);
-
-  const { getTokenPrice } = useTokenConversion();
 
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
@@ -91,29 +89,29 @@ const CustomerDetailsFormModal = ({
     }
   }, [paymentDetails?.currency, canSelectCurrency]);
 
-  useEffect(() => {
-    if (
-      paymentDetails?.currency != null &&
-      paymentDetails?.normalizedPrice != null
-    ) {
-      if (
-        paymentDetails?.fixedCurrency &&
-        paymentDetails?.features?.requireFixedCurrency
-      ) {
-        getTokenPrice({
-          from: paymentDetails?.fixedCurrency.currency,
-          to: paymentDetails?.currency?.symbol,
-          amount: paymentDetails?.fixedCurrency.price,
-        });
-      }
-      setNormalizedPrice(
-        TokenConversionService.convertFromMinimalUnits(
-          getCurrency(paymentDetails?.currency?.symbol),
-          paymentDetails?.normalizedPrice
-        )
-      );
-    }
-  }, [paymentDetails]);
+  // useEffect(() => {
+  //   if (
+  //     paymentDetails?.currency != null &&
+  //     paymentDetails?.normalizedPrice != null
+  //   ) {
+  //     if (
+  //       paymentDetails?.fixedCurrency &&
+  //       paymentDetails?.features?.requireFixedCurrency
+  //     ) {
+  //       getTokenPrice({
+  //         from: paymentDetails?.fixedCurrency.currency,
+  //         to: paymentDetails?.currency?.symbol,
+  //         amount: paymentDetails?.fixedCurrency.price,
+  //       });
+  //     }
+  //     setNormalizedPrice(
+  //       TokenConversionService.convertFromMinimalUnits(
+  //         getCurrency(paymentDetails?.currency?.symbol),
+  //         paymentDetails?.normalizedPrice
+  //       )
+  //     );
+  //   }
+  // }, [paymentDetails]);
 
   const formatTotalPrice = (price: number, quantity = 1): number => {
     const totalPrice = Number((price * quantity).toFixed(3));
