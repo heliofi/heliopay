@@ -1,6 +1,6 @@
 {
-  "name": "@heliofi/solana-adapter",
-  "version": "3.1.1-alpha",
+  "name": "@heliofi/solana-adapter-v1",
+  "version": "0.0.2",
   "description": "API to interact with Helio Finances program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heliofi/helio-package.git"
+    "url": "git+https://github.com/heliofi/heliopay.git"
   },
   "keywords": [
     "solana",
@@ -85,6 +85,5 @@
   },
   "prettier": {
     "singleQuote": true
-  },
-  "gitHead": "c204944e6e6e861c0b2413a3f3a242cc5ab49ac9"
+  }
 }
