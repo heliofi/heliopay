@@ -50,7 +50,7 @@ const prepareSplitPaymentsValues = (
 export const getSinglePaymentTx = async (
   program: Program<HelioIdl>,
   req: SinglePaymentRequest,
-  payFees: boolean = true,
+  fee: number = 0,
   amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): Promise<Transaction> => {
@@ -82,7 +82,7 @@ export const getSinglePaymentTx = async (
   );
 
   const transaction = await program.methods
-    .singlePayment(new BN(req.amount.toString()), payFees, remainingAmounts)
+    .singlePayment(new BN(req.amount), new BN(fee), remainingAmounts)
     .accounts({
       sender: req.sender,
       senderTokenAccount: senderAssociatedTokenAddress,

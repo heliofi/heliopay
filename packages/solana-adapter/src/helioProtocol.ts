@@ -229,7 +229,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'cancelSolPayment',
@@ -270,15 +275,25 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'withdraw',
       accounts: [
         {
-          name: 'recipient',
+          name: 'signer',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
           name: 'recipientTokenAccount',
@@ -331,15 +346,25 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'withdrawSol',
       accounts: [
         {
-          name: 'recipient',
+          name: 'signer',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
         },
         {
           name: 'solPaymentAccount',
@@ -362,7 +387,12 @@ export default {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: 'baseFee',
+          type: 'u64',
+        },
+      ],
     },
     {
       name: 'singlePayment',
@@ -439,8 +469,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'payFees',
-          type: 'bool',
+          name: 'baseFee',
+          type: 'u64',
         },
         {
           name: 'remainingAmounts',
@@ -485,8 +515,8 @@ export default {
           type: 'u64',
         },
         {
-          name: 'payFees',
-          type: 'bool',
+          name: 'baseFee',
+          type: 'u64',
         },
         {
           name: 'remainingAmounts',
@@ -709,6 +739,12 @@ export default {
           },
           {
             name: 'InvalidTopupAmount',
+          },
+          {
+            name: 'InvalidFee',
+          },
+          {
+            name: 'UnauthorizedSigner',
           },
           {
             name: 'General',

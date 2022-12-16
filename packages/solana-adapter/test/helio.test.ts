@@ -167,7 +167,7 @@ describe('api', () => {
     const singlePaymentTransaction = await getSinglePaymentTx(
       program,
       request,
-      false
+      0
     );
 
     const txId = await sendAndConfirm(
@@ -209,7 +209,7 @@ describe('api', () => {
     const singlePaymentTransaction = await getSinglePaymentTx(
       program,
       request,
-      false,
+      0,
       remainingAmounts,
       remainingAccounts
     );
@@ -252,7 +252,7 @@ describe('api', () => {
     const singleSolPaymentTransaction = await getSingleSolPaymentTx(
       program,
       request,
-      true
+      35
     );
 
     const txId = await sendAndConfirm(
@@ -298,7 +298,7 @@ describe('api', () => {
     const singleSolPaymentTransaction = await getSingleSolPaymentTx(
       program,
       request,
-      false,
+      0,
       remainingAmounts,
       remainingAccounts
     );
@@ -327,14 +327,14 @@ describe('api', () => {
     const startAt = Math.floor(new Date().getTime() / 1000) + 1;
     const endAt = startAt + 100;
     const request: CreatePaymentRequest = {
-      amount: 100000,
-      startAt,
-      endAt,
+      amount: String(100000),
+      startAt: String(startAt),
+      endAt: String(endAt),
       interval: 50,
       mintAddress: mint,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
-      paymentAccount,
+      paymentAccount: paymentAccount.publicKey,
     };
 
     const paymentTransaction = await getCreatePaymentTx(program, request, true);
@@ -412,7 +412,7 @@ describe('api', () => {
 
     const topupAmount = 50000;
     const request: TopupRequest = {
-      amount: topupAmount,
+      amount: String(topupAmount),
       sender: sender.publicKey,
       payment: paymentAccount.publicKey,
       mintAddress: mint,
@@ -479,13 +479,13 @@ describe('api', () => {
     const startAt = Math.floor(new Date().getTime() / 1000) + 1;
     const endAt = startAt + 200;
     const request: CreatePaymentRequest = {
-      amount: 1e6,
-      startAt,
-      endAt,
+      amount: String(1e6),
+      startAt: String(startAt),
+      endAt: String(endAt),
       interval: 100,
       sender: sender.publicKey,
       recipient: recipient.publicKey,
-      paymentAccount,
+      paymentAccount: paymentAccount.publicKey,
     };
     const senderBalanceBefore = await connection.getBalance(sender.publicKey);
 
@@ -533,7 +533,7 @@ describe('api', () => {
 
     const topupAmount = 1e6;
     const request: TopupRequest = {
-      amount: topupAmount,
+      amount: String(topupAmount),
       sender: sender.publicKey,
       payment: paymentAccount.publicKey,
       mintAddress: mint,
