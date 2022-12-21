@@ -77,7 +77,8 @@
       "react/react-in-jsx-scope": "off",
       "react/jsx-props-no-spreading": "off",
       "object-shorthand": "off",
-      "no-nested-ternary": "off"
+      "no-nested-ternary": "off",
+      "max-classes-per-file": "off"
     },
     "extends": [
       "@heliofi/eslint-config-helio/react",

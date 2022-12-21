@@ -257,7 +257,7 @@ const CustomerDetailsFormModal = ({
                         <b>
                           {activeCurrency &&
                             CurrencyService.getCurrencyBySymbol(
-                              activeCurrency?.symbol as string
+                              String(activeCurrency?.symbol)
                             )?.symbolPrefix}
                           {formatTotalPrice(
                             totalAmount || normalizedPrice,
@@ -270,13 +270,13 @@ const CustomerDetailsFormModal = ({
                               (
                               {
                                 CurrencyService.getCurrencyBySymbol(
-                                  fixedCurrency as string
+                                  String(fixedCurrency)
                                 )?.symbolPrefix
                               }
                               {formatTotalPrice(
                                 TokenConversionService.convertFromMinimalUnits(
                                   CurrencyService.getCurrencyBySymbol(
-                                    fixedCurrency as string
+                                    String(fixedCurrency)
                                   ),
                                   fixedPrice
                                 ),

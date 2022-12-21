@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
-import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
 import { LivePricePayload } from '../../domain/model/TokenConversion';
 import { useHelioProvider } from '../helio/HelioContext';
 import { JWTService } from '../../domain/services/JWTService';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export const TokenConversionContext = createContext<{
   dynamicRateToken: string | undefined;
@@ -37,16 +37,12 @@ export const useTokenConversion = () => {
   } = useContext(TokenConversionContext);
 
   const { cluster } = useHelioProvider();
+  const { apiService } = useCompositionRoot();
 
   const getTokenPrice = async ({ amount, to, from }: LivePricePayload) => {
     setDynamicRateLoading(true);
     if (cluster) {
-      const result = await HelioApiAdapter.getLivePrice(
-        amount,
-        to,
-        from,
-        cluster
-      );
+      const result = await apiService.getLivePrice(amount, to, from, cluster);
 
       const decodedToken = JWTService.decodeToken(result.rateToken);
 

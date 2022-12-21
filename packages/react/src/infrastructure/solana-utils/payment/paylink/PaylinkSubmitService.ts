@@ -1,4 +1,4 @@
-import { PrepareTransaction, SplitWallet } from '@heliofi/common';
+import { SplitWallet } from '@heliofi/common';
 import { SinglePaymentRequest } from '@heliofi/solana-adapter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { Cluster, Connection, PublicKey } from '@solana/web3.js';
@@ -75,12 +75,6 @@ export class PaylinkSubmitService extends BasePaymentService<
   protected async init(props: CreatePaymentProps): Promise<void> {
     await super.init(props);
   }
-  // paymentRequestId: string,
-  // request: PaylinkRequest,
-  // symbol: string,
-  // quantity: number,
-  // splitWallets?: SplitWallet[],
-  // rateToken?: string
 
   protected async executeTransaction({
     requestOrPaymentId,
@@ -193,31 +187,17 @@ export class PaylinkSubmitService extends BasePaymentService<
     cluster: Cluster;
   }): Promise<TransactionSignatureAndToken> {
     const prepareTransactionResponse =
-      await HelioApiAdapter.publicRequest<PrepareTransaction>({
-        endpoint: this.prepareEndpoint,
-        cluster: cluster,
-        options: {
-          method: 'POST',
-          body: JSON.stringify({
-            paymentRequestId,
-            currency: symbol,
-            quantity: quantity,
-            fixedCurrencyRateToken: rateToken,
-            ...request,
-          }),
-        },
-      });
-    // const prepareTransactionResponse =
-    //   await HelioApiAdapter.getPreparedTransactionMessage(
-    //     this.prepareEndpoint,
-    //     JSON.stringify({
-    //       paymentRequestId,
-    //       currency: symbol,
-    //       quantity,
-    //       fixedCurrencyRateToken: rateToken,
-    //       ...request,
-    //     })
-    //   );
+      await HelioApiAdapter.getPreparedTransactionMessage(
+        this.prepareEndpoint,
+        JSON.stringify({
+          paymentRequestId,
+          currency: symbol,
+          quantity: quantity,
+          fixedCurrencyRateToken: rateToken,
+          ...request,
+        }),
+        cluster
+      );
 
     const transaction = createTransaction(prepareTransactionResponse);
     const signedTransaction = await signTransaction(transaction, wallet);

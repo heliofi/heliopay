@@ -3,7 +3,7 @@ import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
 import { Cluster, Connection, PublicKey } from '@solana/web3.js';
 import { HttpCodes } from '../../../domain';
 import { CurrencyService } from '../../../domain/services/CurrencyService';
-import { getHelioApiBaseUrl } from '../../helio-api/HelioApiAdapter';
+import { getHelioApiBaseUrl } from '../../config';
 import { TransactionTimeoutError } from '../../solana-adapter/TransactionTimeoutError';
 import { VerificationError } from '../../solana-adapter/VerificationError';
 import { TransactionSignatureAndToken } from '../types';

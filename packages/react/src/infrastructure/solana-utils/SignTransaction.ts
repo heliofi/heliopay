@@ -24,6 +24,6 @@ export async function signTransaction(
     }
     return JSON.stringify(signedTransaction.serialize());
   } catch (error) {
-    return '';
+    return String(error);
   }
 }

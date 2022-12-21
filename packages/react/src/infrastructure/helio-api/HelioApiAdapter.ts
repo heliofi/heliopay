@@ -1,53 +1,10 @@
-import { Currency } from '@heliofi/common';
+import { Currency, PrepareTransaction } from '@heliofi/common';
 import { Cluster } from '@solana/web3.js';
-import { ClusterType } from '../../domain';
 import { LivePriceResponse } from '../../domain/model/TokenConversion';
-import { configDev, configProd } from '../config';
+import { getAddressApiBaseUrl, getHelioApiBaseUrl } from '../config';
+import { publicRequest } from '../fetch-middleware';
 
-const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.hel.io';
-const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
-
-type FetchOptions = RequestInit & {
-  clearContentType?: boolean;
-};
-
-export const getAwsConfig = (cluster: Cluster) => {
-  switch (cluster) {
-    case ClusterType.Testnet:
-    case ClusterType.Devnet:
-      return configDev;
-    case ClusterType.Mainnet:
-      return configProd;
-    default:
-      return configDev;
-  }
-};
-
-export const getHelioApiBaseUrl = (cluster: Cluster) => {
-  switch (cluster) {
-    case ClusterType.Testnet:
-    case ClusterType.Devnet:
-      return 'https://dev.api.hel.io/v1';
-    case ClusterType.Mainnet:
-      return 'https://api.hel.io/v1';
-    default:
-      return 'https://api.hel.io/v1';
-  }
-};
-
-export const getAddressApiBaseUrl = (cluster: Cluster) => {
-  switch (cluster) {
-    case ClusterType.Testnet:
-    case ClusterType.Devnet:
-      return DEV_ADDRESS_SERVICE_BASE_URL;
-    case ClusterType.Mainnet:
-      return PROD_ADDRESS_SERVICE_BASE_URL;
-    default:
-      return PROD_ADDRESS_SERVICE_BASE_URL;
-  }
-};
-
-export const HelioApiAdapter = {
+export class HelioApiAdapter {
   async getPaymentRequestByIdPublic(
     id: string,
     cluster: Cluster
@@ -63,7 +20,7 @@ export const HelioApiAdapter = {
       })
     ).json();
     return paymentResult;
-  },
+  }
 
   async getCountry(cluster: Cluster): Promise<any> {
     const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
@@ -77,7 +34,7 @@ export const HelioApiAdapter = {
       })
     ).json();
     return result;
-  },
+  }
 
   async findAddress(
     query: string,
@@ -95,7 +52,7 @@ export const HelioApiAdapter = {
       })
     ).json();
     return result;
-  },
+  }
 
   async retrieveAddress(
     address_id: string,
@@ -113,7 +70,7 @@ export const HelioApiAdapter = {
       })
     ).json();
     return result;
-  },
+  }
 
   async listCurrencies(cluster: Cluster): Promise<Currency[]> {
     const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
@@ -128,7 +85,7 @@ export const HelioApiAdapter = {
       })
     ).json();
     return currencies || [];
-  },
+  }
 
   async getLivePrice(
     amount: number,
@@ -154,34 +111,21 @@ export const HelioApiAdapter = {
     ).json();
 
     return livePrice;
-  },
+  }
 
-  async publicRequest<T>({
-    endpoint,
-    cluster,
-    options = {},
-    shouldParseJson = true,
-  }: {
-    endpoint: string;
-    cluster: Cluster;
-    options: FetchOptions;
-    shouldParseJson?: boolean;
-  }): Promise<T> {
-    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
-    const url = `${HELIO_BASE_API_URL}${endpoint}`;
-    const contentType = !options.clearContentType
-      ? { 'Content-Type': 'application/json' }
-      : null;
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        ...options.headers,
-        ...contentType,
+  static async getPreparedTransactionMessage(
+    url: string,
+    body: string,
+    cluster: Cluster
+  ): Promise<PrepareTransaction> {
+    return publicRequest<PrepareTransaction>(
+      url,
+      cluster,
+      {
+        method: 'POST',
+        body,
       },
-    });
-    if (shouldParseJson) {
-      return (await response.json()) as T;
-    }
-    return (await response.text()) as any;
-  },
-};
+      true
+    );
+  }
+}

@@ -5,7 +5,7 @@ import {
   AddressDetails,
   Country,
 } from '../../domain/model/Address';
-import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../helio/HelioContext';
 
 export const AddressContext = createContext<{
@@ -34,9 +34,10 @@ export const useAddressProvider = () => {
     setCountry,
   } = useContext(AddressContext);
   const { cluster } = useHelioProvider();
+  const { apiService } = useCompositionRoot();
 
   const findAddress = async (query: string, country_code: string) => {
-    const result = await HelioApiAdapter.findAddress(
+    const result = await apiService.findAddress(
       query,
       country_code,
       cluster as Cluster
@@ -45,7 +46,7 @@ export const useAddressProvider = () => {
   };
 
   const getCountry = async () => {
-    const result = await HelioApiAdapter.getCountry(cluster as Cluster);
+    const result = await apiService.getCountry(cluster as Cluster);
     setCountry(result ?? {});
   };
 
@@ -69,7 +70,7 @@ export const useAddressProvider = () => {
       }
       setAddressDetails(result);
     } else {
-      const { result } = await HelioApiAdapter.retrieveAddress(
+      const { result } = await apiService.retrieveAddress(
         address_id,
         country_code,
         cluster as Cluster
