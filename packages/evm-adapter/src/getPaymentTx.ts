@@ -1,31 +1,31 @@
+import { BaseProvider } from '@ethersproject/providers';
 import { Wallet, BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
 
 export const getPaymentTx = async (
-  wallet: Wallet,
+  provider: BaseProvider,
+  walletAddress: string,
   recipientAddress: string,
   tokenAddres: string,
   amount: bigint,
   fee: number,
   chainId?: number
 ) => {
-  const contract = new Contract(contractAddress, helio.abi, wallet);
-  const serializedTx = await contract
-    .connect(wallet)
-    .populateTransaction.payment(
+  const contract = new Contract(contractAddress, helio.abi, provider);
+  const serializedTx = await contract.populateTransaction //.connect(wallet)
+    .payment(
       recipientAddress,
       tokenAddres,
       BigNumber.from(amount),
       BigNumber.from(fee),
       {
-        from: wallet.address,
+        from: walletAddress,
         gasLimit,
-        gasPrice: await wallet.provider.getGasPrice(),
-        nonce: await wallet.getTransactionCount(),
+        gasPrice: await provider.getGasPrice(),
+        nonce: await provider.getTransactionCount(walletAddress),
       }
     );
-  serializedTx.chainId =
-    chainId || (await wallet.provider.getNetwork()).chainId;
+  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
   return serializedTx;
 };
