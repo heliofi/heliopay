@@ -1,10 +1,12 @@
+import { BaseProvider } from '@ethersproject/providers';
 import { Wallet, BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
 import { RecipientAndAmount } from './types';
 
 export const getSplitPaymentTx = async (
-  wallet: Wallet,
+  provider: BaseProvider,
+  walletAddress: string,
   recipientAddress: string,
   tokenAddres: string,
   amount: bigint,
@@ -12,23 +14,20 @@ export const getSplitPaymentTx = async (
   recipientsAndAmounts: RecipientAndAmount[],
   chainId?: number
 ) => {
-  const contract = new Contract(contractAddress, helio.abi, wallet);
-  const serializedTx = await contract
-    .connect(wallet)
-    .populateTransaction.splitPayment(
-      recipientAddress,
-      tokenAddres,
-      BigNumber.from(amount),
-      BigNumber.from(fee),
-      recipientsAndAmounts,
-      {
-        from: wallet.address,
-        gasLimit,
-        gasPrice: await wallet.provider.getGasPrice(),
-        nonce: await wallet.getTransactionCount(),
-      }
-    );
-  serializedTx.chainId =
-    chainId || (await wallet.provider.getNetwork()).chainId;
+  const contract = new Contract(contractAddress, helio.abi, provider);
+  const serializedTx = await contract.populateTransaction.splitPayment(
+    recipientAddress,
+    tokenAddres,
+    BigNumber.from(amount),
+    BigNumber.from(fee),
+    recipientsAndAmounts,
+    {
+      from: walletAddress,
+      gasLimit,
+      gasPrice: await provider.getGasPrice(),
+      nonce: await provider.getTransactionCount(walletAddress),
+    }
+  );
+  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
   return serializedTx;
 };
