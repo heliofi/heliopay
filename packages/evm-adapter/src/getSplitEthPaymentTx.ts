@@ -1,38 +1,37 @@
-import { Wallet, BigNumber, Contract } from 'ethers';
+import { BaseProvider } from '@ethersproject/providers';
+import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
 import { RecipientAndAmount } from './types';
 
 export const getSplitEthPaymentTx = async (
-  wallet: Wallet,
+  provider: BaseProvider,
+  walletAddress: string,
   recipientAddress: string,
   amount: bigint,
   fee: number,
   recipientsAndAmounts: RecipientAndAmount[],
   chainId?: number
 ) => {
-  const contract = new Contract(contractAddress, helio.abi, wallet);
+  const contract = new Contract(contractAddress, helio.abi, provider);
   let totalAmount = BigNumber.from(amount);
   // eslint-disable-next-line no-restricted-syntax
   for (const r of recipientsAndAmounts) {
     totalAmount = totalAmount.add(r.amount);
   }
-  const serializedTx = await contract
-    .connect(wallet)
-    .populateTransaction.splitEthPayment(
-      recipientAddress,
-      BigNumber.from(amount),
-      BigNumber.from(fee),
-      recipientsAndAmounts,
-      {
-        from: wallet.address,
-        value: totalAmount,
-        gasPrice: await wallet.provider.getGasPrice(),
-        gasLimit,
-        nonce: await wallet.getTransactionCount(),
-      }
-    );
-  serializedTx.chainId =
-    chainId || (await wallet.provider.getNetwork()).chainId;
+  const serializedTx = await contract.populateTransaction.splitEthPayment(
+    recipientAddress,
+    BigNumber.from(amount),
+    BigNumber.from(fee),
+    recipientsAndAmounts,
+    {
+      from: walletAddress,
+      value: totalAmount,
+      gasPrice: await provider.getGasPrice(),
+      gasLimit,
+      nonce: await provider.getTransactionCount(walletAddress),
+    }
+  );
+  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
   return serializedTx;
 };

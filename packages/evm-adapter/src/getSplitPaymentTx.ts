@@ -1,5 +1,5 @@
 import { BaseProvider } from '@ethersproject/providers';
-import { Wallet, BigNumber, Contract } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
 import { RecipientAndAmount } from './types';
