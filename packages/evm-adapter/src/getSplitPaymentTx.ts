@@ -2,30 +2,27 @@ import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
-import { RecipientAndAmount } from './types';
+import { PaymentRequest, RecipientAndAmount } from './types';
 
 export const getSplitPaymentTx = async (
   provider: BaseProvider,
-  walletAddress: string,
-  recipientAddress: string,
-  tokenAddres: string,
-  amount: bigint,
+  req: PaymentRequest,
   fee: number,
   recipientsAndAmounts: RecipientAndAmount[],
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
   const serializedTx = await contract.populateTransaction.splitPayment(
-    recipientAddress,
-    tokenAddres,
-    BigNumber.from(amount),
+    req.recipientAddress,
+    req.tokenAddres,
+    BigNumber.from(req.amount),
     BigNumber.from(fee),
     recipientsAndAmounts,
     {
-      from: walletAddress,
+      from: req.walletAddress,
       gasLimit,
       gasPrice: await provider.getGasPrice(),
-      nonce: await provider.getTransactionCount(walletAddress),
+      nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
   serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;

@@ -8,6 +8,7 @@ import {
   getPaymentTx,
   getSplitEthPaymentTx,
   getSplitPaymentTx,
+  PaymentRequest,
   RecipientAndAmount,
 } from '../src';
 import { contractAddress } from '../src/constants';
@@ -113,14 +114,14 @@ describe('Helio protocol', function () {
       const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
       const amount = baseAmount;
       const transferAmount = amount.div(2);
-      const serializedTx = await getPaymentTx(
-        provider,
-        wallet.address,
-        recipient.address,
-        erc20.address,
-        transferAmount.toBigInt(),
-        fee
-      );
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+        tokenAddres: erc20.address,
+      };
+
+      const serializedTx = await getPaymentTx(provider, req, fee);
       const signedTx = await wallet.signTransaction(serializedTx);
       const tx = await provider.sendTransaction(signedTx);
       const receipt = await tx.wait();
@@ -151,12 +152,16 @@ describe('Helio protocol', function () {
       const amount = baseAmount;
       const transferAmount = amount.div(2);
 
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+        tokenAddres: erc20.address,
+      };
+
       const serializedTx = await getSplitPaymentTx(
         provider,
-        wallet.address,
-        recipient.address,
-        erc20.address,
-        transferAmount.toBigInt(),
+        req,
         fee,
         createSplitPaymentsList(splitRecipients, transferAmount)
       );
@@ -190,13 +195,12 @@ describe('Helio protocol', function () {
       );
       const amount = baseAmount;
       const transferAmount = amount.div(20);
-      const serializedTx = await getEthPaymentTx(
-        provider,
-        wallet.address,
-        recipient.address,
-        transferAmount.toBigInt(),
-        fee
-      );
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+      };
+      const serializedTx = await getEthPaymentTx(provider, req, fee);
       const signedTx = await wallet.signTransaction(serializedTx);
       const tx = await provider.sendTransaction(signedTx);
       const receipt = await tx.wait();
@@ -217,11 +221,14 @@ describe('Helio protocol', function () {
       );
       const amount = baseAmount.div(20);
       const transferAmount = amount;
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+      };
       const serializedTx = await getSplitEthPaymentTx(
         provider,
-        wallet.address,
-        recipient.address,
-        amount.toBigInt(),
+        req,
         fee,
         createSplitPaymentsList(splitRecipients, amount)
       );
