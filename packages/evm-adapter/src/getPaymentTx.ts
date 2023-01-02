@@ -11,18 +11,17 @@ export const getPaymentTx = async (
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
-  const serializedTx = await contract.populateTransaction.payment(
+  const unsignedTx = await contract.populateTransaction.payment(
     req.recipientAddress,
     req.tokenAddres,
     BigNumber.from(req.amount),
     BigNumber.from(fee),
     {
-      from: req.walletAddress,
       gasLimit,
       gasPrice: await provider.getGasPrice(),
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
-  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
-  return serializedTx;
+  unsignedTx.chainId = chainId || (await provider.getNetwork()).chainId;
+  return unsignedTx;
 };

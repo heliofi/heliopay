@@ -11,18 +11,17 @@ export const getEthPaymentTx = async (
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
-  const serializedTx = await contract.populateTransaction.ethPayment(
+  const unsignedTx = await contract.populateTransaction.ethPayment(
     req.recipientAddress,
     BigNumber.from(req.amount),
     BigNumber.from(fee),
     {
-      from: req.walletAddress,
       value: BigNumber.from(req.amount),
       gasLimit,
       gasPrice: await provider.getGasPrice(),
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
-  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
-  return serializedTx;
+  unsignedTx.chainId = chainId || (await provider.getNetwork()).chainId;
+  return unsignedTx;
 };

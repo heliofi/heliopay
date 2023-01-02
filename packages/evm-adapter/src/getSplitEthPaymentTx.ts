@@ -17,19 +17,18 @@ export const getSplitEthPaymentTx = async (
   for (const r of recipientsAndAmounts) {
     totalAmount = totalAmount.add(r.amount);
   }
-  const serializedTx = await contract.populateTransaction.splitEthPayment(
+  const unsignedTx = await contract.populateTransaction.splitEthPayment(
     req.recipientAddress,
     BigNumber.from(req.amount),
     BigNumber.from(fee),
     recipientsAndAmounts,
     {
-      from: req.walletAddress,
       value: totalAmount,
       gasPrice: await provider.getGasPrice(),
       gasLimit,
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
-  serializedTx.chainId = chainId || (await provider.getNetwork()).chainId;
-  return serializedTx;
+  unsignedTx.chainId = chainId || (await provider.getNetwork()).chainId;
+  return unsignedTx;
 };
