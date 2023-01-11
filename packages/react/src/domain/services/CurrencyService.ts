@@ -54,4 +54,14 @@ export class CurrencyService {
   static getSolCurrencySymbol(): string {
     return DefaultCurrencies.SOL;
   }
+
+  static getCurrencyByMint(mint: string): Currency {
+    const foundCurrency = CurrencyService.currencies.find(
+      (currency) => currency.mintAddress === mint
+    );
+    if (foundCurrency == null) {
+      throw new Error(`Unable to find currency by mint: ${mint}`);
+    }
+    return foundCurrency;
+  }
 }

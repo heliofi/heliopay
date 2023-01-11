@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import HelioIcon from '../icons/HelioIcon';
+import HelioIcon from '../../assets/icons/HelioIcon';
 
 import { Modal, InheritedModalProps } from '../modal';
 import {

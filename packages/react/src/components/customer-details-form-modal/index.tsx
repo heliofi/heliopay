@@ -30,6 +30,7 @@ import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
 import { ProductInputType } from '../../domain/model/Product';
 import { ProductDetails } from '../../domain/model/ProductDetails';
+import { SwapsForm } from '../swaps-form';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -49,8 +50,13 @@ const CustomerDetailsFormModal = ({
   allowedCurrencies,
   totalAmount,
 }: Props) => {
-  const { currencyList, paymentDetails, isCustomerDetailsRequired } =
-    useHelioProvider();
+  const {
+    currencyList,
+    paymentDetails,
+    isCustomerDetailsRequired,
+    tokenSwapQuote,
+    tokenSwapError,
+  } = useHelioProvider();
   const { country } = useAddressProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
@@ -60,6 +66,7 @@ const CustomerDetailsFormModal = ({
   });
   const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
     useState(false);
+  const [showSwapMenu, setShowSwapMenu] = useState(false);
 
   const canSelectCurrency =
     allowedCurrencies?.length != null && allowedCurrencies?.length > 1;
@@ -168,7 +175,7 @@ const CustomerDetailsFormModal = ({
     };
 
     const productDetails = {
-      name: paymentDetails.product?.name,
+      name: paymentDetails?.product?.name,
       value: values.productValue,
     };
 
@@ -200,7 +207,7 @@ const CustomerDetailsFormModal = ({
     setFieldValue('productValue', selectObject.value as string);
   };
 
-  const symbol = activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay';
+  const title = activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay';
 
   return ReactDOM.createPortal(
     <div>
@@ -211,7 +218,9 @@ const CustomerDetailsFormModal = ({
             <CurrencyIcon gradient iconName={activeCurrency?.symbol || ''} />
           )
         }
-        title={symbol}
+        title={title}
+        showSwap
+        toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
       >
         {paymentDetails ? (
           <Formik
@@ -281,6 +290,16 @@ const CustomerDetailsFormModal = ({
                       value={values.quantity}
                       placeholder="Quantity"
                       label="Quantity"
+                    />
+                  )}
+                  {showSwapMenu && (
+                    <SwapsForm
+                      formValues={values}
+                      setFieldValue={setFieldValue}
+                      normalizedPrice={
+                        ((normalizedPrice || totalAmount) ?? 0) *
+                        (values.quantity ?? 1)
+                      }
                     />
                   )}
                   {isCustomerDetailsRequired && (
@@ -403,7 +422,11 @@ const CustomerDetailsFormModal = ({
                         />
                       </StyledProductWrapper>
                     ))}
-                  <Button type="submit">PAY</Button>
+                  <Button type="submit">
+                    {showSwapMenu && tokenSwapQuote?.from?.symbol
+                      ? `PAY IN ${tokenSwapQuote.from.symbol}`
+                      : 'PAY'}
+                  </Button>
                 </div>
               </Form>
             )}

@@ -23,7 +23,7 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
-import HelioLogoGray from '../icons/HelioLogoGray';
+import HelioLogoGray from '../../assets/icons/HelioLogoGray';
 import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';

@@ -1,5 +1,5 @@
 import { WarningTriangleIcon } from '@heliofi/helio-icons';
-import CheckMarkIcon from '../icons/CheckMarkIcon';
+import CheckMarkIcon from '../../assets/icons/CheckMarkIcon';
 import ExplorerLink from '../explorer-link';
 import {
   StyledResultBox,

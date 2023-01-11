@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CrossIcon } from '@heliofi/helio-icons';
+import { ArrowsDoubleIcon, CrossIcon } from '@heliofi/helio-icons';
 import {
   StyledModalCloseButton,
   StyledModalContainer,
@@ -8,6 +8,7 @@ import {
   StyledModalIcon,
   StyledModalTitle,
   StyledModalWrapper,
+  StyledSwapButton,
 } from './styles';
 
 export type InheritedModalProps = {
@@ -15,10 +16,12 @@ export type InheritedModalProps = {
 };
 
 type ModalProps = {
-  title?: string;
   children: React.ReactNode;
+  title?: string;
   icon?: React.ReactNode;
   animateIcon?: boolean;
+  showSwap?: boolean;
+  toggleSwap?: () => void;
 };
 
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
@@ -26,6 +29,8 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
   onHide,
   children,
   icon,
+  showSwap,
+  toggleSwap,
   animateIcon = false,
 }) => (
   <StyledModalWrapper>
@@ -33,6 +38,14 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
       <StyledModalHeader>
         {icon && <StyledModalIcon spin={animateIcon}>{icon}</StyledModalIcon>}
         {title && <StyledModalTitle>{title}</StyledModalTitle>}
+        {showSwap && (
+          <StyledSwapButton onClick={toggleSwap}>
+            <div>
+              <ArrowsDoubleIcon fill="#FFF" />
+              <p>SWAP</p>
+            </div>
+          </StyledSwapButton>
+        )}
         <StyledModalCloseButton onClick={onHide}>
           <CrossIcon />
         </StyledModalCloseButton>

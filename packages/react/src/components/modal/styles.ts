@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Button from '../button';
 
 export const StyledModalWrapper = styled.div`
   position: fixed;
@@ -68,6 +69,24 @@ export const StyledModalTitle = styled.div`
   font-size: 16px;
   line-height: 140%;
   color: #5a6578;
+`;
+
+export const StyledSwapButton = styled(Button)`
+  width: unset;
+  height: 30px;
+  position: absolute;
+  right: 32px;
+  line-height: unset;
+  padding: 3px 7px;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  path {
+    fill: #fff;
+  }
 `;
 
 export const StyledModalCloseButton = styled.div`

@@ -1,4 +1,5 @@
 import { Cluster } from '@solana/web3.js';
+import { PaymentRequestType } from '@heliofi/common';
 import { ClusterType, Currency } from '../../domain';
 import { configDev, configProd } from '../config';
 
@@ -122,5 +123,49 @@ export const HelioApiAdapter = {
       })
     ).json();
     return currencies || [];
+  },
+
+  async getTokenSwapMintAddresses(
+    mintAddress: string,
+    cluster: Cluster
+  ): Promise<string[]> {
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+    const url = `${HELIO_BASE_API_URL}/swap/mint-routes/${mintAddress}`;
+
+    const tokenSwapCurrencies = await (
+      await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    return tokenSwapCurrencies || [];
+  },
+
+  async getTokenSwapQuote(
+    cluster: Cluster,
+    paymentRequestId: string,
+    paymentRequestType: PaymentRequestType,
+    fromMint: string,
+    quantity: number,
+    amount: number
+  ): Promise<{ routeToken: string }> {
+    const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
+    const url = `${HELIO_BASE_API_URL}/swap/route-token`;
+
+    const urlParams = new URLSearchParams({
+      paymentRequestId,
+      paymentRequestType,
+      fromMint,
+      quantity: String(quantity),
+      amount: String(amount),
+    });
+
+    const tokenSwapQuote = await (
+      await fetch(`${url}?${String(urlParams)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    ).json();
+    return tokenSwapQuote || {};
   },
 };
