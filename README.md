@@ -88,7 +88,8 @@ totalAmount | number | no | | you can pass dynamic amount. dynamic pricing shoul
 | supportedCurrencies | string array | no | | currencies you want to support.
 
 Verify the payment using the Helio API - further details at https://docs.hel.io/developers/helio-api-key
-Devnet and Mainnet are currently supported.
+
+Devnet and Mainnet are currently supported by Helio.
 
 For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
 
@@ -118,3 +119,5 @@ try {
 ```
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
+
+<img width="983" alt="HelioExampleSite" src="https://user-images.githubusercontent.com/97976151/211924594-5f2ec7f9-edd0-4c3b-bdd2-e56100131243.png">
