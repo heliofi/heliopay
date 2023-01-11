@@ -118,6 +118,4 @@ try {
 }
 ```
 
-You can find the full code example in [TransactionService.ts](https://github.com/heliofi/heliopay/blob/main/packages/react/src/infrastructure/solana-adapter/TransactionService.ts)
-
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
