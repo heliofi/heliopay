@@ -87,13 +87,16 @@ const App = () => {
 totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
 | supportedCurrencies | string array | no | | currencies you want to support.
 
-Verify the payment using the Helio API - further details at https://docs.hel.io/developers/helio-api-key
+For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
 
 Devnet and Mainnet are currently supported by Helio.
 
-For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
 
-Once you have access to the API you can call the endpoint per the following example:
+### Using the Helio API
+
+Verify the payment using the Helio API by creating access keys here: https://docs.hel.io/developers/helio-api-key
+
+Once you have access to the API with the public and secret API keys you can call the endpoint per the following example:
 
 ```ts
 try {
