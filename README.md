@@ -20,7 +20,7 @@ const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="devnet"
+        cluster="mainnet-beta"
         paymentRequestId={"your_paylink_id"}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log("onSuccess", event);
@@ -67,7 +67,7 @@ const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="devnet"
+        cluster="mainnet-beta"
         paymentRequestId={"your_paylink_id"}
         supportedCurrencies={["SOL"]}
         totalAmount={0.01}
