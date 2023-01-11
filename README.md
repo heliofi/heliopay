@@ -4,7 +4,7 @@
 
 ## Embed Helio Components
 
-You can embed Helio components for the following 2 use cases:
+You can embed Helio components for the following two use cases:
 
 * Embed a Dynamic payment with the Helio Pay button (REACT)
 * Embed a Pay Link or Pay Stream with the Helio Pay button (REACT)
@@ -45,7 +45,7 @@ const App = () => {
 ```
 ### 2. Embed a Pay Link or Pay Stream with the Helio Pay button
 
-Use this option if you want to put the Helio Pay Button on your site for Links and Streams
+Use this option if you want to embed the Helio Pay Button on your site for Links and Streams
 
 ```ts
 import { HelioPay } from "@heliofi/react";
