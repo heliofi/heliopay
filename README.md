@@ -1,6 +1,4 @@
-## Installation
-
-`yarn add @heliofi/react`
+## Introduction
 
 Helio uses Swagger for API testing where you can review API endpoints and review examples: https://api.hel.io/v1/docs
 
@@ -11,6 +9,10 @@ For full details of our API schema please review https://docs.hel.io/developers/
 Further documents with examples are available here: https://github.com/heliofi/heliopay/tree/main/docs
 
 Devnet and Mainnet are currently supported by Helio.
+
+## Installation
+
+`yarn add @heliofi/react`
 
 ## Embed Helio Components
 
