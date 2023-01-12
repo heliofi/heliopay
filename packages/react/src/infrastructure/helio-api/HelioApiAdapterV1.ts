@@ -1,13 +1,13 @@
-import {publicRequest} from "../fetch-middleware";
-import {Cluster} from "@solana/web3.js";
+import { Cluster } from '@solana/web3.js';
+import { publicRequest } from '../fetch-middleware';
 
 export class HelioApiAdapterV1 {
-    static async getPreparedTransactionMessage(
+  static async getPreparedTransactionMessage(
     url: string,
     body: string,
     cluster: Cluster
   ): Promise<any> {
-    return await publicRequest<any>(
+    return publicRequest<any>(
       url,
       cluster,
       {
@@ -23,7 +23,7 @@ export class HelioApiAdapterV1 {
     body: string,
     cluster: Cluster
   ): Promise<any> {
-    return await publicRequest<any>(
+    return publicRequest<any>(
       url,
       cluster,
       {
@@ -40,29 +40,29 @@ export class HelioApiAdapterV1 {
     fromMint: string,
     cluster: Cluster,
     quantity?: number,
-    normalizedPrice?: number,
+    normalizedPrice?: number
   ): Promise<any> {
     const url = '/swap/route-token';
 
     const options: {
       [key: string]: string;
     } = {
-      paymentRequestId: paymentRequestId,
-      paymentRequestType: paymentRequestType,
-      fromMint: fromMint,
+      paymentRequestId,
+      paymentRequestType,
+      fromMint,
     };
 
     if (quantity != null) {
-      options['quantity'] = quantity.toString();
+      options.quantity = quantity.toString();
     }
 
     if (normalizedPrice != null) {
-      options['amount'] = normalizedPrice.toString();
+      options.amount = normalizedPrice.toString();
     }
 
     const urlParams = new URLSearchParams(options);
 
-    return await publicRequest<any>(
+    return publicRequest<any>(
       `${url}?${urlParams.toString()}`,
       cluster,
       { method: 'GET' },
@@ -70,8 +70,11 @@ export class HelioApiAdapterV1 {
     );
   }
 
-  async getTokenSwapCurrencies(mintAddress: string, cluster: Cluster): Promise<string[]> {
-    return await publicRequest<string[]>(
+  async getTokenSwapCurrencies(
+    mintAddress: string,
+    cluster: Cluster
+  ): Promise<string[]> {
+    return publicRequest<string[]>(
       `/swap/mint-routes/${mintAddress}`,
       cluster,
       { method: 'GET' },
@@ -85,7 +88,7 @@ export class HelioApiAdapterV1 {
     from: string,
     cluster: Cluster,
     paymentRequestId?: string,
-    paymentRequestType?: string,
+    paymentRequestType?: string
   ): Promise<any> {
     let queryParams = '';
     queryParams += `&amount=${amount}`;

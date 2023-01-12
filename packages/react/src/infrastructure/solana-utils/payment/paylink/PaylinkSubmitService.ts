@@ -1,20 +1,20 @@
 import { SplitWallet } from '@heliofi/common';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import {Cluster, Connection, PublicKey, Transaction} from '@solana/web3.js';
+import { Cluster, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import 'reflect-metadata';
+import { SinglePaymentRequest } from '@heliofi/solana-adapter';
 import { CustomerDetails } from '../../../../domain';
 import { BigNumber } from '../../../../domain/model/BigNumber';
 import { fromBigintToStringForSerialization, isEmpty } from '../../../../utils';
 import { createTransaction } from '../../CreateTransaction';
 import { signTransaction } from '../../SignTransaction';
 
-import {SignedTxAndToken} from '../../types';
+import { SignedTxAndToken } from '../../types';
 import { BasePaymentService } from '../BasePaymentService';
 import { BasePaymentProps } from '../models/PaymentProps';
 import { BasePaymentResponse } from '../models/PaymentResponse';
 import { BaseTransactionPayload } from '../models/TransactionPayload';
-import {SinglePaymentRequest} from "../../../../../../solana-adapter";
-import {HelioApiAdapterV1} from "../../../helio-api/HelioApiAdapterV1";
+import { HelioApiAdapterV1 } from '../../../helio-api/HelioApiAdapterV1';
 
 export interface CreatePaymentProps
   extends BasePaymentProps<ApproveTransactionResponse> {
@@ -85,6 +85,7 @@ export class PaylinkSubmitService extends BasePaymentService<
   ApproveTransactionResponse
 > {
   protected readonly endpoint = 'transaction/submit';
+
   protected readonly prepareEndpoint = '/prepare/transaction/sol/paylink';
 
   protected async init(props: CreatePaymentProps): Promise<void> {
@@ -131,18 +132,17 @@ export class PaylinkSubmitService extends BasePaymentService<
         quantity,
         fixedCurrencyRateToken,
       });
-    } else {
-      throw new Error('Connection or wallet is not defined');
     }
+    throw new Error('Connection or wallet is not defined');
   }
 
   protected getTransactionParams({
-                                   amount,
-                                   anchorProvider,
-                                   recipientPK,
-                                   splitRevenue,
-                                   splitWallets,
-                                 }: CreatePaymentProps): SinglePaymentRequest & {
+    amount,
+    anchorProvider,
+    recipientPK,
+    splitRevenue,
+    splitWallets,
+  }: CreatePaymentProps): SinglePaymentRequest & {
     splitRevenue?: boolean;
     splitWallets?: SplitWallet[];
   } {
@@ -183,7 +183,7 @@ export class PaylinkSubmitService extends BasePaymentService<
       signedTransaction: signedTx,
       signedSwapTransaction: swapSignedTx,
       transactionToken: token,
-      paymentRequestId: paymentRequestId,
+      paymentRequestId,
       amount: fromBigintToStringForSerialization(BigInt(amount)),
       sender: (anchorProvider.provider.publicKey as PublicKey).toBase58(),
       recipient: recipientPK,
@@ -193,27 +193,27 @@ export class PaylinkSubmitService extends BasePaymentService<
       cluster: this.cluster as Cluster,
       customerDetails,
       quantity: quantity || 1,
-      rateToken: rateToken,
+      rateToken,
       ...details,
     };
   }
 
   protected async getAndSignSwapPaymentTx({
-                                            wallet,
-                                            request,
-                                            symbol,
-                                            paymentRequestId,
-                                            quantity,
-                                            swapRoute,
-                                            fixedCurrencyRateToken,
-                                          }: GetAndSignSwapPayload): Promise<{
+    wallet,
+    request,
+    symbol,
+    paymentRequestId,
+    quantity,
+    swapRoute,
+    fixedCurrencyRateToken,
+  }: GetAndSignSwapPayload): Promise<{
     swapSignedTx: string;
     signedTx: string;
     token: string;
   }> {
     const prepareSwapTransactionResponse =
       await HelioApiAdapterV1.getPreparedTransactionSwapMessage(
-        this.prepareEndpoint + '/swap',
+        `${this.prepareEndpoint}/swap`,
         JSON.stringify({
           paymentRequestId,
           currency: symbol,
@@ -245,29 +245,29 @@ export class PaylinkSubmitService extends BasePaymentService<
       swapSignedTx: JSON.stringify(swapSignedTx.serialize()),
       signedTx: JSON.stringify(signedTx.serialize()),
       token:
-      prepareSwapTransactionResponse?.standardTransaction.transactionToken,
+        prepareSwapTransactionResponse?.standardTransaction.transactionToken,
     };
   }
 
   protected async getAndSignSinglePaymentTx({
-                                              wallet,
-                                              request,
-                                              symbol,
-                                              paymentRequestId,
-                                              quantity,
-                                              fixedCurrencyRateToken,
-                                            }: GetAndSignPayload): Promise<SignedTxAndToken> {
+    wallet,
+    request,
+    symbol,
+    paymentRequestId,
+    quantity,
+    fixedCurrencyRateToken,
+  }: GetAndSignPayload): Promise<SignedTxAndToken> {
     const prepareTransactionResponse =
       await HelioApiAdapterV1.getPreparedTransactionMessage(
         this.prepareEndpoint,
         JSON.stringify({
           paymentRequestId,
           currency: symbol,
-          quantity: quantity,
+          quantity,
           fixedCurrencyRateToken,
           ...request,
         }),
-        this.cluster as Cluster,
+        this.cluster as Cluster
       );
 
     const transaction = createTransaction(prepareTransactionResponse);

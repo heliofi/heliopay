@@ -1,4 +1,8 @@
-import {AnchorWallet, useAnchorWallet, useConnection} from '@solana/wallet-adapter-react';
+import {
+  AnchorWallet,
+  useAnchorWallet,
+  useConnection,
+} from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
@@ -30,8 +34,8 @@ import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import PaymentResult from '../payment-result';
 import { useAddressProvider } from '../../providers/address/AddressContext';
 import { ProductDetails } from '../../domain/model/ProductDetails';
-import {PaylinkSubmitService} from "../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService";
-import {useTokenConversion} from "../../providers/token-conversion/TokenConversionContext";
+import { PaylinkSubmitService } from '../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService';
+import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -59,8 +63,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
   const { getCountry } = useAddressProvider();
-  const { dynamicRateToken } =
-    useTokenConversion();
+  const { dynamicRateToken } = useTokenConversion();
   const connectionProvider = useConnection();
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | null
@@ -74,7 +77,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     initCluster,
     cluster: mainCluster,
     isCustomerDetailsRequired,
-    tokenSwapQuote
+    tokenSwapQuote,
   } = useHelioProvider();
 
   const [showFormModal, setShowFormModal] = useState(false);
@@ -169,21 +172,21 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
         onPending,
-        customerDetails: customerDetails,
+        customerDetails,
         quantity: Number(quantity),
-        productDetails: productDetails,
+        productDetails,
         splitRevenue: paymentDetails?.features?.splitRevenue,
         splitWallets: paymentDetails?.splitWallets,
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster: cluster,
+        cluster,
         canSwapTokens: paymentDetails?.features.canSwapTokens,
-        swapRouteToken: tokenSwapQuote?.routeTokenString
+        swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
 
       try {
-        await new PaylinkSubmitService().handleTransaction(payload)
+        await new PaylinkSubmitService().handleTransaction(payload);
       } catch (error) {
         handleErrorPayment({
           errorMessage: String(error),

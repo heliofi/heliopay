@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import {HelioApiAdapterV1} from "../infrastructure/helio-api/HelioApiAdapterV1";
+import { HelioApiAdapterV1 } from '../infrastructure/helio-api/HelioApiAdapterV1';
 
 interface CompositionRoot {
   apiService: HelioApiAdapterV1;

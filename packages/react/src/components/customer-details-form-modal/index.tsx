@@ -7,7 +7,7 @@ import { Modal, InheritedModalProps } from '../modal';
 import validationSchema from '../heliopay-container/validation-schema';
 import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import Input from '../input';
-import Button from '../button';
+
 import {
   StyledCurrency,
   StyledCurrencySelectIcon,
@@ -195,13 +195,13 @@ const CustomerDetailsFormModal = ({
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
       amount: TokenConversionService.convertToMinimalUnits(
-              values.currency || paymentDetails?.currency.symbol,
-              values.canChangePrice
-                ? values.customPrice
-                : totalAmount || normalizedPrice
-            ),
+        values.currency || paymentDetails?.currency.symbol,
+        values.canChangePrice
+          ? values.customPrice
+          : totalAmount || normalizedPrice
+      ),
       quantity: values.quantity || 1,
-      currency: getCurrency(values.currency || paymentDetails?.currency.symbol)
+      currency: getCurrency(values.currency || paymentDetails?.currency.symbol),
     });
   };
 

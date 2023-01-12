@@ -1,5 +1,5 @@
-import {getHelioApiBaseUrl} from '../config';
-import {Cluster} from "@solana/web3.js";
+import { Cluster } from '@solana/web3.js';
+import { getHelioApiBaseUrl } from '../config';
 
 type ErrorMessage = {
   message: string;
@@ -16,6 +16,7 @@ type ResponseType = Record<string, any>;
 
 export class ResponseError extends Error {
   public response: Response;
+
   public message: string;
 
   constructor(response: Response, message: string) {
@@ -62,13 +63,12 @@ export const publicRequest = async <T>(
   cluster: Cluster,
   options: FetchOptions = {},
   shouldParseJSON = false
-): Promise<T> => {
-  return request<T>(
+): Promise<T> =>
+  request<T>(
     getHelioApiBaseUrl(cluster) + endpoint,
     enhanceOptions(options),
     shouldParseJSON
   );
-};
 
 const enhanceOptions = (options: FetchOptions, token?: string): RequestInit => {
   const contentType = !options.clearContentType
@@ -85,6 +85,5 @@ const enhanceOptions = (options: FetchOptions, token?: string): RequestInit => {
   };
 };
 
-const bearerAuth = (token?: string): HeadersInit => {
-  return token ? { Authorization: 'Bearer ' + token } : {};
-};
+const bearerAuth = (token?: string): HeadersInit =>
+  token ? { Authorization: `Bearer ${token}` } : {};

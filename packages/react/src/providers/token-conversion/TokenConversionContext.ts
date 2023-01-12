@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
 import { LivePricePayload } from '../../domain/model/TokenConversion';
 import { useHelioProvider } from '../helio/HelioContext';
-import {JWTService} from "../../domain/services/JWTService";
-import {useCompositionRoot} from "../../hooks/compositionRoot";
+import { JWTService } from '../../domain/services/JWTService';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export const TokenConversionContext = createContext<{
   dynamicRateToken: string | undefined;

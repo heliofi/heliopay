@@ -6,11 +6,14 @@ import { CurrencyService } from '../../../domain/services/CurrencyService';
 import { getHelioApiBaseUrl } from '../../config';
 import { TransactionTimeoutError } from '../../solana-adapter/TransactionTimeoutError';
 import { VerificationError } from '../../solana-adapter/VerificationError';
-import {ExecuteTransactionPayload, SignedTxAndToken} from '../types';
+import { ExecuteTransactionPayload, SignedTxAndToken } from '../types';
 import { BasePaymentProps } from './models/PaymentProps';
-import {BasePaymentResponse, SwapPaymentResponse} from './models/PaymentResponse';
+import {
+  BasePaymentResponse,
+  SwapPaymentResponse,
+} from './models/PaymentResponse';
 import { BaseTransactionPayload } from './models/TransactionPayload';
-import {getTransactionSignature} from "../getTransactionSignature";
+import { getTransactionSignature } from '../getTransactionSignature';
 
 export abstract class BasePaymentService<
   TransactionParams,
@@ -19,9 +22,13 @@ export abstract class BasePaymentService<
   Res extends BasePaymentResponse
 > {
   protected abstract readonly endpoint: string;
+
   protected mintAddress?: PublicKey;
+
   protected cluster?: Cluster;
+
   protected wallet?: AnchorWallet;
+
   protected connection?: Connection;
 
   protected abstract executeTransaction(
@@ -53,7 +60,7 @@ export abstract class BasePaymentService<
     this.mintAddress = new PublicKey(
       CurrencyService.getCurrencyBySymbol(symbol).mintAddress as string
     );
-    this.cluster = cluster
+    this.cluster = cluster;
   }
 
   public async handleTransaction(props: Props): Promise<void> {
@@ -195,11 +202,9 @@ export abstract class BasePaymentService<
     if (payload.signedSwapTransaction != null) {
       const response = await this.approveSwapTransaction(payload);
       this.onSuccess(response, payload, onSuccess);
-      return;
     } else {
       const response = await this.approveTransaction(payload);
       this.onSuccess(response, payload, onSuccess);
-      return;
     }
   }
 

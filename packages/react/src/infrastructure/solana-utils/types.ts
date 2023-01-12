@@ -1,4 +1,4 @@
-import {SplitWallet} from "@heliofi/common";
+import { SplitWallet } from '@heliofi/common';
 
 export type TransactionSignatureAndToken = {
   signature?: string;
@@ -13,7 +13,6 @@ export type SignedTxAndToken = {
   error?: Error;
 };
 
-
 export type ExecuteTransactionPayload<TransactionParams> = {
   request?: TransactionParams;
   symbol?: string;
@@ -23,4 +22,3 @@ export type ExecuteTransactionPayload<TransactionParams> = {
   swapRouteToken?: string;
   fixedCurrencyRateToken?: string;
 };
-
