@@ -1,5 +1,5 @@
 import { FormikValues } from 'formik';
-import { Currency } from '@heliofi/common';
+import {Currency, PaymentRequestType} from '@heliofi/common';
 import { useEffect, useState } from 'react';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import {
@@ -54,11 +54,9 @@ export const SwapsForm = ({
 
   useEffect(() => {
     if (selectedCurrency?.mintAddress != null) {
-      // @TODO check double call
       getTokenSwapQuote(
         paymentDetails.id,
-        // @ts-ignore
-        'PAYLINK', // @TODO fix
+        'PAYLINK' as PaymentRequestType.PAYLINK,
         selectedCurrency.mintAddress,
         formValues.quantity,
         normalizedPrice
@@ -87,7 +85,6 @@ export const SwapsForm = ({
       })) || [];
 
   const getCurrencyLabel = () =>
-    // eslint-disable-next-line no-nested-ternary
     tokenSwapQuote != null && selectedCurrency != null && !tokenSwapError
       ? `${TokenConversionService.convertFromMinimalAndRound(
           selectedCurrency?.symbol,
