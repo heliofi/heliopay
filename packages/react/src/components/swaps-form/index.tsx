@@ -54,6 +54,7 @@ export const SwapsForm = ({
 
   useEffect(() => {
     if (selectedCurrency?.mintAddress != null) {
+      // @TODO check double call
       getTokenSwapQuote(
         paymentDetails.id,
         // @ts-ignore

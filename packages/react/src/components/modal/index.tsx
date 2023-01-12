@@ -9,6 +9,7 @@ import {
   StyledModalTitle,
   StyledModalWrapper,
   StyledSwapButton,
+  StyledTickIcon,
 } from './styles';
 
 export type InheritedModalProps = {
@@ -21,6 +22,7 @@ type ModalProps = {
   icon?: React.ReactNode;
   animateIcon?: boolean;
   showSwap?: boolean;
+  isSwapShown?: boolean;
   toggleSwap?: () => void;
 };
 
@@ -30,6 +32,7 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
   children,
   icon,
   showSwap,
+  isSwapShown,
   toggleSwap,
   animateIcon = false,
 }) => (
@@ -39,9 +42,13 @@ export const Modal: FC<ModalProps & InheritedModalProps> = ({
         {icon && <StyledModalIcon spin={animateIcon}>{icon}</StyledModalIcon>}
         {title && <StyledModalTitle>{title}</StyledModalTitle>}
         {showSwap && (
-          <StyledSwapButton onClick={toggleSwap}>
+          <StyledSwapButton onClick={toggleSwap} isSwapShown={!!isSwapShown}>
             <div>
-              <ArrowsDoubleIcon fill="#FFF" />
+              {isSwapShown ? (
+                <StyledTickIcon />
+              ) : (
+                <ArrowsDoubleIcon fill="#FFF" />
+              )}
               <p>SWAP</p>
             </div>
           </StyledSwapButton>

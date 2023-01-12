@@ -37,8 +37,8 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC']}
-        totalAmount={0.01}
+        supportedCurrencies={['USDC', 'SOL']}
+        totalAmount={0.0000001} // @TODO bug when also has normalizedPrice
       />
     </>
   );

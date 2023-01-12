@@ -18,6 +18,7 @@ import {
   StyledProductTooltipIcon,
   StyledProductTooltipText,
   StyledProductWrapper,
+  StyledSubmitButton,
 } from './styles';
 import SelectBox, { Option } from '../selectbox';
 import { countries } from '../../domain/constants/countries';
@@ -54,8 +55,10 @@ const CustomerDetailsFormModal = ({
     currencyList,
     paymentDetails,
     isCustomerDetailsRequired,
+    tokenSwapLoading,
     tokenSwapQuote,
     tokenSwapError,
+    removeTokenSwapError,
   } = useHelioProvider();
   const { country } = useAddressProvider();
   const [normalizedPrice, setNormalizedPrice] = useState(0);
@@ -108,6 +111,12 @@ const CustomerDetailsFormModal = ({
       );
     }
   }, [paymentDetails]);
+
+  useEffect(() => {
+    if (!showSwapMenu) {
+      removeTokenSwapError();
+    }
+  }, [showSwapMenu]);
 
   const formatTotalPrice = (price: number, quantity = 1): number => {
     const totalPrice = Number((price * quantity).toFixed(3));
@@ -185,14 +194,20 @@ const CustomerDetailsFormModal = ({
     onSubmit({
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
-      amount: TokenConversionService.convertToMinimalUnits(
-        getCurrency(values.currency || paymentDetails?.currency.symbol),
-        values.canChangePrice
-          ? values.customPrice
-          : totalAmount || normalizedPrice
-      ),
+      amount:
+        showSwapMenu && tokenSwapQuote
+          ? tokenSwapQuote.inAmount
+          : TokenConversionService.convertToMinimalUnits(
+              getCurrency(values.currency || paymentDetails?.currency.symbol),
+              values.canChangePrice
+                ? values.customPrice
+                : totalAmount || normalizedPrice
+            ),
       quantity: values.quantity || 1,
-      currency: getCurrency(values.currency || paymentDetails?.currency.symbol),
+      currency:
+        showSwapMenu && tokenSwapQuote
+          ? tokenSwapQuote.from
+          : getCurrency(values.currency || paymentDetails?.currency.symbol),
     });
   };
 
@@ -219,7 +234,8 @@ const CustomerDetailsFormModal = ({
           )
         }
         title={title}
-        showSwap
+        showSwap // @TODO check
+        isSwapShown={showSwapMenu}
         toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
       >
         {paymentDetails ? (
@@ -422,11 +438,18 @@ const CustomerDetailsFormModal = ({
                         />
                       </StyledProductWrapper>
                     ))}
-                  <Button type="submit">
-                    {showSwapMenu && tokenSwapQuote?.from?.symbol
+                  <StyledSubmitButton
+                    type="submit"
+                    disabled={
+                      (showSwapMenu && !!tokenSwapError) || tokenSwapLoading
+                    }
+                  >
+                    {showSwapMenu &&
+                    tokenSwapQuote?.from?.symbol &&
+                    !tokenSwapError
                       ? `PAY IN ${tokenSwapQuote.from.symbol}`
                       : 'PAY'}
-                  </Button>
+                  </StyledSubmitButton>
                 </div>
               </Form>
             )}
