@@ -198,7 +198,7 @@ const CustomerDetailsFormModal = ({
         showSwapMenu && tokenSwapQuote
           ? tokenSwapQuote.inAmount
           : TokenConversionService.convertToMinimalUnits(
-              getCurrency(values.currency || paymentDetails?.currency.symbol),
+              values.currency?.symbol || paymentDetails?.currency.symbol,
               values.canChangePrice
                 ? values.customPrice
                 : totalAmount || normalizedPrice
@@ -207,7 +207,7 @@ const CustomerDetailsFormModal = ({
       currency:
         showSwapMenu && tokenSwapQuote
           ? tokenSwapQuote.from
-          : getCurrency(values.currency || paymentDetails?.currency.symbol),
+          : getCurrency(values.currency.symbol || paymentDetails?.currency.symbol),
     });
   };
 
