@@ -14,7 +14,6 @@ const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     '63bfd40c2f9a086a381c468f'
   );
-
   return (
     <>
       <input
