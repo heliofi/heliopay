@@ -2,6 +2,16 @@
 
 `yarn add @heliofi/react`
 
+Helio uses Swagger for API testing where you can review API endpoints and review examples: https://api.hel.io/v1/docs
+
+We recommend that you use Swagger to get familiar with the APIs and for testing payloads
+
+For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
+
+Further documents with examples are available here: https://github.com/heliofi/heliopay/tree/main/docs
+
+Devnet and Mainnet are currently supported by Helio.
+
 ## Embed Helio Components
 
 You can embed Helio components for the following two use cases:
@@ -42,6 +52,35 @@ const App = () => {
     </div>
   );
 };
+```
+
+### Using the Helio API to verify a dynamic payment
+
+Verify the payment using the Helio API by creating access keys here: https://docs.hel.io/developers/helio-api-key
+
+Once you have access to the API with the public and secret API keys you can call the endpoint per the following example:
+
+```ts
+try {
+  const transactionSignature = "solana blockchain transaction signature";
+  const token = "token from helio team";
+  const publicKey =
+    "you public key registered with helio team that recives transacitons";
+
+  const baseUrl = "https://api.hel.io";
+  const endpoint = `/v1/transactions/signature/${transactionSignature}?publicKey=${publickey}`;
+
+  const response = await fetch(`${baseUrl}${endpoint}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  });
+  return response.json();
+} catch (e) {
+  throw new Error("Unable to get transactions data from backend!");
+}
 ```
 ### 2. Embed a Pay Link or Pay Stream with the Helio Pay button
 
@@ -87,39 +126,7 @@ const App = () => {
 totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
 | supportedCurrencies | string array | no | | currencies you want to support.
 
-For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
-
-Devnet and Mainnet are currently supported by Helio.
-
-
-### Using the Helio API
-
-Verify the payment using the Helio API by creating access keys here: https://docs.hel.io/developers/helio-api-key
-
-Once you have access to the API with the public and secret API keys you can call the endpoint per the following example:
-
-```ts
-try {
-  const transactionSignature = "solana blockchain transaction signature";
-  const token = "token from helio team";
-  const publicKey =
-    "you public key registered with helio team that recives transacitons";
-
-  const baseUrl = "https://api.hel.io";
-  const endpoint = `/v1/transactions/signature/${transactionSignature}?publicKey=${publickey}`;
-
-  const response = await fetch(`${baseUrl}${endpoint}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  return response.json();
-} catch (e) {
-  throw new Error("Unable to get transactions data from backend!");
-}
-```
+### Example Application
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
 
