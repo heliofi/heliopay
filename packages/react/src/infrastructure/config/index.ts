@@ -5,3 +5,32 @@ export const configDev = JSON.parse(
 export const configProd = JSON.parse(
   '{"aws_project_region":"eu-west-1","aws_appsync_graphqlEndpoint":"https://lxgvhcb6dvct5h4dqvgwiz6swq.appsync-api.eu-west-1.amazonaws.com/graphql","aws_appsync_region":"eu-west-1","aws_appsync_authenticationType":"AWS_IAM","aws_appsync_apiKey":"da2-25sdd73hhratnpvwt7y2czvv4i","aws_cloud_logic_custom":[{"name":"heliomerchant","endpoint":"https://g5038e1jdg.execute-api.eu-west-1.amazonaws.com/prod","region":"eu-west-1"}],"aws_cognito_identity_pool_id":"eu-west-1:d0445e5a-74c6-4d56-979f-d375ded2a84e","aws_cognito_region":"eu-west-1","aws_user_pools_id":"eu-west-1_haNS4qdNc","aws_user_pools_web_client_id":"5mip23calvcl3q1u8dpsojjvc7","oauth":{},"aws_cognito_username_attributes":[],"aws_cognito_social_providers":[],"aws_cognito_signup_attributes":["EMAIL"],"aws_cognito_mfa_configuration":"OFF","aws_cognito_mfa_types":["SMS"],"aws_cognito_password_protection_settings":{"passwordPolicyMinLength":8,"passwordPolicyCharacters":[]},"aws_cognito_verification_mechanisms":["EMAIL"],"aws_user_files_s3_bucket":"helioimages113109-prod","aws_user_files_s3_bucket_region":"eu-west-1"}'
 );
+
+import { Cluster } from '@solana/web3.js';
+import { ClusterType } from '../../domain';
+export const getHelioApiBaseUrl = (cluster: Cluster) => {
+  switch (cluster) {
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
+      return 'https://dev.api.hel.io/v1';
+    case ClusterType.Mainnet:
+      return 'https://api.hel.io/v1';
+    default:
+      return 'https://api.hel.io/v1';
+  }
+};
+
+const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.hel.io';
+const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
+
+export const getAddressApiBaseUrl = (cluster: Cluster) => {
+  switch (cluster) {
+    case ClusterType.Testnet:
+    case ClusterType.Devnet:
+      return DEV_ADDRESS_SERVICE_BASE_URL;
+    case ClusterType.Mainnet:
+      return PROD_ADDRESS_SERVICE_BASE_URL;
+    default:
+      return PROD_ADDRESS_SERVICE_BASE_URL;
+  }
+};

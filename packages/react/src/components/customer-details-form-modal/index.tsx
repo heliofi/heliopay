@@ -194,20 +194,14 @@ const CustomerDetailsFormModal = ({
     onSubmit({
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
-      amount:
-        showSwapMenu && tokenSwapQuote
-          ? tokenSwapQuote.inAmount
-          : TokenConversionService.convertToMinimalUnits(
-              values.currency?.symbol || paymentDetails?.currency.symbol,
+      amount: TokenConversionService.convertToMinimalUnits(
+              values.currency || paymentDetails?.currency.symbol,
               values.canChangePrice
                 ? values.customPrice
                 : totalAmount || normalizedPrice
             ),
       quantity: values.quantity || 1,
-      currency:
-        showSwapMenu && tokenSwapQuote
-          ? tokenSwapQuote.from
-          : getCurrency(values.currency.symbol || paymentDetails?.currency.symbol),
+      currency: getCurrency(values.currency || paymentDetails?.currency.symbol)
     });
   };
 
@@ -234,7 +228,7 @@ const CustomerDetailsFormModal = ({
           )
         }
         title={title}
-        showSwap // @TODO check
+        showSwap={paymentDetails?.features.canSwapTokens}
         isSwapShown={showSwapMenu}
         toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
       >

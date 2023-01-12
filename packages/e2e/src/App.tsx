@@ -12,7 +12,7 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '636a4ace0142fa94a6e1c764'
+    '63bfd40c2f9a086a381c468f'
   );
 
   return (
@@ -38,7 +38,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC', 'SOL']}
-        totalAmount={0.0000001} // @TODO bug when also has normalizedPrice
+        totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
     </>
   );
