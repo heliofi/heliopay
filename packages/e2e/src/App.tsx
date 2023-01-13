@@ -14,6 +14,7 @@ const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     '63a5802fa14ca68210928eac'
   );
+
   return (
     <>
       <input
@@ -22,7 +23,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="devnet"
+        cluster="mainnet-beta"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);
