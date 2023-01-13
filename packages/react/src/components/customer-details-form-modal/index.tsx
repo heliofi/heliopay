@@ -105,7 +105,7 @@ const CustomerDetailsFormModal = ({
     ) {
       setNormalizedPrice(
         TokenConversionService.convertFromMinimalUnits(
-          getCurrency(paymentDetails?.currency?.symbol),
+          paymentDetails?.currency?.symbol,
           paymentDetails?.normalizedPrice
         )
       );
@@ -228,7 +228,9 @@ const CustomerDetailsFormModal = ({
           )
         }
         title={title}
-        showSwap={paymentDetails?.features.canSwapTokens}
+        showSwap={
+          !paymentDetails?.dynamic && paymentDetails?.features.canSwapTokens
+        }
         isSwapShown={showSwapMenu}
         toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
       >

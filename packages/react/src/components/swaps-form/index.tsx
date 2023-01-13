@@ -1,5 +1,5 @@
 import { FormikValues } from 'formik';
-import {Currency, PaymentRequestType} from '@heliofi/common';
+import { Currency, PaymentRequestType } from '@heliofi/common';
 import { useEffect, useState } from 'react';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import {

@@ -2494,12 +2494,14 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@heliofi/common@0.1.114":
-  version "0.1.114"
-  resolved "https://registry.npmjs.org/@heliofi/common/-/common-0.1.114.tgz#38bae5b53b1011a9d76d23e71ec338036022ccf1"
-  integrity sha512-YcTkF4qwyvLlfV/6DwzLPTXSpT4bPe+3nRm5ujRX36qO1Q4Tu0n236z+E4X2rWT4WZK9zX4/O2GA83InEISuzQ==
+"@heliofi/common@1.1.114":
+  version "0.1.135"
+  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.135.tgz#f2229d1d7996ed1aa7b214292265b7caca2ba729"
+  integrity sha512-ctD95S4TTzO06kLhp50GG1cePc4iwAtOCW5phLg2txJdA0Qx+Uu+DMFn+I699xJ3de3R7mWDmEcr2sdmnfH2oQ==
   dependencies:
+    "@project-serum/anchor" "^0.25.0"
     "@solana/web3.js" "^1.44.0"
+    bs58 "^5.0.0"
     class-transformer "^0.5.1"
     class-validator "^0.13.2"
     moment "^2.29.4"
@@ -2545,9 +2547,9 @@
     ts-jest "^28.0.5"
     yup "^0.32.11"
 
-"@heliofi/solana-adapter@3.1.1-alpha.0":
+"@heliofi/solana-adapter@3.1.1-alpha":
   version "3.1.1-alpha"
-  resolved "https://registry.npmjs.org/@heliofi/solana-adapter/-/solana-adapter-3.1.1-alpha.tgz#84234d71dc1a2141fe815453018fa254e3cd5b3e"
+  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.1.1-alpha.tgz#84234d71dc1a2141fe815453018fa254e3cd5b3e"
   integrity sha512-eDWlzhib82g49ooSsqgngd5ThWvVy94cOtxyUIhH+g0icULBD6M+LkL30aIvsW/kAw5bqBankLvXjXb0TNt4Kw==
   dependencies:
     "@project-serum/anchor" "^0.25.0"
