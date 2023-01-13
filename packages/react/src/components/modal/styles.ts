@@ -95,6 +95,10 @@ export const StyledSwapButton = styled(Button)<{ isSwapShown: boolean }>`
     display: flex;
     align-items: center;
   }
+
+  p {
+    margin: 0;
+  }
 `;
 
 export const StyledTickIcon = styled(TickIcon)`
