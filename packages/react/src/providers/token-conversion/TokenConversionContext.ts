@@ -4,7 +4,7 @@ import { useHelioProvider } from '../helio/HelioContext';
 import { JWTService } from '../../domain/services/JWTService';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
-export const TokenConversionContext = createContext<{
+type Props = {
   dynamicRateToken: string | undefined;
   setDynamicRateToken: (token: string | undefined) => void;
   dynamicRate: number | undefined;
@@ -13,7 +13,8 @@ export const TokenConversionContext = createContext<{
   setDynamicRateLoading: (loading: boolean) => void;
   tokenExpiration: number | undefined;
   setTokenExpiration: (expiration: number | undefined) => void;
-}>({
+}
+export const TokenConversionContext = createContext<Props>({
   dynamicRateToken: undefined,
   setDynamicRateToken: () => {},
   dynamicRate: undefined,

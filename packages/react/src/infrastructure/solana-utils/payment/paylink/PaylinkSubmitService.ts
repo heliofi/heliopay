@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { SinglePaymentRequest } from '@heliofi/solana-adapter';
 import { CustomerDetails } from '../../../../domain';
 import { BigNumber } from '../../../../domain/model/BigNumber';
-import { fromBigintToStringForSerialization, isEmpty } from '../../../../utils';
+import { fromBigintToStringForSerialization, isEmptyObject } from '../../../../utils';
 import { createTransaction } from '../../CreateTransaction';
 import { signTransaction } from '../../SignTransaction';
 
@@ -178,7 +178,7 @@ export class PaylinkSubmitService extends BasePaymentService<
     token: string,
     swapSignedTx?: string
   ): ApproveTransactionPayload {
-    const details = isEmpty(productDetails) ? {} : { productDetails };
+    const details = isEmptyObject(productDetails) ? {} : { productDetails };
     return {
       signedTransaction: signedTx,
       signedSwapTransaction: swapSignedTx,
