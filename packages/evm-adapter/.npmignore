@@ -1,0 +1,9 @@
+*
+!*.d.ts
+!*.map
+!*.js
+!*.json
+!package.json
+!README.md
+!dist
+**/*.test
