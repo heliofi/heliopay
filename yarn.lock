@@ -2863,32 +2863,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
-"@heliofi/react@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@heliofi/react/-/react-1.1.4.tgz#e45476caa74b256fa2052c4a8906020659893126"
-  integrity sha512-i1ix5kHz8xhJH0tdX3jW/SLhnDv+sh2A92EDT45/xQuowGFiloLGjuaY+E/E3c8x6sTGuW0ZhEH1gx41CgyWig==
-  dependencies:
-    "@aws-amplify/api-graphql" "^2.3.12"
-    "@heliofi/helio-icons" "^1.0.5"
-    "@heliofi/solana-adapter" "^1.1.4"
-    "@project-serum/anchor" "^0.25.0"
-    "@solana/wallet-adapter-base" "^0.9.5"
-    "@solana/wallet-adapter-react" "^0.15.5"
-    "@solana/wallet-adapter-react-ui" "^0.9.7"
-    "@solana/wallet-adapter-wallets" "^0.16.1"
-    "@solana/web3.js" "^1.44.0"
-    aws-amplify "^4.3.16"
-    crypto-js "^4.1.1"
-    downshift "^6.1.7"
-    formik "^2.2.9"
-    jest "^28.1.1"
-    react "^18.2.0"
-    react-dom "^18.2.0"
-    react-phone-number-input "^3.2.11"
-    styled-components "^5.3.5"
-    ts-jest "^28.0.5"
-    yup "^0.32.11"
-
 "@heliofi/solana-adapter@3.1.1-alpha":
   version "3.1.1-alpha"
   resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.1.1-alpha.tgz#84234d71dc1a2141fe815453018fa254e3cd5b3e"
@@ -2898,17 +2872,6 @@
     "@solana/spl-token" "^0.2.0"
     "@solana/wallet-adapter-react" "^0.15.20"
     "@solana/web3.js" "^1.66.2"
-    bs58 "^5.0.0"
-    jsonwebtoken "^8.5.1"
-    tweetnacl "^1.0.3"
-
-"@heliofi/solana-adapter@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-1.1.4.tgz#74d31d69bbf6ced3258cb7031b9cd5c9a108d91e"
-  integrity sha512-bK45NWrL3vDOnOr9ahyluZrByhemjpyWG4jRc/OLV+L3fTH36+Z8OKWBNm01NXPaoX7tppDy8VSpC4E2zIql0A==
-  dependencies:
-    "@project-serum/anchor" "^0.25.0"
-    "@solana/spl-token" "^0.2.0"
     bs58 "^5.0.0"
     jsonwebtoken "^8.5.1"
     tweetnacl "^1.0.3"
