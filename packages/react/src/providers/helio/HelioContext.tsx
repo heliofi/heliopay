@@ -1,6 +1,6 @@
 import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
-import { Currency, PaymentRequestType } from '@heliofi/common';
+import { Currency, PaymentRequestType, SOL_MINT, WRAPPED_SOL_MINT } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 import { CurrencyService } from '../../domain/services/CurrencyService';
 import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
@@ -107,10 +107,6 @@ export const useHelioProvider = () => {
     const mintAddress: string | undefined =
       paymentDetails?.currency?.mintAddress;
 
-    const SOL_MINT = '11111111111111111111111111111111';
-    const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112';
-
-    // @TODO replace with SOL_MINT and WRAPPED_SOL_MINT from heliofi/common
     const validatedMintAddress =
       mintAddress === SOL_MINT ? WRAPPED_SOL_MINT : mintAddress;
 
