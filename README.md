@@ -130,7 +130,7 @@ totalAmount | number | no | | you can pass dynamic amount. dynamic pricing shoul
 
 ### Example Application
 
-An example application with dynamic pricing can be found here: [embedded button example app.](https://heliopay-nextjs-sample-twefx01p8-heliofi.vercel.app/)
+An example application with dynamic pricing can be found here: [embedded button example app.](https://https://heliopay-nextjs-sample.vercel.app/)
 
 Repo for the example application: https://github.com/heliofi/heliopay-nextjs-sample
 
