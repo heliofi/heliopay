@@ -147,7 +147,8 @@ export const HelioApiAdapter = {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity: number,
-    amount: number
+    amount: number,
+    toMint?: string,
   ): Promise<{ routeToken: string }> {
     const HELIO_BASE_API_URL = getHelioApiBaseUrl(cluster);
     const url = `${HELIO_BASE_API_URL}/swap/route-token`;
@@ -158,6 +159,7 @@ export const HelioApiAdapter = {
       fromMint,
       quantity: String(quantity),
       amount: String(amount),
+      ...(toMint ? {toMint} : {})
     });
 
     const tokenSwapQuote = await (

@@ -37,6 +37,7 @@ export const SwapsForm = ({
     tokenSwapQuote,
     getTokenSwapQuote,
     tokenSwapError,
+    currencyList
   } = useHelioProvider();
 
   const [selectedCurrency, setSelectedCurrency] = useState(
@@ -53,13 +54,16 @@ export const SwapsForm = ({
   }, [paymentDetails?.currency?.mintAddress]);
 
   useEffect(() => {
+    const currency = currencyList?.find(it => formValues.currency == it.symbol);
+
     if (selectedCurrency?.mintAddress != null) {
       getTokenSwapQuote(
         paymentDetails.id,
         'PAYLINK' as PaymentRequestType.PAYLINK,
         selectedCurrency.mintAddress,
         formValues.quantity,
-        normalizedPrice
+        normalizedPrice,
+        paymentDetails?.dynamic ? currency?.mintAddress : undefined
       );
     }
   }, [
@@ -80,7 +84,7 @@ export const SwapsForm = ({
       )
       .map((currency) => ({
         value: currency.symbol,
-        label: `${currency.symbol} ${currency.name}`,
+        label: `${currency.symbol}`,
         icon: <CurrencyIcon gradient iconName={currency.symbol} />,
       })) || [];
 
@@ -91,7 +95,7 @@ export const SwapsForm = ({
           tokenSwapQuote?.inAmount
         )} ${selectedCurrency?.symbol}`
       : selectedCurrency
-      ? `${selectedCurrency?.symbol} (${selectedCurrency?.name})`
+      ? `${selectedCurrency?.symbol}`
       : 'Select currency';
 
   return (

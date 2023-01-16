@@ -229,7 +229,7 @@ const CustomerDetailsFormModal = ({
         }
         title={title}
         showSwap={
-          !paymentDetails?.dynamic && paymentDetails?.features.canSwapTokens
+          paymentDetails?.features.canSwapTokens
         }
         isSwapShown={showSwapMenu}
         toggleSwap={() => setShowSwapMenu(!showSwapMenu)}

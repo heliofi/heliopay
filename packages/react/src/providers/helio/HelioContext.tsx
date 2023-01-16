@@ -147,7 +147,8 @@ export const useHelioProvider = () => {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity: number,
-    normalizedPrice: number
+    normalizedPrice: number,
+    toMint?: string
   ) => {
     setTokenSwapLoading(true);
     try {
@@ -161,7 +162,8 @@ export const useHelioProvider = () => {
           TokenConversionService.convertToMinimalUnits(
             paymentDetails.currency.symbol,
             normalizedPrice
-          )
+          ),
+          toMint
         );
 
         const decodedToken: {
