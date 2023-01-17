@@ -68,7 +68,7 @@ export const StyledResultText = styled.div`
   font-size: 14px;
   line-height: 125%;
   color: #8e522e;
-  margin-bottom: 4px;
+  margin-bottom: 1px;
 `;
 
 export const StyledResultLink = styled.div<{ error?: boolean }>`
@@ -109,3 +109,10 @@ export const StyledResultFooterText = styled.div`
     text-underline-offset: 2px;
   }
 `;
+
+export const StyledSwapWrapper = styled.div`
+  margin-top: 0.5rem;
+  font-size: 14px;
+  line-height: 125%;
+  color: #8e522e;
+`

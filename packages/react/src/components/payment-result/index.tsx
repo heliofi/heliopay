@@ -12,6 +12,7 @@ import {
   StyledResultTitle,
   StyledResultTopLine,
   StyledResultWrapper,
+  StyledSwapWrapper,
 } from './styles';
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
     transaction?: string;
     errorMessage?: string;
     content?: string;
+    swapTransaction?: string;
   };
 }
 
@@ -46,9 +48,19 @@ const PaymentResult = ({ result }: Props) => {
               Try again
             </StyledResultLink>
           ) : (
-            <StyledResultLink>
-              <ExplorerLink transaction={result?.transaction} />
-            </StyledResultLink>
+            <>
+              <StyledResultLink>
+                <ExplorerLink transaction={result?.transaction} />
+              </StyledResultLink>
+              {result?.swapTransaction && (
+                <StyledSwapWrapper>
+                  Swap transaction
+                  <StyledResultLink>
+                    <ExplorerLink transaction={result?.transaction} />
+                  </StyledResultLink>
+                </StyledSwapWrapper>
+              )}
+            </>
           )}
         </StyledResultContainer>
       </StyledResultBox>
