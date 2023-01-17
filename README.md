@@ -128,6 +128,14 @@ const App = () => {
 totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
 | supportedCurrencies | string array | no | | currencies you want to support.
 
+### Support Currencies
+
+Use our Swagger API to get a list of currencies currently supported : https://api.hel.io/v1/docs#/Currency/CurrencyController_value
+
+Try it out with currency 'type' of "DIGITAL" to return all supported currencies
+
+Or pull directly from : https://api.hel.io/v1/currency?type=DIGITAL
+
 ### Example Application
 
 An example application with dynamic pricing can be found here: [embedded button example app.](https://embed.hel.io/)
