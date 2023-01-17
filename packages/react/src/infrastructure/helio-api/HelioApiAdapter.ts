@@ -3,8 +3,8 @@ import { PaymentRequestType } from '@heliofi/common';
 import { ClusterType, Currency } from '../../domain';
 import { configDev, configProd } from '../config';
 
-const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.hel.io';
-const PROD_ADDRESS_SERVICE_BASE_URL = 'https://hel.io';
+const DEV_ADDRESS_SERVICE_BASE_URL = 'https://dev.api.hel.io/v1';
+const PROD_ADDRESS_SERVICE_BASE_URL = 'https://api.hel.io/v1';
 
 export const getAwsConfig = (cluster: Cluster) => {
   switch (cluster) {
@@ -80,7 +80,7 @@ export const HelioApiAdapter = {
     cluster: Cluster
   ): Promise<any> {
     const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
-    const url = `${ADDRESS_API_BASE_URL}/api/findAddress?query=${query}&country=${country_code}`;
+    const url = `${ADDRESS_API_BASE_URL}/location/find-address?query=${query}&countryCode=${country_code}`;
     const result = await (
       await fetch(url, {
         method: 'GET',
@@ -98,7 +98,7 @@ export const HelioApiAdapter = {
     cluster: Cluster
   ): Promise<any> {
     const ADDRESS_API_BASE_URL = getAddressApiBaseUrl(cluster);
-    const url = `${ADDRESS_API_BASE_URL}/api/retrieveAddress?id=${address_id}&country=${country_code}`;
+    const url = `${ADDRESS_API_BASE_URL}/location/retrieve-address?id=${address_id}&country=${country_code}`;
     const result = await (
       await fetch(url, {
         method: 'GET',

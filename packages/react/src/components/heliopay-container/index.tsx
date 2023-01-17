@@ -90,20 +90,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     initCluster(cluster);
   }, [cluster]);
 
-  useEffect(() => {
-    if (
-      paymentDetails?.features?.requireDeliveryAddress &&
-      paymentDetails?.features?.requireCountry
-    ) {
-      getCountry();
-    }
-  }, [paymentDetails]);
-
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter(
       (currency) =>
         supportedCurrencies?.includes(currency.symbol) &&
-        currency?.blockchain?.engine?.type === 'SOL'
+        (!currency?.blockchain || currency?.blockchain?.engine?.type === 'SOL')
     );
     setAllowedCurrencies(allowedCurrenciesTemp);
   };
