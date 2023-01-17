@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { TickIcon } from '@heliofi/helio-icons';
+import Button from '../button';
 
 export const StyledModalWrapper = styled.div`
   position: fixed;
@@ -68,6 +70,40 @@ export const StyledModalTitle = styled.div`
   font-size: 16px;
   line-height: 140%;
   color: #5a6578;
+`;
+
+export const StyledSwapButton = styled(Button)<{ isSwapShown: boolean }>`
+  ${({ isSwapShown, theme }) => `
+    ${
+      isSwapShown &&
+      `background: #FFF5E9;
+      color: ${theme.colors.primary};
+      box-shadow: unset;`
+    };
+    path {
+      fill: ${isSwapShown ? theme.colors.primary : '#fff'};
+    }
+  `}
+  width: unset;
+  height: 30px;
+  position: absolute;
+  right: 32px;
+  line-height: unset;
+  padding: 3px 7px;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  p {
+    margin: 0;
+  }
+`;
+
+export const StyledTickIcon = styled(TickIcon)`
+  width: 20px;
+  margin-right: 4px;
 `;
 
 export const StyledModalCloseButton = styled.div`

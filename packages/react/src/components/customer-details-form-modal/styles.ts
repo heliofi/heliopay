@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { rgba } from '../../utils';
+import Button from '../button';
 
 export const StyledFormWrapper = styled.div``;
 
@@ -103,4 +104,18 @@ export const StyledProductTooltipIcon = styled.div`
     width: 16px;
     height: 16px;
   }
+`;
+
+export const StyledSubmitButton = styled(Button)`
+  ${({ disabled }) =>
+    disabled &&
+    `background: #ECECEC;
+      color: #9CA3AF;
+      box-shadow: unset;
+      
+      &:hover {
+        background: #A9B3C4;
+        color: #FFF;
+      }
+    `};
 `;

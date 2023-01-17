@@ -8,12 +8,13 @@ import {
 } from '@heliofi/react';
 
 import './styles/style.scss';
-window.Buffer = window.Buffer || require("buffer").Buffer;
+window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '636a4ace0142fa94a6e1c764'
+    '63c50db2fffc85e137a0d4bc'
   );
+
   return (
     <>
       <input
@@ -22,7 +23,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="devnet"
+        cluster="mainnet-beta"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);
@@ -36,8 +37,8 @@ const App = () => {
         onStartPayment={function (): void {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC']}
-        totalAmount={0.01}
+        supportedCurrencies={['USDC', 'SOL']}
+        totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
     </>
   );

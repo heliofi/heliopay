@@ -61,3 +61,12 @@ export const rgba = (hex: string, alpha: string | number) => {
   const color = hexToRgb(hex);
   return `rgba(${color?.r}, ${color?.g}, ${color?.b}, ${alpha})`;
 };
+
+export const isEmptyObject = (obj?: {}) =>
+  obj == null ||
+  (typeof obj === 'object' && Object.keys(obj).length === 0);
+
+export const fromBigintToStringForSerialization = (value: bigint): string =>
+  String(value);
+
+export const now = () => (Date.now ? Date.now() : Number(new Date()));

@@ -1,6 +1,6 @@
 import { StyledButton } from './styles';
 
-interface ButtonProps {
+export interface ButtonProps {
   children: React.ReactNode;
   type?: 'submit' | 'reset' | 'button';
   onClick?: () => void;
