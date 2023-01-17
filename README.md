@@ -128,10 +128,18 @@ const App = () => {
 totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
 | supportedCurrencies | string array | no | | currencies you want to support.
 
+### Support Currencies
+
+Use our Swagger API to get a list of currencies currently supported : https://api.hel.io/v1/docs#/Currency/CurrencyController_value
+
+Try it out with currency 'type' of "DIGITAL" to return all supported currencies
+
+Or pull directly from : https://api.hel.io/v1/currency?type=DIGITAL
+
 ### Example Application
 
-An example application with dynamic pricing can be found here: [embedded button example app.](https://embed.hel.io/)
+An example application with dynamic pricing can be found here: [Embedded example app](https://embed.hel.io/)
 
-Repo for the example application: https://github.com/heliofi/heliopay-nextjs-sample
+Repo for the example application which you can review to understand how to embed Helio components : https://github.com/heliofi/heliopay-nextjs-sample
 
 <img width="983" alt="HelioExampleSite" src="https://user-images.githubusercontent.com/97976151/211924594-5f2ec7f9-edd0-4c3b-bdd2-e56100131243.png">
