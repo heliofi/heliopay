@@ -100,8 +100,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [paymentDetails]);
 
   const generateAllowedCurrencies = () => {
-    const allowedCurrenciesTemp = currencyList.filter((currency) =>
-      supportedCurrencies?.includes(currency.symbol)
+    const allowedCurrenciesTemp = currencyList.filter(
+      (currency) =>
+        supportedCurrencies?.includes(currency.symbol) &&
+        currency?.blockchain?.engine?.type === 'SOL'
     );
     setAllowedCurrencies(allowedCurrenciesTemp);
   };

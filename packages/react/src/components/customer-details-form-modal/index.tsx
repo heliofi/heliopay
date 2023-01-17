@@ -228,9 +228,7 @@ const CustomerDetailsFormModal = ({
           )
         }
         title={title}
-        showSwap={
-          paymentDetails?.features.canSwapTokens
-        }
+        showSwap={paymentDetails?.features.canSwapTokens}
         isSwapShown={showSwapMenu}
         toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
       >
@@ -318,8 +316,7 @@ const CustomerDetailsFormModal = ({
                     <>
                       <StyledFormTitle>Information required</StyledFormTitle>
                       <StyledFormText>
-                        We need some information from you to deliver the
-                        product.
+                        We need some information from you
                       </StyledFormText>
                     </>
                   )}
