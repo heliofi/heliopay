@@ -3,27 +3,25 @@ import styled from 'styled-components';
 
 export const StyledWrapper = styled.div`
   margin-bottom: 12px;
-  :root {
-    --PhoneInput-color--focus: #03b2cb;
-    --PhoneInputInternationalIconPhone-opacity: 0.8;
-    --PhoneInputInternationalIconGlobe-opacity: 0.65;
-    --PhoneInputCountrySelect-marginRight: 0.35em;
-    --PhoneInputCountrySelectArrow-width: 0.3em;
-    --PhoneInputCountrySelectArrow-marginLeft: var(
-      --PhoneInputCountrySelect-marginRight
-    );
-    --PhoneInputCountrySelectArrow-borderWidth: 1px;
-    --PhoneInputCountrySelectArrow-opacity: 0.45;
-    --PhoneInputCountrySelectArrow-color: currentColor;
-    --PhoneInputCountrySelectArrow-color--focus: var(--PhoneInput-color--focus);
-    --PhoneInputCountrySelectArrow-transform: rotate(45deg);
-    --PhoneInputCountryFlag-aspectRatio: 1.5;
-    --PhoneInputCountryFlag-height: 1em;
-    --PhoneInputCountryFlag-borderWidth: 1px;
-    --PhoneInputCountryFlag-borderColor: rgba(0, 0, 0, 0.5);
-    --PhoneInputCountryFlag-borderColor--focus: var(--PhoneInput-color--focus);
-    --PhoneInputCountryFlag-backgroundColor--loading: rgba(0, 0, 0, 0.1);
-  }
+  --PhoneInput-color--focus: #03b2cb;
+  --PhoneInputInternationalIconPhone-opacity: 0.8;
+  --PhoneInputInternationalIconGlobe-opacity: 0.65;
+  --PhoneInputCountrySelect-marginRight: 0.35em;
+  --PhoneInputCountrySelectArrow-width: 0.3em;
+  --PhoneInputCountrySelectArrow-marginLeft: var(
+    --PhoneInputCountrySelect-marginRight
+  );
+  --PhoneInputCountrySelectArrow-borderWidth: 1px;
+  --PhoneInputCountrySelectArrow-opacity: 0.45;
+  --PhoneInputCountrySelectArrow-color: currentColor;
+  --PhoneInputCountrySelectArrow-color--focus: var(--PhoneInput-color--focus);
+  --PhoneInputCountrySelectArrow-transform: rotate(45deg);
+  --PhoneInputCountryFlag-aspectRatio: 1.5;
+  --PhoneInputCountryFlag-height: 1em;
+  --PhoneInputCountryFlag-borderWidth: 1px;
+  --PhoneInputCountryFlag-borderColor: rgba(0, 0, 0, 0.5);
+  --PhoneInputCountryFlag-borderColor--focus: var(--PhoneInput-color--focus);
+  --PhoneInputCountryFlag-backgroundColor--loading: rgba(0, 0, 0, 0.1);
 
   .PhoneInput {
     display: flex;
@@ -35,7 +33,6 @@ export const StyledWrapper = styled.div`
     min-width: 0;
     outline: none;
     background: none;
-    color: inherit;
     font: inherit;
     border: none;
     width: 100%;
