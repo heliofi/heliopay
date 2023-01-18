@@ -8,7 +8,7 @@ We currently support React v18.
 
 `yarn add @heliofi/react`
 
-## Embed Helio Componentss
+## Embed Helio Components
 
 You can embed Helio components for the following two use cases:
 
