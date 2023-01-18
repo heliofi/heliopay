@@ -4,6 +4,10 @@ Helio embedded components can be used in your website for dynamic payments or st
 
 We currently support React v18.
 
+Download the NPM from here: https://www.npmjs.com/package/@heliofi/react
+
+Always use the latest public version and ensure that all your dependencies are on the latest versions
+
 Helio uses Swagger for API testing where you can review API endpoints and review examples: https://api.hel.io/v1/docs
 
 We recommend that you use Swagger to get familiar with the APIs and for testing payloads
