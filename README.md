@@ -1,5 +1,9 @@
 ## Introduction
 
+Helio embedded components can be used in your website for dynamic payments or standard paylinks and pay streams.
+
+We currently support React v18.
+
 Helio uses Swagger for API testing where you can review API endpoints and review examples: https://api.hel.io/v1/docs
 
 We recommend that you use Swagger to get familiar with the APIs and for testing payloads
