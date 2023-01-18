@@ -144,10 +144,10 @@ Try it out with currency 'type' of "DIGITAL" to return all supported currencies
 
 Or pull directly from : https://api.hel.io/v1/currency?type=DIGITAL
 
-### Example Application
+### Embedded Example App
 
-An example application with dynamic pricing can be found here: [Embedded example app](https://embed.hel.io/)
+An example application with dynamic pricing can be found here: [Embedded Example App](https://embed.hel.io/)
 
 Repo for the example application which you can review to understand how to embed Helio components : https://github.com/heliofi/heliopay-nextjs-sample
 
-<img width="983" alt="HelioExampleSite" src="https://user-images.githubusercontent.com/97976151/211924594-5f2ec7f9-edd0-4c3b-bdd2-e56100131243.png">
+<img width="983" alt="Helio Embedded Example App" src="https://user-images.githubusercontent.com/97976151/213204178-1dd385db-00f0-4978-b26c-ba1fefe56d2c.png">
