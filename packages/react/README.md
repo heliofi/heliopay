@@ -16,8 +16,8 @@ You can embed Helio components for the following two use cases:
 * Embed a Pay Link or Pay Stream with the Helio Pay button
 
 Full installation and setup details : https://github.com/heliofi/heliopay#readme
-
-Version updates:
+![img.png](img.png)
+## Version updates:
 
 - address lookup improvement
 - minor bug fixes
