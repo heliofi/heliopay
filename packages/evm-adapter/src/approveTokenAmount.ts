@@ -3,7 +3,7 @@ import { Contract } from 'ethers';
 import { erc20 } from './abi';
 import { contractAddress } from './constants';
 
-export const getPaymentTx = async (
+export const approveTokenAmount = async (
   signer: JsonRpcSigner,
   amount: bigint,
   tokenAddress: string

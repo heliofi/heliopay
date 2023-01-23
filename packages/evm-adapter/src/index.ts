@@ -5,3 +5,4 @@ export * from './getSplitEthPaymentTx';
 export * from './types';
 export * from './constants';
 export * from './abi/helio';
+export * from './approveTokenAmount';
