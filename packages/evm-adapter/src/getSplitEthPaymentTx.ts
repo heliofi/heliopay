@@ -1,6 +1,6 @@
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
-import { helio } from './abi/helio';
+import { helio } from './abi';
 import { contractAddress, gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
 
