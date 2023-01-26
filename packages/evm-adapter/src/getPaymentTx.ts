@@ -11,10 +11,12 @@ export const getPaymentTx = async (
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
+
+  const amount = BigNumber.from(req.amount);
   const unsignedTx = await contract.populateTransaction.payment(
     req.recipientAddress,
     req.tokenAddres,
-    BigNumber.from(req.amount),
+    amount,
     BigNumber.from(fee),
     {
       gasLimit,
