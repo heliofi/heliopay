@@ -3,10 +3,10 @@ import { Contract } from 'ethers';
 import { erc20 } from './abi';
 import { contractAddress } from './constants';
 
-export const approveTokenAmount = async (
+export const requestTokenAmountApproval = async (
   signer: JsonRpcSigner,
   amount: bigint,
-  tokenAddress: string
+  tokenAddress: string | undefined
 ): Promise<TransactionResponse> => {
   if (!tokenAddress) {
     throw new Error('Missing erc20 token address');

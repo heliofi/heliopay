@@ -14,8 +14,8 @@ export type EthPaymentEvent = {
 };
 
 export enum EventName {
-  Payment = 'Payment',
-  EthPayment = 'EthPayment',
-  SplitPayment = 'SplitPayment',
-  SplitEthPayment = 'SplitEthPayment',
+  PAYMENT = 'Payment',
+  ETH_PAYMENT = 'EthPayment',
+  SPLIT_PAYMENT = 'SplitPayment',
+  SPLIT_ETH_PAYMENT = 'SplitEthPayment',
 }

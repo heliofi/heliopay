@@ -2,7 +2,7 @@ export * from './getPaymentTx';
 export * from './getSplitPaymentTx';
 export * from './getEthPaymentTx';
 export * from './getSplitEthPaymentTx';
-export * from './approveTokenAmount';
+export * from './requestTokenAmountApproval';
 export * from './types';
 export * from './constants';
 export * from './abi';
