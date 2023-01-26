@@ -12,3 +12,10 @@ export type EthPaymentEvent = {
   transferAmount: bigint;
   feeAmount: bigint;
 };
+
+export enum EventName {
+  Payment = 'Payment',
+  EthPayment = 'EthPayment',
+  SplitPayment = 'SplitPayment',
+  SplitEthPayment = 'SplitEthPayment',
+}
