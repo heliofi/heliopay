@@ -115,4 +115,4 @@ export const StyledSwapWrapper = styled.div`
   font-size: 14px;
   line-height: 125%;
   color: #8e522e;
-`
+`;

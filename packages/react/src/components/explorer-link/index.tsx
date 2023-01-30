@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SolExplorerService } from '../../domain/services/SolExplorerService';
+import { HelioSDK } from '@heliofi/sdk';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
 interface Props {
@@ -13,7 +13,7 @@ const ExplorerLink: FC<Props> = ({ transaction }) => {
   }
   return (
     <a
-      href={SolExplorerService.getSolanaExplorerTransactionURL(
+      href={HelioSDK.solExplorerService.getSolanaExplorerTransactionURL(
         transaction,
         cluster
       )}

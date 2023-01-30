@@ -1,52 +1,28 @@
-import { Cluster } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
-import {
-  AddressList,
-  AddressDetails,
-  Country,
-} from '../../domain/model/Address';
-import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
-import { useHelioProvider } from '../helio/HelioContext';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { AddressDetails, AddressList } from '../../domain';
 
 export const AddressContext = createContext<{
   addressList?: AddressList;
   setAddressList: (addressList: AddressList) => void;
-  country?: Country;
-  setCountry: (country: Country) => void;
   addressDetails?: AddressDetails;
   setAddressDetails: (address: AddressDetails) => void;
 }>({
   addressList: undefined,
   setAddressList: () => {},
-  country: undefined,
-  setCountry: () => {},
   addressDetails: undefined,
   setAddressDetails: () => {},
 });
 
 export const useAddressProvider = () => {
-  const {
-    addressList,
-    setAddressList,
-    country,
-    addressDetails,
-    setAddressDetails,
-    setCountry,
-  } = useContext(AddressContext);
-  const { cluster } = useHelioProvider();
+  const { addressList, setAddressList, addressDetails, setAddressDetails } =
+    useContext(AddressContext);
+
+  const { apiService } = useCompositionRoot();
 
   const findAddress = async (query: string, country_code: string) => {
-    const result = await HelioApiAdapter.findAddress(
-      query,
-      country_code,
-      cluster as Cluster
-    );
+    const result = await apiService.findAddress(query, country_code);
     setAddressList(result?.results ?? []);
-  };
-
-  const getCountry = async () => {
-    const result = await HelioApiAdapter.getCountry(cluster as Cluster);
-    setCountry(result ?? {});
   };
 
   const retrieveAddress = async (address_id: string, country_code: string) => {
@@ -69,10 +45,9 @@ export const useAddressProvider = () => {
       }
       setAddressDetails(result);
     } else {
-      const { result } = await HelioApiAdapter.retrieveAddress(
+      const { result } = await apiService.retrieveAddress(
         address_id,
-        country_code,
-        cluster as Cluster
+        country_code
       );
       setAddressDetails({
         city: result.province_name,
@@ -89,9 +64,7 @@ export const useAddressProvider = () => {
 
   return {
     addressList,
-    country,
     findAddress,
-    getCountry,
     addressDetails,
     retrieveAddress,
   };

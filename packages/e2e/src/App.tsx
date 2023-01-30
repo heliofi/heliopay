@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ErrorPaymentEvent,
-  HelioPay,
-  PendingPaymentEvent,
-  SuccessPaymentEvent,
-  HelioApiAdapter,
-} from '@heliofi/react';
-
+import React, { useState } from 'react';
+import { HelioPay } from '../../react';
+import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
 import './styles/style.scss';
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '63c50db2fffc85e137a0d4bc'
+    '63c5394da0407c38067b68ac'
   );
 
   return (
@@ -23,7 +17,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="mainnet-beta"
+        cluster="devnet"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log('onSuccess', event);

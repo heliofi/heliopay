@@ -2,7 +2,7 @@ import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Currency } from '@heliofi/common';
 import { HelioContext } from './HelioContext';
-import { TokenSwapQuote } from '../../domain/model/TokenSwapQuote';
+import { TokenSwapQuote } from '../../domain';
 
 export const HelioProvider: FC<{
   children: ReactNode;

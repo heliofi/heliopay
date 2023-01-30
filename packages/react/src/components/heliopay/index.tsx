@@ -5,7 +5,7 @@ import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
-} from '../../domain';
+} from '@heliofi/sdk';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopay-container';
 import { defaultTheme } from '../../theme';

@@ -11,7 +11,7 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
-import { ClusterType } from '../../domain';
+import { ClusterType } from '@heliofi/sdk';
 import { AddressProvider } from '../address';
 
 import { AnchorProvider } from '../anchor';

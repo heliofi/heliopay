@@ -18,28 +18,6 @@ export const shortenWalletAddress = (address: string): string => {
   return `${address.slice(0, 6)}..${address.slice(-3)}`;
 };
 
-export const getStringBetween = (
-  str: string,
-  start: string,
-  end: string
-): string | undefined => {
-  const result = str.match(new RegExp(`${start}(.*)${end}`));
-  if (result == null || result.length < 1) {
-    return undefined;
-  }
-  return result[1].trim();
-};
-
-export const removeUndefinedFields = (obj: Record<string, unknown>) => {
-  const newObj = { ...obj };
-  Object.keys(newObj).forEach((key) => {
-    if (newObj[key] === undefined) {
-      delete newObj[key];
-    }
-  });
-  return newObj;
-};
-
 export const hexToRgb = (hex: string) => {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   const hexTemp = hex.replace(
@@ -57,16 +35,26 @@ export const hexToRgb = (hex: string) => {
     : null;
 };
 
-export const rgba = (hex: string, alpha: string | number) => {
+export const rgba = (hex: string, alpha: string | number): string => {
   const color = hexToRgb(hex);
   return `rgba(${color?.r}, ${color?.g}, ${color?.b}, ${alpha})`;
 };
 
-export const isEmptyObject = (obj?: {}) =>
-  obj == null ||
-  (typeof obj === 'object' && Object.keys(obj).length === 0);
+export const roundValue = (amount: number | string, decimals: number): string =>
+  parseFloat(String(amount)).toFixed(decimals);
 
-export const fromBigintToStringForSerialization = (value: bigint): string =>
-  String(value);
-
-export const now = () => (Date.now ? Date.now() : Number(new Date()));
+export const removeUndefinedFields = <T>(
+  obj: Record<string, unknown>,
+  includeEmptyStrings?: boolean
+): T => {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach((key) => {
+    if (
+      newObj[key] === undefined ||
+      (includeEmptyStrings && newObj[key] === '')
+    ) {
+      delete newObj[key];
+    }
+  });
+  return newObj as unknown as T;
+};

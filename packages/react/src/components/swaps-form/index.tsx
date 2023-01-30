@@ -1,6 +1,7 @@
 import { FormikValues } from 'formik';
 import { Currency, PaymentRequestType } from '@heliofi/common';
 import { useEffect, useState } from 'react';
+import { HelioSDK } from '@heliofi/sdk';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import {
   StyledCurrencySelectIcon,
@@ -11,10 +12,9 @@ import {
 } from './styles';
 import CurrencyIcon from '../currency-icon';
 import SelectBox from '../selectbox';
-import { CurrencyService } from '../../domain/services/CurrencyService';
-import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import { useDebounce } from '../../hooks/useDebounce';
 import Spinner from '../../assets/placeholders/LoadingSpinner';
+import { roundValue } from '../../utils';
 
 interface SwapsFormProps {
   formValues: FormikValues;
@@ -37,7 +37,7 @@ export const SwapsForm = ({
     tokenSwapQuote,
     getTokenSwapQuote,
     tokenSwapError,
-    currencyList
+    currencyList,
   } = useHelioProvider();
 
   const [selectedCurrency, setSelectedCurrency] = useState(
@@ -54,7 +54,9 @@ export const SwapsForm = ({
   }, [paymentDetails?.currency?.mintAddress]);
 
   useEffect(() => {
-    const currency = currencyList?.find(it => formValues.currency == it.symbol);
+    const currency = currencyList?.find(
+      (it) => formValues.currency === it.symbol
+    );
 
     if (selectedCurrency?.mintAddress != null) {
       getTokenSwapQuote(
@@ -88,15 +90,20 @@ export const SwapsForm = ({
         icon: <CurrencyIcon gradient iconName={currency.symbol} />,
       })) || [];
 
-  const getCurrencyLabel = () =>
-    tokenSwapQuote != null && selectedCurrency != null && !tokenSwapError
-      ? `${TokenConversionService.convertFromMinimalAndRound(
-          selectedCurrency?.symbol,
-          tokenSwapQuote?.inAmount
-        )} ${selectedCurrency?.symbol}`
-      : selectedCurrency
+  const getCurrencyLabel = (): string => {
+    let currencyLabel = selectedCurrency
       ? `${selectedCurrency?.symbol}`
       : 'Select currency';
+
+    if (tokenSwapQuote != null && selectedCurrency != null && !tokenSwapError) {
+      currencyLabel = `${HelioSDK.tokenConversionService.convertFromMinimalAndRound(
+        selectedCurrency?.symbol,
+        tokenSwapQuote?.inAmount
+      )} ${selectedCurrency?.symbol}`;
+    }
+
+    return currencyLabel;
+  };
 
   return (
     <StyledSwapsContainer>
@@ -116,7 +123,7 @@ export const SwapsForm = ({
               onChange={(option) => {
                 setFieldValue('swapsCurrency', option.value);
                 setSelectedCurrency(
-                  CurrencyService.getCurrencyBySymbol(
+                  HelioSDK.currencyService.getCurrencyBySymbol(
                     String(option.value)
                   ) as unknown as Currency
                 );
@@ -144,21 +151,18 @@ export const SwapsForm = ({
             <div>
               <StyledTokenSwapQuoteInfo>
                 <p>Price impact:</p>
-                <p>
-                  {CurrencyService.roundValue(tokenSwapQuote.priceImpactPct, 3)}
-                  %
-                </p>
+                <p>{roundValue(tokenSwapQuote.priceImpactPct, 3)}%</p>
               </StyledTokenSwapQuoteInfo>
               <StyledTokenSwapQuoteInfo>
                 <p>Exchange rate:</p>
                 <p>
                   1 {paymentDetails.currency.symbol} ={' '}
-                  {CurrencyService.roundValue(
-                    TokenConversionService.convertFromMinimalUnits(
+                  {roundValue(
+                    HelioSDK.tokenConversionService.convertFromMinimalUnits(
                       tokenSwapQuote.from.symbol,
                       tokenSwapQuote.inAmount
                     ) /
-                      TokenConversionService.convertFromMinimalUnits(
+                      HelioSDK.tokenConversionService.convertFromMinimalUnits(
                         tokenSwapQuote.to.symbol,
                         tokenSwapQuote.outAmount
                       ),

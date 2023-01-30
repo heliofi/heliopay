@@ -1,4 +1,4 @@
-import { ASSET_URL } from '../../domain/constants/common';
+import { HelioSDK } from '@heliofi/sdk';
 
 export type IconProps = {
   iconName?: string;
@@ -10,7 +10,12 @@ const CurrencyIcon = ({ className, gradient = false, iconName }: IconProps) => {
   const filename = iconName + (gradient ? '' : '_uncolored');
   return (
     <div className={className}>
-      {iconName && <img alt={iconName} src={`${ASSET_URL}/${filename}.svg`} />}
+      {iconName && (
+        <img
+          alt={iconName}
+          src={`${HelioSDK.configService.getAssetUrl()}/${filename}.svg`}
+        />
+      )}
     </div>
   );
 };

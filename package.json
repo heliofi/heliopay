@@ -6,9 +6,11 @@
   },
   "scripts": {
     "release": "lerna publish",
-    "build": "(cd packages/solana-adapter && yarn build) && (cd packages/react && yarn build)"
+    "build": "(cd packages/solana-adapter && yarn build) && (cd packages/sdk && yarn build) && (cd packages/react && yarn build)"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "publishConfig": {
     "access": "public"
   }
