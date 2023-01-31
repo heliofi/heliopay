@@ -37,12 +37,12 @@ export const HelioPay = ({
   supportedCurrencies,
   totalAmount,
 }: HelioPayProps) => {
+  const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+
+  const { HelioSDK } = useCompositionRoot();
   useMemo(() => {
-    const { HelioSDK } = useCompositionRoot();
     HelioSDK.setCluster(cluster as Cluster);
   }, [cluster]);
-
-  const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
