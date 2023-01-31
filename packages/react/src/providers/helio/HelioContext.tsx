@@ -7,7 +7,6 @@ import {
   WRAPPED_SOL_MINT,
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
-import { HelioSDK } from '@heliofi/sdk';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { TokenSwapQuote } from '../../domain';
 
@@ -67,7 +66,7 @@ export const useHelioProvider = () => {
     setTokenSwapError,
   } = useContext(HelioContext);
 
-  const { apiService } = useCompositionRoot();
+  const { HelioSDK } = useCompositionRoot();
 
   const getCurrencyList = async () => {
     if (cluster) {
@@ -95,7 +94,7 @@ export const useHelioProvider = () => {
     if (!cluster) {
       throw new Error('Please provide a cluster');
     }
-    const result = await apiService.getPaymentRequestByIdPublic(
+    const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
       paymentRequestId
     );
     setPaymentDetails(result || {});
@@ -115,7 +114,7 @@ export const useHelioProvider = () => {
       mintAddress === SOL_MINT ? WRAPPED_SOL_MINT : mintAddress;
 
     if (validatedMintAddress && cluster) {
-      const mintAddresses = await apiService.getTokenSwapMintAddresses(
+      const mintAddresses = await HelioSDK.apiService.getTokenSwapMintAddresses(
         validatedMintAddress
       );
 
@@ -153,17 +152,18 @@ export const useHelioProvider = () => {
     setTokenSwapLoading(true);
     try {
       if (cluster) {
-        const tokenSwapJWTResponse = await apiService.getTokenSwapQuote(
-          paymentRequestId,
-          paymentRequestType,
-          fromMint,
-          quantity ?? 1,
-          HelioSDK.tokenConversionService.convertToMinimalUnits(
-            paymentDetails.currency.symbol,
-            normalizedPrice
-          ),
-          toMint
-        );
+        const tokenSwapJWTResponse =
+          await HelioSDK.apiService.getTokenSwapQuote(
+            paymentRequestId,
+            paymentRequestType,
+            fromMint,
+            quantity ?? 1,
+            HelioSDK.tokenConversionService.convertToMinimalUnits(
+              paymentDetails.currency.symbol,
+              normalizedPrice
+            ),
+            toMint
+          );
 
         const decodedToken: {
           prid: string;

@@ -1,4 +1,4 @@
-import { HelioSDK } from '@heliofi/sdk';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type IconProps = {
   iconName?: string;
@@ -8,6 +8,8 @@ export type IconProps = {
 
 const CurrencyIcon = ({ className, gradient = false, iconName }: IconProps) => {
   const filename = iconName + (gradient ? '' : '_uncolored');
+  const { HelioSDK } = useCompositionRoot();
+
   return (
     <div className={className}>
       {iconName && (

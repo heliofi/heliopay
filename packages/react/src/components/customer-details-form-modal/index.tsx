@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom';
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { InfoIcon } from '@heliofi/helio-icons';
-import { HelioSDK } from '@heliofi/sdk';
 
 import {
   CustomerDetails,
@@ -35,6 +34,7 @@ import AddressSection from '../addressSection';
 import { SwapsForm } from '../swaps-form';
 import { countries, Country } from '../../domain';
 import { removeUndefinedFields } from '../../utils';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -63,6 +63,9 @@ const CustomerDetailsFormModal = ({
     tokenSwapError,
     removeTokenSwapError,
   } = useHelioProvider();
+
+  const { HelioSDK } = useCompositionRoot();
+
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [selectValue, setSelectValue] = useState({

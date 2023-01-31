@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
-import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { AddressDetails, AddressList } from '../../domain';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export const AddressContext = createContext<{
   addressList?: AddressList;
@@ -18,10 +18,10 @@ export const useAddressProvider = () => {
   const { addressList, setAddressList, addressDetails, setAddressDetails } =
     useContext(AddressContext);
 
-  const { apiService } = useCompositionRoot();
+  const { HelioSDK } = useCompositionRoot();
 
   const findAddress = async (query: string, country_code: string) => {
-    const result = await apiService.findAddress(query, country_code);
+    const result = await HelioSDK.apiService.findAddress(query, country_code);
     setAddressList(result?.results ?? []);
   };
 
@@ -45,7 +45,7 @@ export const useAddressProvider = () => {
       }
       setAddressDetails(result);
     } else {
-      const { result } = await apiService.retrieveAddress(
+      const { result } = await HelioSDK.apiService.retrieveAddress(
         address_id,
         country_code
       );

@@ -3,14 +3,13 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
   ClusterType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
-  HelioSDK,
 } from '@heliofi/sdk';
 import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
@@ -33,6 +32,7 @@ import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import PaymentResult from '../payment-result';
 import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -57,9 +57,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   supportedCurrencies,
   totalAmount,
 }) => {
-  useMemo(() => {
-    HelioSDK.init(cluster as ClusterType);
-  }, [cluster]);
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
   const { dynamicRateToken } = useTokenConversion();
@@ -78,7 +75,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     isCustomerDetailsRequired,
     tokenSwapQuote,
   } = useHelioProvider();
-
+  const { HelioSDK } = useCompositionRoot();
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[] | null>(

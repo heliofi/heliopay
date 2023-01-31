@@ -49,6 +49,6 @@ export class CurrencyService {
   }
 
   private hasCurrencyResult(): boolean {
-    return !!this.currencies.length;
+    return !!this.currencies?.length;
   }
 }

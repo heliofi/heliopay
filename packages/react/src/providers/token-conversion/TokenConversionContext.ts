@@ -37,11 +37,11 @@ export const useTokenConversion = () => {
     setTokenExpiration,
   } = useContext(TokenConversionContext);
 
-  const { apiService } = useCompositionRoot();
+  const { HelioSDK } = useCompositionRoot();
 
   const getTokenPrice = async ({ amount, to, from }: LivePricePayload) => {
     setDynamicRateLoading(true);
-    const result = await apiService.getLivePrice(amount, to, from);
+    const result = await HelioSDK.apiService.getLivePrice(amount, to, from);
     const decodedToken: {
       exp: number;
       rate: number;

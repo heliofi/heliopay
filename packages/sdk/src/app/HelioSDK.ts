@@ -1,5 +1,5 @@
+import { Cluster } from "@solana/web3.js";
 import {
-  ClusterType,
   CurrencyService,
   SolExplorerService,
   TokenConversionService,
@@ -8,69 +8,74 @@ import {
 import { HelioApiAdapter, PaylinkSubmitService } from "../infrastructure";
 
 export class HelioSDK {
-  private static instance: HelioSDK;
+  private _cluster: Cluster | undefined;
 
-  private currencyService: CurrencyService;
+  private _currencyService: CurrencyService;
 
-  private apiService: HelioApiAdapter;
+  private _apiService: HelioApiAdapter;
 
-  private tokenConversionService: TokenConversionService;
+  private _tokenConversionService: TokenConversionService;
 
-  private solExplorerService: SolExplorerService;
+  private _solExplorerService: SolExplorerService;
 
-  private paylinkService: PaylinkSubmitService;
+  private _paylinkService: PaylinkSubmitService;
 
-  private configService: ConfigService;
+  private _configService: ConfigService;
 
-  constructor(private cluster: ClusterType) {
-    this.configService = new ConfigService(cluster);
-    this.apiService = new HelioApiAdapter(this.configService);
-    this.currencyService = new CurrencyService(this.apiService);
-    this.tokenConversionService = new TokenConversionService(
-      this.currencyService
+  constructor(options?: { cluster: Cluster }) {
+    this._cluster = options?.cluster;
+    this._configService = new ConfigService(options?.cluster);
+    this._apiService = new HelioApiAdapter(this._configService);
+    this._currencyService = new CurrencyService(this._apiService);
+    this._tokenConversionService = new TokenConversionService(
+      this._currencyService
     );
-    this.solExplorerService = new SolExplorerService(this.configService);
-    this.paylinkService = new PaylinkSubmitService(
-      this.apiService,
-      this.currencyService,
-      this.configService
+    this._solExplorerService = new SolExplorerService(this._configService);
+    this._paylinkService = new PaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
     );
   }
 
-  static init(cluster: ClusterType): typeof HelioSDK {
-    this.instance = new HelioSDK(cluster);
-    return HelioSDK;
-  }
-
-  static getInstance(): HelioSDK {
-    if (!this.instance) {
-      throw new Error("please call HelioSDK.init before getInstance");
+  private checkCluster() {
+    if (!this._cluster) {
+      throw new Error("Please set cluster");
     }
-
-    return this.instance;
   }
 
-  static get currencyService(): CurrencyService {
-    return HelioSDK.getInstance().currencyService;
+  setCluster(cluster: Cluster) {
+    this._cluster = cluster;
+    this._configService.setCluster(cluster);
   }
 
-  static get apiService(): HelioApiAdapter {
-    return HelioSDK.getInstance().apiService;
+  get currencyService(): CurrencyService {
+    this.checkCluster();
+    return this._currencyService;
   }
 
-  static get solExplorerService(): SolExplorerService {
-    return HelioSDK.getInstance().solExplorerService;
+  get apiService(): HelioApiAdapter {
+    this.checkCluster();
+    return this._apiService;
   }
 
-  static get tokenConversionService(): TokenConversionService {
-    return HelioSDK.getInstance().tokenConversionService;
+  get solExplorerService(): SolExplorerService {
+    this.checkCluster();
+    return this._solExplorerService;
   }
 
-  static get paylinkService(): PaylinkSubmitService {
-    return HelioSDK.getInstance().paylinkService;
+  get tokenConversionService(): TokenConversionService {
+    this.checkCluster();
+    return this._tokenConversionService;
   }
 
-  static get configService(): ConfigService {
-    return HelioSDK.getInstance().configService;
+  get paylinkService(): PaylinkSubmitService {
+    this.checkCluster();
+    return this._paylinkService;
+  }
+
+  get configService(): ConfigService {
+    this.checkCluster();
+    return this._configService;
   }
 }

@@ -1,7 +1,6 @@
 import { FormikValues } from 'formik';
 import { Currency, PaymentRequestType } from '@heliofi/common';
 import { useEffect, useState } from 'react';
-import { HelioSDK } from '@heliofi/sdk';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import {
   StyledCurrencySelectIcon,
@@ -15,6 +14,7 @@ import SelectBox from '../selectbox';
 import { useDebounce } from '../../hooks/useDebounce';
 import Spinner from '../../assets/placeholders/LoadingSpinner';
 import { roundValue } from '../../utils';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface SwapsFormProps {
   formValues: FormikValues;
@@ -39,6 +39,8 @@ export const SwapsForm = ({
     tokenSwapError,
     currencyList,
   } = useHelioProvider();
+
+  const { HelioSDK } = useCompositionRoot();
 
   const [selectedCurrency, setSelectedCurrency] = useState(
     tokenSwapCurrencies?.find(
