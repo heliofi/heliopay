@@ -4,6 +4,7 @@ import {
   SolExplorerService,
   TokenConversionService,
   ConfigService,
+  HelioApiConnector,
 } from "../domain";
 import { HelioApiAdapter, PaylinkSubmitService } from "../infrastructure";
 
@@ -12,7 +13,7 @@ export class HelioSDK {
 
   private _currencyService: CurrencyService;
 
-  private _apiService: HelioApiAdapter;
+  private _apiService: HelioApiConnector;
 
   private _tokenConversionService: TokenConversionService;
 
@@ -38,7 +39,7 @@ export class HelioSDK {
     );
   }
 
-  private checkCluster() {
+  private checkCluster(): void | never {
     if (!this._cluster) {
       throw new Error("Please set cluster");
     }
@@ -49,32 +50,32 @@ export class HelioSDK {
     this._configService.setCluster(cluster);
   }
 
-  get currencyService(): CurrencyService {
+  get currencyService(): CurrencyService | never {
     this.checkCluster();
     return this._currencyService;
   }
 
-  get apiService(): HelioApiAdapter {
+  get apiService(): HelioApiConnector | never {
     this.checkCluster();
     return this._apiService;
   }
 
-  get solExplorerService(): SolExplorerService {
+  get solExplorerService(): SolExplorerService | never {
     this.checkCluster();
     return this._solExplorerService;
   }
 
-  get tokenConversionService(): TokenConversionService {
+  get tokenConversionService(): TokenConversionService | never {
     this.checkCluster();
     return this._tokenConversionService;
   }
 
-  get paylinkService(): PaylinkSubmitService {
+  get paylinkService(): PaylinkSubmitService | never {
     this.checkCluster();
     return this._paylinkService;
   }
 
-  get configService(): ConfigService {
+  get configService(): ConfigService | never {
     this.checkCluster();
     return this._configService;
   }

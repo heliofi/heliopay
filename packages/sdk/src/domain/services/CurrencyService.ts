@@ -1,16 +1,16 @@
 import { Currency } from "@heliofi/common";
-import type { HelioApiAdapter } from "../../infrastructure";
+import { HelioApiConnector } from "../model";
 
 export class CurrencyService {
   private currencies!: Currency[];
 
-  constructor(private apiService: HelioApiAdapter) {}
+  constructor(private apiService: HelioApiConnector) {}
 
-  setCurrencies(currencies: Currency[]) {
+  private setCurrencies(currencies: Currency[]) {
     this.currencies = currencies;
   }
 
-  getCurrencyBySymbol(symbol: string): Currency {
+  getCurrencyBySymbol(symbol: string): Currency | never {
     if (!this.hasCurrencyResult()) {
       throw new Error(`You should call currencyService.getCurrencies() before`);
     }
@@ -24,7 +24,7 @@ export class CurrencyService {
     return currency;
   }
 
-  getCurrencyByMint(mint: string): Currency {
+  getCurrencyByMint(mint: string): Currency | never {
     if (!this.hasCurrencyResult()) {
       throw new Error(`You should call currencyService.getCurrencies() before`);
     }

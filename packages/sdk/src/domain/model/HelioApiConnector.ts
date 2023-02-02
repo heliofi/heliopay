@@ -3,6 +3,8 @@ import {
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
   PaymentRequestType,
+  PrepareSwapTransaction,
+  PrepareTransaction,
   SwapRouteToken,
   TokenQuoting,
 } from "@heliofi/common";
@@ -12,6 +14,7 @@ export interface HelioApiConnector {
     query: string,
     country_code: string
   ): Promise<FetchifyFindAddress>;
+
   retrieveAddress(
     address_id: string,
     country_code: string
@@ -39,4 +42,14 @@ export interface HelioApiConnector {
     paymentRequestId?: string,
     paymentRequestType?: string
   ): Promise<TokenQuoting>;
+
+  getPreparedTransactionMessage(
+    url: string,
+    body: string
+  ): Promise<PrepareTransaction>;
+
+  getPreparedTransactionSwapMessage(
+    url: string,
+    body: string
+  ): Promise<PrepareSwapTransaction>;
 }

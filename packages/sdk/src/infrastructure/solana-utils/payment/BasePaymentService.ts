@@ -1,7 +1,7 @@
 import { SplitWallet } from "@heliofi/common";
 import { AnchorWallet } from "@solana/wallet-adapter-react/src/useAnchorWallet";
 import { Cluster, Connection, PublicKey } from "@solana/web3.js";
-import { HttpCodes } from "../../../domain";
+import { HelioApiConnector, HttpCodes } from "../../../domain";
 import type { CurrencyService, ConfigService } from "../../../domain";
 import { TransactionTimeoutError } from "../../solana-adapter/TransactionTimeoutError";
 import { VerificationError } from "../../solana-adapter/VerificationError";
@@ -13,7 +13,6 @@ import {
 } from "./models/PaymentResponse";
 import { BaseTransactionPayload } from "./models/TransactionPayload";
 import { getTransactionSignature } from "../getTransactionSignature";
-import type { HelioApiAdapter } from "../../helio-api";
 
 export abstract class BasePaymentService<
   TransactionParams,
@@ -32,7 +31,7 @@ export abstract class BasePaymentService<
   protected connection?: Connection;
 
   constructor(
-    protected apiService: HelioApiAdapter,
+    protected apiService: HelioApiConnector,
     private currencyService: CurrencyService,
     private configService: ConfigService
   ) {}
