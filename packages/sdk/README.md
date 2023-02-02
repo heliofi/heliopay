@@ -185,15 +185,15 @@ This SDK are required for developing a Helio app.
 |:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
 | handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
 
-```
-  BasePaymentResponse: {
-    transactionSignature: string;
-    swapTransactionSignature?: string;
-  };
-  
+```ts
   import { Idl, Program } from "@project-serum/anchor";
   import { AnchorWallet } from "@solana/wallet-adapter-react";
   import { Cluster, Connection } from "@solana/web3.js";
+  
+  BasePaymentResponse: {
+      transactionSignature: string;
+      swapTransactionSignature?: string;
+  };
   
   BasePaymentProps: {
     onSuccess: (event: {
