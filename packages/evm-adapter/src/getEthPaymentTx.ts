@@ -7,16 +7,14 @@ import { PaymentRequest } from './types';
 export const getEthPaymentTx = async (
   provider: BaseProvider,
   req: PaymentRequest,
-  fee: number,
-  transactonDbId: string,
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
   const unsignedTx = await contract.populateTransaction.ethPayment(
     req.recipientAddress,
     BigNumber.from(req.amount),
-    BigNumber.from(fee),
-    transactonDbId,
+    BigNumber.from(req.fee),
+    req.transactonDbId,
     {
       value: BigNumber.from(req.amount),
       gasLimit,

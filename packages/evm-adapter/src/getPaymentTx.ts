@@ -7,8 +7,6 @@ import { PaymentRequest } from './types';
 export const getPaymentTx = async (
   provider: BaseProvider,
   req: PaymentRequest,
-  fee: number,
-  transactionDbId: string,
   chainId?: number
 ) => {
   const contract = new Contract(contractAddress, helio.abi, provider);
@@ -18,8 +16,8 @@ export const getPaymentTx = async (
     req.recipientAddress,
     req.tokenAddres,
     amount,
-    BigNumber.from(fee),
-    transactionDbId,
+    BigNumber.from(req.fee),
+    req.transactonDbId,
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),

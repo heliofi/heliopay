@@ -10,4 +10,6 @@ export type PaymentRequest = {
   recipientAddress: string;
   amount: bigint;
   tokenAddres?: string;
+  fee: number;
+  transactonDbId: string;
 };
