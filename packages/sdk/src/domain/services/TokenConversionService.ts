@@ -1,5 +1,5 @@
-import { Currency } from "@heliofi/common";
-import type { CurrencyService } from "./CurrencyService";
+import { Currency } from '@heliofi/common';
+import type { CurrencyService } from './CurrencyService';
 
 export class TokenConversionService {
   // @TODO change to bigint
@@ -37,9 +37,11 @@ export class TokenConversionService {
 
   convertFromMinimalAndRound(symbol: string, minimalAmount: number): string {
     const decimalAmount = this.convertFromMinimalUnits(symbol, minimalAmount);
-    return this.formatPrice(
-      this.currencyService.getCurrencyBySymbol(symbol),
-      decimalAmount
-    );
+    const currency = this.currencyService.getCurrencyBySymbol(symbol);
+
+    if (currency) {
+      return this.formatPrice(currency, decimalAmount);
+    }
+    throw new Error(`Unable to find currency: ${currency}`);
   }
 }

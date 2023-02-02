@@ -11,7 +11,7 @@ export const getStringBetween = (
 };
 
 export const isEmptyObject = (obj?: {}) =>
-  obj == null || (typeof obj === "object" && Object.keys(obj).length === 0);
+  obj == null || (typeof obj === 'object' && Object.keys(obj).length === 0);
 
 export const fromBigintToStringForSerialization = (value: bigint): string =>
   String(value);

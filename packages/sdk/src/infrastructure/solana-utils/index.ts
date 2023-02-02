@@ -1,1 +1,1 @@
-export * from "./payment/paylink/PaylinkSubmitService";
+export * from './payment/paylink/PaylinkSubmitService';

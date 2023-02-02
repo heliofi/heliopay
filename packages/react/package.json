@@ -16,7 +16,7 @@
     "@aws-amplify/api-graphql": "^2.3.12",
     "@heliofi/common": "^0.1.135",
     "@heliofi/helio-icons": "^1.0.5",
-    "@heliofi/sdk": "^1.0.0",
+    "@heliofi/sdk": "^0.0.1",
     "@heliofi/solana-adapter": "3.1.1-alpha",
     "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.3.6",

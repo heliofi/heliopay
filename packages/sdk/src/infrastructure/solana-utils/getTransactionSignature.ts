@@ -1,5 +1,5 @@
-import { Transaction } from "@solana/web3.js";
-import bs58 from "bs58";
+import { Transaction } from '@solana/web3.js';
+import bs58 from 'bs58';
 
 const toArrayBuffer = (buf: Buffer): ArrayBuffer => {
   const ab = new ArrayBuffer(buf.length);

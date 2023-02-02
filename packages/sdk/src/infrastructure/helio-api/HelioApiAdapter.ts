@@ -7,9 +7,9 @@ import {
   PrepareTransaction,
   SwapRouteToken,
   TokenQuoting,
-} from "@heliofi/common";
-import type { ConfigService, HelioApiConnector } from "../../domain";
-import { enhanceOptions, FetchOptions, request } from "../fetch-middleware";
+} from '@heliofi/common';
+import type { ConfigService, HelioApiConnector } from '../../domain';
+import { enhanceOptions, FetchOptions, request } from '../fetch-middleware';
 
 export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
@@ -17,7 +17,7 @@ export class HelioApiAdapter implements HelioApiConnector {
   async getPaymentRequestByIdPublic(id: string): Promise<any> {
     return this.publicRequest<any>(
       `/paylink/${id}/public`,
-      { method: "GET" },
+      { method: 'GET' },
       true
     );
   }
@@ -28,7 +28,7 @@ export class HelioApiAdapter implements HelioApiConnector {
   ): Promise<FetchifyFindAddress> {
     return this.publicRequest<FetchifyFindAddress>(
       `/location/find-address?query=${query}&countryCode=${country_code}`,
-      { method: "GET" },
+      { method: 'GET' },
       true
     );
   }
@@ -39,19 +39,19 @@ export class HelioApiAdapter implements HelioApiConnector {
   ): Promise<FetchifyRetrieveAddress> {
     return this.publicRequest<FetchifyRetrieveAddress>(
       `/location/retrieve-address?id=${address_id}&country=${country_code}`,
-      { method: "GET" },
+      { method: 'GET' },
       true
     );
   }
 
   async listCurrencies(): Promise<Currency[]> {
-    return this.publicRequest<any>("/currency", { method: "GET" }, true);
+    return this.publicRequest<any>('/currency', { method: 'GET' }, true);
   }
 
   async getTokenSwapMintAddresses(mintAddress: string): Promise<string[]> {
     return this.publicRequest<any>(
       `/swap/mint-routes/${mintAddress}`,
-      { method: "GET" },
+      { method: 'GET' },
       true
     );
   }
@@ -63,7 +63,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     return this.publicRequest<PrepareTransaction>(
       url,
       {
-        method: "POST",
+        method: 'POST',
         body,
       },
       true
@@ -77,7 +77,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     return this.publicRequest<PrepareSwapTransaction>(
       url,
       {
-        method: "POST",
+        method: 'POST',
         body,
       },
       true
@@ -91,7 +91,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     paymentRequestId?: string,
     paymentRequestType?: string
   ): Promise<TokenQuoting> {
-    let queryParams = "";
+    let queryParams = '';
     queryParams += `&amount=${amount}`;
     queryParams += `&to=${to}`;
     queryParams += `&from=${from}`;
@@ -106,7 +106,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     return this.publicRequest<TokenQuoting>(
       `/token-quoting?${queryParams}`,
       {
-        method: "GET",
+        method: 'GET',
       },
       true
     );
@@ -143,7 +143,7 @@ export class HelioApiAdapter implements HelioApiConnector {
 
     return this.publicRequest<SwapRouteToken>(
       `${url}?${urlParams.toString()}`,
-      { method: "GET" },
+      { method: 'GET' },
       true
     );
   }

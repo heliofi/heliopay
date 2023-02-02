@@ -1,4 +1,4 @@
-import { ResponseError } from "./ResponseError";
+import { ResponseError } from './ResponseError';
 
 type ErrorMessage = {
   message: string;
@@ -49,7 +49,7 @@ export const enhanceOptions = (
   token?: string
 ): RequestInit => {
   const contentType = !options.clearContentType
-    ? { "Content-Type": "application/json" }
+    ? { 'Content-Type': 'application/json' }
     : null;
 
   return {
@@ -62,4 +62,4 @@ export const enhanceOptions = (
   };
 };
 
-export * from "./ResponseError";
+export * from './ResponseError';

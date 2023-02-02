@@ -1,6 +1,6 @@
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Keypair, Transaction } from "@solana/web3.js";
-import nacl from "tweetnacl";
+import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { Keypair, Transaction } from '@solana/web3.js';
+import nacl from 'tweetnacl';
 
 export async function signTransaction(
   pTransaction: Transaction,
@@ -24,7 +24,7 @@ export async function signTransaction(
     }
     return JSON.stringify(signedTransaction.serialize());
   } catch (error) {
-    return "";
+    return '';
   }
 }
 

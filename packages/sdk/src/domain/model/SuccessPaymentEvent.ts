@@ -1,5 +1,5 @@
-import { PaymentEvent } from "./PaymentEvent";
-import type { ApproveTransactionResponse } from "../../infrastructure";
+import { PaymentEvent } from './PaymentEvent';
+import type { ApproveTransactionResponse } from '../../infrastructure';
 
 export interface SuccessPaymentEvent<T = ApproveTransactionResponse>
   extends PaymentEvent {

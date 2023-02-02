@@ -1,21 +1,21 @@
-import { CustomerDetails, SplitWallet } from "@heliofi/common";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Cluster, Connection, PublicKey, Transaction } from "@solana/web3.js";
-import "reflect-metadata";
-import { SinglePaymentRequest } from "@heliofi/solana-adapter";
-import { BigNumber } from "../../../../domain/model/BigNumber";
+import { CustomerDetails, SplitWallet } from '@heliofi/common';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { Cluster, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import 'reflect-metadata';
+import { SinglePaymentRequest } from '@heliofi/solana-adapter';
+import { BigNumber } from '../../../../domain/model/BigNumber';
 import {
   fromBigintToStringForSerialization,
   isEmptyObject,
-} from "../../../../utils";
-import { createTransaction } from "../../CreateTransaction";
-import { signTransaction } from "../../SignTransaction";
+} from '../../../../utils';
+import { createTransaction } from '../../CreateTransaction';
+import { signTransaction } from '../../SignTransaction';
 
-import { SignedTxAndToken } from "../../types";
-import { BasePaymentService } from "../BasePaymentService";
-import { BasePaymentProps } from "../models/PaymentProps";
-import { BasePaymentResponse } from "../models/PaymentResponse";
-import { BaseTransactionPayload } from "../models/TransactionPayload";
+import { SignedTxAndToken } from '../../types';
+import { BasePaymentService } from '../BasePaymentService';
+import { BasePaymentProps } from '../models/PaymentProps';
+import { BasePaymentResponse } from '../models/PaymentResponse';
+import { BaseTransactionPayload } from '../models/TransactionPayload';
 
 export interface CreatePaymentProps
   extends BasePaymentProps<ApproveTransactionResponse> {
@@ -85,9 +85,9 @@ export class PaylinkSubmitService extends BasePaymentService<
   CreatePaymentProps,
   ApproveTransactionResponse
 > {
-  protected readonly endpoint = "transaction/submit";
+  protected readonly endpoint = 'transaction/submit';
 
-  protected readonly prepareEndpoint = "/prepare/transaction/sol/paylink";
+  protected readonly prepareEndpoint = '/prepare/transaction/sol/paylink';
 
   protected async init(props: CreatePaymentProps): Promise<void> {
     await super.init(props);
@@ -132,7 +132,7 @@ export class PaylinkSubmitService extends BasePaymentService<
         fixedCurrencyRateToken,
       });
     }
-    throw new Error("Connection or wallet is not defined");
+    throw new Error('Connection or wallet is not defined');
   }
 
   protected getTransactionParams({
@@ -146,7 +146,7 @@ export class PaylinkSubmitService extends BasePaymentService<
     splitWallets?: SplitWallet[];
   } {
     if (!anchorProvider.provider.publicKey) {
-      throw new Error("Public key is invalid");
+      throw new Error('Public key is invalid');
     }
 
     return {
@@ -232,7 +232,7 @@ export class PaylinkSubmitService extends BasePaymentService<
       prepareSwapTransactionResponse?.standardTransaction
     );
 
-    const swapTx = Transaction.from(Buffer.from(swapTransaction, "base64"));
+    const swapTx = Transaction.from(Buffer.from(swapTransaction, 'base64'));
 
     const [swapSignedTx, signedTx] = await wallet.signAllTransactions([
       swapTx,

@@ -1,1 +1,1 @@
-export * from "./HelioApiAdapter";
+export * from './HelioApiAdapter';

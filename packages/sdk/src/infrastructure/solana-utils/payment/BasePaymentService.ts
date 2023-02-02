@@ -1,18 +1,18 @@
-import { SplitWallet } from "@heliofi/common";
-import { AnchorWallet } from "@solana/wallet-adapter-react/src/useAnchorWallet";
-import { Cluster, Connection, PublicKey } from "@solana/web3.js";
-import { HelioApiConnector, HttpCodes } from "../../../domain";
-import type { CurrencyService, ConfigService } from "../../../domain";
-import { TransactionTimeoutError } from "../../solana-adapter/TransactionTimeoutError";
-import { VerificationError } from "../../solana-adapter/VerificationError";
-import { ExecuteTransactionPayload, SignedTxAndToken } from "../types";
-import { BasePaymentProps } from "./models/PaymentProps";
+import { SplitWallet } from '@heliofi/common';
+import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
+import { Cluster, Connection, PublicKey } from '@solana/web3.js';
+import { HelioApiConnector, HttpCodes } from '../../../domain';
+import type { CurrencyService, ConfigService } from '../../../domain';
+import { TransactionTimeoutError } from '../../solana-adapter/TransactionTimeoutError';
+import { VerificationError } from '../../solana-adapter/VerificationError';
+import { ExecuteTransactionPayload, SignedTxAndToken } from '../types';
+import { BasePaymentProps } from './models/PaymentProps';
 import {
   BasePaymentResponse,
   SwapPaymentResponse,
-} from "./models/PaymentResponse";
-import { BaseTransactionPayload } from "./models/TransactionPayload";
-import { getTransactionSignature } from "../getTransactionSignature";
+} from './models/PaymentResponse';
+import { BaseTransactionPayload } from './models/TransactionPayload';
+import { getTransactionSignature } from '../getTransactionSignature';
 
 export abstract class BasePaymentService<
   TransactionParams,
@@ -61,9 +61,13 @@ export abstract class BasePaymentService<
     this.wallet = wallet;
     this.connection = connection;
 
-    this.mintAddress = new PublicKey(
-      this.currencyService.getCurrencyBySymbol(symbol).mintAddress as string
-    );
+    const currency = this.currencyService.getCurrencyBySymbol(symbol);
+
+    if (!currency) {
+      throw new Error(`Unable to find currency: ${currency}`);
+    }
+
+    this.mintAddress = new PublicKey(currency.mintAddress as string);
     this.cluster = cluster;
   }
 
@@ -93,13 +97,13 @@ export abstract class BasePaymentService<
     );
 
     if (sendTransactionResponse?.signedTx === undefined) {
-      props.onError({ errorMessage: "Failed to send transaction" });
+      props.onError({ errorMessage: 'Failed to send transaction' });
       return;
     }
 
     const { token, signedTx, swapSignedTx } = sendTransactionResponse;
     if (!this.isSignedTransactionValid(signedTx)) {
-      props.onError({ errorMessage: "Transaction canceled" });
+      props.onError({ errorMessage: 'Transaction canceled' });
       return;
     }
 
@@ -125,7 +129,7 @@ export abstract class BasePaymentService<
     try {
       await callback();
     } catch (e) {
-      onError("Unable to verify the transaction.");
+      onError('Unable to verify the transaction.');
     }
   }
 
@@ -161,9 +165,9 @@ export abstract class BasePaymentService<
   ): Promise<BasePaymentResponse> {
     const HELIO_BASE_API_URL = this.configService.getHelioApiBaseUrl();
     const res = await fetch(`${HELIO_BASE_API_URL}/${this.endpoint}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify(reqBody),
     });
@@ -182,9 +186,9 @@ export abstract class BasePaymentService<
   ): Promise<SwapPaymentResponse> {
     const HELIO_BASE_API_URL = this.configService.getHelioApiBaseUrl();
     const res = await fetch(`${HELIO_BASE_API_URL}/${this.endpoint}/swap`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify(reqBody),
     });
@@ -201,7 +205,7 @@ export abstract class BasePaymentService<
 
   protected async approveTransactionByType(
     payload: Payload,
-    onSuccess: BasePaymentProps<Res>["onSuccess"]
+    onSuccess: BasePaymentProps<Res>['onSuccess']
   ) {
     if (payload.signedSwapTransaction != null) {
       const response = await this.approveSwapTransaction(payload);
@@ -214,9 +218,9 @@ export abstract class BasePaymentService<
 
   protected async handleApprovedTransaction(
     payload: Payload,
-    onSuccess: BasePaymentProps<Res>["onSuccess"],
-    onError: BasePaymentProps<Res>["onError"],
-    onPending: BasePaymentProps<Res>["onPending"]
+    onSuccess: BasePaymentProps<Res>['onSuccess'],
+    onError: BasePaymentProps<Res>['onError'],
+    onPending: BasePaymentProps<Res>['onPending']
   ): Promise<void> {
     try {
       await this.approveTransactionByType(payload, onSuccess);
@@ -237,7 +241,7 @@ export abstract class BasePaymentService<
   protected onSuccess(
     response: BasePaymentResponse,
     payload: Payload,
-    onSuccess: BasePaymentProps<Res>["onSuccess"]
+    onSuccess: BasePaymentProps<Res>['onSuccess']
   ) {
     onSuccess({
       transaction: response.transactionSignature,

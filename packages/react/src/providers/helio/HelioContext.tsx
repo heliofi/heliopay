@@ -126,9 +126,11 @@ export const useHelioProvider = () => {
         HelioSDK.currencyService.getCurrencyBySymbol('SOL');
       const bonkCurrency = HelioSDK.currencyService.getCurrencyBySymbol('BONK');
 
-      currencies.unshift(solanaCurrency);
+      if (solanaCurrency) {
+        currencies.unshift(solanaCurrency);
+      }
 
-      if (mintAddress !== bonkCurrency.mintAddress) {
+      if (bonkCurrency && mintAddress !== bonkCurrency.mintAddress) {
         currencies.push(bonkCurrency);
       }
 

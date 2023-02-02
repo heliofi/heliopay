@@ -1,5 +1,5 @@
-import { Currency } from "@heliofi/common";
-import { HelioApiConnector } from "../model";
+import { Currency } from '@heliofi/common';
+import { HelioApiConnector } from '../model';
 
 export class CurrencyService {
   private currencies!: Currency[];
@@ -10,7 +10,7 @@ export class CurrencyService {
     this.currencies = currencies;
   }
 
-  getCurrencyBySymbol(symbol: string): Currency | never {
+  getCurrencyBySymbol(symbol: string): Currency | undefined {
     if (!this.hasCurrencyResult()) {
       throw new Error(`You should call currencyService.getCurrencies() before`);
     }
@@ -19,7 +19,7 @@ export class CurrencyService {
       (currencyItem) => currencyItem.symbol === symbol
     );
     if (currency == null) {
-      throw new Error(`Unable to find currency: ${currency}`);
+      return undefined;
     }
     return currency;
   }

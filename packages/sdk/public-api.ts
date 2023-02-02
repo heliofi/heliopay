@@ -1,2 +1,2 @@
-export * from "./src/domain/model";
-export * from "./src/app";
+export * from './src/domain/model';
+export * from './src/app';

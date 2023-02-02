@@ -1,4 +1,4 @@
-import { SplitWallet } from "@heliofi/common";
+import { SplitWallet } from '@heliofi/common';
 
 export type TransactionSignatureAndToken = {
   signature?: string;

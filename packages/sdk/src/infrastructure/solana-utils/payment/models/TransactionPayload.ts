@@ -1,4 +1,4 @@
-import { Cluster } from "@solana/web3.js";
+import { Cluster } from '@solana/web3.js';
 
 export interface BaseTransactionPayload {
   cluster: Cluster;

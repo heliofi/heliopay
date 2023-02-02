@@ -1,12 +1,12 @@
-import { Cluster } from "@solana/web3.js";
+import { Cluster } from '@solana/web3.js';
 import {
   CurrencyService,
   SolExplorerService,
   TokenConversionService,
   ConfigService,
   HelioApiConnector,
-} from "../domain";
-import { HelioApiAdapter, PaylinkSubmitService } from "../infrastructure";
+} from '../domain';
+import { HelioApiAdapter, PaylinkSubmitService } from '../infrastructure';
 
 export class HelioSDK {
   private _cluster: Cluster | undefined;
@@ -41,7 +41,7 @@ export class HelioSDK {
 
   private checkCluster(): void | never {
     if (!this._cluster) {
-      throw new Error("Please set cluster");
+      throw new Error('Please set cluster');
     }
   }
 
