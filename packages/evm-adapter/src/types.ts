@@ -9,7 +9,7 @@ export type PaymentRequest = {
   walletAddress: string;
   recipientAddress: string;
   amount: bigint;
-  tokenAddres?: string;
   fee: number;
   transactonDbId: string;
+  tokenAddres?: string;
 };
