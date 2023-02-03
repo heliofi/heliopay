@@ -185,7 +185,7 @@ This SDK are required for developing a Helio app.
 |:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
 | handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
 
-```ts
+```Typescript
   import { Idl, Program } from "@project-serum/anchor";
   import { AnchorWallet } from "@solana/wallet-adapter-react";
   import { Cluster, Connection } from "@solana/web3.js";
@@ -224,13 +224,13 @@ This SDK are required for developing a Helio app.
 | setCluster          | cluster: Cluster | void    | set cluster                                |
 | getHelioApiBaseUrl  | none             | string  | get Helio api base url for current cluster |
 
-```
+```Typescript
  Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 
 ## Example
 
-```ts
+```Typescript
 import { HelioSDK, ClusterType } from '@heliofi/sdk';
 import { Cluster } from '@solana/web3.js';
 
