@@ -1,4 +1,4 @@
 import { BigNumber, utils } from 'ethers';
 
-export const contractAddress = '0x3Ba7cdeb44Ac853b149f2a6616fa8DAd3aFaeC6c';
+export const contractAddress = '0x707Cad6EDB79eE9F64818B09F14A7Aa7f4910e93';
 export const gasLimit = BigNumber.from(utils.hexlify('0x100000'));

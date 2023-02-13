@@ -7,7 +7,6 @@ import { PaymentRequest, RecipientAndAmount } from './types';
 export const getSplitPaymentTx = async (
   provider: BaseProvider,
   req: PaymentRequest,
-  fee: number,
   recipientsAndAmounts: RecipientAndAmount[],
   chainId?: number
 ) => {
@@ -16,8 +15,9 @@ export const getSplitPaymentTx = async (
     req.recipientAddress,
     req.tokenAddres,
     BigNumber.from(req.amount),
-    BigNumber.from(fee),
+    BigNumber.from(req.fee),
     recipientsAndAmounts,
+    req.transactonDbId,
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),
