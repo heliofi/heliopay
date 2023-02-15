@@ -1,11 +1,14 @@
 import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
-import { Currency, PaymentRequestType, SOL_MINT, WRAPPED_SOL_MINT } from '@heliofi/common';
+import {
+  Currency,
+  PaymentRequestType,
+  SOL_MINT,
+  WRAPPED_SOL_MINT,
+} from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
-import { CurrencyService } from '../../domain/services/CurrencyService';
-import { HelioApiAdapter } from '../../infrastructure/helio-api/HelioApiAdapter';
-import { TokenSwapQuote } from '../../domain/model/TokenSwapQuote';
-import { TokenConversionService } from '../../domain/services/TokenConversionService';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { TokenSwapQuote } from '../../domain';
 
 export const HelioContext = createContext<{
   currencyList: any[];
@@ -63,11 +66,12 @@ export const useHelioProvider = () => {
     setTokenSwapError,
   } = useContext(HelioContext);
 
+  const { HelioSDK } = useCompositionRoot();
+
   const getCurrencyList = async () => {
     if (cluster) {
-      const result = await HelioApiAdapter.listCurrencies(cluster);
+      const result = await HelioSDK.currencyService.getCurrencies();
       setCurrencyList(result || []);
-      CurrencyService.setCurrencies(result);
     }
   };
 
@@ -90,9 +94,8 @@ export const useHelioProvider = () => {
     if (!cluster) {
       throw new Error('Please provide a cluster');
     }
-    const result = await HelioApiAdapter.getPaymentRequestByIdPublic(
-      paymentRequestId,
-      cluster
+    const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
+      paymentRequestId
     );
     setPaymentDetails(result || {});
   };
@@ -111,21 +114,23 @@ export const useHelioProvider = () => {
       mintAddress === SOL_MINT ? WRAPPED_SOL_MINT : mintAddress;
 
     if (validatedMintAddress && cluster) {
-      const mintAddresses = await HelioApiAdapter.getTokenSwapMintAddresses(
-        validatedMintAddress,
-        cluster
+      const mintAddresses = await HelioSDK.apiService.getTokenSwapMintAddresses(
+        validatedMintAddress
       );
 
       const currencies = mintAddresses.map((address) =>
-        CurrencyService.getCurrencyByMint(address)
+        HelioSDK.currencyService.getCurrencyByMint(address)
       );
 
-      const solanaCurrency = CurrencyService.getCurrencyBySymbol('SOL');
-      const bonkCurrency = CurrencyService.getCurrencyBySymbol('BONK');
+      const solanaCurrency =
+        HelioSDK.currencyService.getCurrencyBySymbol('SOL');
+      const bonkCurrency = HelioSDK.currencyService.getCurrencyBySymbol('BONK');
 
-      currencies.unshift(solanaCurrency);
+      if (solanaCurrency) {
+        currencies.unshift(solanaCurrency);
+      }
 
-      if (mintAddress !== bonkCurrency.mintAddress) {
+      if (bonkCurrency && mintAddress !== bonkCurrency.mintAddress) {
         currencies.push(bonkCurrency);
       }
 
@@ -149,18 +154,18 @@ export const useHelioProvider = () => {
     setTokenSwapLoading(true);
     try {
       if (cluster) {
-        const tokenSwapJWTResponse = await HelioApiAdapter.getTokenSwapQuote(
-          cluster,
-          paymentRequestId,
-          paymentRequestType,
-          fromMint,
-          quantity ?? 1,
-          TokenConversionService.convertToMinimalUnits(
-            paymentDetails.currency.symbol,
-            normalizedPrice
-          ),
-          toMint
-        );
+        const tokenSwapJWTResponse =
+          await HelioSDK.apiService.getTokenSwapQuote(
+            paymentRequestId,
+            paymentRequestType,
+            fromMint,
+            quantity ?? 1,
+            HelioSDK.tokenConversionService.convertToMinimalUnits(
+              paymentDetails.currency.symbol,
+              normalizedPrice
+            ),
+            toMint
+          );
 
         const decodedToken: {
           prid: string;
@@ -173,8 +178,8 @@ export const useHelioProvider = () => {
         setTokenSwapQuote({
           paymentRequestId: decodedToken.prid,
           routeTokenString: tokenSwapJWTResponse.routeToken,
-          from: CurrencyService.getCurrencyByMint(decodedToken.from),
-          to: CurrencyService.getCurrencyByMint(decodedToken.to),
+          from: HelioSDK.currencyService.getCurrencyByMint(decodedToken.from),
+          to: HelioSDK.currencyService.getCurrencyByMint(decodedToken.to),
           slippageBps: quote.slippageBps,
           priceImpactPct: quote.priceImpactPct,
           inAmount: quote.inAmount,

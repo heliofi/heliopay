@@ -1,4 +1,4 @@
-import { Currency } from './Currency';
+import { Currency } from '@heliofi/common';
 
 export interface TokenSwapQuote {
   paymentRequestId: string;

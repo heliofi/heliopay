@@ -1,0 +1,66 @@
+{
+  "name": "@heliofi/sdk",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "yarn build -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@heliofi/common": "^0.1.135",
+    "@heliofi/solana-adapter": "3.1.1-alpha",
+    "@project-serum/anchor": "^0.25.0",
+    "@solana/wallet-adapter-react": "^0.15.20",
+    "@solana/web3.js": "^1.66.2",
+    "bs58": "^5.0.0",
+    "reflect-metadata": "^0.1.13",
+    "tweetnacl": "^1.0.3",
+    "yarn": "^1.22.19"
+  },
+  "devDependencies": {
+    "@heliofi/eslint-config-helio": "^0.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^26.1.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "typescript": "4.5.4"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "prettier",
+      "jest"
+    ],
+    "rules": {
+      "prettier/prettier": "error",
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-props-no-spreading": "off",
+      "class-methods-use-this": "off",
+      "no-underscore-dangle": "off"
+    },
+    "extends": [
+      "@heliofi/eslint-config-helio",
+      "prettier"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "ignorePatterns": [
+      "**/dist"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}

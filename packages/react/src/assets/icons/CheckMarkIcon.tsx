@@ -21,5 +21,4 @@ const CheckMarkIcon = () => (
   </svg>
 );
 
-
 export default CheckMarkIcon;

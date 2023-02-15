@@ -1,15 +1,16 @@
 import { DefaultTheme, ThemeProvider } from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
-} from '../../domain';
+} from '@heliofi/sdk';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopay-container';
 import { defaultTheme } from '../../theme';
 import { deepMerge } from '../../utils';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -37,6 +38,11 @@ export const HelioPay = ({
   totalAmount,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+
+  const { HelioSDK } = useCompositionRoot();
+  useMemo(() => {
+    HelioSDK.setCluster(cluster as Cluster);
+  }, [cluster]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});

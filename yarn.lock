@@ -2836,11 +2836,12 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@heliofi/common@0.1.135":
-  version "0.1.135"
-  resolved "https://registry.npmjs.org/@heliofi/common/-/common-0.1.135.tgz#f2229d1d7996ed1aa7b214292265b7caca2ba729"
-  integrity sha512-ctD95S4TTzO06kLhp50GG1cePc4iwAtOCW5phLg2txJdA0Qx+Uu+DMFn+I699xJ3de3R7mWDmEcr2sdmnfH2oQ==
+"@heliofi/common@^0.1.135":
+  version "0.1.155"
+  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.155.tgz#e53d973728b273b53652438fd76d946a2f89c73f"
+  integrity sha512-Ut/B1+Caw2scgbwuPae4C44yHB5gHL+yb6Y8X9YON2p7Zw15l8+KTZWOp0AmS1qxAfFxNCM+pycN+ZCncvtgrQ==
   dependencies:
+    "@heliofi/evm-adapter" "^0.0.18-beta"
     "@project-serum/anchor" "^0.25.0"
     "@solana/web3.js" "^1.44.0"
     bs58 "^5.0.0"
@@ -12352,7 +12353,7 @@ jws@^3.2.2:
 
 jwt-decode@^3.1.2:
   version "3.1.2"
-  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  resolved "https://registry.npmjs.org/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
   integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 keccak@^3.0.0, keccak@^3.0.2:
@@ -17334,6 +17335,11 @@ yargs@^17.3.1, yargs@^17.4.0:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.0.0"
+
+yarn@^1.22.19:
+  version "1.22.19"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.19.tgz#4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  integrity sha512-/0V5q0WbslqnwP91tirOvldvYISzaqhClxzyUKXYxs07yUILIs5jx/k6CFe8bvKSkds5w+eiOqta39Wk3WxdcQ==
 
 yn@3.1.1:
   version "3.1.1"

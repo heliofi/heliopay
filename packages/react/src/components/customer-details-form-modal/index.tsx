@@ -2,10 +2,16 @@ import ReactDOM from 'react-dom';
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { InfoIcon } from '@heliofi/helio-icons';
+
+import {
+  CustomerDetails,
+  ProductDetails,
+  Currency,
+  ProductInputType,
+} from '@heliofi/common';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { Modal, InheritedModalProps } from '../modal';
 import validationSchema from '../heliopay-container/validation-schema';
-import { TokenConversionService } from '../../domain/services/TokenConversionService';
 import Input from '../input';
 
 import {
@@ -21,17 +27,14 @@ import {
   StyledSubmitButton,
 } from './styles';
 import SelectBox, { Option } from '../selectbox';
-import { countries } from '../../domain/constants/countries';
-import { removeUndefinedFields } from '../../utils';
-import { Currency, CustomerDetails } from '../../domain';
 import NumberInput from '../numberInput';
 import CurrencyIcon from '../currency-icon';
 import PhoneNumberInput from '../phoneNumberInput';
-import { useAddressProvider } from '../../providers/address/AddressContext';
 import AddressSection from '../addressSection';
-import { ProductInputType } from '../../domain/model/Product';
-import { ProductDetails } from '../../domain/model/ProductDetails';
 import { SwapsForm } from '../swaps-form';
+import { countries, Country } from '../../domain';
+import { removeUndefinedFields } from '../../utils';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface Props extends InheritedModalProps {
   onSubmit: (data: {
@@ -60,7 +63,9 @@ const CustomerDetailsFormModal = ({
     tokenSwapError,
     removeTokenSwapError,
   } = useHelioProvider();
-  const { country } = useAddressProvider();
+
+  const { HelioSDK } = useCompositionRoot();
+
   const [normalizedPrice, setNormalizedPrice] = useState(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [selectValue, setSelectValue] = useState({
@@ -80,7 +85,7 @@ const CustomerDetailsFormModal = ({
     icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
   }));
 
-  const countryOptions = countries.map((countryItem) => ({
+  const countryOptions = countries.map((countryItem: Country) => ({
     label: countryItem.name,
     value: countryItem.code,
   }));
@@ -104,7 +109,7 @@ const CustomerDetailsFormModal = ({
       paymentDetails?.normalizedPrice != null
     ) {
       setNormalizedPrice(
-        TokenConversionService.convertFromMinimalUnits(
+        HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency?.symbol,
           paymentDetails?.normalizedPrice
         )
@@ -150,9 +155,7 @@ const CustomerDetailsFormModal = ({
     email: undefined,
     discordUsername: undefined,
     twitterUsername: undefined,
-    country: country
-      ? { label: country.country_name, value: country.country_code }
-      : undefined,
+    country: { label: '', value: '' },
     areaCode: '',
     deliveryAddress: undefined,
     city: undefined,
@@ -188,13 +191,14 @@ const CustomerDetailsFormModal = ({
       value: values.productValue,
     };
 
-    const clearDetails = removeUndefinedFields(details);
-    const clearProductDetails = removeUndefinedFields(productDetails);
+    const clearDetails = removeUndefinedFields<CustomerDetails>(details);
+    const clearProductDetails =
+      removeUndefinedFields<ProductDetails>(productDetails);
 
     onSubmit({
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
-      amount: TokenConversionService.convertToMinimalUnits(
+      amount: HelioSDK.tokenConversionService.convertToMinimalUnits(
         values.currency || paymentDetails?.currency.symbol,
         values.canChangePrice
           ? values.customPrice
@@ -246,7 +250,7 @@ const CustomerDetailsFormModal = ({
                       fieldId="customPrice"
                       fieldName="customPrice"
                       label="Name your own price"
-                      prefix={activeCurrency?.sign}
+                      prefix={activeCurrency?.symbolPrefix}
                       suffix={
                         activeCurrency && (
                           <StyledCurrency>

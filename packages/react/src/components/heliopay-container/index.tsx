@@ -5,16 +5,15 @@ import {
 } from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
-import { useHelioProvider } from '../../providers/helio/HelioContext';
-import ConnectButton from '../connect-button';
 import {
   ClusterType,
-  Currency,
-  CustomerDetails,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
-} from '../../domain';
+} from '@heliofi/sdk';
+import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
+import ConnectButton from '../connect-button';
 import Button from '../button';
 import WalletController from '../WalletController';
 import {
@@ -32,10 +31,8 @@ import CustomerDetailsFormModal from '../customer-details-form-modal';
 import { LoadingModal } from '../loading-modal';
 import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
 import PaymentResult from '../payment-result';
-import { useAddressProvider } from '../../providers/address/AddressContext';
-import { ProductDetails } from '../../domain/model/ProductDetails';
-import { PaylinkSubmitService } from '../../infrastructure/solana-utils/payment/paylink/PaylinkSubmitService';
 import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -62,7 +59,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
-  const { getCountry } = useAddressProvider();
   const { dynamicRateToken } = useTokenConversion();
   const connectionProvider = useConnection();
   const [result, setResult] = useState<
@@ -79,7 +75,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     isCustomerDetailsRequired,
     tokenSwapQuote,
   } = useHelioProvider();
-
+  const { HelioSDK } = useCompositionRoot();
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[] | null>(
@@ -179,7 +175,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       };
 
       try {
-        await new PaylinkSubmitService().handleTransaction(payload);
+        await HelioSDK.paylinkService.handleTransaction(payload);
       } catch (error) {
         handleErrorPayment({
           errorMessage: String(error),

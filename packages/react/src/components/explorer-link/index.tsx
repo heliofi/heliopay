@@ -1,21 +1,20 @@
 import { FC } from 'react';
-import { SolExplorerService } from '../../domain/services/SolExplorerService';
-import { useHelioProvider } from '../../providers/helio/HelioContext';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface Props {
   transaction?: string;
 }
 
 const ExplorerLink: FC<Props> = ({ transaction }) => {
-  const { cluster } = useHelioProvider();
+  const { HelioSDK } = useCompositionRoot();
+
   if (transaction == null) {
     return <span>Transaction is not available</span>;
   }
   return (
     <a
-      href={SolExplorerService.getSolanaExplorerTransactionURL(
-        transaction,
-        cluster
+      href={HelioSDK.solExplorerService.getSolanaExplorerTransactionURL(
+        transaction
       )}
       target="_blank"
       rel="noreferrer"

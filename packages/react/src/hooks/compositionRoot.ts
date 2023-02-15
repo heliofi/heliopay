@@ -1,12 +1,12 @@
 import { createContext, useContext } from 'react';
-import { HelioApiAdapterV1 } from '../infrastructure/helio-api/HelioApiAdapterV1';
+import { HelioSDK } from '@heliofi/sdk';
 
 interface CompositionRoot {
-  apiService: HelioApiAdapterV1;
+  HelioSDK: HelioSDK;
 }
 
 export const compositionRoot = {
-  apiService: new HelioApiAdapterV1(),
+  HelioSDK: new HelioSDK(),
 };
 
 export const CompositionRootContext =
