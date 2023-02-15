@@ -1,15 +1,20 @@
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
-import { contractAddress, gasLimit } from './constants';
+import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
+import { getContractAddress } from './utils';
 
 export const getSplitEthPaymentTx = async (
   provider: BaseProvider,
   req: PaymentRequest,
-  recipientsAndAmounts: RecipientAndAmount[],
-  chainId?: number
+  recipientsAndAmounts: RecipientAndAmount[]
 ) => {
+  const chainId = (await provider.getNetwork()).chainId;
+  const contractAddress = getContractAddress(chainId);
+  if (!contractAddress) {
+    throw new Error(`Non existant contract address for chainId ${chainId}`);
+  }
   const contract = new Contract(contractAddress, helio.abi, provider);
   let totalAmount = BigNumber.from(req.amount);
   // eslint-disable-next-line no-restricted-syntax
@@ -29,6 +34,5 @@ export const getSplitEthPaymentTx = async (
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
-  unsignedTx.chainId = chainId || (await provider.getNetwork()).chainId;
   return unsignedTx;
 };
