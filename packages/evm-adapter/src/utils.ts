@@ -1,10 +1,10 @@
-import { contractAddresses } from './constants';
+import { ContractAddresses } from './constants';
 
 export const getContractAddress = (chainId: number): string | undefined => {
   switch (chainId) {
     case 80001:
-      return contractAddresses.POLYGON_MUMBAI;
+      return ContractAddresses.POLYGON_MUMBAI;
     case 137:
-      return contractAddresses.POLYGON_MAINNET;
+      return ContractAddresses.POLYGON_MAINNET;
   }
 };
