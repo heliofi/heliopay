@@ -34,5 +34,6 @@ export const getSplitEthPaymentTx = async (
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
+  unsignedTx.chainId = chainId;
   return unsignedTx;
 };

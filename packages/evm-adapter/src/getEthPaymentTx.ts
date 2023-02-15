@@ -15,7 +15,7 @@ export const getEthPaymentTx = async (
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
   const contract = new Contract(contractAddress, helio.abi, provider);
-  return await contract.populateTransaction.ethPayment(
+  const unsignedTx = await contract.populateTransaction.ethPayment(
     req.recipientAddress,
     BigNumber.from(req.amount),
     BigNumber.from(req.fee),
@@ -27,4 +27,6 @@ export const getEthPaymentTx = async (
       nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
+  unsignedTx.chainId = chainId;
+  return unsignedTx;
 };

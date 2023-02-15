@@ -111,48 +111,48 @@ describe('Helio protocol', function () {
   });
 
   describe('ERC payments', function () {
-    // it('Should get serialized transaction and pay in the ERC20', async function () {
-    //   sleep(30 * 1000);
-    //   console.log('Nonce: ', await wallet.getTransactionCount());
-    //   const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
-    //   const amount = baseAmount;
-    //   const transferAmount = amount.div(2);
-    //   const req: PaymentRequest = {
-    //     walletAddress: wallet.address,
-    //     recipientAddress: recipient.address,
-    //     amount: transferAmount.toBigInt(),
-    //     fee,
-    //     transactonDbId: 'Erc2oTxId',
-    //     tokenAddres: erc20.address,
-    //   };
+    it('Should get serialized transaction and pay in the ERC20', async function () {
+      sleep(120 * 1000);
+      console.log('Nonce: ', await wallet.getTransactionCount());
+      const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
+      const amount = baseAmount;
+      const transferAmount = amount.div(2);
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'Erc2oTxId',
+        tokenAddres: erc20.address,
+      };
 
-    //   const serializedTx = await getPaymentTx(provider, req);
-    //   const signedTx = await wallet.signTransaction(serializedTx);
-    //   const tx = await provider.sendTransaction(signedTx);
-    //   const receipt = await tx.wait();
-    //   console.log(parseLogs(receipt.logs, helio));
-    //   console.log('tx hash', tx.hash);
+      const serializedTx = await getPaymentTx(provider, req);
+      const signedTx = await wallet.signTransaction(serializedTx);
+      const tx = await provider.sendTransaction(signedTx);
+      const receipt = await tx.wait();
+      console.log(parseLogs(receipt.logs, helio));
+      console.log('tx hash', tx.hash);
 
-    //   sleep(15 * 1000);
+      sleep(15 * 1000);
 
-    //   // await expect(provider.sendTransaction(signedTx)).to.emit(
-    //   //   helio,
-    //   //   'Payment'
-    //   // );
-    //   const recipientBalance = await erc20.balanceOf(recipient.address);
-    //   console.log(
-    //     'recipientBalance before: ',
-    //     recipientBalanceBefore,
-    //     'recipientBalance: ',
-    //     recipientBalance
-    //   );
-    //   expect(recipientBalance).to.be.equal(
-    //     recipientBalanceBefore.add(transferAmount)
-    //   );
-    // });
+      // await expect(provider.sendTransaction(signedTx)).to.emit(
+      //   helio,
+      //   'Payment'
+      // );
+      const recipientBalance = await erc20.balanceOf(recipient.address);
+      console.log(
+        'recipientBalance before: ',
+        recipientBalanceBefore,
+        'recipientBalance: ',
+        recipientBalance
+      );
+      expect(recipientBalance).to.be.equal(
+        recipientBalanceBefore.add(transferAmount)
+      );
+    });
 
     it('Should get serialized transaction and split pay in the ERC20', async function () {
-      sleep(30 * 1000);
+      sleep(240 * 1000);
       console.log('Nonce: ', await wallet.getTransactionCount());
       const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
       const amount = baseAmount;
@@ -193,80 +193,80 @@ describe('Helio protocol', function () {
     });
   });
 
-  // describe('ETH payments', function () {
-  //   it('Should get serialized transaction and pay in the eth', async function () {
-  //     sleep(60 * 1000);
-  //     console.log('Nonce: ', await wallet.getTransactionCount());
-  //     const recipientBalanceBefore = await provider.getBalance(
-  //       recipient.address
-  //     );
-  //     const amount = baseAmount;
-  //     const transferAmount = amount.div(20);
-  //     const req: PaymentRequest = {
-  //       walletAddress: wallet.address,
-  //       recipientAddress: recipient.address,
-  //       amount: transferAmount.toBigInt(),
-  //       fee,
-  //       transactonDbId: 'EthTxId',
-  //     };
-  //     const serializedTx = await getEthPaymentTx(provider, req);
-  //     const signedTx = await wallet.signTransaction(serializedTx);
-  //     const tx = await provider.sendTransaction(signedTx);
-  //     const receipt = await tx.wait();
-  //     console.log('tx hash', tx.hash);
-  //     console.log(parseLogs(receipt.logs, helio));
+  describe('ETH payments', function () {
+    it('Should get serialized transaction and pay in the eth', async function () {
+      sleep(90 * 1000);
+      console.log('Nonce: ', await wallet.getTransactionCount());
+      const recipientBalanceBefore = await provider.getBalance(
+        recipient.address
+      );
+      const amount = baseAmount;
+      const transferAmount = amount.div(20);
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'EthTxId',
+      };
+      const serializedTx = await getEthPaymentTx(provider, req);
+      const signedTx = await wallet.signTransaction(serializedTx);
+      const tx = await provider.sendTransaction(signedTx);
+      const receipt = await tx.wait();
+      console.log('tx hash', tx.hash);
+      console.log(parseLogs(receipt.logs, helio));
 
-  //     sleep(15 * 1000);
-  //     const recipientBalance = await provider.getBalance(recipient.address);
-  //     console.log(
-  //       'recipientBalance before: ',
-  //       recipientBalanceBefore,
-  //       'recipientBalance: ',
-  //       recipientBalance
-  //     );
-  //     expect(recipientBalance).to.be.equal(
-  //       recipientBalanceBefore.add(transferAmount)
-  //     );
-  //   });
+      sleep(15 * 1000);
+      const recipientBalance = await provider.getBalance(recipient.address);
+      console.log(
+        'recipientBalance before: ',
+        recipientBalanceBefore,
+        'recipientBalance: ',
+        recipientBalance
+      );
+      expect(recipientBalance).to.be.equal(
+        recipientBalanceBefore.add(transferAmount)
+      );
+    });
 
-  //   it('Should get serialized transaction and split pay in the eth', async function () {
-  //     sleep(75 * 1000);
-  //     console.log('Nonce: ', await wallet.getTransactionCount());
-  //     const recipientBalanceBefore = await provider.getBalance(
-  //       recipient.address
-  //     );
-  //     const amount = baseAmount.div(20);
-  //     const transferAmount = amount;
-  //     const req: PaymentRequest = {
-  //       walletAddress: wallet.address,
-  //       recipientAddress: recipient.address,
-  //       amount: transferAmount.toBigInt(),
-  //       fee,
-  //       transactonDbId: 'SplitEthTxId',
-  //     };
-  //     const serializedTx = await getSplitEthPaymentTx(
-  //       provider,
-  //       req,
-  //       createSplitPaymentsList(splitRecipients, amount)
-  //     );
-  //     const signedTx = await wallet.signTransaction(serializedTx);
-  //     const tx = await provider.sendTransaction(signedTx);
-  //     await tx.wait();
-  //     console.log('tx hash', tx.hash);
-  //     const recipientBalance = await provider.getBalance(recipient.address);
-  //     console.log(
-  //       'recipientBalance before: ',
-  //       recipientBalanceBefore,
-  //       'recipientBalance: ',
-  //       recipientBalance
-  //     );
-  //     expect(recipientBalance).to.be.equal(
-  //       recipientBalanceBefore.add(
-  //         transferAmount.mul(splitRecipients.length + 1)
-  //       )
-  //     );
-  //   });
-  // });
+    it('Should get serialized transaction and split pay in the eth', async function () {
+      sleep(120 * 1000);
+      console.log('Nonce: ', await wallet.getTransactionCount());
+      const recipientBalanceBefore = await provider.getBalance(
+        recipient.address
+      );
+      const amount = baseAmount.div(20);
+      const transferAmount = amount;
+      const req: PaymentRequest = {
+        walletAddress: wallet.address,
+        recipientAddress: recipient.address,
+        amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'SplitEthTxId',
+      };
+      const serializedTx = await getSplitEthPaymentTx(
+        provider,
+        req,
+        createSplitPaymentsList(splitRecipients, amount)
+      );
+      const signedTx = await wallet.signTransaction(serializedTx);
+      const tx = await provider.sendTransaction(signedTx);
+      await tx.wait();
+      console.log('tx hash', tx.hash);
+      const recipientBalance = await provider.getBalance(recipient.address);
+      console.log(
+        'recipientBalance before: ',
+        recipientBalanceBefore,
+        'recipientBalance: ',
+        recipientBalance
+      );
+      expect(recipientBalance).to.be.equal(
+        recipientBalanceBefore.add(
+          transferAmount.mul(splitRecipients.length + 1)
+        )
+      );
+    });
+  });
 });
 
 async function sleep(time) {
