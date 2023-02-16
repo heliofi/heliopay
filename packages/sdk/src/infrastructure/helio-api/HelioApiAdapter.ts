@@ -2,6 +2,7 @@ import {
   Currency,
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
+  Paylink,
   PaymentRequestType,
   PrepareSwapTransaction,
   PrepareTransaction,
@@ -14,8 +15,8 @@ import { enhanceOptions, FetchOptions, request } from '../fetch-middleware';
 export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
 
-  async getPaymentRequestByIdPublic(id: string): Promise<any> {
-    return this.publicRequest<any>(
+  async getPaymentRequestByIdPublic(id: string): Promise<Paylink> {
+    return this.publicRequest<Paylink>(
       `/paylink/${id}/public`,
       { method: 'GET' },
       true
@@ -45,7 +46,7 @@ export class HelioApiAdapter implements HelioApiConnector {
   }
 
   async listCurrencies(): Promise<Currency[]> {
-    return this.publicRequest<any>('/currency', { method: 'GET' }, true);
+    return this.publicRequest<Currency[]>('/currency', { method: 'GET' }, true);
   }
 
   async getTokenSwapMintAddresses(mintAddress: string): Promise<string[]> {

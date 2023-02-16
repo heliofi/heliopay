@@ -9,6 +9,12 @@ export class ConfigService {
 
   static PROD_HELIO_SERVICE_BASE_URL = 'https://api.hel.io/v1';
 
+  static DEV_HELIO_BASE_URL = 'https://dev.hel.io';
+
+  static PROD_HELIO_BASE_URL = 'https://www.hel.io';
+
+  static CURRENCY_USDC = 'USDC';
+
   constructor(cluster?: Cluster) {
     this.cluster = cluster;
   }
@@ -38,5 +44,22 @@ export class ConfigService {
       default:
         return ConfigService.PROD_HELIO_SERVICE_BASE_URL;
     }
+  }
+
+  getHelioBaseUrl(): string {
+    switch (this.cluster) {
+      case ClusterType.Testnet:
+      case ClusterType.Devnet:
+        return ConfigService.DEV_HELIO_BASE_URL;
+      case ClusterType.Mainnet:
+        return ConfigService.PROD_HELIO_BASE_URL;
+      default:
+        return ConfigService.PROD_HELIO_BASE_URL;
+    }
+  }
+
+  getPaymentFullLink(id: string): string {
+    const baseUrl = this.getHelioBaseUrl();
+    return `${baseUrl}/pay/${id}?ref=${baseUrl}`;
   }
 }

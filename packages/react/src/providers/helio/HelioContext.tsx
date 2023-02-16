@@ -12,7 +12,7 @@ import { TokenSwapQuote } from '../../domain';
 
 export const HelioContext = createContext<{
   currencyList: any[];
-  setCurrencyList: (currencyList: any[]) => void;
+  setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails: any; // @TODO change type
   setPaymentDetails: (paymentDetails: any) => void;
   cluster: Cluster | null;

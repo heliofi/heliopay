@@ -2,6 +2,7 @@ import {
   Currency,
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
+  Paylink,
   PaymentRequestType,
   PrepareSwapTransaction,
   PrepareTransaction,
@@ -22,7 +23,7 @@ export interface HelioApiConnector {
 
   listCurrencies(): Promise<Currency[]>;
 
-  getPaymentRequestByIdPublic(id: string): Promise<any>;
+  getPaymentRequestByIdPublic(id: string): Promise<Paylink>;
 
   getTokenSwapMintAddresses(mintAddress: string): Promise<string[]>;
 
