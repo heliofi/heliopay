@@ -4,6 +4,7 @@ export type PaymentEvent = {
   tokenAddress: string;
   transferAmount: bigint;
   feeAmount: bigint;
+  transactionDbId: string;
 };
 
 export type EthPaymentEvent = {
@@ -11,6 +12,7 @@ export type EthPaymentEvent = {
   recipient: string;
   transferAmount: bigint;
   feeAmount: bigint;
+  transactionDbId: string;
 };
 
 export enum EventName {

@@ -4,6 +4,7 @@ import { BigNumber, Contract, Wallet } from 'ethers';
 import { ethers } from 'hardhat';
 import { JsonRpcProvider, Log } from '@ethersproject/providers';
 import {
+  getContractAddress,
   getEthPaymentTx,
   getPaymentTx,
   getSplitEthPaymentTx,
@@ -11,7 +12,6 @@ import {
   PaymentRequest,
   RecipientAndAmount,
 } from '../src';
-import { contractAddress } from '../src/constants';
 import { helio as helioAbi } from '../src/abi';
 import { erc20Mock as erc20MockAbi } from './abi/erc20Mock';
 import { LogDescription } from '@ethersproject/abi';
@@ -36,6 +36,9 @@ describe('Helio protocol', function () {
   describe('Deploy and prepare', function () {
     it('Should deploy and approve funds', async function () {
       provider = ethers.provider;
+      const contractAddress =
+        getContractAddress((await provider.getNetwork()).chainId) ||
+        'no address';
       helio = new Contract(contractAddress, helioAbi.abi, provider);
       // Returns only one signer on Mumbai
       const signers = await ethers.getSigners();
@@ -94,13 +97,13 @@ describe('Helio protocol', function () {
       console.log(
         'Wallet address: ',
         wallet.address,
-        'sender address: ',
+        ' sender address: ',
         sender.address
       );
       console.log(
         'Wallet ETH balance: ',
         await wallet.getBalance(),
-        'Wallet ERC balance: ',
+        ' Wallet ERC balance: ',
         await erc20.balanceOf(wallet.address)
       );
       return wallet;
@@ -109,8 +112,8 @@ describe('Helio protocol', function () {
 
   describe('ERC payments', function () {
     it('Should get serialized transaction and pay in the ERC20', async function () {
+      sleep(120 * 1000);
       console.log('Nonce: ', await wallet.getTransactionCount());
-      sleep(15 * 1000);
       const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
       const amount = baseAmount;
       const transferAmount = amount.div(2);
@@ -118,10 +121,12 @@ describe('Helio protocol', function () {
         walletAddress: wallet.address,
         recipientAddress: recipient.address,
         amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'Erc2oTxId',
         tokenAddres: erc20.address,
       };
 
-      const serializedTx = await getPaymentTx(provider, req, fee);
+      const serializedTx = await getPaymentTx(provider, req);
       const signedTx = await wallet.signTransaction(serializedTx);
       const tx = await provider.sendTransaction(signedTx);
       const receipt = await tx.wait();
@@ -147,6 +152,7 @@ describe('Helio protocol', function () {
     });
 
     it('Should get serialized transaction and split pay in the ERC20', async function () {
+      sleep(240 * 1000);
       console.log('Nonce: ', await wallet.getTransactionCount());
       const recipientBalanceBefore = await erc20.balanceOf(recipient.address);
       const amount = baseAmount;
@@ -156,13 +162,14 @@ describe('Helio protocol', function () {
         walletAddress: wallet.address,
         recipientAddress: recipient.address,
         amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'SplitErc20TxId',
         tokenAddres: erc20.address,
       };
 
       const serializedTx = await getSplitPaymentTx(
         provider,
         req,
-        fee,
         createSplitPaymentsList(splitRecipients, transferAmount)
       );
       const signedTx = await wallet.signTransaction(serializedTx);
@@ -188,8 +195,8 @@ describe('Helio protocol', function () {
 
   describe('ETH payments', function () {
     it('Should get serialized transaction and pay in the eth', async function () {
+      sleep(90 * 1000);
       console.log('Nonce: ', await wallet.getTransactionCount());
-      sleep(15 * 1000);
       const recipientBalanceBefore = await provider.getBalance(
         recipient.address
       );
@@ -199,8 +206,10 @@ describe('Helio protocol', function () {
         walletAddress: wallet.address,
         recipientAddress: recipient.address,
         amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'EthTxId',
       };
-      const serializedTx = await getEthPaymentTx(provider, req, fee);
+      const serializedTx = await getEthPaymentTx(provider, req);
       const signedTx = await wallet.signTransaction(serializedTx);
       const tx = await provider.sendTransaction(signedTx);
       const receipt = await tx.wait();
@@ -209,12 +218,19 @@ describe('Helio protocol', function () {
 
       sleep(15 * 1000);
       const recipientBalance = await provider.getBalance(recipient.address);
+      console.log(
+        'recipientBalance before: ',
+        recipientBalanceBefore,
+        'recipientBalance: ',
+        recipientBalance
+      );
       expect(recipientBalance).to.be.equal(
         recipientBalanceBefore.add(transferAmount)
       );
     });
 
     it('Should get serialized transaction and split pay in the eth', async function () {
+      sleep(120 * 1000);
       console.log('Nonce: ', await wallet.getTransactionCount());
       const recipientBalanceBefore = await provider.getBalance(
         recipient.address
@@ -225,11 +241,12 @@ describe('Helio protocol', function () {
         walletAddress: wallet.address,
         recipientAddress: recipient.address,
         amount: transferAmount.toBigInt(),
+        fee,
+        transactonDbId: 'SplitEthTxId',
       };
       const serializedTx = await getSplitEthPaymentTx(
         provider,
         req,
-        fee,
         createSplitPaymentsList(splitRecipients, amount)
       );
       const signedTx = await wallet.signTransaction(serializedTx);
