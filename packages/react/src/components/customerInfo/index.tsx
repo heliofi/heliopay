@@ -10,8 +10,8 @@ import {
 } from '../../ui-kits';
 import AddressSection from '../addressSection';
 import { countries, Country } from '../../domain';
-import { FormikProps } from '../baseCheckout/constants';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
+import { FormikProps, FormikSetFieldValue } from '../baseCheckout/constants';
 
 import {
   StyledFormText,
@@ -52,7 +52,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
 
   const changeSelectValue = (
     selectObject: SelectBoxOption,
-    setValue: (formikId: string, value: string) => void
+    setValue: FormikSetFieldValue
   ) => {
     setSelectValue({
       label: selectObject.label,
