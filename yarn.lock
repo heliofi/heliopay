@@ -2859,13 +2859,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
-"@heliofi/evm-adapter@^0.0.18-beta":
-  version "0.0.18-beta"
-  resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.18-beta.tgz#1d0692d30a2eb20157d45c9f790db67ea7b4295e"
-  integrity sha512-JNuBeypno7NyCAtXdtarpBuHaT7O2KiwjjBDtCqq6ZYfi2sLb64f8fckZP9OjPjVnPZqfoY2NrB53aDQV9Z4lA==
-  dependencies:
-    ethers "^5.7.2"
-
 "@heliofi/helio-icons@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
