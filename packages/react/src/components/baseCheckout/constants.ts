@@ -1,5 +1,6 @@
-import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
 import { FormikValues } from 'formik';
+import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
+import { HelioSDK as HelioSDKType } from '@heliofi/sdk';
 
 export type InheritedOnSumbit = (data: {
   amount: number;
@@ -16,7 +17,21 @@ export type InheritedBaseCheckoutProps = {
   totalAmount?: number;
 };
 
+export type FormikSetFieldValue = (
+  field: string,
+  value: any,
+  shouldValidate?: boolean
+) => void;
+
 export type FormikProps = {
   formValues: FormikValues;
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldValue: FormikSetFieldValue;
 };
+
+export interface IHandleSubmit {
+  paymentDetails?: any;
+  HelioSDK: HelioSDKType;
+  price: number;
+  onSubmit: InheritedOnSumbit;
+  currencyList: Currency[];
+}

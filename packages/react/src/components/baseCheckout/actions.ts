@@ -1,8 +1,8 @@
-import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
-import { HelioSDK as HelioSDKType } from '@heliofi/sdk';
+import { FormikValues } from 'formik';
+import { CustomerDetails, ProductDetails } from '@heliofi/common';
+
+import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
-import { InheritedOnSumbit } from './constants';
-import { Option } from '../../components/selectbox';
 
 export const getInitialValues = (
   paymentDetails: any,
@@ -52,14 +52,8 @@ export const handleSubmit =
     price,
     onSubmit,
     currencyList,
-  }: {
-    paymentDetails?: any;
-    HelioSDK: HelioSDKType;
-    price: number;
-    onSubmit: InheritedOnSumbit;
-    currencyList: Currency[];
-  }) =>
-  (values: any) => {
+  }: IHandleSubmit) =>
+  (values: FormikValues) => {
     const details = {
       fullName: values.fullName,
       email: values.email,
@@ -101,12 +95,4 @@ export const handleSubmit =
 export const formatTotalPrice = (price: number, quantity = 1): number => {
   const totalPrice = Number((price * quantity).toFixed(3));
   return totalPrice || price;
-};
-
-export const stringToOptions = (value: string): Option[] => {
-  const options = value.split(',');
-  return options.map((option) => ({
-    label: option,
-    value: option,
-  }));
 };

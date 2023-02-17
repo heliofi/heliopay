@@ -2,6 +2,7 @@ import React from 'react';
 import { MinusIcon, PlusIcon } from '@heliofi/helio-icons';
 
 import Input from '../input';
+import { FormikSetFieldValue } from '../../components/baseCheckout/constants';
 
 import {
   StyledNumberButtons,
@@ -17,7 +18,7 @@ type NumberInputProps = {
   max?: number;
   step?: number;
   value?: number;
-  setFieldValue: (field: string, value: number | string) => void;
+  setFieldValue: FormikSetFieldValue;
   label?: string;
 };
 

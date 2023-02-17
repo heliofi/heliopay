@@ -58,8 +58,8 @@ export class ConfigService {
     }
   }
 
-  getPaymentFullLink(id: string): string {
+  getPhantomLink(id: string): string {
     const baseUrl = this.getHelioBaseUrl();
-    return `${baseUrl}/pay/${id}?ref=${baseUrl}`;
+    return `https://phantom.app/ul/browse/${baseUrl}/pay/${id}?ref=${baseUrl}`;
   }
 }

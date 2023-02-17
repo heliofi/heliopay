@@ -38,6 +38,7 @@ In the example below if you provide totalAmount and the currency to the button, 
 
 ```ts
 import { HelioPay } from "@heliofi/react";
+import { SuccessPaymentEvent } from '@heliofi/sdk'
 
 const App = () => {
   return (
@@ -98,6 +99,7 @@ Use this option if you want to embed the Helio Pay Button on your site for Links
 
 ```ts
 import { HelioPay } from "@heliofi/react";
+import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
 
 const App = () => {
   return (
@@ -124,17 +126,17 @@ const App = () => {
 ```
 #### Properties table for the Helio components
 
-| Property         | Type     | Required | Default value | Description                                                                                |
-| :--------------- | :------- | :------- | :------------ | :----------------------------------------------------------------------------------------- |
-| cluster          | string   | yes      |               | **available values;** devnet, mainnet-beta, testnet                                        |
-| paymentRequestId | string   | yes      |               | Your paylink ID                                                                            |
-| onSuccess        | function | no       |               | triggered event when success                                                               |
-| onError          | function | no       |               | triggered event when error                                                                 |
-| onPending        | function | no       |               | triggered event when pending                                                               |
-| onStartPayment   | function | no       |               | triggered event on start payment                                                           |
-| theme            | object   | no       |               | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-totalAmount | number | no | | you can pass dynamic amount. dynamic pricing should be checked for this. |
-| supportedCurrencies | string array | no | | currencies you want to support.
+| Property            | Type         | Required | Default value | Description                                                                                |
+|:--------------------|:-------------|:---------|:--------------|:-------------------------------------------------------------------------------------------|
+| cluster             | string       | yes      |               | **available values;** devnet, mainnet-beta, testnet                                        |
+| paymentRequestId    | string       | yes      |               | Your paylink ID                                                                            |
+| onSuccess           | function     | no       |               | triggered event when success                                                               |
+| onError             | function     | no       |               | triggered event when error                                                                 |
+| onPending           | function     | no       |               | triggered event when pending                                                               |
+| onStartPayment      | function     | no       |               | triggered event on start payment                                                           |
+| theme               | object       | no       |               | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
+| totalAmount         | number       | no       |               | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
+| supportedCurrencies | string array | no       |               | currencies you want to support.                                                            |
 
 ### Support Currencies
 

@@ -6,7 +6,7 @@ import { StyledPriceBanner, StyledTitle, StyledPrice } from './styles';
 export type PriceBannerProps = {
   title?: string;
   amount: number;
-  currency: string | undefined;
+  currency?: string;
 };
 
 const PriceBanner = ({ title, amount, currency }: PriceBannerProps) => (

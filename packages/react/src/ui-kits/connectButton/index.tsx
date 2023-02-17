@@ -1,6 +1,7 @@
+import React, { FC } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import React, { FC } from 'react';
+
 import { StyledConnectButtonWrapper } from './styles';
 
 const ConnectButton: FC = () => {

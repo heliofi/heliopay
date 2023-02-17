@@ -1,8 +1,10 @@
-import { useSelect } from 'downshift';
+import React, { ReactNode } from 'react';
 
+import { useSelect } from 'downshift';
 import { ArrowsDownIcon } from '@heliofi/helio-icons';
-import { ReactNode } from 'react';
+
 import ElementContainer from '../elementContainer';
+
 import {
   StyledErrorMessage,
   StyledLabel,

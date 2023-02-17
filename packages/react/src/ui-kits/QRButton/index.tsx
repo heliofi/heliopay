@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
-import Wallet from '../../assets/icons/Wallet';
 import QR from '../../assets/icons/QR';
+import Wallet from '../../assets/icons/Wallet';
 
 import { QRButtonWrapper, StyledQRIcon, StyledQRText } from './styles';
 

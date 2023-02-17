@@ -7,7 +7,7 @@ import {
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
 import { SolanaProvider } from '../../providers';
-import HelioPayContainer from '../../componentsV2/heliopay-container';
+import HelioPayContainer from '../heliopayContainer';
 import { defaultTheme } from '../../theme';
 import { deepMerge } from '../../utils';
 import { useCompositionRoot } from '../../hooks/compositionRoot';

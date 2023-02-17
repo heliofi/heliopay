@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FormikValues } from 'formik';
-import { Currency, PaymentRequestType } from '@heliofi/common';
+import { PaymentRequestType } from '@heliofi/common';
 
-import { useHelioProvider } from '../../providers/helio/HelioContext';
-import { CurrencyIcon, SelectBox } from '../../ui-kits';
-import { useDebounce } from '../../hooks/useDebounce';
-import Spinner from '../../assets/placeholders/LoadingSpinner';
 import { roundValue } from '../../utils';
+import { useDebounce } from '../../hooks/useDebounce';
+import { CurrencyIcon, SelectBox } from '../../ui-kits';
+import Spinner from '../../assets/placeholders/LoadingSpinner';
+import { FormikSetFieldValue } from '../baseCheckout/constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
 
 import {
   StyledCurrencySelectIcon,
@@ -19,7 +20,7 @@ import {
 
 interface SwapsFormProps {
   formValues: FormikValues;
-  setFieldValue: (field: string, value: unknown) => void;
+  setFieldValue: FormikSetFieldValue;
   normalizedPrice: number;
 }
 
@@ -64,7 +65,7 @@ const SwapsForm = ({
     if (selectedCurrency?.mintAddress != null) {
       getTokenSwapQuote(
         paymentDetails.id,
-        'PAYLINK' as PaymentRequestType.PAYLINK,
+        PaymentRequestType.PAYLINK,
         selectedCurrency.mintAddress,
         formValues.quantity,
         normalizedPrice,
@@ -128,7 +129,7 @@ const SwapsForm = ({
                 setSelectedCurrency(
                   HelioSDK.currencyService.getCurrencyBySymbol(
                     String(option.value)
-                  ) as unknown as Currency
+                  )
                 );
               }}
               placeholder="Select currency"

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type IconProps = {

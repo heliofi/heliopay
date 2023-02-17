@@ -11,7 +11,7 @@ import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { TokenSwapQuote } from '../../domain';
 
 export const HelioContext = createContext<{
-  currencyList: any[];
+  currencyList: Currency[];
   setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails: any; // @TODO change type
   setPaymentDetails: (paymentDetails: any) => void;

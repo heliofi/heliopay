@@ -1,7 +1,9 @@
 import React, { ChangeEvent, FC, useState } from 'react';
 import { FormikProps, FormikValues } from 'formik';
 
+import { FormikSetFieldValue } from '../../components/baseCheckout/constants';
 import ElementContainer, { ElementContainerProps } from '../elementContainer';
+
 import {
   StyledErrorMessage,
   StyledField,
@@ -23,7 +25,7 @@ type InputProps = {
   labelSuffix?: React.ReactNode | string;
   placeholder?: string;
   fieldValue?: string | number;
-  setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
+  setFieldValue?: FormikSetFieldValue;
 };
 
 const Input: FC<InputProps & ElementContainerProps> = ({

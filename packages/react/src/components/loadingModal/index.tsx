@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import HelioIcon from '../../assets/icons/HelioIcon';
-
 import { Modal, InheritedModalProps } from '../modal';
+
 import {
   StyledLoadingLink,
   StyledLoadingText,

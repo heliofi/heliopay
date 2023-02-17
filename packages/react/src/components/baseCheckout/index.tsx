@@ -1,24 +1,14 @@
 import React, { FC, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { Form, Formik } from 'formik';
+import { createPortal } from 'react-dom';
 import { Currency } from '@heliofi/common';
-import { CheckoutHeader } from '../checkoutHeader';
-import CustomerInfo from '../customerInfo';
-import {
-  StyledBaseCheckoutWrapper,
-  StyledBaseCheckoutContainer,
-  StyledBaseCheckoutBody,
-} from './styles';
-import { useHelioProvider } from '../../providers/helio/HelioContext';
+
 import {
   formatTotalPrice,
   getCurrency,
   getInitialValues,
   handleSubmit,
 } from './actions';
-import { InheritedBaseCheckoutProps } from './constants';
-import validationSchema from './validation-schema';
-import { useCompositionRoot } from '../../hooks/compositionRoot';
 import {
   CurrencyIcon,
   Button,
@@ -28,6 +18,18 @@ import {
   QRCodeCard,
 } from '../../ui-kits';
 import SwapsForm from '../swapsForm';
+import CustomerInfo from '../customerInfo';
+import { CheckoutHeader } from '../checkoutHeader';
+import validationSchema from './validation-schema';
+import { InheritedBaseCheckoutProps } from './constants';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
+
+import {
+  StyledBaseCheckoutWrapper,
+  StyledBaseCheckoutContainer,
+  StyledBaseCheckoutBody,
+} from './styles';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<any>;
@@ -96,7 +98,7 @@ const BaseCheckout = ({
         )
       );
     }
-  }, [paymentDetails]);
+  }, [paymentDetails?.currency, paymentDetails?.normalizedPrice]);
 
   useEffect(() => {
     if (!showSwapMenu) {
@@ -104,6 +106,8 @@ const BaseCheckout = ({
     }
   }, [showSwapMenu]);
 
+  // @ts-ignore
+  // @ts-ignore
   return createPortal(
     <StyledBaseCheckoutWrapper>
       <StyledBaseCheckoutContainer>
@@ -132,7 +136,7 @@ const BaseCheckout = ({
                 />
               )}
               <QRCodeCard
-                phantomDeepLink={`https://phantom.app/ul/browse/${HelioSDK.configService.getPaymentFullLink(
+                phantomDeepLink={`${HelioSDK.configService.getPhantomLink(
                   paymentDetails?.id
                 )}`}
               />

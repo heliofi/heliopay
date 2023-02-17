@@ -4,12 +4,14 @@ export const StyledWrapper = styled.div``;
 
 export const StyledAreaCode = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  align-items: flex-end;
 `;
 
 export const StyledInput = styled.div`
   width: 100%;
+  height: 102px;
 `;
 
 export const StyledButton = styled.div`
@@ -36,7 +38,7 @@ export const StyledSelectDropdown = styled.div`
   left: 0;
   width: 100%;
   background-color: #fff;
-  box-shadow: 0px 8px 10px rgba(195, 200, 209, 0.2);
+  box-shadow: 0 8px 10px rgba(195, 200, 209, 0.2);
   border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
@@ -66,18 +68,6 @@ export const StyledSelectItem = styled.div<{ highlighted: boolean }>`
     `}
 `;
 
-export const StyledSelectItemIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-`;
-
 export const StyledLabel = styled.label`
   font-style: normal;
   font-weight: 400;
@@ -86,4 +76,17 @@ export const StyledLabel = styled.label`
   margin-bottom: 5px;
   color: #9ca3af;
   display: block;
+`;
+
+export const StyledStreetInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const StyledStreet = styled.div`
+  width: 75%;
+`;
+
+export const StyledStreetNumber = styled.div`
+  width: 20%;
 `;

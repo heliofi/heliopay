@@ -1,22 +1,34 @@
-import {
-  AnchorWallet,
-  useAnchorWallet,
-  useConnection,
-} from '@solana/wallet-adapter-react';
-import { FC, useEffect, useState } from 'react';
-import { Cluster } from '@solana/web3.js';
+import React, { FC, useEffect, useState } from 'react';
 import {
   ClusterType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
-import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
-import { useHelioProvider } from '../../providers/helio/HelioContext';
-import ConnectButton from '../../components/connect-button';
-import { Button } from '../../ui-kits';
+import {
+  AnchorWallet,
+  useAnchorWallet,
+  useConnection,
+} from '@solana/wallet-adapter-react';
+import { Cluster } from '@solana/web3.js';
+import {
+  Currency,
+  CustomerDetails,
+  ProductDetails,
+  BlockchainEngineType,
+} from '@heliofi/common';
+
+import PaymentResult from '../paymentResult';
+import { LoadingModal } from '../loadingModal';
+import WalletController from '../WalletController';
+import { Button, ConnectButton } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
-import WalletController from '../../components/WalletController';
+import HelioLogoGray from '../../assets/icons/HelioLogoGray';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
+import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
+import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
+
 import {
   StyledEnvironment,
   StyledErrorMessage,
@@ -27,12 +39,6 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
-import HelioLogoGray from '../../assets/icons/HelioLogoGray';
-import { LoadingModal } from '../../components/loading-modal';
-import { useAnchorProvider } from '../../providers/anchor/AnchorContext';
-import PaymentResult from '../../components/payment-result';
-import { useTokenConversion } from '../../providers/token-conversion/TokenConversionContext';
-import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -88,7 +94,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     const allowedCurrenciesTemp = currencyList.filter(
       (currency) =>
         supportedCurrencies?.includes(currency.symbol) &&
-        (!currency?.blockchain || currency?.blockchain?.engine?.type === 'SOL')
+        (!currency?.blockchain ||
+          currency?.blockchain?.engine?.type === BlockchainEngineType.SOL)
     );
     setAllowedCurrencies(allowedCurrenciesTemp || []);
   };
@@ -115,7 +122,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     if (!currency) {
       throw new Error('Unknown currency');
     }
-    return currencyList.find((c: any) => c.symbol === currency);
+
+    const currentCurrency = currencyList.find(
+      (c: Currency) => c.symbol === currency
+    );
+
+    if (!currentCurrency) {
+      throw new Error('Unknown currency symbol');
+    }
+    return currentCurrency;
   };
 
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
@@ -149,7 +164,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       setShowFormModal(false);
       const recipient = paymentDetails?.wallet?.publicKey;
       const { symbol } = getCurrency(currency.symbol);
-      if (symbol == null) throw new Error('Unknown currency symbol');
+
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,

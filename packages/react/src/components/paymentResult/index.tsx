@@ -1,6 +1,9 @@
+import React from 'react';
 import { WarningTriangleIcon } from '@heliofi/helio-icons';
+
+import { ExplorerLink } from '../../ui-kits';
 import CheckMarkIcon from '../../assets/icons/CheckMarkIcon';
-import ExplorerLink from '../explorer-link';
+
 import {
   StyledResultBox,
   StyledResultContainer,
