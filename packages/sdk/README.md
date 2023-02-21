@@ -2,20 +2,40 @@
 
 ## Introduction
 
-NPM package with Typescript.
+The Helio SDK is easiest way to integrate Helio payments into your site or project.
 
-HelioSDK is a collection of software development tools in one installable package.
+The functionality provided in the SDK wraps and enhances the core Helio [REST APIs](https://docs.hel.io/developers/detailed-api-schema) into one NPM package which is easy to install and upgrade.
 
-This SDK are required for developing a Helio app.
 
 ## Installation
 
 `yarn add @heliofi/sdk`
 
-## HelioSDK Services
+`npm install helio-sdk`
+
+After installing the SDK please import it into your project:
+
+```ts
+import { Helio } from "helio-sdk";
+
+const helioAPI = new Helio("<your-api-key-here>"); // input your api key generated from hel.io here
+```
+
+<b>Obtaining API Keys</b>
+
+Generate API Keys at hel.io | settings | API and enter the required keys as per the example above
+
+Store your public and secret API keys in a safe place. You will not be able to copy the secret API key after creation
 
 
-### Properties table for the HelioSDK
+## Using the Helio SDK
+
+The Helio SDK consolidates all the required API endpoints and services into one easy to use NPM package
+
+See below for a list of services, methods and associated properties:
+
+### Helio SDK Properties table:
+
 
 | Methods                | Params                         | Return                        | Description                                                                  |
 |:-----------------------|:-------------------------------|:------------------------------|:-----------------------------------------------------------------------------|
@@ -28,12 +48,14 @@ This SDK are required for developing a Helio app.
 | paylinkService         | none                           | PaylinkSubmitService, never   | returns object PaylinkSubmitService                                          |
 | configService          | none                           | ConfigService, never          | returns object ConfigService                                                 |
 
+Select the required blockchain type by selecting one of the options below:
+
 ```
  Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 <br>
 
-### Properties table for the CurrencyService
+### CurrencyService Properties
 
 | Methods                | Params                 | Return               | Description                             |
 |:-----------------------|:-----------------------|:---------------------|:----------------------------------------|
@@ -63,7 +85,7 @@ This SDK are required for developing a Helio app.
 ```
 <br>
 
-### Properties table for the HelioApiAdapter
+### HelioApiAdapter Properties
 
 | Methods                            | Params                                                                                                                                                   | Return                                 | Description                                          |
 |:-----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-----------------------------------------------------|
@@ -140,7 +162,7 @@ This SDK are required for developing a Helio app.
 ```
 <br>
 
-### Properties table for the SolExplorerService
+### SolExplorerService Properties
 
 | Methods                          | Params                 | Return  | Description                       |
 |:---------------------------------|:-----------------------|:--------|:----------------------------------|
@@ -148,7 +170,7 @@ This SDK are required for developing a Helio app.
 
 <br>
 
-### Properties table for the TokenConversionService
+### TokenConversionService Properties
 
 | Methods                     | Params                                       | Return  | Description                            |
 |:----------------------------|:---------------------------------------------|:--------|:---------------------------------------|
@@ -179,7 +201,7 @@ This SDK are required for developing a Helio app.
 ```
 <br>
 
-### Properties table for the PaylinkSubmitService
+### PaylinkSubmitService Properties
 
 | Methods            | Params                                              | Return               | Description                                              |
 |:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
@@ -215,7 +237,7 @@ This SDK are required for developing a Helio app.
 ```
 <br>
 
-### Properties table for the ConfigService
+### ConfigService Properties
 
 | Methods             | Params           | Return  | Description                                |
 |:--------------------|:-----------------|:--------|:-------------------------------------------|
@@ -228,7 +250,7 @@ This SDK are required for developing a Helio app.
  Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 
-## Example
+## Example Helio SDK commands
 
 ```Typescript
 import { HelioSDK, ClusterType } from '@heliofi/sdk';
