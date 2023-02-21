@@ -30,7 +30,7 @@ The Helio SDK consolidates all the required API endpoints and services into one 
 
 See below for a list of services, methods and associated properties:
 
-### Helio SDK Properties table:
+### Helio SDK properties summary table:
 
 
 | Methods                | Params                         | Return                        | Description                                                                  |
@@ -51,7 +51,7 @@ Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 <br>
 
-### CurrencyService Properties
+### CurrencyService properties
 
 | Methods                | Params                 | Return               | Description                             |
 |:-----------------------|:-----------------------|:---------------------|:----------------------------------------|
@@ -81,7 +81,7 @@ Currency: {
 ```
 <br>
 
-### HelioApiAdapter Properties
+### HelioApiAdapter properties
 
 | Methods                            | Params                                                                                                                                                   | Return                                 | Description                                          |
 |:-----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-----------------------------------------------------|
@@ -158,7 +158,7 @@ PrepareSwapTransaction: {
 ```
 <br>
 
-### SolExplorerService Properties
+### SolExplorerService properties
 
 | Methods                          | Params                 | Return  | Description                       |
 |:---------------------------------|:-----------------------|:--------|:----------------------------------|
@@ -166,7 +166,7 @@ PrepareSwapTransaction: {
 
 <br>
 
-### TokenConversionService Properties
+### TokenConversionService properties
 
 | Methods                     | Params                                       | Return  | Description                            |
 |:----------------------------|:---------------------------------------------|:--------|:---------------------------------------|
@@ -197,7 +197,7 @@ PrepareSwapTransaction: {
 ```
 <br>
 
-### PaylinkSubmitService Properties
+### PaylinkSubmitService properties
 
 | Methods            | Params                                              | Return               | Description                                              |
 |:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
@@ -233,7 +233,7 @@ BasePaymentProps: {
 ```
 <br>
 
-### ConfigService Properties
+### ConfigService properties
 
 | Methods             | Params           | Return  | Description                                |
 |:--------------------|:-----------------|:--------|:-------------------------------------------|
