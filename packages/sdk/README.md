@@ -15,7 +15,7 @@ Download the SDK NPM module from [here](https://www.npmjs.com/package/@heliofi/s
 After installing the SDK please import it into your project:
 
 ```Typescript
-import { Helio } from "sdk";
+import { Helio } from "@heliofi/sdk";
 ```
 
 <b>Obtaining API Keys</b>
