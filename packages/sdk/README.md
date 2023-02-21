@@ -63,7 +63,7 @@ Select the required blockchain type by selecting one of the options below:
 | getCurrencyBySymbol    | symbol: string         | Currency, never      | get currency by symbol (e.g. "SOl")     |
 | getCurrencyByMint      | mint: string           | Currency, never      | get currency by mint address            |
 
-```
+```TypeScript
   Currency: {
     blockchain: {
       engine: {
@@ -99,7 +99,7 @@ Select the required blockchain type by selecting one of the options below:
 | getPreparedTransactionMessage      | url: string, body: string                                                                                                                                | Promise&lt;PrepareTransaction&gt;      | prepare transaction to send                          |
 | getPreparedTransactionSwapMessage  | url: string, body: string                                                                                                                                | Promise&lt;PrepareSwapTransaction&gt;  | prepare transaction to send for swap case            |
 
-```
+```TypeScript
   FetchifyFindAddress: {
     results: {
       id: string;
@@ -179,7 +179,7 @@ Select the required blockchain type by selecting one of the options below:
 | formatPrice                 | currency: Currency, normalizedAmount: number | string  | format price                           |
 | convertFromMinimalAndRound  | symbol: string, minimalAmount: number        | string  | convert from minimal amount and round  |
 
-```
+```TypeScript
   Currency: {
     blockchain: {
       engine: {
