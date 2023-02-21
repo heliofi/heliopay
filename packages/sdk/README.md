@@ -15,7 +15,7 @@ The functionality provided in the SDK wraps and enhances the core Helio [REST AP
 
 After installing the SDK please import it into your project:
 
-```ts
+```Typescript
 import { Helio } from "helio-sdk";
 
 const helioAPI = new Helio("<your-api-key-here>"); // input your api key generated from hel.io here
@@ -50,8 +50,8 @@ See below for a list of services, methods and associated properties:
 
 Select the required blockchain type by selecting one of the options below:
 
-```
- Cluster = "devnet" | "testnet" | "mainnet-beta";
+```Typescript
+Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 <br>
 
@@ -63,25 +63,25 @@ Select the required blockchain type by selecting one of the options below:
 | getCurrencyBySymbol    | symbol: string         | Currency, never      | get currency by symbol (e.g. "SOl")     |
 | getCurrencyByMint      | mint: string           | Currency, never      | get currency by mint address            |
 
-```TypeScript
-  Currency: {
-    blockchain: {
-      engine: {
-        id: string;
-        type: "EVM" | "SOL";
-      };
+```Typescript
+Currency: {
+  blockchain: {
+    engine: {
+      id: string;
+      type: "EVM" | "SOL";
     };
-    id: string;
-    symbol: string;
-    name: string;
-    mintAddress?: string;
-    coinMarketCapId: number;
-    decimals: number;
-    symbolPrefix?: string;
-    order: number;
-    type?: "FIAT" | "DIGITAL";
-    iconUrl?: string;
   };
+  id: string;
+  symbol: string;
+  name: string;
+  mintAddress?: string;
+  coinMarketCapId: number;
+  decimals: number;
+  symbolPrefix?: string;
+  order: number;
+  type?: "FIAT" | "DIGITAL";
+  iconUrl?: string;
+};
 ```
 <br>
 
@@ -99,66 +99,66 @@ Select the required blockchain type by selecting one of the options below:
 | getPreparedTransactionMessage      | url: string, body: string                                                                                                                                | Promise&lt;PrepareTransaction&gt;      | prepare transaction to send                          |
 | getPreparedTransactionSwapMessage  | url: string, body: string                                                                                                                                | Promise&lt;PrepareSwapTransaction&gt;  | prepare transaction to send for swap case            |
 
-```TypeScript
-  FetchifyFindAddress: {
-    results: {
-      id: string;
-      count: number;
-      labels: string[];
-    }[];
-  };
-  
-  FetchifyRetrieveAddress: {
-    result: {
-      province_name: string;
-      street_name: string;
-      street_prefix: string;
-      street_suffix: string;
-      building_number: string;
-      line_2: string;
-      province: string;
-      locality: string;
-    };
-  };
-  
-  Currency: {
-    blockchain: {
-      engine: {
-        id: string;
-        type: "EVM" | "SOL";
-      };
-    };
+```Typescript
+FetchifyFindAddress: {
+  results: {
     id: string;
-    symbol: string;
-    name: string;
-    mintAddress?: string;
-    coinMarketCapId: number;
-    decimals: number;
-    symbolPrefix?: string;
-    order: number;
-    type?: "FIAT" | "DIGITAL";
-    iconUrl?: string;
-  };
-  
-  PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
- 
-  SwapRouteToken: {
-    routeToken: string;
-  };
+    count: number;
+    labels: string[];
+  }[];
+};
 
-  TokenQuoting: {
-    rateToken: string;
+FetchifyRetrieveAddress: {
+  result: {
+    province_name: string;
+    street_name: string;
+    street_prefix: string;
+    street_suffix: string;
+    building_number: string;
+    line_2: string;
+    province: string;
+    locality: string;
   };
- 
-  PrepareTransaction: {
-    transactionToken: string;
-    transactionMessage: string;
-  };
+};
   
-  PrepareSwapTransaction: {
-    standardTransaction: PrepareTransaction;
-    swapTransaction: string;
+Currency: {
+  blockchain: {
+    engine: {
+      id: string;
+      type: "EVM" | "SOL";
+    };
   };
+  id: string;
+  symbol: string;
+  name: string;
+  mintAddress?: string;
+  coinMarketCapId: number;
+  decimals: number;
+  symbolPrefix?: string;
+  order: number;
+  type?: "FIAT" | "DIGITAL";
+  iconUrl?: string;
+};
+
+PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
+
+SwapRouteToken: {
+  routeToken: string;
+};
+
+TokenQuoting: {
+  rateToken: string;
+};
+
+PrepareTransaction: {
+  transactionToken: string;
+  transactionMessage: string;
+};
+
+PrepareSwapTransaction: {
+  standardTransaction: PrepareTransaction;
+  swapTransaction: string;
+};
 ```
 <br>
 
@@ -179,7 +179,7 @@ Select the required blockchain type by selecting one of the options below:
 | formatPrice                 | currency: Currency, normalizedAmount: number | string  | format price                           |
 | convertFromMinimalAndRound  | symbol: string, minimalAmount: number        | string  | convert from minimal amount and round  |
 
-```TypeScript
+```Typescript
   Currency: {
     blockchain: {
       engine: {
@@ -208,31 +208,31 @@ Select the required blockchain type by selecting one of the options below:
 | handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
 
 ```Typescript
-  import { Idl, Program } from "@project-serum/anchor";
-  import { AnchorWallet } from "@solana/wallet-adapter-react";
-  import { Cluster, Connection } from "@solana/web3.js";
-  
-  BasePaymentResponse: {
-      transactionSignature: string;
-      swapTransactionSignature?: string;
-  };
-  
-  BasePaymentProps: {
-    onSuccess: (event: {
-      data: BasePaymentResponse;
-      transaction: string;
-      paymentPK?: string;
-      swapTransaction?: string;
-    }) => void;
-    onError: (event: { transaction?: string; errorMessage: string }) => void;
-    onPending?: (event: { transaction: string }) => void;
-    symbol: string;
-    anchorProvider: Program<HelioIdl>;
-    wallet: AnchorWallet;
-    connection: Connection;
-    rateToken?: string;
-    cluster: Cluster;
-  };
+import { Idl, Program } from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Cluster, Connection } from "@solana/web3.js";
+
+BasePaymentResponse: {
+    transactionSignature: string;
+    swapTransactionSignature?: string;
+};
+
+BasePaymentProps: {
+  onSuccess: (event: {
+    data: BasePaymentResponse;
+    transaction: string;
+    paymentPK?: string;
+    swapTransaction?: string;
+  }) => void;
+  onError: (event: { transaction?: string; errorMessage: string }) => void;
+  onPending?: (event: { transaction: string }) => void;
+  symbol: string;
+  anchorProvider: Program<HelioIdl>;
+  wallet: AnchorWallet;
+  connection: Connection;
+  rateToken?: string;
+  cluster: Cluster;
+};
   
 ```
 <br>
@@ -247,7 +247,7 @@ Select the required blockchain type by selecting one of the options below:
 | getHelioApiBaseUrl  | none             | string  | get Helio api base url for current cluster |
 
 ```Typescript
- Cluster = "devnet" | "testnet" | "mainnet-beta";
+Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 
 ## Example Helio SDK commands
