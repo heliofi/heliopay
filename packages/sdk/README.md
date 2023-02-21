@@ -6,7 +6,8 @@ The Helio SDK is easiest way to integrate Helio payments into your site or proje
 
 The functionality provided in the SDK wraps and enhances the core Helio [REST APIs](https://docs.hel.io/developers/detailed-api-schema) into one NPM package which is easy to install and upgrade.
 
-Download the SDK NPM from [here](https://www.npmjs.com/package/@heliofi/sdk)
+Download the SDK NPM module from [here](https://www.npmjs.com/package/@heliofi/sdk)
+
 ## Installation
 
 `yarn add @heliofi/sdk`
