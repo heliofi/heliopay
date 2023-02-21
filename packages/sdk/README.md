@@ -17,15 +17,11 @@ After installing the SDK please import it into your project:
 
 ```Typescript
 import { Helio } from "helio-sdk";
-
-const helioAPI = new Helio("<your-api-key-here>"); // input your api key generated from hel.io here
 ```
 
 <b>Obtaining API Keys</b>
 
-Generate API Keys at hel.io | settings | API and enter the required keys as per the example above
-
-Store your public and secret API keys in a safe place. You will not be able to copy the secret API key after creation
+API keys are not currently required for this version of the Helio SDK - more news on this soon
 
 
 ## Using the Helio SDK
