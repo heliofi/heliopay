@@ -68,12 +68,12 @@ const BaseCheckout = ({
     (showSwapMenu && !!tokenSwapError) || tokenSwapLoading;
 
   const initialValues = getInitialValues(
-    paymentDetails,
     normalizedPrice,
     canSelectCurrency,
     paymentDetails?.dynamic
       ? allowedCurrencies?.[0].symbol
-      : paymentDetails?.currency?.symbol
+      : paymentDetails?.currency?.symbol,
+    paymentDetails
   );
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const BaseCheckout = ({
             )
           }
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
-          showSwap={paymentDetails?.features.canSwapTokens}
+          showSwap={!!paymentDetails?.features.canSwapTokens}
           isSwapShown={showSwapMenu}
           toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
           onHide={onHide}
@@ -135,11 +135,13 @@ const BaseCheckout = ({
                   currency={activeCurrency?.symbol}
                 />
               )}
-              <QRCodeCard
-                phantomDeepLink={`${HelioSDK.configService.getPhantomLink(
-                  paymentDetails?.id
-                )}`}
-              />
+              {paymentDetails?.id && (
+                <QRCodeCard
+                  phantomDeepLink={`${HelioSDK.configService.getPhantomLink(
+                    paymentDetails?.id
+                  )}`}
+                />
+              )}
               <PhantomCompatibleCard />
             </div>
           )}

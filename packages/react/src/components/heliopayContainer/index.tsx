@@ -31,7 +31,7 @@ import { useTokenConversion } from '../../providers/token-conversion/TokenConver
 
 import {
   StyledEnvironment,
-  StyledErrorMessage,
+  // StyledErrorMessage,
   StyledLeft,
   StyledLogo,
   StyledLogoContainer,
@@ -152,9 +152,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     customerDetails,
     productDetails,
   }: {
-    amount: number;
+    amount: bigint;
     currency: Currency;
-    quantity: number;
+    quantity: bigint;
     customerDetails?: CustomerDetails;
     productDetails?: ProductDetails;
   }) => {
@@ -162,14 +162,14 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.wallet?.publicKey;
+      const recipient = paymentDetails?.wallet?.publicKey as string;
       const { symbol } = getCurrency(currency.symbol);
 
       const payload = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
         symbol,
-        amount: amount * (quantity || 1),
+        amount: amount * (quantity || BigInt(1)),
         paymentRequestId,
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
@@ -212,10 +212,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         supportedCurrencies?.length
                       ) {
                         setShowFormModal(true);
-                      } else {
+                      } else if (paymentDetails) {
                         submitPayment({
                           amount: paymentDetails?.normalizedPrice,
-                          quantity: 1,
+                          quantity: BigInt(1),
                           customerDetails: undefined,
                           currency: paymentDetails?.currency,
                         });
@@ -242,10 +242,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
               </StyledLogoContainer>
             </StyledRight>
           </StyledRow>
-
-          {paymentDetails?.message && (
+          {/* {paymentDetails?.message && (
             <StyledErrorMessage>{paymentDetails.message}</StyledErrorMessage>
           )}
+          @todo-v fix this case
+           */}
           {wallet && <WalletController />}
         </>
       ) : (

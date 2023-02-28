@@ -62,7 +62,7 @@ const SwapsForm = ({
       (it) => formValues.currency === it.symbol
     );
 
-    if (selectedCurrency?.mintAddress != null) {
+    if (selectedCurrency?.mintAddress != null && paymentDetails?.id) {
       getTokenSwapQuote(
         paymentDetails.id,
         PaymentRequestType.PAYLINK,
@@ -76,10 +76,10 @@ const SwapsForm = ({
     selectedCurrency,
     debouncedQuantity,
     debouncedPrice,
-    paymentDetails.currency.mintAddress,
-    paymentDetails.currency.symbol,
-    paymentDetails.id,
-    paymentDetails.type,
+    paymentDetails?.currency.mintAddress,
+    paymentDetails?.currency.symbol,
+    paymentDetails?.id,
+    // paymentDetails?.type, @todo-v add type
   ]);
 
   const currencyOptions =
@@ -102,7 +102,7 @@ const SwapsForm = ({
     if (tokenSwapQuote != null && selectedCurrency != null && !tokenSwapError) {
       currencyLabel = `${HelioSDK.tokenConversionService.convertFromMinimalAndRound(
         selectedCurrency?.symbol,
-        tokenSwapQuote?.inAmount
+        BigInt(tokenSwapQuote?.inAmount)
       )} ${selectedCurrency?.symbol}`;
     }
 
@@ -160,15 +160,15 @@ const SwapsForm = ({
               <StyledTokenSwapQuoteInfo>
                 <p>Exchange rate:</p>
                 <p>
-                  1 {paymentDetails.currency.symbol} ={' '}
+                  1 {paymentDetails?.currency.symbol} ={' '}
                   {roundValue(
                     HelioSDK.tokenConversionService.convertFromMinimalUnits(
                       tokenSwapQuote.from.symbol,
-                      tokenSwapQuote.inAmount
+                      BigInt(tokenSwapQuote.inAmount)
                     ) /
                       HelioSDK.tokenConversionService.convertFromMinimalUnits(
                         tokenSwapQuote.to.symbol,
-                        tokenSwapQuote.outAmount
+                        BigInt(tokenSwapQuote.outAmount)
                       ),
                     4
                   )}{' '}

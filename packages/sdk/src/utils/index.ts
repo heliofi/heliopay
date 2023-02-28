@@ -15,3 +15,11 @@ export const isEmptyObject = (obj?: {}) =>
 
 export const fromBigintToStringForSerialization = (value: bigint): string =>
   String(value);
+
+export const fromBigintDivisionToNumber = (
+  dividend: bigint,
+  divider: bigint,
+  divisionNormalizer = 1000000
+): number =>
+  Number((dividend * BigInt(divisionNormalizer)) / divider) /
+  divisionNormalizer;

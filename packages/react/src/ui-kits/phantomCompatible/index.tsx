@@ -2,7 +2,7 @@ import React from 'react';
 
 import { StyledPhantomLogo, StyledPhantomRow } from './styles';
 
-// @ts-ignore
+// @ts-ignore @todo-v configure files paths
 import PhantomPurple from '../../../public/PhantomPurple.png';
 
 const PhantomCompatibleCard = () => (

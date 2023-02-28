@@ -3,12 +3,13 @@ import { CustomerDetails, ProductDetails } from '@heliofi/common';
 
 import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
+import { PaymentDetails } from '../../providers/helio/HelioContext';
 
 export const getInitialValues = (
-  paymentDetails: any,
   normalizedPrice: number,
   canSelectCurrency: boolean,
-  initialCurrency?: string
+  initialCurrency?: string,
+  paymentDetails?: PaymentDetails
 ) => ({
   requireEmail: paymentDetails?.features.requireEmail,
   requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
@@ -18,8 +19,8 @@ export const getInitialValues = (
   requireCountry: paymentDetails?.features.requireCountry,
   requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
   requireProductDetails: paymentDetails?.features.requireProductDetails,
-  canChangePrice: paymentDetails?.features.canChangePrice,
-  canChangeQuantity: paymentDetails?.features.canChangeQuantity,
+  canChangePrice: paymentDetails?.features?.canChangePrice,
+  canChangeQuantity: paymentDetails?.features?.canChangeQuantity,
   fullName: undefined,
   email: undefined,
   discordUsername: undefined,
@@ -80,11 +81,13 @@ export const handleSubmit =
     onSubmit({
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
-      amount: HelioSDK.tokenConversionService.convertToMinimalUnits(
-        values.currency || paymentDetails?.currency.symbol,
-        values.canChangePrice ? values.customPrice : price
+      amount: BigInt(
+        HelioSDK.tokenConversionService.convertToMinimalUnits(
+          values.currency || paymentDetails?.currency.symbol,
+          values.canChangePrice ? values.customPrice : price
+        )
       ),
-      quantity: values.quantity || 1,
+      quantity: BigInt(values.quantity || 1),
       currency: getCurrency(
         currencyList,
         values.currency || paymentDetails?.currency.symbol

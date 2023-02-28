@@ -3,10 +3,10 @@ import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
 import { HelioSDK as HelioSDKType } from '@heliofi/sdk';
 
 export type InheritedOnSumbit = (data: {
-  amount: number;
+  amount: bigint;
   customerDetails?: CustomerDetails;
   productDetails?: ProductDetails;
-  quantity: number;
+  quantity: bigint;
   currency: Currency;
 }) => void;
 
