@@ -2,7 +2,8 @@
   "name": "@heliofi/sdk",
   "version": "0.0.3-alpha.0",
   "description": "",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "yarn build -w",
@@ -37,6 +38,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "typescript": "4.5.4"
   },
+  "files": [
+    "*.js",
+    "/**/*.js",
+    "/*.d.ts",
+    "/**/*.d.ts"
+  ],
   "eslintConfig": {
     "plugins": [
       "prettier",
