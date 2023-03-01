@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/evm-adapter",
-  "version": "0.0.22-beta",
+  "version": "0.0.23-beta.0",
   "description": "API to interact with Helio Finances program on EVM chains.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
