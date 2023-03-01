@@ -2859,10 +2859,32 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
+"@heliofi/evm-adapter@^0.0.22-beta":
+  version "0.0.22-beta"
+  resolved "https://registry.npmjs.org/@heliofi/evm-adapter/-/evm-adapter-0.0.22-beta.tgz#901b5bccb1fe9f1c450d3a915d3c2bc60c0912a9"
+  integrity sha512-lMEDbO4hZw21NGEBBSoRc2Qzm5yZxRZiqR4TeYL6uPG0CBXXQOBp/AiPgw+3FtHhoPRM2vL/LsCARmDElNs+3A==
+  dependencies:
+    ethers "^5.7.2"
+
 "@heliofi/helio-icons@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
+
+"@heliofi/sdk@^0.0.4-alpha.0":
+  version "0.0.4-alpha.0"
+  resolved "https://registry.npmjs.org/@heliofi/sdk/-/sdk-0.0.4-alpha.0.tgz#41556500c72a52f2de5f781cd1ce0dc2e3113ef4"
+  integrity sha512-fISemQGQPqhP84raV1pnTiojg9cZL/2Ww7BgE9Fbjtbxgub0DrP/D+41lQQYu9Plb66cCQOASXMZj2zLiyw5hA==
+  dependencies:
+    "@heliofi/common" "^0.1.135"
+    "@heliofi/solana-adapter" "3.1.1-alpha"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    reflect-metadata "^0.1.13"
+    tweetnacl "^1.0.3"
+    yarn "^1.22.19"
 
 "@heliofi/solana-adapter@3.1.1-alpha":
   version "3.1.1-alpha"
