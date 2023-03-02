@@ -16,11 +16,13 @@ export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
 
   async getPaymentRequestByIdPublic(id: string): Promise<Paylink> {
-    return this.publicRequest<Paylink>(
+    const res = await this.publicRequest<Paylink>(
       `/paylink/${id}/public`,
       { method: 'GET' },
       true
     );
+
+    return Paylink.fromObject(res);
   }
 
   async findAddress(

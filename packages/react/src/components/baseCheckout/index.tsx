@@ -53,7 +53,7 @@ const BaseCheckout = ({
 
   const { HelioSDK } = useCompositionRoot();
 
-  const [normalizedPrice, setNormalizedPrice] = useState(0);
+  const [normalizedPrice, setNormalizedPrice] = useState<number>(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
