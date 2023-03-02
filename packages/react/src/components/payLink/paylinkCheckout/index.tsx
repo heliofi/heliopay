@@ -9,6 +9,7 @@ type PaylinkCheckoutProps = InheritedBaseCheckoutProps;
 
 const PaylinkCheckout = (props: PaylinkCheckoutProps) => {
   const { totalAmount } = props;
+
   const { paymentDetails } = useHelioProvider();
 
   if (paymentDetails?.dynamic && !totalAmount) {
