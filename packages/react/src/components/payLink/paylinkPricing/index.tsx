@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency } from '@heliofi/common';
+import { Currency, LinkFeaturesDto } from '@heliofi/common';
 
 import {
   Input,
@@ -14,7 +14,7 @@ import { formatTotalPrice, getCurrency } from '../../baseCheckout/actions';
 
 import { StyledCurrency, StyledCurrencySelectIcon } from './styles';
 
-type PaylinkPricingProps = FormikProps & {
+export type PaylinkPricingProps = FormikProps & {
   activeCurrency: Currency | null;
   price: number;
   canSelectCurrency: boolean;
@@ -31,7 +31,7 @@ const PaylinkPricing = ({
   allowedCurrencies,
   setActiveCurrency,
 }: PaylinkPricingProps) => {
-  const { currencyList, paymentDetails } = useHelioProvider();
+  const { currencyList, getPaymentFeatures } = useHelioProvider();
 
   const currenciesOptions = allowedCurrencies.map((currency: Currency) => ({
     label: currency?.symbol ?? '',
@@ -93,7 +93,7 @@ const PaylinkPricing = ({
         />
       )}
 
-      {paymentDetails?.features?.canChangeQuantity && (
+      {getPaymentFeatures<LinkFeaturesDto>()?.canChangeQuantity && (
         <NumberInput
           fieldId="quantity"
           fieldName="quantity"

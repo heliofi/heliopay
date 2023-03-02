@@ -16,6 +16,7 @@ import {
   CustomerDetails,
   ProductDetails,
   BlockchainEngineType,
+  PaymentRequestType,
 } from '@heliofi/common';
 
 import PaymentResult from '../paymentResult';
@@ -39,6 +40,7 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
+import PaystreamChekout from '../payStream/paystreamChekout';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -76,19 +78,17 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     paymentDetails,
     getCurrencyList,
     getPaymentDetails,
+    getPaymentFeatures,
     initCluster,
     cluster: mainCluster,
     isCustomerDetailsRequired,
     tokenSwapQuote,
   } = useHelioProvider();
   const { HelioSDK } = useCompositionRoot();
+
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
-
-  useEffect(() => {
-    initCluster(cluster);
-  }, [cluster]);
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter(
@@ -99,24 +99,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     );
     setAllowedCurrencies(allowedCurrenciesTemp || []);
   };
-
-  useEffect(() => {
-    if (mainCluster) {
-      getCurrencyList();
-    }
-  }, [mainCluster]);
-
-  useEffect(() => {
-    if (supportedCurrencies) {
-      generateAllowedCurrencies();
-    }
-  }, [currencyList, supportedCurrencies]);
-
-  useEffect(() => {
-    if (mainCluster) {
-      getPaymentDetails(paymentRequestId);
-    }
-  }, [paymentRequestId, mainCluster]);
 
   const getCurrency = (currency?: string): Currency => {
     if (!currency) {
@@ -177,13 +159,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         customerDetails,
         quantity: Number(quantity),
         productDetails,
-        splitRevenue: paymentDetails?.features?.splitRevenue,
+        splitRevenue: getPaymentFeatures()?.splitRevenue,
         splitWallets: paymentDetails?.splitWallets,
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
         cluster,
-        canSwapTokens: paymentDetails?.features.canSwapTokens,
+        canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
 
@@ -196,6 +178,30 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       }
     }
   };
+
+  const paymentRequestType = HelioSDK.getPaymentRequestType();
+
+  useEffect(() => {
+    initCluster(cluster);
+  }, [cluster]);
+
+  useEffect(() => {
+    if (mainCluster) {
+      getCurrencyList();
+    }
+  }, [mainCluster]);
+
+  useEffect(() => {
+    if (supportedCurrencies) {
+      generateAllowedCurrencies();
+    }
+  }, [currencyList, supportedCurrencies]);
+
+  useEffect(() => {
+    if (mainCluster && paymentRequestType) {
+      getPaymentDetails(paymentRequestId);
+    }
+  }, [paymentRequestId, mainCluster, paymentRequestType]);
 
   return (
     <StyledWrapper>
@@ -252,14 +258,22 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       ) : (
         <PaymentResult result={result} />
       )}
-      {showFormModal && (
-        <PaylinkCheckout
-          onHide={() => setShowFormModal(false)}
-          onSubmit={submitPayment}
-          allowedCurrencies={allowedCurrencies}
-          totalAmount={totalAmount}
-        />
-      )}
+      {showFormModal &&
+        (paymentRequestType === PaymentRequestType.PAYLINK ? (
+          <PaylinkCheckout
+            onHide={() => setShowFormModal(false)}
+            onSubmit={submitPayment}
+            allowedCurrencies={allowedCurrencies}
+            totalAmount={totalAmount}
+          />
+        ) : (
+          <PaystreamChekout
+            onHide={() => setShowFormModal(false)}
+            onSubmit={submitPayment}
+            allowedCurrencies={[]}
+            totalAmount={totalAmount}
+          />
+        ))}
 
       {showLoadingModal && (
         <LoadingModal onHide={() => setShowLoadingModal(false)} />

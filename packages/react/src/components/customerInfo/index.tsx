@@ -25,7 +25,8 @@ import {
 type CustomerInfoProps = FormikProps;
 
 const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
-  const { paymentDetails, isCustomerDetailsRequired } = useHelioProvider();
+  const { paymentDetails, isCustomerDetailsRequired, getPaymentFeatures } =
+    useHelioProvider();
 
   const [selectValue, setSelectValue] = useState({
     label: '',
@@ -70,7 +71,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         </>
       )}
 
-      {paymentDetails?.features.requireFullName && (
+      {getPaymentFeatures().requireFullName && (
         <Input
           fieldId="fullName"
           fieldName="fullName"
@@ -81,7 +82,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features.requireEmail && (
+      {getPaymentFeatures().requireEmail && (
         <Input
           fieldId="email"
           fieldName="email"
@@ -92,7 +93,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features.requireTwitterUsername && (
+      {getPaymentFeatures().requireTwitterUsername && (
         <Input
           fieldId="twitterUsername"
           fieldName="twitterUsername"
@@ -103,7 +104,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features.requireDiscordUsername && (
+      {getPaymentFeatures().requireDiscordUsername && (
         <Input
           fieldId="discordUsername"
           fieldName="discordUsername"
@@ -114,7 +115,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features?.requirePhoneNumber && (
+      {getPaymentFeatures()?.requirePhoneNumber && (
         <PhoneNumberInput
           fieldId="phoneNumber"
           fieldName="phoneNumber"
@@ -126,7 +127,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features.requireCountry && (
+      {getPaymentFeatures().requireCountry && (
         <SelectBox
           options={countryOptions}
           placeholder="Select country"
@@ -139,7 +140,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features.requireDeliveryAddress && (
+      {getPaymentFeatures().requireDeliveryAddress && (
         <AddressSection
           values={formValues}
           setFieldValue={setFieldValue}
@@ -148,7 +149,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         />
       )}
 
-      {paymentDetails?.features?.requireProductDetails &&
+      {getPaymentFeatures()?.requireProductDetails &&
         paymentDetails?.product != null &&
         (paymentDetails?.product?.type === ProductInputType.SELECTOR ? (
           <SelectBox

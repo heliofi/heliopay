@@ -3,24 +3,26 @@ import { CustomerDetails, ProductDetails } from '@heliofi/common';
 
 import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
-import { PaymentDetails } from '../../providers/helio/HelioContext';
+import { PaymentFeatures } from '../../providers/helio/HelioContext';
 
 export const getInitialValues = (
   normalizedPrice: number,
   canSelectCurrency: boolean,
   initialCurrency?: string,
-  paymentDetails?: PaymentDetails
+  paymentFeatures?: PaymentFeatures,
+  canChangeQuantity?: boolean,
+  canChangePrice?: boolean
 ) => ({
-  requireEmail: paymentDetails?.features.requireEmail,
-  requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
-  requireFullName: paymentDetails?.features.requireFullName,
-  requireTwitterUsername: paymentDetails?.features.requireTwitterUsername,
-  requirePhoneNumber: paymentDetails?.features.requirePhoneNumber,
-  requireCountry: paymentDetails?.features.requireCountry,
-  requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
-  requireProductDetails: paymentDetails?.features.requireProductDetails,
-  canChangePrice: paymentDetails?.features?.canChangePrice,
-  canChangeQuantity: paymentDetails?.features?.canChangeQuantity,
+  requireEmail: paymentFeatures?.requireEmail,
+  requireDiscordUsername: paymentFeatures?.requireDiscordUsername,
+  requireFullName: paymentFeatures?.requireFullName,
+  requireTwitterUsername: paymentFeatures?.requireTwitterUsername,
+  requirePhoneNumber: paymentFeatures?.requirePhoneNumber,
+  requireCountry: paymentFeatures?.requireCountry,
+  requireDeliveryAddress: paymentFeatures?.requireDeliveryAddress,
+  requireProductDetails: paymentFeatures?.requireProductDetails,
+  canChangePrice,
+  canChangeQuantity,
   fullName: undefined,
   email: undefined,
   discordUsername: undefined,
@@ -32,13 +34,12 @@ export const getInitialValues = (
   street: undefined,
   streetNumber: undefined,
   phoneNumber: undefined,
-  quantity: paymentDetails?.features.canChangeQuantity ? 1 : undefined,
-  customPrice: paymentDetails?.features.canChangePrice
-    ? undefined
-    : normalizedPrice,
+  quantity: canChangeQuantity ? 1 : undefined,
+  customPrice: canChangePrice ? undefined : normalizedPrice,
   canSelectCurrency,
   currency: canSelectCurrency ? undefined : initialCurrency,
   productValue: undefined,
+  maxTime: undefined,
 });
 
 export const getCurrency = (currencyList: any[], currency?: string) => {

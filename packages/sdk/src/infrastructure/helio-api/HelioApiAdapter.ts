@@ -3,7 +3,9 @@ import {
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
   Paylink,
+  PaymentRequest,
   PaymentRequestType,
+  Paystream,
   PrepareSwapTransaction,
   PrepareTransaction,
   SwapRouteToken,
@@ -15,9 +17,34 @@ import { enhanceOptions, FetchOptions, request } from '../fetch-middleware';
 export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
 
-  async getPaymentRequestByIdPublic(id: string): Promise<Paylink> {
-    return this.publicRequest<Paylink>(
+  // @todo-v check this case
+  async getPaymentRequestTypeById(id: string): Promise<PaymentRequestType> {
+    const payData = await this.publicRequest<Paylink>(
       `/paylink/${id}/public`,
+      { method: 'GET' },
+      true
+    );
+    if (payData) {
+      return PaymentRequestType.PAYLINK;
+    }
+    return PaymentRequestType.PAYSTREAM;
+  }
+
+  async getPaymentRequestByIdPublic(id: string): Promise<PaymentRequest> {
+    let param;
+    switch (this.configService.getPaymentRequestType()) {
+      case PaymentRequestType.PAYLINK:
+        param = 'paylink';
+        break;
+      case PaymentRequestType.PAYSTREAM:
+        param = 'paystream';
+        break;
+      default:
+        break;
+    }
+
+    return this.publicRequest<PaymentRequest>(
+      `/${param}/${id}/public`,
       { method: 'GET' },
       true
     );

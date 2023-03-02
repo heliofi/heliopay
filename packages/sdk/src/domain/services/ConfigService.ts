@@ -1,9 +1,12 @@
 import { Cluster } from '@solana/web3.js';
+import { PaymentRequestType } from '@heliofi/common';
 import { ASSET_URL } from '../constants';
 import { ClusterType } from '../model';
 
 export class ConfigService {
-  private cluster: Cluster | undefined;
+  private cluster?: Cluster;
+
+  private paymentRequestType?: PaymentRequestType;
 
   static DEV_HELIO_SERVICE_BASE_URL = 'https://dev.api.hel.io/v1';
 
@@ -32,6 +35,19 @@ export class ConfigService {
 
   setCluster(cluster: Cluster) {
     this.cluster = cluster;
+  }
+
+  getPaymentRequestType(): PaymentRequestType {
+    if (!this.paymentRequestType) {
+      throw new Error(
+        'Please set payment request type before getPaymentRequestType'
+      );
+    }
+    return this.paymentRequestType;
+  }
+
+  setPaymentRequestType(paymentRequestType: PaymentRequestType) {
+    this.paymentRequestType = paymentRequestType;
   }
 
   getHelioApiBaseUrl(): string {

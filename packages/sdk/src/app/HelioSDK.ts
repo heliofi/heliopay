@@ -1,15 +1,17 @@
 import { Cluster } from '@solana/web3.js';
+import { PaymentRequestType } from '@heliofi/common';
+
 import {
+  ConfigService,
   CurrencyService,
+  HelioApiConnector,
   SolExplorerService,
   TokenConversionService,
-  ConfigService,
-  HelioApiConnector,
 } from '../domain';
 import { HelioApiAdapter, PaylinkSubmitService } from '../infrastructure';
 
 export class HelioSDK {
-  private _cluster: Cluster | undefined;
+  private _cluster?: Cluster;
 
   private _currencyService: CurrencyService;
 
@@ -23,8 +25,14 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
-  constructor(options?: { cluster: Cluster }) {
+  private _paymentRequestType?: PaymentRequestType;
+
+  constructor(options?: {
+    cluster: Cluster;
+    paymentRequestType: PaymentRequestType;
+  }) {
     this._cluster = options?.cluster;
+    this._paymentRequestType = options?.paymentRequestType;
     this._configService = new ConfigService(options?.cluster);
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
@@ -48,6 +56,19 @@ export class HelioSDK {
   setCluster(cluster: Cluster) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
+  }
+
+  async setPaymentRequestType(paymentRequestId: string) {
+    const paymentRequestType = await this._apiService.getPaymentRequestTypeById(
+      paymentRequestId
+    );
+    this._paymentRequestType = paymentRequestType;
+    this._configService.setPaymentRequestType(paymentRequestType);
+  }
+
+  getPaymentRequestType(): PaymentRequestType | undefined | never {
+    this.checkCluster();
+    return this._paymentRequestType;
   }
 
   get currencyService(): CurrencyService | never {

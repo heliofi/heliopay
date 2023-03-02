@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
 import { createPortal } from 'react-dom';
-import { Currency } from '@heliofi/common';
+import { Currency, LinkFeaturesDto } from '@heliofi/common';
 
 import {
   formatTotalPrice,
@@ -30,9 +30,11 @@ import {
   StyledBaseCheckoutContainer,
   StyledBaseCheckoutBody,
 } from './styles';
+import { PaylinkPricingProps } from '../payLink/paylinkPricing';
+import { PaystreamPricingProps } from '../payStream/paystreamPricing';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
-  PricingComponent: FC<any>;
+  PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
 };
 
 const BaseCheckout = ({
@@ -45,6 +47,7 @@ const BaseCheckout = ({
   const {
     currencyList,
     paymentDetails,
+    getPaymentFeatures,
     tokenSwapLoading,
     tokenSwapQuote,
     tokenSwapError,
@@ -73,7 +76,9 @@ const BaseCheckout = ({
     paymentDetails?.dynamic
       ? allowedCurrencies?.[0].symbol
       : paymentDetails?.currency?.symbol,
-    paymentDetails
+    getPaymentFeatures(),
+    getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
+    getPaymentFeatures<LinkFeaturesDto>().canChangePrice
   );
 
   useEffect(() => {
@@ -106,8 +111,6 @@ const BaseCheckout = ({
     }
   }, [showSwapMenu]);
 
-  // @ts-ignore
-  // @ts-ignore
   return createPortal(
     <StyledBaseCheckoutWrapper>
       <StyledBaseCheckoutContainer>
@@ -118,7 +121,7 @@ const BaseCheckout = ({
             )
           }
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
-          showSwap={!!paymentDetails?.features.canSwapTokens}
+          showSwap={!!getPaymentFeatures().canSwapTokens}
           isSwapShown={showSwapMenu}
           toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
           onHide={onHide}
@@ -128,7 +131,7 @@ const BaseCheckout = ({
         <StyledBaseCheckoutBody>
           {showQRCode && (
             <div>
-              {!paymentDetails?.features.canChangePrice && (
+              {!getPaymentFeatures<LinkFeaturesDto>().canChangePrice && (
                 <PriceBanner
                   title="Total price:"
                   amount={formatTotalPrice(totalAmount || normalizedPrice)}

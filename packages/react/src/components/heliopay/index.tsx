@@ -40,9 +40,14 @@ export const HelioPay = ({
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   const { HelioSDK } = useCompositionRoot();
+
   useMemo(() => {
     HelioSDK.setCluster(cluster as Cluster);
   }, [cluster]);
+
+  useMemo(() => {
+    HelioSDK.setPaymentRequestType(paymentRequestId);
+  }, [paymentRequestId, cluster]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});

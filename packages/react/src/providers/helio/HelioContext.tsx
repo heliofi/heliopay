@@ -4,20 +4,24 @@ import {
   Currency,
   Paylink,
   PaymentRequestType,
+  PaymentRequest,
   SOL_MINT,
   WRAPPED_SOL_MINT,
+  Paystream,
+  LinkFeaturesDto,
+  PaymentRequestFeatures,
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { TokenSwapQuote } from '../../domain';
 
-export type PaymentDetails = Paylink; // @todo-v change type
+export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
   currencyList: Currency[];
   setCurrencyList: (currencyList: Currency[]) => void;
-  paymentDetails?: PaymentDetails;
+  paymentDetails?: PaymentRequest;
   setPaymentDetails: (paymentDetails: any) => void;
   cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
@@ -79,17 +83,21 @@ export const useHelioProvider = () => {
     }
   };
 
+  const getPaymentFeatures = <T extends PaymentFeatures>(): T =>
+    (paymentDetails as Paylink | Paystream)?.features as T;
+
   const checkCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
+
     return !!(
-      paymentDetails.features?.requireEmail ||
-      paymentDetails.features?.requireFullName ||
-      paymentDetails.features?.requireDiscordUsername ||
-      paymentDetails.features?.requireTwitterUsername ||
-      paymentDetails.features?.requireCountry ||
-      paymentDetails.features?.requireDeliveryAddress ||
-      paymentDetails.features?.canChangeQuantity || // @TODO remove
-      paymentDetails.features?.canChangePrice
+      getPaymentFeatures()?.requireEmail ||
+      getPaymentFeatures()?.requireFullName ||
+      getPaymentFeatures()?.requireDiscordUsername ||
+      getPaymentFeatures()?.requireTwitterUsername ||
+      getPaymentFeatures()?.requireCountry ||
+      getPaymentFeatures()?.requireDeliveryAddress ||
+      getPaymentFeatures<LinkFeaturesDto>()?.canChangeQuantity || // @TODO remove
+      getPaymentFeatures<LinkFeaturesDto>()?.canChangePrice
     );
   };
 
@@ -208,6 +216,7 @@ export const useHelioProvider = () => {
     paymentDetails,
     getCurrencyList,
     getPaymentDetails,
+    getPaymentFeatures,
     cluster,
     initCluster,
     isCustomerDetailsRequired,
