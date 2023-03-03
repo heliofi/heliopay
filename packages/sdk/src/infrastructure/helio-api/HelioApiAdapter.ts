@@ -48,6 +48,8 @@ export class HelioApiAdapter implements HelioApiConnector {
       { method: 'GET' },
       true
     );
+
+    return Paylink.fromObject(res);
   }
 
   async findAddress(

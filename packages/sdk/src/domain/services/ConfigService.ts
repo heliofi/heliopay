@@ -16,8 +16,6 @@ export class ConfigService {
 
   static PROD_HELIO_BASE_URL = 'https://www.hel.io';
 
-  static CURRENCY_USDC = 'USDC';
-
   constructor(cluster?: Cluster) {
     this.cluster = cluster;
   }

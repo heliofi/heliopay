@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfigService } from '@heliofi/sdk/src/domain';
+import { CurrencySymbols } from '@heliofi/sdk';
 
 import { StyledPriceBanner, StyledTitle, StyledPrice } from './styles';
 
@@ -13,7 +13,7 @@ const PriceBanner = ({ title, amount, currency }: PriceBannerProps) => (
   <StyledPriceBanner>
     {title && <StyledTitle>{title}</StyledTitle>}{' '}
     <StyledPrice>
-      {currency === ConfigService.CURRENCY_USDC ? '$' : ''}
+      {currency === CurrencySymbols.USDC ? '$' : ''}
       {amount} {currency}
     </StyledPrice>
   </StyledPriceBanner>
