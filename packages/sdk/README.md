@@ -2,18 +2,28 @@
 
 ## Introduction
 
-NPM package with Typescript.
+The Helio SDK is a packaged module to make integrating Helio and our components as easy and as quickly as possible into your front end web site or store so you can start accepting Helio web3 payments.
 
-HelioSDK is a collection of software development tools in one installable package.
+It wraps and enhances the Helio [API](https://api.hel.io/v1/docs) away into one NPM package which is easy to install and upgrade.
 
-This SDK are required for developing a Helio app.
+The Helio SDK is is written in Typescript and is currently in **ALPHA** and will be updated to **STABLE** in the coming weeks.
+
+Solana is currently supported with Polygon and ETH following soon.
+
 
 ## Installation
 
 `yarn add @heliofi/sdk`
 
-## HelioSDK Services
+After installing the SDK please import this into your project:
 
+`import { Helio } from "@heliofi/sdk";`
+
+## Helio SDK Services
+
+Detailed below are the methods used via the SDK to interact with the Helio API
+
+Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the HelioSDK
 
@@ -32,6 +42,8 @@ This SDK are required for developing a Helio app.
  Cluster = "devnet" | "testnet" | "mainnet-beta";
 ```
 <br>
+
+## Methods
 
 ### Properties table for the CurrencyService
 
