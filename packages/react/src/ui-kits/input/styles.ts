@@ -66,3 +66,7 @@ export const StyledLabelContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+export const StyledInputContainer = styled.div`
+  display: flex;
+`;

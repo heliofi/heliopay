@@ -32,7 +32,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC', 'SOL']}
-        totalAmount={0.01} // @TODO bug when also has normalizedPrice
+        // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
     </>
   );

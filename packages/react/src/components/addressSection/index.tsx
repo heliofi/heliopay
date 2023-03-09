@@ -87,18 +87,19 @@ const AddressSection = ({
               onFocus={() =>
                 addressList && addressList.length > 0 && openMenu()
               }
+              nextSibling={
+                <StyledButton>
+                  <Button
+                    {...getToggleButtonProps()}
+                    onClick={() => onChangePostcode(areaCodeValue)}
+                    type="button"
+                  >
+                    <SearchIcon />
+                  </Button>
+                </StyledButton>
+              }
             />
           </StyledInput>
-
-          <StyledButton>
-            <Button
-              {...getToggleButtonProps()}
-              onClick={() => onChangePostcode(areaCodeValue)}
-              type="button"
-            >
-              <SearchIcon />
-            </Button>
-          </StyledButton>
         </StyledAreaCode>
         <StyledSelectDropdownContainer {...getMenuProps()}>
           {isOpen && (
