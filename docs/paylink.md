@@ -31,8 +31,8 @@ export class PrepareTransactionDto {
   paymentRequestId: string;
   sender: string;
   currency: string;
-  amount?: string;
-  quantity?: number;
+  amount: string;
+  quantity: number;
   fixedCurrencyRateToken?: string;
 }
 ```
