@@ -27,7 +27,7 @@ interface Props {
   };
 }
 
-const PaymentResult = ({ result }: Props) => {
+const PaylinkPaymentResult = ({ result }: Props) => {
   const hasError = result?.errorMessage;
   return (
     <StyledResultWrapper>
@@ -79,4 +79,4 @@ const PaymentResult = ({ result }: Props) => {
   );
 };
 
-export default PaymentResult;
+export default PaylinkPaymentResult;

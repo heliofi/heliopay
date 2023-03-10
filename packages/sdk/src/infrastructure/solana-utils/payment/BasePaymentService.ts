@@ -35,6 +35,7 @@ export abstract class BasePaymentService<
     private currencyService: CurrencyService,
     private configService: ConfigService
   ) {}
+
   protected abstract executeTransaction(
     requestOrPaymentId: string,
     {
@@ -246,7 +247,7 @@ export abstract class BasePaymentService<
     onSuccess({
       transaction: response.transactionSignature,
       data: response as Res,
-      swapTransaction: response?.swapTransactionSignature,
+      swapTransactionSignature: response?.swapTransactionSignature,
     });
   }
 

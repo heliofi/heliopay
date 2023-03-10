@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikValues } from 'formik';
 import { createPortal } from 'react-dom';
-import { Currency, LinkFeaturesDto } from '@heliofi/common';
+import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
 import {
   formatTotalPrice,
@@ -10,11 +10,11 @@ import {
   handleSubmit,
 } from './actions';
 import {
-  CurrencyIcon,
   Button,
-  QRButton,
-  PriceBanner,
+  CurrencyIcon,
   PhantomCompatibleCard,
+  PriceBanner,
+  QRButton,
   QRCodeCard,
 } from '../../ui-kits';
 import SwapsForm from '../swapsForm';
@@ -26,9 +26,9 @@ import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
 import {
-  StyledBaseCheckoutWrapper,
-  StyledBaseCheckoutContainer,
   StyledBaseCheckoutBody,
+  StyledBaseCheckoutContainer,
+  StyledBaseCheckoutWrapper,
 } from './styles';
 import { PaylinkPricingProps } from '../payLink/paylinkPricing';
 import { PaystreamPricingProps } from '../payStream/paystreamPricing';
@@ -46,8 +46,8 @@ const BaseCheckout = ({
 }: BaseCheckoutProps) => {
   const {
     currencyList,
-    paymentDetails,
     getPaymentFeatures,
+    getPaymentDetails,
     tokenSwapLoading,
     tokenSwapQuote,
     tokenSwapError,
@@ -62,6 +62,7 @@ const BaseCheckout = ({
   const [showQRCode, setShowQRCode] = useState(false);
 
   const canSelectCurrency = allowedCurrencies.length > 1;
+  const paymentRequestType = HelioSDK.getPaymentRequestType();
 
   const payButtonText =
     showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError
@@ -70,9 +71,19 @@ const BaseCheckout = ({
   const payButtonDisable =
     (showSwapMenu && !!tokenSwapError) || tokenSwapLoading;
 
+  const paymentDetails = getPaymentDetails();
+
+  const getSwapsFormPrice = (formValues: FormikValues) => {
+    const amount = (normalizedPrice || totalAmount) ?? 0;
+    return paymentRequestType === PaymentRequestType.PAYLINK
+      ? amount * (formValues.quantity ?? 1)
+      : amount * (formValues.interval ?? 1);
+  };
+
   const initialValues = getInitialValues(
     normalizedPrice,
     canSelectCurrency,
+    getPaymentDetails,
     paymentDetails?.dynamic
       ? allowedCurrencies?.[0].symbol
       : paymentDetails?.currency?.symbol,
@@ -177,10 +188,7 @@ const BaseCheckout = ({
                       <SwapsForm
                         formValues={values}
                         setFieldValue={setFieldValue}
-                        normalizedPrice={
-                          ((normalizedPrice || totalAmount) ?? 0) *
-                          (values.quantity ?? 1)
-                        }
+                        normalizedPrice={getSwapsFormPrice(values)}
                       />
                     )}
 

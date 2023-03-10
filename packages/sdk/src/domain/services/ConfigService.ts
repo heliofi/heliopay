@@ -1,7 +1,8 @@
 import { Cluster } from '@solana/web3.js';
 import { PaymentRequestType } from '@heliofi/common';
-import { ASSET_URL } from '../constants';
+
 import { ClusterType } from '../model';
+import { ASSET_URL } from '../constants';
 
 export class ConfigService {
   private cluster?: Cluster;

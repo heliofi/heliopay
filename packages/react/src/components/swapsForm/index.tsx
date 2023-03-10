@@ -43,6 +43,7 @@ const SwapsForm = ({
   } = useHelioProvider();
 
   const { HelioSDK } = useCompositionRoot();
+  const paymentRequestType = HelioSDK.getPaymentRequestType();
 
   const [selectedCurrency, setSelectedCurrency] = useState(
     tokenSwapCurrencies?.find(
@@ -62,10 +63,14 @@ const SwapsForm = ({
       (it) => formValues.currency === it.symbol
     );
 
-    if (selectedCurrency?.mintAddress != null && paymentDetails?.id) {
+    if (
+      selectedCurrency?.mintAddress != null &&
+      paymentDetails?.id &&
+      paymentRequestType
+    ) {
       getTokenSwapQuote(
         paymentDetails.id,
-        PaymentRequestType.PAYLINK,
+        paymentRequestType,
         selectedCurrency.mintAddress,
         formValues.quantity,
         normalizedPrice,
@@ -79,7 +84,7 @@ const SwapsForm = ({
     paymentDetails?.currency.mintAddress,
     paymentDetails?.currency.symbol,
     paymentDetails?.id,
-    // paymentDetails?.type, @todo-v add type
+    paymentRequestType,
   ]);
 
   const currencyOptions =

@@ -2,8 +2,8 @@ import React from 'react';
 
 import BaseCheckout from '../../baseCheckout';
 import PaylinkPricing from '../paylinkPricing';
-import { InheritedBaseCheckoutProps } from '../../baseCheckout/constants';
 import { useHelioProvider } from '../../../providers/helio/HelioContext';
+import { InheritedBaseCheckoutProps } from '../../baseCheckout/constants';
 
 type PaylinkCheckoutProps = InheritedBaseCheckoutProps;
 

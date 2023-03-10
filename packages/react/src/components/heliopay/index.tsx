@@ -6,10 +6,11 @@ import {
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
+
+import { deepMerge } from '../../utils';
+import { defaultTheme } from '../../theme';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
-import { defaultTheme } from '../../theme';
-import { deepMerge } from '../../utils';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HelioPayProps {

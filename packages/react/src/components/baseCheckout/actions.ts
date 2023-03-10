@@ -1,13 +1,24 @@
 import { FormikValues } from 'formik';
-import { CustomerDetails, ProductDetails } from '@heliofi/common';
+import { StreamTimeService } from '@heliofi/sdk';
+import {
+  CustomerDetails,
+  Paystream,
+  ProductDetails,
+  PaymentRequestType,
+} from '@heliofi/common';
 
+import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
+import {
+  PaymentDetailsType,
+  PaymentFeatures,
+} from '../../providers/helio/HelioContext';
 import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
-import { PaymentFeatures } from '../../providers/helio/HelioContext';
 
 export const getInitialValues = (
   normalizedPrice: number,
   canSelectCurrency: boolean,
+  getPaymentDetails: <T extends PaymentDetailsType>() => T,
   initialCurrency?: string,
   paymentFeatures?: PaymentFeatures,
   canChangeQuantity?: boolean,
@@ -39,7 +50,12 @@ export const getInitialValues = (
   canSelectCurrency,
   currency: canSelectCurrency ? undefined : initialCurrency,
   productValue: undefined,
-  maxTime: undefined,
+  interval: getPaymentDetails<Paystream>()?.maxTime
+    ? StreamTimeService.getInitialStreamTime({
+        intervalType: getPaymentDetails<Paystream>().interval,
+        durationSec: getPaymentDetails<Paystream>().maxTime,
+      })
+    : undefined,
 });
 
 export const getCurrency = (currencyList: any[], currency?: string) => {
@@ -56,6 +72,8 @@ export const handleSubmit =
     currencyList,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
+    const paymentRequestType = HelioSDK.getPaymentRequestType();
+
     const details = {
       fullName: values.fullName,
       email: values.email,
@@ -79,7 +97,7 @@ export const handleSubmit =
     const clearProductDetails =
       removeUndefinedFields<ProductDetails>(productDetails);
 
-    onSubmit({
+    const requestData = {
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
       amount: BigInt(
@@ -88,12 +106,27 @@ export const handleSubmit =
           values.canChangePrice ? values.customPrice : price
         )
       ),
-      quantity: BigInt(values.quantity || 1),
       currency: getCurrency(
         currencyList,
         values.currency || paymentDetails?.currency.symbol
       ),
-    });
+    };
+
+    if (paymentRequestType === PaymentRequestType.PAYLINK) {
+      onSubmit({
+        ...requestData,
+        quantity: BigInt(values.quantity || 1),
+      });
+    } else if (paymentRequestType === PaymentRequestType.PAYSTREAM) {
+      onSubmit({
+        ...requestData,
+        maxTime: paymentDetails.maxTime,
+        interval: CreatePaymentService.timeToSeconds(
+          paymentDetails.interval,
+          1
+        ),
+      });
+    }
   };
 
 export const formatTotalPrice = (price: number, quantity = 1): number => {

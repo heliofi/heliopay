@@ -1,18 +1,15 @@
 import { FormikValues } from 'formik';
-import { Currency, CustomerDetails, ProductDetails } from '@heliofi/common';
+import { Currency } from '@heliofi/common';
 import { HelioSDK as HelioSDKType } from '@heliofi/sdk';
+import { SubmitPaymentsTypesProps } from '../heliopayContainer/constants';
 
-export type InheritedOnSumbit = (data: {
-  amount: bigint;
-  customerDetails?: CustomerDetails;
-  productDetails?: ProductDetails;
-  quantity: bigint;
-  currency: Currency;
-}) => void;
+export type InheritedOnSubmit = (
+  data: SubmitPaymentsTypesProps
+) => Promise<void>;
 
 export type InheritedBaseCheckoutProps = {
   onHide: () => void;
-  onSubmit: InheritedOnSumbit;
+  onSubmit: InheritedOnSubmit;
   allowedCurrencies: Currency[];
   totalAmount?: number;
 };
@@ -32,6 +29,6 @@ export interface IHandleSubmit {
   paymentDetails?: any;
   HelioSDK: HelioSDKType;
   price: number;
-  onSubmit: InheritedOnSumbit;
+  onSubmit: InheritedOnSubmit;
   currencyList: Currency[];
 }

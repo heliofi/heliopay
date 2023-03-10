@@ -5,7 +5,6 @@ import {
   Paylink,
   PaymentRequest,
   PaymentRequestType,
-  Paystream,
   PrepareSwapTransaction,
   PrepareTransaction,
   SwapRouteToken,
@@ -43,13 +42,13 @@ export class HelioApiAdapter implements HelioApiConnector {
         break;
     }
 
-    return this.publicRequest<PaymentRequest>(
+    const res = this.publicRequest<PaymentRequest>(
       `/${param}/${id}/public`,
       { method: 'GET' },
       true
     );
 
-    return Paylink.fromObject(res);
+    return PaymentRequest.fromObject(res);
   }
 
   async findAddress(

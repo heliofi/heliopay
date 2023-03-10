@@ -2,20 +2,21 @@ import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
 import {
   Currency,
+  LinkFeaturesDto,
   Paylink,
-  PaymentRequestType,
   PaymentRequest,
+  PaymentRequestFeatures,
+  PaymentRequestType,
+  Paystream,
   SOL_MINT,
   WRAPPED_SOL_MINT,
-  Paystream,
-  LinkFeaturesDto,
-  PaymentRequestFeatures,
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { TokenSwapQuote } from '../../domain';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
 
+export type PaymentDetailsType = Paylink | Paystream;
 export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
@@ -83,8 +84,11 @@ export const useHelioProvider = () => {
     }
   };
 
+  const getPaymentDetails = <T extends PaymentDetailsType>(): T =>
+    paymentDetails as T;
+
   const getPaymentFeatures = <T extends PaymentFeatures>(): T =>
-    (paymentDetails as Paylink | Paystream)?.features as T;
+    getPaymentDetails()?.features as T;
 
   const checkCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
@@ -101,7 +105,7 @@ export const useHelioProvider = () => {
     );
   };
 
-  const getPaymentDetails = async (paymentRequestId: string) => {
+  const initPaymentDetails = async (paymentRequestId: string) => {
     setPaymentDetails(null);
     if (!cluster) {
       throw new Error('Please provide a cluster');
@@ -215,8 +219,9 @@ export const useHelioProvider = () => {
     currencyList,
     paymentDetails,
     getCurrencyList,
-    getPaymentDetails,
+    initPaymentDetails,
     getPaymentFeatures,
+    getPaymentDetails,
     cluster,
     initCluster,
     isCustomerDetailsRequired,

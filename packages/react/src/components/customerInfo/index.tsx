@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { ProductInputType } from '@heliofi/common';
 import { InfoIcon } from '@heliofi/helio-icons';
+import { ProductInputType } from '@heliofi/common';
 
 import {
   Input,

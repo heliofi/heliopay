@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { StreamTimeService } from '@heliofi/sdk';
+import React from 'react';
 import { Currency, Paystream } from '@heliofi/common';
 
 import { FormikProps } from '../../baseCheckout/constants';
@@ -13,19 +12,13 @@ export type PaystreamPricingProps = FormikProps & {
 };
 
 const PaystreamPricing = ({
+  formValues,
   setFieldValue,
   activeCurrency,
   price,
 }: PaystreamPricingProps) => {
-  const helioProvider = useHelioProvider();
-  const paymentDetails = helioProvider.paymentDetails as Paystream;
-
-  const streamInitialPrice = StreamTimeService.getInitialStreamTime({
-    intervalType: paymentDetails.interval,
-    durationSec: paymentDetails.maxTime,
-  });
-
-  const [maxTime, setMaxTime] = useState<number>(streamInitialPrice);
+  const { getPaymentDetails } = useHelioProvider();
+  const paymentDetails = getPaymentDetails<Paystream>();
 
   return (
     <div>
@@ -38,20 +31,19 @@ const PaystreamPricing = ({
           />
 
           <NumberInput
-            fieldId="maxTime"
-            fieldName="maxTime"
+            fieldId="interval"
+            fieldName="interval"
             setFieldValue={(name, value) => {
               setFieldValue(name, value);
-              setMaxTime(value);
             }}
-            value={maxTime}
+            value={formValues.interval}
             placeholder="Quantity"
             label={`Duration (${paymentDetails.interval?.toLowerCase()})`}
             required
           />
 
           <PriceBanner
-            amount={formatTotalPrice(price, maxTime)}
+            amount={formatTotalPrice(price, formValues.interval)}
             currency={activeCurrency?.symbol}
           />
         </>

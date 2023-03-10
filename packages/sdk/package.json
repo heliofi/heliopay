@@ -51,7 +51,8 @@
       "react/react-in-jsx-scope": "off",
       "react/jsx-props-no-spreading": "off",
       "class-methods-use-this": "off",
-      "no-underscore-dangle": "off"
+      "no-underscore-dangle": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_"}]
     },
     "extends": [
       "@heliofi/eslint-config-helio",
