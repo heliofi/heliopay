@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { ArrowsDoubleIcon, CrossIcon } from '@heliofi/helio-icons';
+
 import {
   StyledModalCloseButton,
   StyledModalContainer,

@@ -2,18 +2,22 @@ import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
 import {
   Currency,
+  Paylink,
   PaymentRequestType,
   SOL_MINT,
   WRAPPED_SOL_MINT,
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
+
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { TokenSwapQuote } from '../../domain';
 
+export type PaymentDetails = Paylink; // @todo-v change type
+
 export const HelioContext = createContext<{
-  currencyList: any[];
-  setCurrencyList: (currencyList: any[]) => void;
-  paymentDetails: any; // @TODO change type
+  currencyList: Currency[];
+  setCurrencyList: (currencyList: Currency[]) => void;
+  paymentDetails?: PaymentDetails;
   setPaymentDetails: (paymentDetails: any) => void;
   cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
@@ -30,7 +34,7 @@ export const HelioContext = createContext<{
 }>({
   currencyList: [],
   setCurrencyList: () => {},
-  paymentDetails: null,
+  paymentDetails: undefined,
   setPaymentDetails: () => {},
   cluster: null,
   setCluster: () => {},
@@ -75,9 +79,9 @@ export const useHelioProvider = () => {
     }
   };
 
-  const checkCustomerDetailsRequired = () => {
+  const checkCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
-    return (
+    return !!(
       paymentDetails.features?.requireEmail ||
       paymentDetails.features?.requireFullName ||
       paymentDetails.features?.requireDiscordUsername ||
@@ -161,7 +165,7 @@ export const useHelioProvider = () => {
             fromMint,
             quantity ?? 1,
             HelioSDK.tokenConversionService.convertToMinimalUnits(
-              paymentDetails.currency.symbol,
+              paymentDetails?.currency.symbol,
               normalizedPrice
             ),
             toMint

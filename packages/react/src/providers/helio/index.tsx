@@ -7,7 +7,7 @@ import { TokenSwapQuote } from '../../domain';
 export const HelioProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const [currencyList, setCurrencyList] = useState<any[]>([]);
+  const [currencyList, setCurrencyList] = useState<Currency[]>([]);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [cluster, setCluster] = useState<Cluster | null>(null);
   const [isCustomerDetailsRequired, setIsCustomerDetailsRequired] =

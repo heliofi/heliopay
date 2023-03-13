@@ -1,9 +1,11 @@
+import React, { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { useState } from 'react';
 import { ExitIcon, ArrowsDoubleIcon } from '@heliofi/helio-icons';
-import useOnClickOutside from '../../hooks/useClickOutside';
+
 import { shortenWalletAddress } from '../../utils';
+import useOnClickOutside from '../../hooks/useClickOutside';
+
 import {
   StyledDropdownButton,
   StyledMenu,
@@ -19,11 +21,9 @@ const WalletController = () => {
   const { disconnect, publicKey } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleClickOutside = () => {
+  const dropdownRef = useOnClickOutside(() => {
     setIsOpen(false);
-  };
-
-  const dropdownRef = useOnClickOutside(handleClickOutside);
+  });
 
   const items = [
     {
@@ -43,6 +43,7 @@ const WalletController = () => {
       icon: <ExitIcon />,
     },
   ];
+
   return (
     <StyledMenuWrapper ref={dropdownRef}>
       <StyledDropdownButton onClick={() => setIsOpen(!isOpen)}>

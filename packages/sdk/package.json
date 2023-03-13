@@ -1,8 +1,12 @@
 {
   "name": "@heliofi/sdk",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "yarn build -w",
@@ -35,7 +39,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-prettier": "^4.0.0",
-    "typescript": "4.5.4"
+    "typescript": "^4.5.5"
   },
   "eslintConfig": {
     "plugins": [

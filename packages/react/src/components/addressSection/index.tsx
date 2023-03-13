@@ -1,9 +1,12 @@
-import { SearchIcon } from '@heliofi/helio-icons';
-import { useSelect } from 'downshift';
 import { useEffect } from 'react';
+import { useSelect } from 'downshift';
+import { SearchIcon } from '@heliofi/helio-icons';
+
+import { shortenString } from '../../utils';
+import { Button, Input } from '../../ui-kits';
+import { FormikSetFieldValue } from '../baseCheckout/constants';
 import { useAddressProvider } from '../../providers/address/AddressContext';
-import Button from '../button';
-import Input from '../input';
+
 import {
   StyledAreaCode,
   StyledButton,
@@ -12,15 +15,25 @@ import {
   StyledSelectDropdownContainer,
   StyledSelectItem,
   StyledWrapper,
+  StyledStreetInfo,
+  StyledStreet,
+  StyledStreetNumber,
 } from './styles';
 
 type AddressSectionProps = {
-  setFieldValue: (field: string, value: string | number) => void;
+  values: {
+    deliveryAddress?: string;
+    city?: string;
+    streetNumber?: string;
+    street?: string;
+  };
+  setFieldValue: FormikSetFieldValue;
   areaCodeValue: string;
   countryCode?: string;
 };
 
 const AddressSection = ({
+  values,
   setFieldValue,
   areaCodeValue,
   countryCode,
@@ -32,6 +45,7 @@ const AddressSection = ({
     isOpen = true,
     openMenu,
     getMenuProps,
+    getToggleButtonProps,
     getItemProps,
     closeMenu,
   } = useSelect({ items: addressList ?? [] });
@@ -66,22 +80,26 @@ const AddressSection = ({
             <Input
               fieldId="areaCode"
               fieldName="areaCode"
+              setFieldValue={setFieldValue}
+              required
               placeholder="Postal/Zip code"
               label="Postal/Zip code"
               onFocus={() =>
                 addressList && addressList.length > 0 && openMenu()
               }
+              nextSibling={
+                <StyledButton>
+                  <Button
+                    {...getToggleButtonProps()}
+                    onClick={() => onChangePostcode(areaCodeValue)}
+                    type="button"
+                  >
+                    <SearchIcon />
+                  </Button>
+                </StyledButton>
+              }
             />
           </StyledInput>
-
-          <StyledButton>
-            <Button
-              onClick={() => onChangePostcode(areaCodeValue)}
-              type="button"
-            >
-              <SearchIcon />
-            </Button>
-          </StyledButton>
         </StyledAreaCode>
         <StyledSelectDropdownContainer {...getMenuProps()}>
           {isOpen && (
@@ -91,8 +109,7 @@ const AddressSection = ({
                 return (
                   <StyledSelectItem
                     {...getItemProps({ item, index })}
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={`${item.id}${index}`}
+                    key={`${item.id}`}
                     {...getItemProps({
                       item,
                       index,
@@ -102,11 +119,7 @@ const AddressSection = ({
                       closeMenu();
                     }}
                   >
-                    <div>
-                      {label.length < 45
-                        ? label
-                        : `${label.substring(0, 45)}...`}
-                    </div>
+                    <div>{shortenString(label, 45)}</div>
                   </StyledSelectItem>
                 );
               })}
@@ -118,35 +131,47 @@ const AddressSection = ({
       <Input
         fieldId="city"
         fieldName="city"
+        fieldValue={values.city}
+        setFieldValue={setFieldValue}
+        required
         label="City"
         placeholder="Your city"
       />
-      <div className="mb-2 grid grid-cols-5 gap-x-4">
-        <div className="col-span-4">
+
+      <StyledStreetInfo>
+        <StyledStreet>
           <Input
             fieldId="street"
             fieldName="street"
+            fieldValue={values.street}
+            setFieldValue={setFieldValue}
+            required
             placeholder="Street name"
             label="Street"
           />
-        </div>
-        <div>
+        </StyledStreet>
+        <StyledStreetNumber>
           <Input
             fieldId="streetNumber"
             fieldName="streetNumber"
+            fieldValue={values.streetNumber}
+            setFieldValue={setFieldValue}
+            required
             placeholder="No."
             label="Number"
           />
-        </div>
-      </div>
-      <div className="mb-2">
-        <Input
-          fieldId="deliveryAddress"
-          fieldName="deliveryAddress"
-          placeholder="Building, Apartment, Floor number"
-          label="Address line 1"
-        />
-      </div>
+        </StyledStreetNumber>
+      </StyledStreetInfo>
+
+      <Input
+        fieldId="deliveryAddress"
+        fieldName="deliveryAddress"
+        fieldValue={values.deliveryAddress}
+        setFieldValue={setFieldValue}
+        required
+        placeholder="Building, Apartment, Floor number"
+        label="Address line 1"
+      />
     </StyledWrapper>
   );
 };

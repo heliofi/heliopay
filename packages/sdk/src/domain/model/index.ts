@@ -5,3 +5,4 @@ export type { SuccessPaymentEvent } from './SuccessPaymentEvent';
 export { HttpCodes } from './HttpCodes';
 export { ClusterType } from './Cluster';
 export * from './HelioApiConnector';
+export * from './CurrencySymbol';
