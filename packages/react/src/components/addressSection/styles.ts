@@ -11,14 +11,12 @@ export const StyledAreaCode = styled.div`
 
 export const StyledInput = styled.div`
   width: 100%;
-  height: 102px;
 `;
 
 export const StyledButton = styled.div`
   height: 48px;
   width: 48px;
   color: #fff;
-  margin-bottom: 12px;
   margin-left: 12px;
 
   svg,

@@ -6,7 +6,9 @@ The Helio SDK is a packaged module to make integrating Helio and our components 
 
 It wraps and enhances the Helio [API](https://api.hel.io/v1/docs) away into one NPM package which is easy to install and upgrade.
 
-The Helio SDK is is written in Typescript and is currently in **ALPHA** and will be updated to **STABLE** in the coming weeks.
+The Helio SDK is is written in Typescript. 
+
+Please use the latest production version. Only used ALPHA versions if advised to do so.
 
 Solana is currently supported with Polygon and ETH following soon.
 
@@ -269,3 +271,4 @@ const amount = helioSDK.tokenConversionService.convertToMinimalUnits('symbol', 1
 //handle transaction
 await helioSDK.paylinkService.handleTransaction({...});
 ```
+

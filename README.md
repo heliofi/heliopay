@@ -10,9 +10,13 @@ Download the NPM from here: https://www.npmjs.com/package/@heliofi/react
 
 Always use the latest public version and ensure that all your dependencies are on the latest versions
 
+The Helio SDK is now integrated into the Helio React modules.
+
+For full details of our SDK and how to use it please review https://github.com/heliofi/heliopay/tree/main/packages/sdk
+
 Helio uses Swagger for API testing where you can review API endpoints and review examples: https://api.hel.io/v1/docs
 
-We recommend that you use Swagger to get familiar with the APIs and for testing payloads
+We recommend that you use Swagger to get familiar with the SDK and APIs and for testing payloads
 
 For full details of our API schema please review https://docs.hel.io/developers/detailed-api-schema
 

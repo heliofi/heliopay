@@ -10,6 +10,7 @@ import {
   StyledInput,
   StyledLabel,
   StyledLabelContainer,
+  StyledInputContainer
 } from './styles';
 
 type InputProps = {
@@ -26,6 +27,7 @@ type InputProps = {
   placeholder?: string;
   fieldValue?: string | number;
   setFieldValue?: FormikSetFieldValue;
+  nextSibling?: React.ReactNode
 };
 
 const Input: FC<InputProps & ElementContainerProps> = ({
@@ -45,6 +47,7 @@ const Input: FC<InputProps & ElementContainerProps> = ({
   prefix,
   suffix,
   inactive,
+  nextSibling = ''
 }) => {
   const [focus, setFocus] = useState(false);
 
@@ -70,27 +73,30 @@ const Input: FC<InputProps & ElementContainerProps> = ({
           {labelSuffix}
         </StyledLabelContainer>
       )}
-      <ElementContainer
-        placeholder={placeholder}
-        fieldValue={fieldValue}
-        prefix={prefix}
-        suffix={suffix}
-        inactive={inactive}
-        focus={focus}
-      >
-        <StyledField
-          id={fieldId}
-          name={fieldName}
-          disabled={disabled}
+      <StyledInputContainer>
+        <ElementContainer
           placeholder={placeholder}
-          value={fieldValue}
-          className={inputClassName}
-          onChange={onChangeField}
-          onFocus={onFocusField}
-          onBlur={onBlurField}
-          component={component}
-        />
-      </ElementContainer>
+          fieldValue={fieldValue}
+          prefix={prefix}
+          suffix={suffix}
+          inactive={inactive}
+          focus={focus}
+        >
+          <StyledField
+            id={fieldId}
+            name={fieldName}
+            disabled={disabled}
+            placeholder={placeholder}
+            value={fieldValue}
+            className={inputClassName}
+            onChange={onChangeField}
+            onFocus={onFocusField}
+            onBlur={onBlurField}
+            component={component}
+          />
+        </ElementContainer>
+        {nextSibling}
+      </StyledInputContainer>
       <StyledErrorMessage name={fieldName} component="div" />
     </StyledInput>
   );

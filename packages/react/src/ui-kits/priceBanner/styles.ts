@@ -24,7 +24,8 @@ export const StyledPriceBanner = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 125%;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.fontColor};
+  margin-bottom: 20px;
   b {
     font-weight: 600;
   }
