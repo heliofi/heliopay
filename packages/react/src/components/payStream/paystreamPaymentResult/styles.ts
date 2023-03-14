@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import { rgba } from '../../../utils';
+import { Button } from '../../../ui-kits';
 
 export const StyledPPResultWrapper = styled.div``;
 
@@ -10,8 +12,38 @@ export const StyledPPResultBox = styled.div`
   border-radius: 8px;
   width: 400px;
   max-width: 100%;
-  height: 315px;
-  max-height: 100%;
+`;
+
+export const StyledPPResultContainer = styled.div`
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgb(128 26 7 / 1);
+`;
+
+export const StyledPPResultTime = styled.div`
+  width: 7rem;
+  height: 120px;
+  border-radius: 50%;
+  background: ${({ theme }) => rgba(theme.colors.primary, 0.1)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+export const StyledPPResultLiveTime = styled.h2`
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+`;
+
+export const StyledPPResultMaxTime = styled.div`
+  font-size: 0.75rem;
+  line-height: 1rem;
 `;
 
 export const StyledPPResultTopLine = styled.div`
@@ -23,55 +55,54 @@ export const StyledPPResultTopLine = styled.div`
   text-align: right;
 `;
 
-export const StyledResultContainer = styled.div`
-  padding: 12px;
+export const StyledPPResultInfo = styled.div`
+  margin-top: 15px;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  row-gap: 0.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
 `;
 
-export const StyledResultIcon = styled.div<{ error: boolean }>`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 16px;
-  background: ${({ error, theme }) =>
-    error ? '#FEE3E3' : rgba(theme.colors.primary, 0.1)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  svg {
-    width: 80px;
-    height: 80px;
-    fill: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
-  }
-  path {
-    fill: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
-  }
-`;
-
-export const StyledResultTitle = styled.div<{ error: boolean }>`
-  font-style: normal;
+export const StyledPPResultStreamInfo = styled.p`
   font-weight: 700;
-  font-size: 14px;
-  line-height: 125%;
-  margin-bottom: 4px;
-  color: ${({ error, theme }) => (error ? '#f87272' : theme.colors.primary)};
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 `;
 
-export const StyledResultText = styled.div`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 125%;
-  color: #8e522e;
-  margin-bottom: 1px;
+export const StyledPPResultAmount = styled.div`
+  margin-top: 31px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 `;
 
-export const StyledResultLink = styled.div<{ error?: boolean }>`
+export const StyledPPResultPrice = styled.span`
+  font-weight: 700;
+`;
+
+export const StyledPPResultButton = styled(Button)`
+  margin-top: 28px;
+  width: 100%;
+  padding-bottom: 0;
+  padding-top: 0;
+  background: ${({ theme }) => rgba(theme.colors.primary, 0.1)};
+  color: ${({ theme }) => theme.colors.primary};
+  box-shadow: none;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: #ffffff;
+  }
+`;
+
+export const StyledPPResultButtonText = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const StyledPPResultLink = styled.div<{ error?: boolean }>`
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

@@ -14,7 +14,7 @@ interface CancelStreamProps extends BasePaymentProps<CancelStreamResponse> {
 
 type CancelPaymentRequest = Record<string, never>;
 
-export type CancelStreamResponse = BasePaymentResponse;
+export interface CancelStreamResponse extends BasePaymentResponse {}
 
 interface StreamCancelPayload {
   signedTransaction: string;

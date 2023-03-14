@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import {
   ClusterType,
+  CreatePaystreamResponse,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
-  CreatePaystreamResponse,
 } from '@heliofi/sdk';
 import {
   AnchorWallet,
@@ -13,8 +13,8 @@ import {
 } from '@solana/wallet-adapter-react';
 import { Cluster } from '@solana/web3.js';
 import {
-  Currency,
   BlockchainEngineType,
+  Currency,
   PaymentRequestType,
 } from '@heliofi/common';
 
@@ -26,7 +26,7 @@ import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
 import { Button, ConnectButton } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
-import PaylinkPaymentResult from '../paylinkPaymentResult';
+import PaymentResult from '../paymentResult';
 import PaystreamChekout from '../payStream/paystreamChekout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
@@ -37,7 +37,6 @@ import { useTokenConversion } from '../../providers/token-conversion/TokenConver
 
 import {
   StyledEnvironment,
-  // StyledErrorMessage,
   StyledLeft,
   StyledLogo,
   StyledLogoContainer,
@@ -303,10 +302,21 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       ) : (
         <>
           {paymentRequestType === PaymentRequestType.PAYLINK && (
-            <PaylinkPaymentResult result={result} />
+            <PaymentResult result={result} />
           )}
           {paymentRequestType === PaymentRequestType.PAYSTREAM && (
-            <PaystreamPaymentResult result={result} />
+            <PaystreamPaymentResult
+              result={
+                result as
+                  | SuccessPaymentEvent<CreatePaystreamResponse>
+                  | ErrorPaymentEvent
+              }
+              totalAmount={totalAmount}
+              setShowLoadingModal={setShowLoadingModal}
+              onPending={onPending}
+              onError={handleErrorPayment}
+              currency={paymentDetails?.currency}
+            />
           )}
         </>
       )}

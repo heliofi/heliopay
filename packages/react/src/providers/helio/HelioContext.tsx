@@ -175,7 +175,9 @@ export const useHelioProvider = () => {
             paymentRequestId,
             paymentRequestType,
             fromMint,
-            quantity ?? 1,
+            paymentRequestType === PaymentRequestType.PAYLINK
+              ? quantity ?? 1
+              : undefined,
             HelioSDK.tokenConversionService.convertToMinimalUnits(
               paymentDetails?.currency.symbol,
               normalizedPrice

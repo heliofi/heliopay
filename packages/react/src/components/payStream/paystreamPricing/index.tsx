@@ -1,6 +1,7 @@
 import React from 'react';
 import { Currency, Paystream } from '@heliofi/common';
 
+import { timeUnitLabels } from '../time-units';
 import { FormikProps } from '../../baseCheckout/constants';
 import { NumberInput, PriceBanner } from '../../../ui-kits';
 import { formatTotalPrice } from '../../baseCheckout/actions';
@@ -25,7 +26,7 @@ const PaystreamPricing = ({
       {paymentDetails.maxTime && (
         <>
           <PriceBanner
-            title={`Pay per ${paymentDetails.interval?.toLowerCase()}: `}
+            title={`Pay per ${timeUnitLabels[paymentDetails.interval]}: `}
             amount={price}
             currency={activeCurrency?.symbol}
           />
@@ -38,11 +39,12 @@ const PaystreamPricing = ({
             }}
             value={formValues.interval}
             placeholder="Quantity"
-            label={`Duration (${paymentDetails.interval?.toLowerCase()})`}
+            label={`Duration (${timeUnitLabels[paymentDetails.interval]})`}
             required
           />
 
           <PriceBanner
+            label="Pre-approve total amount"
             amount={formatTotalPrice(price, formValues.interval)}
             currency={activeCurrency?.symbol}
           />

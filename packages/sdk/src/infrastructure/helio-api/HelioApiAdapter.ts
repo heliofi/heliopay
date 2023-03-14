@@ -160,7 +160,7 @@ export class HelioApiAdapter implements HelioApiConnector {
       ...(toMint ? { toMint } : {}),
     };
 
-    if (quantity != null) {
+    if (quantity) {
       options.quantity = quantity.toString();
     }
 

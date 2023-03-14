@@ -120,7 +120,10 @@ export const handleSubmit =
     } else if (paymentRequestType === PaymentRequestType.PAYSTREAM) {
       onSubmit({
         ...requestData,
-        maxTime: paymentDetails.maxTime,
+        maxTime: CreatePaymentService.timeToSeconds(
+          paymentDetails.interval,
+          values.interval
+        ),
         interval: CreatePaymentService.timeToSeconds(
           paymentDetails.interval,
           1
@@ -130,6 +133,6 @@ export const handleSubmit =
   };
 
 export const formatTotalPrice = (price: number, quantity = 1): number => {
-  const totalPrice = Number((price * quantity).toFixed(3));
+  const totalPrice = Number(price * quantity);
   return totalPrice || price;
 };

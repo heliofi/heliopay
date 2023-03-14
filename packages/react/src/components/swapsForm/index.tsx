@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FormikValues } from 'formik';
-import { PaymentRequestType } from '@heliofi/common';
 
 import { roundValue } from '../../utils';
 import { useDebounce } from '../../hooks/useDebounce';
@@ -85,6 +84,7 @@ const SwapsForm = ({
     paymentDetails?.currency.symbol,
     paymentDetails?.id,
     paymentRequestType,
+    formValues.interval,
   ]);
 
   const currencyOptions =
