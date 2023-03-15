@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -52,7 +52,12 @@
       "react/jsx-props-no-spreading": "off",
       "class-methods-use-this": "off",
       "no-underscore-dangle": "off",
-      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_"}]
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
     },
     "extends": [
       "@heliofi/eslint-config-helio",
