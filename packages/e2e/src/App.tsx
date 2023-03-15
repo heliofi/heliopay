@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { HelioPay } from '../../react';
 import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
 import './styles/style.scss';
+import { PaymentRequestType } from "@heliofi/common";
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '6400749df8f5277689550449'
+    '6411a15b205680c4734779c9'
   );
 
   return (
@@ -32,6 +33,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC', 'SOL']}
+        paymentType={'PAYSTREAM' as PaymentRequestType}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
     </>

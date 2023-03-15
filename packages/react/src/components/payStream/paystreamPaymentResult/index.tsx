@@ -17,6 +17,15 @@ import {
 
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 
+import { timeUnitLabels } from '../time-units';
+import { ExplorerLink } from '../../../ui-kits';
+import Alarm from '../../../assets/icons/Alarm';
+import PaymentResult from '../../paymentResult';
+import { Stop } from '../../../assets/icons/Stop';
+import { useCompositionRoot } from '../../../hooks/compositionRoot';
+import { useHelioProvider } from '../../../providers/helio/HelioContext';
+import { useAnchorProvider } from '../../../providers/anchor/AnchorContext';
+
 import {
   StyledPPResultWrapper,
   StyledPPResultBox,
@@ -36,20 +45,11 @@ import {
   StyledSwapWrapper,
   StyledPPResultButtonText,
 } from './styles';
-import Alarm from '../../../assets/icons/Alarm';
-import { Stop } from '../../../assets/icons/Stop';
-import PaymentResult from '../../paymentResult';
-import { timeUnitLabels } from '../time-units';
-import { useHelioProvider } from '../../../providers/helio/HelioContext';
-import { ExplorerLink } from '../../../ui-kits';
-import { useAnchorProvider } from '../../../providers/anchor/AnchorContext';
-import { useCompositionRoot } from '../../../hooks/compositionRoot';
 
 interface Props {
   result: {
     errorMessage?: string;
   } & (SuccessPaymentEvent<CreatePaystreamResponse> | ErrorPaymentEvent);
-  totalAmount?: number;
   setShowLoadingModal: (showLoadingModal: boolean) => void;
   currency: Currency;
   onError: (event: ErrorPaymentEvent) => void;
@@ -58,7 +58,6 @@ interface Props {
 
 const PaystreamPaymentResult = ({
   result,
-  totalAmount,
   setShowLoadingModal,
   onError,
   onPending,
@@ -88,6 +87,11 @@ const PaystreamPaymentResult = ({
 
   const hasError = 'errorMessage' in result;
 
+  const price = HelioSDK.tokenConversionService.convertFromMinimalUnits(
+    paymentDetails?.currency?.symbol,
+    paymentDetails?.normalizedPrice
+  );
+
   const cancelPayment = useCallback(async () => {
     setShowLoadingModal(true);
     if (helioProvider && wallet && connectionProvider && paymentId) {
@@ -96,7 +100,12 @@ const PaystreamPaymentResult = ({
         symbol: currency?.symbol,
         paymentId,
         onSuccess: () => {
-          window.location.reload();
+          toast.success('Your Pay Stream was successfully stopped', {
+            duration: 2000,
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         },
         onError,
         onPending: (event: PendingPaymentEvent) => onPending?.(event),
@@ -180,7 +189,9 @@ const PaystreamPaymentResult = ({
                 <StyledSwapWrapper>
                   Swap transaction
                   <StyledPPResultLink>
-                    <ExplorerLink transaction={transactionSignature} />
+                    <ExplorerLink
+                      transaction={result.swapTransactionSignature}
+                    />
                   </StyledPPResultLink>
                 </StyledSwapWrapper>
               )}
@@ -189,8 +200,7 @@ const PaystreamPaymentResult = ({
             <StyledPPResultAmount>
               Pay per {timeUnit}:{' '}
               <StyledPPResultPrice>
-                {totalAmount || paymentDetails.normalizedPrice}{' '}
-                {paymentDetails.currency.symbol} / {timeUnit}
+                {price} {paymentDetails.currency.symbol} / {timeUnit}
               </StyledPPResultPrice>
             </StyledPPResultAmount>
 

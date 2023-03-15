@@ -1,11 +1,13 @@
 import { DefaultTheme, ThemeProvider } from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
+import { Toaster } from 'react-hot-toast';
+import { PaymentRequestType } from '@heliofi/common';
 
 import { deepMerge } from '../../utils';
 import { defaultTheme } from '../../theme';
@@ -24,6 +26,7 @@ interface HelioPayProps {
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
+  paymentType?: PaymentRequestType;
 }
 
 export const HelioPay = ({
@@ -37,6 +40,7 @@ export const HelioPay = ({
   payButtonTitle,
   supportedCurrencies,
   totalAmount,
+  paymentType = PaymentRequestType.PAYLINK,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -47,8 +51,8 @@ export const HelioPay = ({
   }, [cluster]);
 
   useMemo(() => {
-    HelioSDK.setPaymentRequestType(paymentRequestId);
-  }, [paymentRequestId, cluster]);
+    HelioSDK.setPaymentRequestType(paymentType);
+  }, [paymentType]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
@@ -69,6 +73,7 @@ export const HelioPay = ({
           supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
         />
+        <Toaster />
       </SolanaProvider>
     </ThemeProvider>
   );

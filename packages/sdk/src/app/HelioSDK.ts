@@ -77,12 +77,9 @@ export class HelioSDK {
     this._configService.setCluster(cluster);
   }
 
-  async setPaymentRequestType(paymentRequestId: string) {
-    const paymentRequestType = await this._apiService.getPaymentRequestTypeById(
-      paymentRequestId
-    );
-    this._paymentRequestType = paymentRequestType;
-    this._configService.setPaymentRequestType(paymentRequestType);
+  async setPaymentRequestType(paymentType: PaymentRequestType) {
+    this._paymentRequestType = paymentType;
+    this._configService.setPaymentRequestType(paymentType);
   }
 
   getPaymentRequestType(): PaymentRequestType | undefined | never {

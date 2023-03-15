@@ -22,11 +22,11 @@ import {
   SubmitPaymentPaylinkProps,
   SubmitPaymentPaystreamProps,
 } from './constants';
+import PaymentResult from '../paymentResult';
 import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
 import { Button, ConnectButton } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
-import PaymentResult from '../paymentResult';
 import PaystreamChekout from '../payStream/paystreamChekout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
@@ -311,7 +311,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                   | SuccessPaymentEvent<CreatePaystreamResponse>
                   | ErrorPaymentEvent
               }
-              totalAmount={totalAmount}
               setShowLoadingModal={setShowLoadingModal}
               onPending={onPending}
               onError={handleErrorPayment}
@@ -320,26 +319,26 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           )}
         </>
       )}
-      {showFormModal &&
-        (paymentRequestType === PaymentRequestType.PAYLINK ? (
-          <PaylinkCheckout
-            onHide={() => setShowFormModal(false)}
-            onSubmit={(data) =>
-              submitPaymentPaylink(data as SubmitPaymentPaylinkProps)
-            }
-            allowedCurrencies={allowedCurrencies}
-            totalAmount={totalAmount}
-          />
-        ) : (
-          <PaystreamChekout
-            onHide={() => setShowFormModal(false)}
-            onSubmit={(data) =>
-              submitPaymentPaystream(data as SubmitPaymentPaystreamProps)
-            }
-            allowedCurrencies={[]}
-            totalAmount={totalAmount}
-          />
-        ))}
+      {showFormModal && paymentRequestType === PaymentRequestType.PAYLINK && (
+        <PaylinkCheckout
+          onHide={() => setShowFormModal(false)}
+          onSubmit={(data) =>
+            submitPaymentPaylink(data as SubmitPaymentPaylinkProps)
+          }
+          allowedCurrencies={allowedCurrencies}
+          totalAmount={totalAmount}
+        />
+      )}
+      {showFormModal && paymentRequestType === PaymentRequestType.PAYSTREAM && (
+        <PaystreamChekout
+          onHide={() => setShowFormModal(false)}
+          onSubmit={(data) =>
+            submitPaymentPaystream(data as SubmitPaymentPaystreamProps)
+          }
+          allowedCurrencies={[]}
+          totalAmount={totalAmount}
+        />
+      )}
       {showLoadingModal && (
         <LoadingModal onHide={() => setShowLoadingModal(false)} />
       )}

@@ -53,6 +53,4 @@ export interface HelioApiConnector {
     url: string,
     body: string
   ): Promise<PrepareSwapTransaction>;
-
-  getPaymentRequestTypeById(id: string): Promise<PaymentRequestType>;
 }
