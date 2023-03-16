@@ -140,10 +140,3 @@ export const StyledResultFooterText = styled.div`
     text-underline-offset: 2px;
   }
 `;
-
-export const StyledSwapWrapper = styled.div`
-  margin-top: 0.5rem;
-  font-size: 14px;
-  line-height: 125%;
-  color: #8e522e;
-`;

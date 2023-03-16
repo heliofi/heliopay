@@ -1,5 +1,6 @@
 import { Cluster } from '@solana/web3.js';
 
+import { PaymentRequestType } from '@heliofi/common';
 import { ClusterType } from '../model';
 import { ASSET_URL } from '../constants';
 
@@ -57,8 +58,9 @@ export class ConfigService {
     }
   }
 
-  getPhantomLink(id: string): string {
+  getPhantomLink(id: string, paymentType: PaymentRequestType): string {
     const baseUrl = this.getHelioBaseUrl();
-    return `https://phantom.app/ul/browse/${baseUrl}/pay/${id}?ref=${baseUrl}`;
+    const urlParam = paymentType === PaymentRequestType.PAYLINK ? 'pay' : 's';
+    return `https://phantom.app/ul/browse/${baseUrl}/${urlParam}/${id}?ref=${baseUrl}`;
   }
 }

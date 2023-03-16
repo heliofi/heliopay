@@ -42,7 +42,6 @@ import {
   StyledResultFooterText,
   StyledPPResultLink,
   StyledPPResultTopLine,
-  StyledSwapWrapper,
   StyledPPResultButtonText,
 } from './styles';
 

@@ -149,10 +149,11 @@ const BaseCheckout = ({
                   currency={activeCurrency?.symbol}
                 />
               )}
-              {paymentDetails?.id && (
+              {paymentDetails?.id && paymentType && (
                 <QRCodeCard
                   phantomDeepLink={`${HelioSDK.configService.getPhantomLink(
-                    paymentDetails?.id
+                    paymentDetails?.id,
+                    paymentType
                   )}`}
                 />
               )}
