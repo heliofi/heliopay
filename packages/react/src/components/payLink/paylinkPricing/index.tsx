@@ -16,7 +16,7 @@ import { StyledCurrency, StyledCurrencySelectIcon } from './styles';
 
 export type PaylinkPricingProps = FormikProps & {
   activeCurrency: Currency | null;
-  price: number;
+  totalDecimalAmount: number;
   canSelectCurrency: boolean;
   allowedCurrencies: Currency[];
   setActiveCurrency: (activeCurrency: Currency | null) => void;
@@ -26,7 +26,7 @@ const PaylinkPricing = ({
   formValues,
   setFieldValue,
   activeCurrency,
-  price,
+  totalDecimalAmount,
   canSelectCurrency,
   allowedCurrencies,
   setActiveCurrency,
@@ -64,7 +64,10 @@ const PaylinkPricing = ({
       ) : (
         <PriceBanner
           title="Total price:"
-          amount={formatTotalPrice(price, formValues.quantity)}
+          totalDecimalAmount={formatTotalPrice(
+            totalDecimalAmount,
+            formValues.quantity
+          )}
           currency={activeCurrency?.symbol}
         />
       )}

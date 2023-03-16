@@ -35,7 +35,7 @@ export interface HelioApiConnector {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity?: number,
-    normalizedPrice?: number,
+    totalDecimalAmount?: number,
     toMint?: string
   ): Promise<SwapRouteToken>;
 

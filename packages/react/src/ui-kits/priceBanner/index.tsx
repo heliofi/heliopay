@@ -12,18 +12,23 @@ import {
 export type PriceBannerProps = {
   label?: string;
   title?: string;
-  amount: number;
+  totalDecimalAmount: number;
   currency?: string;
 };
 
-const PriceBanner = ({ label, title, amount, currency }: PriceBannerProps) => (
+const PriceBanner = ({
+  label,
+  title,
+  totalDecimalAmount,
+  currency,
+}: PriceBannerProps) => (
   <StyledPriceBannerWrapper>
     <StyledPriceBannerLabel>{label}</StyledPriceBannerLabel>
     <StyledPriceBanner>
       {title && <StyledTitle>{title}</StyledTitle>}{' '}
       <StyledPrice>
         {currency === CurrencySymbols.USDC ? '$' : ''}
-        {amount} {currency}
+        {totalDecimalAmount} {currency}
       </StyledPrice>
     </StyledPriceBanner>
   </StyledPriceBannerWrapper>

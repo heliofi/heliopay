@@ -9,14 +9,14 @@ import { useHelioProvider } from '../../../providers/helio/HelioContext';
 
 export type PaystreamPricingProps = FormikProps & {
   activeCurrency: Currency | null;
-  price: number;
+  totalDecimalAmount: number;
 };
 
 const PaystreamPricing = ({
   formValues,
   setFieldValue,
   activeCurrency,
-  price,
+  totalDecimalAmount,
 }: PaystreamPricingProps) => {
   const { getPaymentDetails } = useHelioProvider();
   const paymentDetails = getPaymentDetails<Paystream>();
@@ -27,7 +27,7 @@ const PaystreamPricing = ({
         <>
           <PriceBanner
             title={`Pay per ${timeUnitLabels[paymentDetails.interval]}: `}
-            amount={price}
+            totalDecimalAmount={totalDecimalAmount}
             currency={activeCurrency?.symbol}
           />
 
@@ -45,7 +45,10 @@ const PaystreamPricing = ({
 
           <PriceBanner
             label="Pre-approve total amount"
-            amount={formatTotalPrice(price, formValues.interval)}
+            totalDecimalAmount={formatTotalPrice(
+              totalDecimalAmount,
+              formValues.interval
+            )}
             currency={activeCurrency?.symbol}
           />
         </>

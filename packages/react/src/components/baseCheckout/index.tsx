@@ -58,7 +58,7 @@ const BaseCheckout = ({
 
   const { HelioSDK } = useCompositionRoot();
 
-  const [normalizedPrice, setNormalizedPrice] = useState<number>(0);
+  const [decimalAmount, setDecimalAmount] = useState<number>(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
@@ -75,14 +75,14 @@ const BaseCheckout = ({
   const paymentDetails = getPaymentDetails();
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
-    const amount = (normalizedPrice || totalAmount) ?? 0;
+    const amount = (decimalAmount || totalAmount) ?? 0;
     return paymentType === PaymentRequestType.PAYLINK
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
   };
 
   const initialValues = getInitialValues(
-    normalizedPrice,
+    totalAmount || decimalAmount,
     canSelectCurrency,
     getPaymentDetails,
     paymentDetails?.dynamic
@@ -108,7 +108,7 @@ const BaseCheckout = ({
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
-      setNormalizedPrice(
+      setDecimalAmount(
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency?.symbol,
           paymentDetails?.normalizedPrice
@@ -146,7 +146,9 @@ const BaseCheckout = ({
               {!getPaymentFeatures<LinkFeaturesDto>().canChangePrice && (
                 <PriceBanner
                   title="Total price:"
-                  amount={formatTotalPrice(totalAmount || normalizedPrice)}
+                  totalDecimalAmount={formatTotalPrice(
+                    totalAmount || decimalAmount
+                  )}
                   currency={activeCurrency?.symbol}
                 />
               )}
@@ -168,7 +170,7 @@ const BaseCheckout = ({
                 onSubmit={handleSubmit({
                   paymentDetails,
                   HelioSDK,
-                  price: totalAmount || normalizedPrice,
+                  totalDecimalAmount: totalAmount || decimalAmount,
                   onSubmit,
                   currencyList,
                   paymentType,
@@ -181,7 +183,7 @@ const BaseCheckout = ({
                       formValues={values}
                       setFieldValue={setFieldValue}
                       activeCurrency={activeCurrency}
-                      price={totalAmount || normalizedPrice}
+                      totalDecimalAmount={totalAmount || decimalAmount}
                       canSelectCurrency={canSelectCurrency}
                       allowedCurrencies={allowedCurrencies}
                       setActiveCurrency={setActiveCurrency}
@@ -191,7 +193,7 @@ const BaseCheckout = ({
                       <SwapsForm
                         formValues={values}
                         setFieldValue={setFieldValue}
-                        normalizedPrice={getSwapsFormPrice(values)}
+                        totalDecimalAmount={getSwapsFormPrice(values)}
                       />
                     )}
 

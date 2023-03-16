@@ -136,7 +136,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity?: number,
-    normalizedPrice?: number,
+    totalDecimalAmount?: number,
     toMint?: string
   ): Promise<SwapRouteToken> {
     const url = `/swap/route-token`;
@@ -154,8 +154,8 @@ export class HelioApiAdapter implements HelioApiConnector {
       options.quantity = quantity.toString();
     }
 
-    if (normalizedPrice != null) {
-      options.amount = normalizedPrice.toString();
+    if (totalDecimalAmount != null) {
+      options.amount = totalDecimalAmount.toString();
     }
 
     const urlParams = new URLSearchParams(options);

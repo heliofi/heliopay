@@ -29,7 +29,7 @@ export type FormikProps = {
 export interface IHandleSubmit {
   paymentDetails?: any;
   HelioSDK: HelioSDKType;
-  price: number;
+  totalDecimalAmount: number;
   onSubmit: InheritedOnSubmit;
   currencyList: Currency[];
   paymentType: PaymentRequestType;
