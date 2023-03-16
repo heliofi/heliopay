@@ -70,10 +70,9 @@ export const handleSubmit =
     price,
     onSubmit,
     currencyList,
+    paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
-    const paymentRequestType = HelioSDK.getPaymentRequestType();
-
     const details = {
       fullName: values.fullName,
       email: values.email,
@@ -112,12 +111,12 @@ export const handleSubmit =
       ),
     };
 
-    if (paymentRequestType === PaymentRequestType.PAYLINK) {
+    if (paymentType === PaymentRequestType.PAYLINK) {
       onSubmit({
         ...requestData,
         quantity: BigInt(values.quantity || 1),
       });
-    } else if (paymentRequestType === PaymentRequestType.PAYSTREAM) {
+    } else if (paymentType === PaymentRequestType.PAYSTREAM) {
       onSubmit({
         ...requestData,
         maxTime: CreatePaymentService.timeToSeconds(

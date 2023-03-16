@@ -50,10 +50,6 @@ export const HelioPay = ({
     HelioSDK.setCluster(cluster as Cluster);
   }, [cluster]);
 
-  useMemo(() => {
-    HelioSDK.setPaymentRequestType(paymentType);
-  }, [paymentType]);
-
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
     setCurrentTheme(mergedTheme);
@@ -72,6 +68,7 @@ export const HelioPay = ({
           payButtonTitle={payButtonTitle}
           supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
+          paymentType={paymentType}
         />
         <Toaster />
       </SolanaProvider>

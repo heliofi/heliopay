@@ -7,15 +7,15 @@ import {
   SuccessPaymentEvent,
   PendingPaymentEvent,
 } from '@heliofi/sdk';
-import { Currency, IntervalType, Paystream } from '@heliofi/common';
-import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
 import {
   SECOND_MS,
   StringService,
   TimeFormatterService,
 } from '@heliofi/sdk/dist/src/domain';
-
+import { Currency, IntervalType, Paystream } from '@heliofi/common';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
+import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
+import { getTransactionSignature } from '@heliofi/sdk/dist/src/infrastructure/solana-utils/getTransactionSignature';
 
 import { timeUnitLabels } from '../time-units';
 import { ExplorerLink } from '../../../ui-kits';
@@ -82,8 +82,9 @@ const PaystreamPaymentResult = ({
   const paymentId = paymentData?.id;
   const startedAt = paymentData?.startedAt;
   const endedAt = paymentData?.endedAt;
-  const transactionSignature =
-    'data' in result ? result.data.transactionSignature : undefined;
+  const transactionSignature = getTransactionSignature(
+    result?.transaction ?? ''
+  );
 
   const hasError = 'errorMessage' in result;
 
@@ -186,14 +187,12 @@ const PaystreamPaymentResult = ({
                 <ExplorerLink transaction={transactionSignature} />
               </StyledPPResultLink>
               {result.swapTransactionSignature && (
-                <StyledSwapWrapper>
-                  Swap transaction
-                  <StyledPPResultLink>
-                    <ExplorerLink
-                      transaction={result.swapTransactionSignature}
-                    />
-                  </StyledPPResultLink>
-                </StyledSwapWrapper>
+                <StyledPPResultLink>
+                  <ExplorerLink
+                    transaction={result.swapTransactionSignature}
+                    title="View swapped transaction"
+                  />
+                </StyledPPResultLink>
               )}
             </StyledPPResultInfo>
 

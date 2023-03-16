@@ -36,6 +36,8 @@ export const HelioContext = createContext<{
   setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote) => void;
   tokenSwapError: string;
   setTokenSwapError: (error: string) => void;
+  paymentType?: PaymentRequestType;
+  setPaymentType: (requestType: PaymentRequestType) => void;
 }>({
   currencyList: [],
   setCurrencyList: () => {},
@@ -53,6 +55,8 @@ export const HelioContext = createContext<{
   setTokenSwapQuote: () => {},
   tokenSwapError: '',
   setTokenSwapError: () => {},
+  paymentType: undefined,
+  setPaymentType: () => {},
 });
 
 export const useHelioProvider = () => {
@@ -73,6 +77,8 @@ export const useHelioProvider = () => {
     setTokenSwapQuote,
     tokenSwapError,
     setTokenSwapError,
+    paymentType,
+    setPaymentType,
   } = useContext(HelioContext);
 
   const { HelioSDK } = useCompositionRoot();
@@ -110,8 +116,12 @@ export const useHelioProvider = () => {
     if (!cluster) {
       throw new Error('Please provide a cluster');
     }
+    if (!paymentType) {
+      throw new Error('Please provide a payment type');
+    }
     const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
-      paymentRequestId
+      paymentRequestId,
+      paymentType
     );
     setPaymentDetails(result || {});
   };
@@ -234,5 +244,7 @@ export const useHelioProvider = () => {
     tokenSwapError,
     getTokenSwapQuote,
     removeTokenSwapError,
+    paymentType,
+    setPaymentType,
   };
 };

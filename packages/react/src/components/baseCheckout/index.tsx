@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Form, Formik, FormikValues } from 'formik';
 import { createPortal } from 'react-dom';
+import { Form, Formik, FormikValues } from 'formik';
 import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
 import {
@@ -52,6 +52,7 @@ const BaseCheckout = ({
     tokenSwapQuote,
     tokenSwapError,
     removeTokenSwapError,
+    paymentType,
   } = useHelioProvider();
 
   const { HelioSDK } = useCompositionRoot();
@@ -62,7 +63,6 @@ const BaseCheckout = ({
   const [showQRCode, setShowQRCode] = useState(false);
 
   const canSelectCurrency = allowedCurrencies.length > 1;
-  const paymentRequestType = HelioSDK.getPaymentRequestType();
 
   const payButtonText =
     showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError
@@ -75,7 +75,7 @@ const BaseCheckout = ({
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
     const amount = (normalizedPrice || totalAmount) ?? 0;
-    return paymentRequestType === PaymentRequestType.PAYLINK
+    return paymentType === PaymentRequestType.PAYLINK
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
   };
@@ -160,7 +160,7 @@ const BaseCheckout = ({
             </div>
           )}
           {!showQRCode &&
-            (paymentDetails ? (
+            (paymentDetails && paymentType ? (
               <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit({
@@ -169,6 +169,7 @@ const BaseCheckout = ({
                   price: totalAmount || normalizedPrice,
                   onSubmit,
                   currencyList,
+                  paymentType,
                 })}
                 validationSchema={validationSchema}
               >

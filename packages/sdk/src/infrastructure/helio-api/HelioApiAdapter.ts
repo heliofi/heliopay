@@ -16,9 +16,12 @@ import { enhanceOptions, FetchOptions, request } from '../fetch-middleware';
 export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
 
-  async getPaymentRequestByIdPublic(id: string): Promise<PaymentRequest> {
+  async getPaymentRequestByIdPublic(
+    id: string,
+    paymentType: PaymentRequestType
+  ): Promise<PaymentRequest> {
     let param;
-    switch (this.configService.getPaymentRequestType()) {
+    switch (paymentType) {
       case PaymentRequestType.PAYLINK:
         param = 'paylink';
         break;

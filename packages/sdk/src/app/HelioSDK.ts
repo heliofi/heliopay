@@ -34,14 +34,11 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
-  private _paymentRequestType?: PaymentRequestType;
-
   constructor(options?: {
     cluster: Cluster;
     paymentRequestType: PaymentRequestType;
   }) {
     this._cluster = options?.cluster;
-    this._paymentRequestType = options?.paymentRequestType;
     this._configService = new ConfigService(options?.cluster);
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
@@ -75,16 +72,6 @@ export class HelioSDK {
   setCluster(cluster: Cluster) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
-  }
-
-  async setPaymentRequestType(paymentType: PaymentRequestType) {
-    this._paymentRequestType = paymentType;
-    this._configService.setPaymentRequestType(paymentType);
-  }
-
-  getPaymentRequestType(): PaymentRequestType | undefined | never {
-    this.checkCluster();
-    return this._paymentRequestType;
   }
 
   get currencyService(): CurrencyService | never {

@@ -1,6 +1,7 @@
 import { FormikValues } from 'formik';
-import { Currency } from '@heliofi/common';
 import { HelioSDK as HelioSDKType } from '@heliofi/sdk';
+import { Currency, PaymentRequestType } from '@heliofi/common';
+
 import { SubmitPaymentsTypesProps } from '../heliopayContainer/constants';
 
 export type InheritedOnSubmit = (
@@ -31,4 +32,5 @@ export interface IHandleSubmit {
   price: number;
   onSubmit: InheritedOnSubmit;
   currencyList: Currency[];
+  paymentType: PaymentRequestType;
 }

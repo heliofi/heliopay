@@ -55,6 +55,7 @@ interface HeliopayContainerProps {
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
+  paymentType: PaymentRequestType;
 }
 
 const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -67,6 +68,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   payButtonTitle = 'Pay',
   supportedCurrencies,
   totalAmount,
+  paymentType,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -81,6 +83,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     cluster: mainCluster,
     isCustomerDetailsRequired,
     tokenSwapQuote,
+    paymentType: paymentRequestType,
+    setPaymentType,
   } = useHelioProvider();
   const { HelioSDK } = useCompositionRoot();
   const connectionProvider = useConnection();
@@ -93,7 +97,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
   const paymentDetails = getPaymentDetails();
-  const paymentRequestType = HelioSDK.getPaymentRequestType();
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter(
@@ -228,6 +231,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   useEffect(() => {
     initCluster(cluster);
   }, [cluster]);
+
+  useEffect(() => {
+    setPaymentType(paymentType);
+  }, [paymentType]);
 
   useEffect(() => {
     if (mainCluster) {

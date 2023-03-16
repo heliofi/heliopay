@@ -23,7 +23,10 @@ export interface HelioApiConnector {
 
   listCurrencies(): Promise<Currency[]>;
 
-  getPaymentRequestByIdPublic(id: string): Promise<PaymentRequest>;
+  getPaymentRequestByIdPublic(
+    id: string,
+    paymentType: PaymentRequestType
+  ): Promise<PaymentRequest>;
 
   getTokenSwapMintAddresses(mintAddress: string): Promise<string[]>;
 

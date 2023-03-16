@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { HelioPay } from '../../react';
-import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
-import './styles/style.scss';
+import React, {useState} from 'react';
 import { PaymentRequestType } from "@heliofi/common";
+import { ErrorPaymentEvent, PendingPaymentEvent, SuccessPaymentEvent } from '@heliofi/sdk'
+
+import { HelioPay } from '../../react';
+
+import './styles/style.scss';
+
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
