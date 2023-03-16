@@ -1,5 +1,4 @@
 import { Cluster } from '@solana/web3.js';
-import { PaymentRequestType } from '@heliofi/common';
 
 import {
   ConfigService,
@@ -34,10 +33,7 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
-  constructor(options?: {
-    cluster: Cluster;
-    paymentRequestType: PaymentRequestType;
-  }) {
+  constructor(options?: { cluster: Cluster }) {
     this._cluster = options?.cluster;
     this._configService = new ConfigService(options?.cluster);
     this._apiService = new HelioApiAdapter(this._configService);
