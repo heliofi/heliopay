@@ -14,6 +14,7 @@ import {
 } from '../../providers/helio/HelioContext';
 import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
+import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
 
 export const getInitialValues = (
   normalizedPrice: number,
@@ -22,7 +23,8 @@ export const getInitialValues = (
   initialCurrency?: string,
   paymentFeatures?: PaymentFeatures,
   canChangeQuantity?: boolean,
-  canChangePrice?: boolean
+  canChangePrice?: boolean,
+  searchParams?: CheckoutSearchParamsValues
 ) => ({
   requireEmail: paymentFeatures?.requireEmail,
   requireDiscordUsername: paymentFeatures?.requireDiscordUsername,
@@ -56,6 +58,7 @@ export const getInitialValues = (
         durationSec: getPaymentDetails<Paystream>().maxTime,
       })
     : undefined,
+  ...searchParams,
 });
 
 export const getCurrency = (currencyList: any[], currency?: string) => {

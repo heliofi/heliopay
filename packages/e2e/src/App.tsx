@@ -21,6 +21,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
+          // customerDetails={{}}
         cluster="devnet"
         paymentRequestId={paymentId}
         onSuccess={function (event: SuccessPaymentEvent): void {

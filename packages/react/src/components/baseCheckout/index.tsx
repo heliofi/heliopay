@@ -33,6 +33,8 @@ import {
   StyledBaseCheckoutContainer,
   StyledBaseCheckoutWrapper,
 } from './styles';
+import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
+import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -55,6 +57,8 @@ const BaseCheckout = ({
     removeTokenSwapError,
     paymentType,
   } = useHelioProvider();
+
+  const { customerDetails } = useCheckoutSearchParamsProvider();
 
   const { HelioSDK } = useCompositionRoot();
 
@@ -80,6 +84,11 @@ const BaseCheckout = ({
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
   };
+  const searchParams =
+    CheckoutSearchParamsManager.getFilteredCheckoutSearchParams(
+      paymentDetails,
+      customerDetails
+    );
 
   const initialValues = getInitialValues(
     normalizedPrice,
@@ -90,7 +99,8 @@ const BaseCheckout = ({
       : paymentDetails?.currency?.symbol,
     getPaymentFeatures(),
     getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
-    getPaymentFeatures<LinkFeaturesDto>().canChangePrice
+    getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
+    searchParams
   );
 
   useEffect(() => {
