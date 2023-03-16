@@ -25,13 +25,14 @@ import { InheritedBaseCheckoutProps } from './constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
+import { PaylinkPricingProps } from '../payLink/paylinkPricing';
+import { PaystreamPricingProps } from '../payStream/paystreamPricing';
+
 import {
   StyledBaseCheckoutBody,
   StyledBaseCheckoutContainer,
   StyledBaseCheckoutWrapper,
 } from './styles';
-import { PaylinkPricingProps } from '../payLink/paylinkPricing';
-import { PaystreamPricingProps } from '../payStream/paystreamPricing';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
