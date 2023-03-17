@@ -10,12 +10,11 @@ import {
   isEmptyObject,
   fromBigintToStringForSerialization,
 } from '../../../../utils';
-
 import { BasePaymentProps } from '../models/PaymentProps';
 import { createTransaction } from '../../CreateTransaction';
 import { BasePaystreamService } from './BasePaystreamService';
 import { BigNumber } from '../../../../domain/model/BigNumber';
-import { BasePaymentResponse } from '../models/PaymentResponse';
+import { BasePaymentResponse, isSwapResponse } from '../models/PaymentResponse';
 import { BaseTransactionPayload } from '../models/TransactionPayload';
 import { ExecuteTransactionPayload, SignedTxAndToken } from '../../types';
 import { signSwapTransactions, signTransaction } from '../../SignTransaction';
@@ -210,7 +209,9 @@ export class PaystreamStartService extends BasePaystreamService<
         },
         content: response?.document?.content,
       },
-      swapTransactionSignature: response?.swapTransactionSignature,
+      swapTransactionSignature: isSwapResponse(response)
+        ? response.swapTransactionSignature
+        : undefined,
     });
   }
 

@@ -1,12 +1,15 @@
-import { ContentResponse } from '@heliofi/common';
+import {
+  OnlyContentAndSwapTransactionPaylink,
+  OnlyContentAndTransactionPaylink,
+} from '@heliofi/common';
 
-export interface BasePaymentResponse {
-  transactionSignature: string;
-  swapTransactionSignature?: string;
-  content?: ContentResponse;
-}
+export class BasePaymentResponse extends OnlyContentAndTransactionPaylink {}
 
-export interface SwapPaymentResponse {
-  transactionSignature: string;
-  swapTransactionSignature: string;
-}
+export class SwapPaymentResponse extends OnlyContentAndSwapTransactionPaylink {}
+
+export type PaymentResponse = SwapPaymentResponse | BasePaymentResponse;
+
+export type SwapResponse = { swapTransactionSignature?: string };
+
+export const isSwapResponse = (response: unknown): response is SwapResponse =>
+  (response as SwapResponse)?.swapTransactionSignature != null;

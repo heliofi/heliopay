@@ -1,3 +1,3 @@
 export const CurrencySymbols = {
-  USDC: 'USDC'
-}
+  USDC: 'USDC',
+};
