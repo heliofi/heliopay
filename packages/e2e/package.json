@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@heliofi/react": "^3.2.6-alpha.0",
+    "@heliofi/sdk": "^0.1.5-alpha.0",
+    "@heliofi/common": "0.1.195",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -48,6 +50,7 @@
       "prettier/prettier": "error"
     },
     "extends": [
+      "@heliofi/eslint-config-helio",
       "prettier"
     ],
     "parserOptions": {
