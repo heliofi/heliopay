@@ -249,7 +249,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [currencyList, supportedCurrencies]);
 
   useEffect(() => {
-    if (mainCluster && paymentRequestType) {
+    if (mainCluster && paymentRequestType && paymentRequestId) {
       initPaymentDetails(paymentRequestId);
     }
   }, [paymentRequestId, mainCluster, paymentRequestType]);
@@ -278,7 +278,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         });
                       }
                     }}
-                    disabled={!paymentDetails?.id}
+                    disabled={!paymentRequestId || !paymentDetails?.id}
                   >
                     {payButtonTitle}
                   </Button>
