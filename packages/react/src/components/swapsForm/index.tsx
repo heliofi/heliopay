@@ -20,7 +20,7 @@ import {
 interface SwapsFormProps {
   formValues: FormikValues;
   setFieldValue: FormikSetFieldValue;
-  normalizedPrice: number;
+  totalDecimalAmount: number;
 }
 
 const DEBOUNCE_TIME = 500;
@@ -28,7 +28,7 @@ const DEBOUNCE_TIME = 500;
 const SwapsForm = ({
   formValues,
   setFieldValue,
-  normalizedPrice,
+  totalDecimalAmount,
 }: SwapsFormProps) => {
   const {
     paymentDetails,
@@ -72,7 +72,7 @@ const SwapsForm = ({
         paymentType,
         selectedCurrency.mintAddress,
         formValues.quantity,
-        normalizedPrice,
+        totalDecimalAmount,
         paymentDetails?.dynamic ? currency?.mintAddress : undefined
       );
     }

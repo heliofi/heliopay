@@ -10,7 +10,7 @@ import {
   StyledInput,
   StyledLabel,
   StyledLabelContainer,
-  StyledInputContainer
+  StyledInputContainer,
 } from './styles';
 
 type InputProps = {
@@ -27,7 +27,7 @@ type InputProps = {
   placeholder?: string;
   fieldValue?: string | number;
   setFieldValue?: FormikSetFieldValue;
-  nextSibling?: React.ReactNode
+  nextSibling?: React.ReactNode;
 };
 
 const Input: FC<InputProps & ElementContainerProps> = ({
@@ -47,7 +47,7 @@ const Input: FC<InputProps & ElementContainerProps> = ({
   prefix,
   suffix,
   inactive,
-  nextSibling = ''
+  nextSibling = '',
 }) => {
   const [focus, setFocus] = useState(false);
 

@@ -2836,12 +2836,12 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@heliofi/common@^0.1.135":
-  version "0.1.176"
-  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.176.tgz#2da8e03b015ad2bb253d61532a87ccf627254f8e"
-  integrity sha512-ZYoJgH2qucHH17/tSvKA6XwdPLZZQfvL9xlCs1+cAs266lIxnoRg1sWct6eSY6D275hcAuSQ7mQJa62B12tg7g==
+"@heliofi/common@0.1.195":
+  version "0.1.195"
+  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.195.tgz#80711fd992a1c022027f045516baaf4dd1f8226c"
+  integrity sha512-cNVdRc3645KdnHV6jvYlQ62z6zdQmTlWQztdFYsNZE5IgfvTPSEZv42jnUHcS6aTlzvUAiQKwqixXntCJ4mVZA==
   dependencies:
-    "@heliofi/evm-adapter" "^0.0.22-beta"
+    "@heliofi/evm-adapter" "^0.0.28-beta"
     "@project-serum/anchor" "^0.25.0"
     "@solana/web3.js" "^1.44.0"
     bs58 "^5.0.0"
@@ -2859,10 +2859,10 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
-"@heliofi/evm-adapter@^0.0.22-beta":
-  version "0.0.22-beta"
-  resolved "https://registry.npmjs.org/@heliofi/evm-adapter/-/evm-adapter-0.0.22-beta.tgz#901b5bccb1fe9f1c450d3a915d3c2bc60c0912a9"
-  integrity sha512-lMEDbO4hZw21NGEBBSoRc2Qzm5yZxRZiqR4TeYL6uPG0CBXXQOBp/AiPgw+3FtHhoPRM2vL/LsCARmDElNs+3A==
+"@heliofi/evm-adapter@^0.0.28-beta":
+  version "0.0.28-beta"
+  resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.28-beta.tgz#3e55af3e6a34cf2c956728610396833265587dbe"
+  integrity sha512-kznDeADyyJf+iIcDoCRe59ffrCHoVwloc9bOtBj0EwULV+BzdLnbVsMFoSmLZ4qVyIyyKEp+pASBjJYiwDoIpw==
   dependencies:
     ethers "^5.7.2"
 

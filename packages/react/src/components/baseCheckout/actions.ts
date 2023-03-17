@@ -17,7 +17,7 @@ import { removeUndefinedFields } from '../../utils';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
 
 export const getInitialValues = (
-  normalizedPrice: number,
+  totalDecimalAmount: number,
   canSelectCurrency: boolean,
   getPaymentDetails: <T extends PaymentDetailsType>() => T,
   initialCurrency?: string,
@@ -48,7 +48,7 @@ export const getInitialValues = (
   streetNumber: undefined,
   phoneNumber: undefined,
   quantity: canChangeQuantity ? 1 : undefined,
-  customPrice: canChangePrice ? undefined : normalizedPrice,
+  customPrice: canChangePrice ? undefined : totalDecimalAmount,
   canSelectCurrency,
   currency: canSelectCurrency ? undefined : initialCurrency,
   productValue: undefined,
@@ -70,7 +70,7 @@ export const handleSubmit =
   ({
     paymentDetails,
     HelioSDK,
-    price,
+    totalDecimalAmount,
     onSubmit,
     currencyList,
     paymentType,
@@ -105,7 +105,7 @@ export const handleSubmit =
       amount: BigInt(
         HelioSDK.tokenConversionService.convertToMinimalUnits(
           values.currency || paymentDetails?.currency.symbol,
-          values.canChangePrice ? values.customPrice : price
+          values.canChangePrice ? values.customPrice : totalDecimalAmount
         )
       ),
       currency: getCurrency(

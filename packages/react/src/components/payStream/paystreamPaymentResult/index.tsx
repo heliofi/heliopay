@@ -87,7 +87,7 @@ const PaystreamPaymentResult = ({
 
   const hasError = 'errorMessage' in result;
 
-  const price = HelioSDK.tokenConversionService.convertFromMinimalUnits(
+  const decimalAmount = HelioSDK.tokenConversionService.convertFromMinimalUnits(
     paymentDetails?.currency?.symbol,
     paymentDetails?.normalizedPrice
   );
@@ -198,7 +198,7 @@ const PaystreamPaymentResult = ({
             <StyledPPResultAmount>
               Pay per {timeUnit}:{' '}
               <StyledPPResultPrice>
-                {price} {paymentDetails.currency.symbol} / {timeUnit}
+                {decimalAmount} {paymentDetails.currency.symbol} / {timeUnit}
               </StyledPPResultPrice>
             </StyledPPResultAmount>
 
