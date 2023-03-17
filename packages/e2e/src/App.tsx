@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
-import { PaymentRequestType } from "@heliofi/common";
-import { ErrorPaymentEvent, PendingPaymentEvent, SuccessPaymentEvent } from '@heliofi/sdk'
+import React, { useState } from 'react';
+import { PaymentRequestType } from '@heliofi/common';
+import {
+  ErrorPaymentEvent,
+  PendingPaymentEvent,
+  SuccessPaymentEvent,
+} from '@heliofi/sdk';
 
-import { HelioPay } from '../../react';
+import { HelioPay } from '@heliofi/react/dist';
 
 import './styles/style.scss';
 
