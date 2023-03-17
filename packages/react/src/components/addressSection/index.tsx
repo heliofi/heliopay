@@ -80,6 +80,7 @@ const AddressSection = ({
             <Input
               fieldId="areaCode"
               fieldName="areaCode"
+              fieldValue={areaCodeValue}
               setFieldValue={setFieldValue}
               required
               placeholder="Postal/Zip code"

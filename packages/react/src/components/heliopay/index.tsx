@@ -14,6 +14,7 @@ import { defaultTheme } from '../../theme';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
+import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -27,6 +28,7 @@ interface HelioPayProps {
   supportedCurrencies?: string[];
   totalAmount?: number;
   paymentType?: PaymentRequestType;
+  searchCustomerDetails?: CheckoutSearchParamsValues;
 }
 
 export const HelioPay = ({
@@ -41,6 +43,7 @@ export const HelioPay = ({
   supportedCurrencies,
   totalAmount,
   paymentType = PaymentRequestType.PAYLINK,
+  searchCustomerDetails,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -69,6 +72,7 @@ export const HelioPay = ({
           supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
           paymentType={paymentType}
+          searchCustomerDetails={searchCustomerDetails}
         />
         <Toaster />
       </SolanaProvider>

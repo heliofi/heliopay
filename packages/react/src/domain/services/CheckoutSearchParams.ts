@@ -9,7 +9,6 @@ export type CheckoutSearchParamsValues = Pick<
   | 'phoneNumber'
   | 'productValue'
   | 'areaCode'
-  | 'state'
   | 'deliveryAddress'
   | 'city'
   | 'street'
@@ -25,7 +24,6 @@ export class CheckoutSearchParams extends URLSearchParams {
     phoneNumber: undefined,
     productValue: undefined,
     areaCode: undefined,
-    state: undefined,
     deliveryAddress: undefined,
     city: undefined,
     street: undefined,

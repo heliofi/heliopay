@@ -1,11 +1,8 @@
-import { createContext, useContext, useEffect } from 'react';
-import {
-  CheckoutSearchParams,
-  CheckoutSearchParamsValues,
-} from '../../domain/services/CheckoutSearchParams';
+import { createContext, useContext } from 'react';
+import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
 
 export const CheckoutSearchParamsContext = createContext<{
-  customerDetails: CheckoutSearchParamsValues;
+  customerDetails?: CheckoutSearchParamsValues;
   setCustomerDetails: (customerDetails: CheckoutSearchParamsValues) => void;
 }>({
   customerDetails: {},
@@ -16,13 +13,5 @@ export const useCheckoutSearchParamsProvider = () => {
   const { customerDetails, setCustomerDetails } = useContext(
     CheckoutSearchParamsContext
   );
-
-  const queryString = window.location.href.split('?')[1];
-
-  useEffect(() => {
-    const checkoutSearchParams = new CheckoutSearchParams(queryString);
-    setCustomerDetails(checkoutSearchParams.getParsedCheckoutSearchParams());
-  }, [queryString]);
-
   return { customerDetails, setCustomerDetails };
 };

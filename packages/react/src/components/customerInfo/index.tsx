@@ -75,6 +75,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         <Input
           fieldId="fullName"
           fieldName="fullName"
+          fieldValue={formValues.fullName}
           setFieldValue={setFieldValue}
           required
           placeholder="Full name"
@@ -86,6 +87,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         <Input
           fieldId="email"
           fieldName="email"
+          fieldValue={formValues.email}
           setFieldValue={setFieldValue}
           required
           placeholder="john@helio.co"
@@ -97,6 +99,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         <Input
           fieldId="twitterUsername"
           fieldName="twitterUsername"
+          fieldValue={formValues.twitterUsername}
           setFieldValue={setFieldValue}
           required
           placeholder="@helio_pay"
@@ -108,6 +111,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         <Input
           fieldId="discordUsername"
           fieldName="discordUsername"
+          fieldValue={formValues.discordUsername}
           setFieldValue={setFieldValue}
           required
           placeholder="Helio#1234"
@@ -119,6 +123,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
         <PhoneNumberInput
           fieldId="phoneNumber"
           fieldName="phoneNumber"
+          value={formValues.phoneNumber}
           required
           label="Phone number"
           onChange={(value) => {
@@ -166,6 +171,7 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
             <Input
               fieldId="productValue"
               fieldName="productValue"
+              fieldValue={formValues.productValue}
               setFieldValue={setFieldValue}
               required
               placeholder="Insert data here..."

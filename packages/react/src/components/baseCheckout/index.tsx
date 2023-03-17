@@ -86,7 +86,7 @@ const BaseCheckout = ({
   };
   const searchParams =
     CheckoutSearchParamsManager.getFilteredCheckoutSearchParams(
-      paymentDetails,
+      getPaymentFeatures(),
       customerDetails
     );
 
@@ -176,6 +176,7 @@ const BaseCheckout = ({
           {!showQRCode &&
             (paymentDetails && paymentType ? (
               <Formik
+                enableReinitialize
                 initialValues={initialValues}
                 onSubmit={handleSubmit({
                   paymentDetails,

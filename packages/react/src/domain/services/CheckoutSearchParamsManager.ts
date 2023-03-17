@@ -1,6 +1,5 @@
-import { PaymentRequest } from '@heliofi/common';
-
 import { CheckoutSearchParamsValues } from './CheckoutSearchParams';
+import { PaymentFeatures } from '../../providers/helio/HelioContext';
 
 export class CheckoutSearchParamsManager {
   private static readonly requiredPropertiesKeysMap = new Map<string, string[]>(
@@ -11,14 +10,7 @@ export class CheckoutSearchParamsManager {
       ['requireTwitterUsername', ['twitterUsername']],
       [
         'requireDeliveryAddress',
-        [
-          'street',
-          'city',
-          'streetNumber',
-          'deliveryAddress',
-          'state',
-          'areaCode',
-        ],
+        ['street', 'city', 'streetNumber', 'deliveryAddress', 'areaCode'],
       ],
       ['requirePhoneNumber', ['phoneNumber']],
       ['requireProductDetails', ['productValue']],
@@ -26,7 +18,7 @@ export class CheckoutSearchParamsManager {
   );
 
   static getFilteredCheckoutSearchParams(
-    paymentData: PaymentRequest,
+    paymentData: PaymentFeatures,
     checkoutSearchParams: CheckoutSearchParamsValues | undefined
   ): CheckoutSearchParamsValues | undefined {
     const requiredPropertiesKeys = Array.from(

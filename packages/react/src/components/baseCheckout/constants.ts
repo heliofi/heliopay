@@ -34,38 +34,33 @@ export interface IHandleSubmit {
   currencyList: Currency[];
   paymentType: PaymentRequestType;
 }
-// @todo-v check
+
 export type CheckoutFormInitialValuesType = {
   requireEmail?: boolean;
   requireDiscordUsername?: boolean;
   requireFullName?: boolean;
   requireTwitterUsername?: boolean;
+  requirePhoneNumber?: boolean;
   requireCountry?: boolean;
   requireDeliveryAddress?: boolean;
-  requirePhoneNumber?: boolean;
   requireProductDetails?: boolean;
   canChangePrice?: boolean;
   canChangeQuantity?: boolean;
-  requireQuantityLimits?: boolean;
-  minQuantity?: number;
-  maxQuantity?: number;
-  requireMaxTransactions?: boolean;
-  transactionsLeft?: number;
   fullName?: string;
   email?: string;
   discordUsername?: string;
   twitterUsername?: string;
   country?: { label: string; value: string };
-  phoneNumber?: string;
-  productValue?: string;
-  quantity?: number;
-  customPrice?: number;
-  maxTime: number;
   areaCode?: string;
-  state?: string;
   deliveryAddress?: string;
   city?: string;
   street?: string;
   streetNumber?: string;
-  swapsCurrency?: string;
+  phoneNumber?: string;
+  quantity?: number;
+  customPrice?: number;
+  canSelectCurrency?: boolean;
+  currency?: string;
+  productValue?: string;
+  interval?: number;
 };
