@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { PaymentRequestType } from '@heliofi/common';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
@@ -7,6 +6,7 @@ import {
 } from '@heliofi/sdk';
 
 import { HelioPay } from '@heliofi/react/dist';
+import { PaymentRequestType } from '@heliofi/common';
 
 import './styles/style.scss';
 
@@ -40,7 +40,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         supportedCurrencies={['USDC', 'SOL']}
-        paymentType={'PAYSTREAM' as PaymentRequestType}
+        paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
     </>

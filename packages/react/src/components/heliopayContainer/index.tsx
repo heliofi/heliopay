@@ -146,7 +146,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.wallet?.publicKey as string;
+      const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
       const payload = {
@@ -193,7 +193,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.wallet?.publicKey as string;
+      const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
       const payload = {
