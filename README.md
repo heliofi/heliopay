@@ -169,7 +169,7 @@ const App = () => {
 **Available params for customer info:** fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.
 
 <br>**Use this if you want to autofill customer info by url:**
-<br>http://your_domain/?fullName=full%20name&email=email@email.com
+<br>http://your_domain/?fullName=full%20name&city=your_city
 
 <br>**Use this option if you want to embed the Helio Pay Button on your site for autofill customer info:**
 
