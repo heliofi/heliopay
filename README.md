@@ -163,6 +163,45 @@ const App = () => {
   );
 };
 ```
+
+### 4. Autofill customer details info in fields with url params or Helio Pay button
+
+Available params for customer info: fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.
+
+<br>Use this if you want to autofill customer info by url:
+http://your_domain/?fullName=full%name&email=email@email.com...
+
+<br>Use this option if you want to embed the Helio Pay Button on your site for autofill customer info:
+
+```ts
+import { HelioPay } from "@heliofi/react";
+import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+
+const App = () => {
+  return (
+    <div>
+      <HelioPay
+        cluster="mainnet-beta"
+        paymentRequestId={"your_paylink_id"}
+        onSuccess={function (event: SuccessPaymentEvent): void {
+          console.log("onSuccess", event);
+        }}
+        onError={function (event: ErrorPaymentEvent): void {
+          console.log("onError", event);
+        }}
+        onPending={function (event: PendingPaymentEvent): void {
+          console.log("onPending", event);
+        }}
+        onStartPayment={function (): void {
+          console.log("onStartPayment");
+        }}
+        searchCustomerDetails={{ fullName: 'full name', email: 'email@email.com', ... }}
+      />
+    </div>
+  );
+};
+```
+
 #### Properties table for the Helio components
 
 | Property            | Type                | Required | Default value               | Description                                                                                |
