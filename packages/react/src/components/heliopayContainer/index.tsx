@@ -18,16 +18,13 @@ import {
   PaymentRequestType,
 } from '@heliofi/common';
 
-import {
-  SubmitPaymentPaylinkProps,
-  SubmitPaymentPaystreamProps,
-} from './constants';
+import { SubmitPaylinkProps, SubmitPaystreamProps } from './constants';
 import PaymentResult from '../paymentResult';
 import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
 import { Button, ConnectButton } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
-import PaystreamChekout from '../payStream/paystreamChekout';
+import PaystreamCheckout from '../payStream/paystreamCheckout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
@@ -144,18 +141,18 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setShowLoadingModal(false);
   };
 
-  const submitPaymentPaylink = async ({
+  const submitPaylink = async ({
     amount,
     currency,
     quantity,
     customerDetails,
     productDetails,
-  }: SubmitPaymentPaylinkProps) => {
+  }: SubmitPaylinkProps) => {
     if (helioProvider && currency?.symbol != null) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.wallet?.publicKey as string;
+      const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
       const payload = {
@@ -190,19 +187,19 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   };
 
-  const submitPaymentPaystream = async ({
+  const submitPaystream = async ({
     amount,
     currency,
     interval,
     maxTime,
     customerDetails,
     productDetails,
-  }: SubmitPaymentPaystreamProps) => {
+  }: SubmitPaystreamProps) => {
     if (helioProvider && currency?.symbol != null) {
       onStartPayment?.();
       setShowLoadingModal(true);
       setShowFormModal(false);
-      const recipient = paymentDetails?.wallet?.publicKey as string;
+      const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
       const payload = {
@@ -288,7 +285,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                       ) {
                         setShowFormModal(true);
                       } else if (paymentDetails) {
-                        submitPaymentPaylink({
+                        submitPaylink({
                           amount: paymentDetails?.normalizedPrice,
                           quantity: BigInt(1),
                           customerDetails: undefined,
@@ -347,19 +344,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       {showFormModal && paymentRequestType === PaymentRequestType.PAYLINK && (
         <PaylinkCheckout
           onHide={() => setShowFormModal(false)}
-          onSubmit={(data) =>
-            submitPaymentPaylink(data as SubmitPaymentPaylinkProps)
-          }
+          onSubmit={(data) => submitPaylink(data as SubmitPaylinkProps)}
           allowedCurrencies={allowedCurrencies}
           totalAmount={totalAmount}
         />
       )}
       {showFormModal && paymentRequestType === PaymentRequestType.PAYSTREAM && (
-        <PaystreamChekout
+        <PaystreamCheckout
           onHide={() => setShowFormModal(false)}
-          onSubmit={(data) =>
-            submitPaymentPaystream(data as SubmitPaymentPaystreamProps)
-          }
+          onSubmit={(data) => submitPaystream(data as SubmitPaystreamProps)}
           allowedCurrencies={[]}
           totalAmount={totalAmount}
         />

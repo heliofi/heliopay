@@ -4,9 +4,9 @@ import BaseCheckout from '../../baseCheckout';
 import PaystreamPricing from '../paystreamPricing';
 import { InheritedBaseCheckoutProps } from '../../baseCheckout/constants';
 
-type PaystreamChekoutProps = InheritedBaseCheckoutProps;
+type PaystreamCheckoutProps = InheritedBaseCheckoutProps;
 
-const PaystreamChekout = (props: PaystreamChekoutProps) => {
+const PaystreamCheckout = (props: PaystreamCheckoutProps) => {
   const { totalAmount } = props;
 
   if (totalAmount) {
@@ -16,4 +16,4 @@ const PaystreamChekout = (props: PaystreamChekoutProps) => {
   return <BaseCheckout {...props} PricingComponent={PaystreamPricing} />;
 };
 
-export default PaystreamChekout;
+export default PaystreamCheckout;
