@@ -133,7 +133,7 @@ const App = () => {
 
 ### 3. Embed a Pay Stream with the Helio Pay button
 
-Use this option if you want to embed the Helio Pay Button on your site for Streams
+Use this option if you want to embed the Helio Pay Button on your site for Pay Streams
 
 ```ts
 import { HelioPay } from "@heliofi/react";
