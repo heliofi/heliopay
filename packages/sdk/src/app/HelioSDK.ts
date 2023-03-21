@@ -1,15 +1,21 @@
 import { Cluster } from '@solana/web3.js';
+
 import {
+  ConfigService,
   CurrencyService,
+  HelioApiConnector,
   SolExplorerService,
   TokenConversionService,
-  ConfigService,
-  HelioApiConnector,
 } from '../domain';
-import { HelioApiAdapter, PaylinkSubmitService } from '../infrastructure';
+import {
+  HelioApiAdapter,
+  PaylinkSubmitService,
+  PaystreamStartService,
+  PaystreamCancelService,
+} from '../infrastructure';
 
 export class HelioSDK {
-  private _cluster: Cluster | undefined;
+  private _cluster?: Cluster;
 
   private _currencyService: CurrencyService;
 
@@ -20,6 +26,10 @@ export class HelioSDK {
   private _solExplorerService: SolExplorerService;
 
   private _paylinkService: PaylinkSubmitService;
+
+  private _paystreamStartService: PaystreamStartService;
+
+  private _paystreamCancelService: PaystreamCancelService;
 
   private _configService: ConfigService;
 
@@ -33,6 +43,16 @@ export class HelioSDK {
     );
     this._solExplorerService = new SolExplorerService(this._configService);
     this._paylinkService = new PaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._paystreamStartService = new PaystreamStartService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._paystreamCancelService = new PaystreamCancelService(
       this._apiService,
       this._currencyService,
       this._configService
@@ -73,6 +93,16 @@ export class HelioSDK {
   get paylinkService(): PaylinkSubmitService | never {
     this.checkCluster();
     return this._paylinkService;
+  }
+
+  get paystreamStartService(): PaystreamStartService | never {
+    this.checkCluster();
+    return this._paystreamStartService;
+  }
+
+  get paystreamCancelService(): PaystreamCancelService | never {
+    this.checkCluster();
+    return this._paystreamCancelService;
   }
 
   get configService(): ConfigService | never {

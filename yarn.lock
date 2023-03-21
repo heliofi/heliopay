@@ -2836,12 +2836,12 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@heliofi/common@^0.1.135":
-  version "0.1.176"
-  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.176.tgz#2da8e03b015ad2bb253d61532a87ccf627254f8e"
-  integrity sha512-ZYoJgH2qucHH17/tSvKA6XwdPLZZQfvL9xlCs1+cAs266lIxnoRg1sWct6eSY6D275hcAuSQ7mQJa62B12tg7g==
+"@heliofi/common@0.1.195":
+  version "0.1.195"
+  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.195.tgz#80711fd992a1c022027f045516baaf4dd1f8226c"
+  integrity sha512-cNVdRc3645KdnHV6jvYlQ62z6zdQmTlWQztdFYsNZE5IgfvTPSEZv42jnUHcS6aTlzvUAiQKwqixXntCJ4mVZA==
   dependencies:
-    "@heliofi/evm-adapter" "^0.0.22-beta"
+    "@heliofi/evm-adapter" "^0.0.28-beta"
     "@project-serum/anchor" "^0.25.0"
     "@solana/web3.js" "^1.44.0"
     bs58 "^5.0.0"
@@ -2859,10 +2859,10 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
-"@heliofi/evm-adapter@^0.0.22-beta":
-  version "0.0.22-beta"
-  resolved "https://registry.npmjs.org/@heliofi/evm-adapter/-/evm-adapter-0.0.22-beta.tgz#901b5bccb1fe9f1c450d3a915d3c2bc60c0912a9"
-  integrity sha512-lMEDbO4hZw21NGEBBSoRc2Qzm5yZxRZiqR4TeYL6uPG0CBXXQOBp/AiPgw+3FtHhoPRM2vL/LsCARmDElNs+3A==
+"@heliofi/evm-adapter@^0.0.28-beta":
+  version "0.0.28-beta"
+  resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.28-beta.tgz#3e55af3e6a34cf2c956728610396833265587dbe"
+  integrity sha512-kznDeADyyJf+iIcDoCRe59ffrCHoVwloc9bOtBj0EwULV+BzdLnbVsMFoSmLZ4qVyIyyKEp+pASBjJYiwDoIpw==
   dependencies:
     ethers "^5.7.2"
 
@@ -10745,6 +10745,11 @@ globby@^11.0.2, globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
+goober@^2.1.10:
+  version "2.1.12"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.1.12.tgz#6c1645314ac9a68fe76408e1f502c63df8a39042"
+  integrity sha512-yXHAvO08FU1JgTXX6Zn6sYCUFfB/OJSX8HHjDSgerZHZmFKAb08cykp5LBw5QnmyMcZyPRMqkdyHUSSzge788Q==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.0.1.tgz#29ff76de69dac7489b7c0918a5788e56477c332c"
@@ -14674,6 +14679,13 @@ react-fast-compare@^2.0.1:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
+
+react-hot-toast@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-hot-toast/-/react-hot-toast-2.4.0.tgz#b91e7a4c1b6e3068fc599d3d83b4fb48668ae51d"
+  integrity sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==
+  dependencies:
+    goober "^2.1.10"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

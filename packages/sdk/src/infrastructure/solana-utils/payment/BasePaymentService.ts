@@ -1,18 +1,21 @@
 import { SplitWallet } from '@heliofi/common';
-import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
 import { Cluster, Connection, PublicKey } from '@solana/web3.js';
-import { HelioApiConnector, HttpCodes } from '../../../domain';
-import type { CurrencyService, ConfigService } from '../../../domain';
-import { TransactionTimeoutError } from '../../solana-adapter/TransactionTimeoutError';
-import { VerificationError } from '../../solana-adapter/VerificationError';
-import { ExecuteTransactionPayload, SignedTxAndToken } from '../types';
-import { BasePaymentProps } from './models/PaymentProps';
+import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
+
 import {
+  PaymentResponse,
   BasePaymentResponse,
   SwapPaymentResponse,
+  isSwapResponse,
 } from './models/PaymentResponse';
+import { BasePaymentProps } from './models/PaymentProps';
+import { HelioApiConnector, HttpCodes } from '../../../domain';
 import { BaseTransactionPayload } from './models/TransactionPayload';
 import { getTransactionSignature } from '../getTransactionSignature';
+import type { CurrencyService, ConfigService } from '../../../domain';
+import { ExecuteTransactionPayload, SignedTxAndToken } from '../types';
+import { VerificationError } from '../../solana-adapter/VerificationError';
+import { TransactionTimeoutError } from '../../solana-adapter/TransactionTimeoutError';
 
 export abstract class BasePaymentService<
   TransactionParams,
@@ -35,6 +38,7 @@ export abstract class BasePaymentService<
     private currencyService: CurrencyService,
     private configService: ConfigService
   ) {}
+
   protected abstract executeTransaction(
     requestOrPaymentId: string,
     {
@@ -239,14 +243,16 @@ export abstract class BasePaymentService<
   }
 
   protected onSuccess(
-    response: BasePaymentResponse,
+    response: PaymentResponse,
     payload: Payload,
     onSuccess: BasePaymentProps<Res>['onSuccess']
-  ) {
+  ): void {
     onSuccess({
       transaction: response.transactionSignature,
       data: response as Res,
-      swapTransaction: response?.swapTransactionSignature,
+      swapTransactionSignature: isSwapResponse(response)
+        ? response.swapTransactionSignature
+        : undefined,
     });
   }
 

@@ -20,6 +20,7 @@ type NumberInputProps = {
   value?: number;
   setFieldValue: FormikSetFieldValue;
   label?: string;
+  required?: boolean;
 };
 
 const NumberInput = ({
@@ -32,6 +33,7 @@ const NumberInput = ({
   value,
   setFieldValue,
   label,
+  required,
 }: NumberInputProps) => {
   const handleDecrement = (): void => {
     if (!value) {
@@ -71,6 +73,7 @@ const NumberInput = ({
       fieldValue={value}
       onChange={handleChange}
       label={label}
+      required={required}
       suffix={
         <StyledNumberButtons>
           <StyledNumberMinus onClick={handleDecrement}>

@@ -1,11 +1,13 @@
 import { FC } from 'react';
+
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface Props {
   transaction?: string;
+  title?: string;
 }
 
-const ExplorerLink: FC<Props> = ({ transaction }) => {
+const ExplorerLink: FC<Props> = ({ transaction, title }) => {
   const { HelioSDK } = useCompositionRoot();
 
   if (transaction == null) {
@@ -19,7 +21,7 @@ const ExplorerLink: FC<Props> = ({ transaction }) => {
       target="_blank"
       rel="noreferrer"
     >
-      View transaction
+      {title ?? 'View details'}
     </a>
   );
 };

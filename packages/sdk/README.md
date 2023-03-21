@@ -29,16 +29,18 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the HelioSDK
 
-| Methods                | Params                         | Return                        | Description                                                                  |
-|:-----------------------|:-------------------------------|:------------------------------|:-----------------------------------------------------------------------------|
-| constructor            | options?: { cluster: Cluster } | void                          | set properties,  **cluster available values:** devnet, mainnet-beta, testnet |
-| setCluster             | cluster: Cluster               | void                          | set cluster available value                                                  |
-| currencyService        | none                           | CurrencyService, never        | returns object CurrencyService                                               |
-| apiService             | none                           | HelioApiConnector, never      | returns object HelioApiAdapter                                               |
-| solExplorerService     | none                           | SolExplorerService, never     | returns object SolExplorerService                                            |
-| tokenConversionService | none                           | TokenConversionService, never | returns object TokenConversionService                                        |
-| paylinkService         | none                           | PaylinkSubmitService, never   | returns object PaylinkSubmitService                                          |
-| configService          | none                           | ConfigService, never          | returns object ConfigService                                                 |
+| Methods                 | Params                         | Return                        | Description                                                                  |
+|:------------------------|:-------------------------------|:------------------------------|:-----------------------------------------------------------------------------|
+| constructor             | options?: { cluster: Cluster } | void                          | set properties,  **cluster available values:** devnet, mainnet-beta, testnet |
+| setCluster              | cluster: Cluster               | void                          | set cluster available value                                                  |
+| currencyService         | none                           | CurrencyService, never        | returns object CurrencyService                                               |
+| apiService              | none                           | HelioApiConnector, never      | returns object HelioApiAdapter                                               |
+| solExplorerService      | none                           | SolExplorerService, never     | returns object SolExplorerService                                            |
+| tokenConversionService  | none                           | TokenConversionService, never | returns object TokenConversionService                                        |
+| paylinkService          | none                           | PaylinkSubmitService, never   | returns object PaylinkSubmitService                                          |
+| paystreamStartService   | none                           | PaystreamStartService, never  | returns object PaystreamStartService                                         |
+| paystreamCancelService  | none                           | PaystreamCancelService, never | returns object PaystreamCancelService                                        |
+| configService           | none                           | ConfigService, never          | returns object ConfigService                                                 |
 
 ```
  Cluster = "devnet" | "testnet" | "mainnet-beta";
@@ -84,7 +86,7 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 | findAddress                        | query: string, country_code: string                                                                                                                      | Promise&lt;FetchifyFindAddress&gt;     | get addresses list by area code and country code     |
 | retrieveAddress                    | address_id: string, country_code: string                                                                                                                 | Promise&lt;FetchifyRetrieveAddress&gt; | get address more info by address id and country code |
 | listCurrencies                     | none                                                                                                                                                     | Promise<Currency[]>                    | get currencies list                                  |
-| getPaymentRequestByIdPublic        | id: string                                                                                                                                               | Promise&lt;any&gt;                     | get paylink info                                     |
+| getPaymentRequestByIdPublic        | id: string, paymentType: PaymentRequestType                                                                                                              | Promise&lt;any&gt;                     | get payment data by req. id and payment type         |
 | getTokenSwapMintAddresses          | mintAddress: string                                                                                                                                      | Promise<string[]>                      | get mint addresses list                              |
 | getTokenSwapQuote                  | paymentRequestId: string, paymentRequestType: PaymentRequestType,<br> fromMint: string, quantity?: number,<br> normalizedPrice?: number, toMint?: string | Promise&lt;SwapRouteToken&gt;          | get route token for swap                             |
 | getLivePrice                       | amount: number, to: string, from: string,<br> paymentRequestId?: string, paymentRequestType?: string                                                     | Promise&lt;TokenQuoting&gt;            | get converted data                                   |
@@ -166,10 +168,10 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 | Methods                     | Params                                       | Return  | Description                            |
 |:----------------------------|:---------------------------------------------|:--------|:---------------------------------------|
-| convertFromMinimalUnits     | symbol: any, minimalAmount: number           | number  | convert from minimal amount            |
+| convertFromMinimalUnits     | symbol: any, minimalAmount: bigint           | number  | convert from minimal amount            |
 | convertToMinimalUnits       | symbol?: any actualAmount?: number           | number  | convert to minimal amount              |
 | formatPrice                 | currency: Currency, normalizedAmount: number | string  | format price                           |
-| convertFromMinimalAndRound  | symbol: string, minimalAmount: number        | string  | convert from minimal amount and round  |
+| convertFromMinimalAndRound  | symbol: string, minimalAmount: bigint        | string  | convert from minimal amount and round  |
 
 ```
   Currency: {
@@ -203,15 +205,34 @@ Please ensure you select the correct 'Cluster' or network during deployment.
   import { Idl, Program } from "@project-serum/anchor";
   import { AnchorWallet } from "@solana/wallet-adapter-react";
   import { Cluster, Connection } from "@solana/web3.js";
-  
-  BasePaymentResponse: {
+  import { HelioIdl } from '@heliofi/solana-adapter';
+
+  TransactionStatus: {
+      INITIATED = "INITIATED",
+      PENDING = "PENDING",
+      SUCCESS = "SUCCESS",
+      FAILED = "FAILED",
+      CANCELED = "CANCELED",
+      SETTLED = "SETTLED"
+  };
+    
+  ContentResponse: {
+      text?: string;
+      mediaUrl?: string;
+      mediaAttachmentId?: string;
+  };
+
+  ApproveTransactionResponse: {
       transactionSignature: string;
       swapTransactionSignature?: string;
+      content: ContentResponse;
+      status?: TransactionStatus;
+      statusToken?: string;
   };
   
   BasePaymentProps: {
     onSuccess: (event: {
-      data: BasePaymentResponse;
+      data: ApproveTransactionResponse;
       transaction: string;
       paymentPK?: string;
       swapTransaction?: string;
@@ -227,19 +248,139 @@ Please ensure you select the correct 'Cluster' or network during deployment.
   };
   
 ```
+
+<br>
+
+### Properties table for the PaystreamStartService
+
+| Methods            | Params                                              | Return               | Description                                                         |
+|:-------------------|:----------------------------------------------------|:---------------------|:--------------------------------------------------------------------|
+| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream transaction |
+
+```Typescript
+  import { Idl, Program } from "@project-serum/anchor";
+  import { AnchorWallet } from "@solana/wallet-adapter-react";
+  import { Cluster, Connection } from "@solana/web3.js";
+  import { HelioIdl } from '@heliofi/solana-adapter';
+
+  TransactionStatus: {
+      INITIATED = "INITIATED",
+      PENDING = "PENDING",
+      SUCCESS = "SUCCESS",
+      FAILED = "FAILED",
+      CANCELED = "CANCELED",
+      SETTLED = "SETTLED"
+  };
+
+  ContentResponse: {
+      text?: string;
+      mediaUrl?: string;
+      mediaAttachmentId?: string;
+  };
+
+  CreatePaystreamResponse: {
+      document: {
+          id: string;
+          startedAt: bigint;
+          endedAt: bigint;
+      };
+      content: ContentResponse;
+      transactionSignature: string;
+      status?: TransactionStatus;
+      statusToken?: string;
+      swapTransactionSignature?: string;
+  };
+  
+  BasePaymentProps: {
+    onSuccess: (event: {
+      data: CreatePaystreamResponse;
+      transaction: string;
+      paymentPK?: string;
+      swapTransaction?: string;
+    }) => void;
+    onError: (event: { transaction?: string; errorMessage: string }) => void;
+    onPending?: (event: { transaction: string }) => void;
+    symbol: string;
+    anchorProvider: Program<HelioIdl>;
+    wallet: AnchorWallet;
+    connection: Connection;
+    rateToken?: string;
+    cluster: Cluster;
+  };
+  
+```
+
+<br>
+
+### Properties table for the PaystreamCancelService
+
+| Methods            | Params                                              | Return               | Description                                                                     |
+|:-------------------|:----------------------------------------------------|:---------------------|:--------------------------------------------------------------------------------|
+| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream for cancel transaction  |
+
+```Typescript
+  import { Idl, Program } from "@project-serum/anchor";
+  import { AnchorWallet } from "@solana/wallet-adapter-react";
+  import { Cluster, Connection } from "@solana/web3.js";
+  import { HelioIdl } from '@heliofi/solana-adapter';
+
+  TransactionStatus: {
+    INITIATED = "INITIATED",
+    PENDING = "PENDING",
+    SUCCESS = "SUCCESS",
+    FAILED = "FAILED",
+    CANCELED = "CANCELED",
+    SETTLED = "SETTLED"
+  };
+
+  ContentResponse: {
+    text?: string;
+    mediaUrl?: string;
+    mediaAttachmentId?: string;
+  };
+
+  CancelStreamResponse: {
+    content: ContentResponse;
+    transactionSignature: string;
+    status?: TransactionStatus;
+    statusToken?: string;
+    swapTransactionSignature?: string;
+  };
+
+  BasePaymentProps: {
+    onSuccess: (event: {
+        data: CancelStreamResponse;
+        transaction: string;
+        paymentPK?: string;
+        swapTransaction?: string;
+    }) => void;
+    onError: (event: { transaction?: string; errorMessage: string }) => void;
+    onPending?: (event: { transaction: string }) => void;
+    symbol: string;
+    anchorProvider: Program<HelioIdl>;
+    wallet: AnchorWallet;
+    connection: Connection;
+    rateToken?: string;
+    cluster: Cluster;
+  };
+
+```
 <br>
 
 ### Properties table for the ConfigService
 
-| Methods             | Params           | Return  | Description                                |
-|:--------------------|:-----------------|:--------|:-------------------------------------------|
-| getAssetUrl         | none             | string  | get helio assets url                       |
-| getCluster          | none             | Cluster | return selected cluster                    |
-| setCluster          | cluster: Cluster | void    | set cluster                                |
-| getHelioApiBaseUrl  | none             | string  | get Helio api base url for current cluster |
+| Methods            | Params                                       | Return  | Description                                |
+|:-------------------|:---------------------------------------------|:--------|:-------------------------------------------|
+| getAssetUrl        | none                                         | string  | get helio assets url                       |
+| getCluster         | none                                         | Cluster | return selected cluster                    |
+| setCluster         | cluster: Cluster                             | void    | set cluster                                |
+| getHelioApiBaseUrl | none                                         | string  | get Helio api base url for current cluster |
+| getPhantomLink     | id: string, paymentType: PaymentRequestType  | string  | get payment url for phantom app            |
 
 ```Typescript
  Cluster = "devnet" | "testnet" | "mainnet-beta";
+
+PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
 ```
 
 ## Example
@@ -271,4 +412,3 @@ const amount = helioSDK.tokenConversionService.convertToMinimalUnits('symbol', 1
 //handle transaction
 await helioSDK.paylinkService.handleTransaction({...});
 ```
-

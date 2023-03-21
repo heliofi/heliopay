@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency } from '@heliofi/common';
+import { Currency, LinkFeaturesDto } from '@heliofi/common';
 
 import {
   Input,
@@ -14,9 +14,9 @@ import { formatTotalPrice, getCurrency } from '../../baseCheckout/actions';
 
 import { StyledCurrency, StyledCurrencySelectIcon } from './styles';
 
-type PaylinkPricingProps = FormikProps & {
+export type PaylinkPricingProps = FormikProps & {
   activeCurrency: Currency | null;
-  price: number;
+  totalDecimalAmount: number;
   canSelectCurrency: boolean;
   allowedCurrencies: Currency[];
   setActiveCurrency: (activeCurrency: Currency | null) => void;
@@ -26,12 +26,12 @@ const PaylinkPricing = ({
   formValues,
   setFieldValue,
   activeCurrency,
-  price,
+  totalDecimalAmount,
   canSelectCurrency,
   allowedCurrencies,
   setActiveCurrency,
 }: PaylinkPricingProps) => {
-  const { currencyList, paymentDetails } = useHelioProvider();
+  const { currencyList, getPaymentFeatures } = useHelioProvider();
 
   const currenciesOptions = allowedCurrencies.map((currency: Currency) => ({
     label: currency?.symbol ?? '',
@@ -64,7 +64,10 @@ const PaylinkPricing = ({
       ) : (
         <PriceBanner
           title="Total price:"
-          amount={formatTotalPrice(price, formValues.quantity)}
+          totalDecimalAmount={formatTotalPrice(
+            totalDecimalAmount,
+            formValues.quantity
+          )}
           currency={activeCurrency?.symbol}
         />
       )}
@@ -93,7 +96,7 @@ const PaylinkPricing = ({
         />
       )}
 
-      {paymentDetails?.features?.canChangeQuantity && (
+      {getPaymentFeatures<LinkFeaturesDto>()?.canChangeQuantity && (
         <NumberInput
           fieldId="quantity"
           fieldName="quantity"

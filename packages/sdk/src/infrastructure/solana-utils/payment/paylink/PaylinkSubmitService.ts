@@ -3,6 +3,7 @@ import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { Cluster, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import 'reflect-metadata';
 import { SinglePaymentRequest } from '@heliofi/solana-adapter';
+
 import { BigNumber } from '../../../../domain/model/BigNumber';
 import {
   fromBigintToStringForSerialization,
@@ -14,7 +15,7 @@ import { signTransaction } from '../../SignTransaction';
 import { SignedTxAndToken } from '../../types';
 import { BasePaymentService } from '../BasePaymentService';
 import { BasePaymentProps } from '../models/PaymentProps';
-import { BasePaymentResponse } from '../models/PaymentResponse';
+import { PaymentResponse } from '../models/PaymentResponse';
 import { BaseTransactionPayload } from '../models/TransactionPayload';
 
 export interface CreatePaymentProps
@@ -50,11 +51,7 @@ interface GetAndSignSwapPayload extends GetAndSignPayload {
   swapRoute: string;
 }
 
-export interface ApproveTransactionResponse extends BasePaymentResponse {
-  content: {
-    text: string;
-  };
-}
+export type ApproveTransactionResponse = PaymentResponse;
 
 export interface ApproveTransactionPayload extends BaseTransactionPayload {
   paymentRequestId: string;

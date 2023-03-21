@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Form, Formik } from 'formik';
 import { createPortal } from 'react-dom';
-import { Currency } from '@heliofi/common';
+import { Form, Formik, FormikValues } from 'formik';
+import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
 import {
   formatTotalPrice,
@@ -10,11 +10,11 @@ import {
   handleSubmit,
 } from './actions';
 import {
-  CurrencyIcon,
   Button,
-  QRButton,
-  PriceBanner,
+  CurrencyIcon,
   PhantomCompatibleCard,
+  PriceBanner,
+  QRButton,
   QRCodeCard,
 } from '../../ui-kits';
 import SwapsForm from '../swapsForm';
@@ -25,14 +25,17 @@ import { InheritedBaseCheckoutProps } from './constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
+import { PaylinkPricingProps } from '../payLink/paylinkPricing';
+import { PaystreamPricingProps } from '../payStream/paystreamPricing';
+
 import {
-  StyledBaseCheckoutWrapper,
-  StyledBaseCheckoutContainer,
   StyledBaseCheckoutBody,
+  StyledBaseCheckoutContainer,
+  StyledBaseCheckoutWrapper,
 } from './styles';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
-  PricingComponent: FC<any>;
+  PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
 };
 
 const BaseCheckout = ({
@@ -44,16 +47,18 @@ const BaseCheckout = ({
 }: BaseCheckoutProps) => {
   const {
     currencyList,
-    paymentDetails,
+    getPaymentFeatures,
+    getPaymentDetails,
     tokenSwapLoading,
     tokenSwapQuote,
     tokenSwapError,
     removeTokenSwapError,
+    paymentType,
   } = useHelioProvider();
 
   const { HelioSDK } = useCompositionRoot();
 
-  const [normalizedPrice, setNormalizedPrice] = useState<number>(0);
+  const [decimalAmount, setDecimalAmount] = useState<number>(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
@@ -67,13 +72,25 @@ const BaseCheckout = ({
   const payButtonDisable =
     (showSwapMenu && !!tokenSwapError) || tokenSwapLoading;
 
+  const paymentDetails = getPaymentDetails();
+
+  const getSwapsFormPrice = (formValues: FormikValues) => {
+    const amount = (decimalAmount || totalAmount) ?? 0;
+    return paymentType === PaymentRequestType.PAYLINK
+      ? amount * (formValues.quantity ?? 1)
+      : amount * (formValues.interval ?? 1);
+  };
+
   const initialValues = getInitialValues(
-    normalizedPrice,
+    totalAmount || decimalAmount,
     canSelectCurrency,
+    getPaymentDetails,
     paymentDetails?.dynamic
       ? allowedCurrencies?.[0].symbol
       : paymentDetails?.currency?.symbol,
-    paymentDetails
+    getPaymentFeatures(),
+    getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
+    getPaymentFeatures<LinkFeaturesDto>().canChangePrice
   );
 
   useEffect(() => {
@@ -91,7 +108,7 @@ const BaseCheckout = ({
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
-      setNormalizedPrice(
+      setDecimalAmount(
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency?.symbol,
           paymentDetails?.normalizedPrice
@@ -106,8 +123,6 @@ const BaseCheckout = ({
     }
   }, [showSwapMenu]);
 
-  // @ts-ignore
-  // @ts-ignore
   return createPortal(
     <StyledBaseCheckoutWrapper>
       <StyledBaseCheckoutContainer>
@@ -118,7 +133,7 @@ const BaseCheckout = ({
             )
           }
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
-          showSwap={!!paymentDetails?.features.canSwapTokens}
+          showSwap={!!getPaymentFeatures().canSwapTokens}
           isSwapShown={showSwapMenu}
           toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
           onHide={onHide}
@@ -128,17 +143,20 @@ const BaseCheckout = ({
         <StyledBaseCheckoutBody>
           {showQRCode && (
             <div>
-              {!paymentDetails?.features.canChangePrice && (
+              {!getPaymentFeatures<LinkFeaturesDto>().canChangePrice && (
                 <PriceBanner
                   title="Total price:"
-                  amount={formatTotalPrice(totalAmount || normalizedPrice)}
+                  totalDecimalAmount={formatTotalPrice(
+                    totalAmount || decimalAmount
+                  )}
                   currency={activeCurrency?.symbol}
                 />
               )}
-              {paymentDetails?.id && (
+              {paymentDetails?.id && paymentType && (
                 <QRCodeCard
                   phantomDeepLink={`${HelioSDK.configService.getPhantomLink(
-                    paymentDetails?.id
+                    paymentDetails?.id,
+                    paymentType
                   )}`}
                 />
               )}
@@ -146,15 +164,16 @@ const BaseCheckout = ({
             </div>
           )}
           {!showQRCode &&
-            (paymentDetails ? (
+            (paymentDetails && paymentType ? (
               <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit({
                   paymentDetails,
                   HelioSDK,
-                  price: totalAmount || normalizedPrice,
+                  totalDecimalAmount: totalAmount || decimalAmount,
                   onSubmit,
                   currencyList,
+                  paymentType,
                 })}
                 validationSchema={validationSchema}
               >
@@ -164,7 +183,7 @@ const BaseCheckout = ({
                       formValues={values}
                       setFieldValue={setFieldValue}
                       activeCurrency={activeCurrency}
-                      price={totalAmount || normalizedPrice}
+                      totalDecimalAmount={totalAmount || decimalAmount}
                       canSelectCurrency={canSelectCurrency}
                       allowedCurrencies={allowedCurrencies}
                       setActiveCurrency={setActiveCurrency}
@@ -174,10 +193,7 @@ const BaseCheckout = ({
                       <SwapsForm
                         formValues={values}
                         setFieldValue={setFieldValue}
-                        normalizedPrice={
-                          ((normalizedPrice || totalAmount) ?? 0) *
-                          (values.quantity ?? 1)
-                        }
+                        totalDecimalAmount={getSwapsFormPrice(values)}
                       />
                     )}
 

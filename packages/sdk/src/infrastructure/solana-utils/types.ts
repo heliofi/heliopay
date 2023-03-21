@@ -14,8 +14,8 @@ export type SignedTxAndToken = {
 };
 
 export type ExecuteTransactionPayload<TransactionParams> = {
-  request?: TransactionParams;
-  symbol?: string;
+  request: TransactionParams;
+  symbol: string;
   quantity?: number;
   splitWallets?: SplitWallet[];
   canSwapTokens?: boolean;

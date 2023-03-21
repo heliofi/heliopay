@@ -1,15 +1,18 @@
 import { DefaultTheme, ThemeProvider } from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
+import { Toaster } from 'react-hot-toast';
+import { PaymentRequestType } from '@heliofi/common';
+
+import { deepMerge } from '../../utils';
+import { defaultTheme } from '../../theme';
 import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
-import { defaultTheme } from '../../theme';
-import { deepMerge } from '../../utils';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 interface HelioPayProps {
@@ -23,6 +26,7 @@ interface HelioPayProps {
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
+  paymentType?: PaymentRequestType;
 }
 
 export const HelioPay = ({
@@ -36,10 +40,12 @@ export const HelioPay = ({
   payButtonTitle,
   supportedCurrencies,
   totalAmount,
+  paymentType = PaymentRequestType.PAYLINK,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   const { HelioSDK } = useCompositionRoot();
+
   useMemo(() => {
     HelioSDK.setCluster(cluster as Cluster);
   }, [cluster]);
@@ -62,7 +68,9 @@ export const HelioPay = ({
           payButtonTitle={payButtonTitle}
           supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
+          paymentType={paymentType}
         />
+        <Toaster />
       </SolanaProvider>
     </ThemeProvider>
   );

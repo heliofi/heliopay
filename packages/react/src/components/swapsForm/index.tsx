@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FormikValues } from 'formik';
-import { PaymentRequestType } from '@heliofi/common';
 
 import { roundValue } from '../../utils';
 import { useDebounce } from '../../hooks/useDebounce';
@@ -21,7 +20,7 @@ import {
 interface SwapsFormProps {
   formValues: FormikValues;
   setFieldValue: FormikSetFieldValue;
-  normalizedPrice: number;
+  totalDecimalAmount: number;
 }
 
 const DEBOUNCE_TIME = 500;
@@ -29,7 +28,7 @@ const DEBOUNCE_TIME = 500;
 const SwapsForm = ({
   formValues,
   setFieldValue,
-  normalizedPrice,
+  totalDecimalAmount,
 }: SwapsFormProps) => {
   const {
     paymentDetails,
@@ -40,6 +39,7 @@ const SwapsForm = ({
     getTokenSwapQuote,
     tokenSwapError,
     currencyList,
+    paymentType,
   } = useHelioProvider();
 
   const { HelioSDK } = useCompositionRoot();
@@ -62,13 +62,17 @@ const SwapsForm = ({
       (it) => formValues.currency === it.symbol
     );
 
-    if (selectedCurrency?.mintAddress != null && paymentDetails?.id) {
+    if (
+      selectedCurrency?.mintAddress != null &&
+      paymentDetails?.id &&
+      paymentType
+    ) {
       getTokenSwapQuote(
         paymentDetails.id,
-        PaymentRequestType.PAYLINK,
+        paymentType,
         selectedCurrency.mintAddress,
         formValues.quantity,
-        normalizedPrice,
+        totalDecimalAmount,
         paymentDetails?.dynamic ? currency?.mintAddress : undefined
       );
     }
@@ -79,7 +83,8 @@ const SwapsForm = ({
     paymentDetails?.currency.mintAddress,
     paymentDetails?.currency.symbol,
     paymentDetails?.id,
-    // paymentDetails?.type, @todo-v add type
+    paymentType,
+    formValues.interval,
   ]);
 
   const currencyOptions =

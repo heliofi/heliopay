@@ -1,26 +1,39 @@
 import { FormikValues } from 'formik';
-import { CustomerDetails, ProductDetails } from '@heliofi/common';
+import { StreamTimeService } from '@heliofi/sdk';
+import {
+  CustomerDetails,
+  Paystream,
+  ProductDetails,
+  PaymentRequestType,
+} from '@heliofi/common';
 
+import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
+import {
+  PaymentDetailsType,
+  PaymentFeatures,
+} from '../../providers/helio/HelioContext';
 import { IHandleSubmit } from './constants';
 import { removeUndefinedFields } from '../../utils';
-import { PaymentDetails } from '../../providers/helio/HelioContext';
 
 export const getInitialValues = (
-  normalizedPrice: number,
+  totalDecimalAmount: number,
   canSelectCurrency: boolean,
+  getPaymentDetails: <T extends PaymentDetailsType>() => T,
   initialCurrency?: string,
-  paymentDetails?: PaymentDetails
+  paymentFeatures?: PaymentFeatures,
+  canChangeQuantity?: boolean,
+  canChangePrice?: boolean
 ) => ({
-  requireEmail: paymentDetails?.features.requireEmail,
-  requireDiscordUsername: paymentDetails?.features.requireDiscordUsername,
-  requireFullName: paymentDetails?.features.requireFullName,
-  requireTwitterUsername: paymentDetails?.features.requireTwitterUsername,
-  requirePhoneNumber: paymentDetails?.features.requirePhoneNumber,
-  requireCountry: paymentDetails?.features.requireCountry,
-  requireDeliveryAddress: paymentDetails?.features.requireDeliveryAddress,
-  requireProductDetails: paymentDetails?.features.requireProductDetails,
-  canChangePrice: paymentDetails?.features?.canChangePrice,
-  canChangeQuantity: paymentDetails?.features?.canChangeQuantity,
+  requireEmail: paymentFeatures?.requireEmail,
+  requireDiscordUsername: paymentFeatures?.requireDiscordUsername,
+  requireFullName: paymentFeatures?.requireFullName,
+  requireTwitterUsername: paymentFeatures?.requireTwitterUsername,
+  requirePhoneNumber: paymentFeatures?.requirePhoneNumber,
+  requireCountry: paymentFeatures?.requireCountry,
+  requireDeliveryAddress: paymentFeatures?.requireDeliveryAddress,
+  requireProductDetails: paymentFeatures?.requireProductDetails,
+  canChangePrice,
+  canChangeQuantity,
   fullName: undefined,
   email: undefined,
   discordUsername: undefined,
@@ -32,13 +45,17 @@ export const getInitialValues = (
   street: undefined,
   streetNumber: undefined,
   phoneNumber: undefined,
-  quantity: paymentDetails?.features.canChangeQuantity ? 1 : undefined,
-  customPrice: paymentDetails?.features.canChangePrice
-    ? undefined
-    : normalizedPrice,
+  quantity: canChangeQuantity ? 1 : undefined,
+  customPrice: canChangePrice ? undefined : totalDecimalAmount,
   canSelectCurrency,
   currency: canSelectCurrency ? undefined : initialCurrency,
   productValue: undefined,
+  interval: getPaymentDetails<Paystream>()?.maxTime
+    ? StreamTimeService.getInitialStreamTime({
+        intervalType: getPaymentDetails<Paystream>().interval,
+        durationSec: getPaymentDetails<Paystream>().maxTime,
+      })
+    : undefined,
 });
 
 export const getCurrency = (currencyList: any[], currency?: string) => {
@@ -50,9 +67,10 @@ export const handleSubmit =
   ({
     paymentDetails,
     HelioSDK,
-    price,
+    totalDecimalAmount,
     onSubmit,
     currencyList,
+    paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
     const details = {
@@ -78,24 +96,42 @@ export const handleSubmit =
     const clearProductDetails =
       removeUndefinedFields<ProductDetails>(productDetails);
 
-    onSubmit({
+    const requestData = {
       customerDetails: clearDetails,
       productDetails: clearProductDetails,
       amount: BigInt(
         HelioSDK.tokenConversionService.convertToMinimalUnits(
           values.currency || paymentDetails?.currency.symbol,
-          values.canChangePrice ? values.customPrice : price
+          values.canChangePrice ? values.customPrice : totalDecimalAmount
         )
       ),
-      quantity: BigInt(values.quantity || 1),
       currency: getCurrency(
         currencyList,
         values.currency || paymentDetails?.currency.symbol
       ),
-    });
+    };
+
+    if (paymentType === PaymentRequestType.PAYLINK) {
+      onSubmit({
+        ...requestData,
+        quantity: BigInt(values.quantity || 1),
+      });
+    } else if (paymentType === PaymentRequestType.PAYSTREAM) {
+      onSubmit({
+        ...requestData,
+        maxTime: CreatePaymentService.timeToSeconds(
+          paymentDetails.interval,
+          values.interval
+        ),
+        interval: CreatePaymentService.timeToSeconds(
+          paymentDetails.interval,
+          1
+        ),
+      });
+    }
   };
 
 export const formatTotalPrice = (price: number, quantity = 1): number => {
-  const totalPrice = Number((price * quantity).toFixed(3));
+  const totalPrice = Number(price * quantity);
   return totalPrice || price;
 };

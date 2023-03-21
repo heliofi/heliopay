@@ -99,9 +99,9 @@ try {
   throw new Error("Unable to get transactions data from backend!");
 }
 ```
-### 2. Embed a Pay Link or Pay Stream with the Helio Pay button
+### 2. Embed a Pay Link with the Helio Pay button
 
-Use this option if you want to embed the Helio Pay Button on your site for Links and Streams
+Use this option if you want to embed the Helio Pay Button on your site for Links
 
 ```ts
 import { HelioPay } from "@heliofi/react";
@@ -130,19 +130,53 @@ const App = () => {
   );
 };
 ```
+
+### 3. Embed a Pay Stream with the Helio Pay button
+
+Use this option if you want to embed the Helio Pay Button on your site for Streams
+
+```ts
+import { HelioPay } from "@heliofi/react";
+import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+
+const App = () => {
+  return (
+    <div>
+      <HelioPay
+        cluster="mainnet-beta"
+        paymentRequestId={"your_paystream_id"}
+        paymentType={PaymentRequestType.PAYSTREAM}
+        onSuccess={function (event: SuccessPaymentEvent): void {
+          console.log("onSuccess", event);
+        }}
+        onError={function (event: ErrorPaymentEvent): void {
+          console.log("onError", event);
+        }}
+        onPending={function (event: PendingPaymentEvent): void {
+          console.log("onPending", event);
+        }}
+        onStartPayment={function (): void {
+          console.log("onStartPayment");
+        }}
+      />
+    </div>
+  );
+};
+```
 #### Properties table for the Helio components
 
-| Property            | Type         | Required | Default value | Description                                                                                |
-|:--------------------|:-------------|:---------|:--------------|:-------------------------------------------------------------------------------------------|
-| cluster             | string       | yes      |               | **available values;** devnet, mainnet-beta, testnet                                        |
-| paymentRequestId    | string       | yes      |               | Your paylink ID                                                                            |
-| onSuccess           | function     | no       |               | triggered event when success                                                               |
-| onError             | function     | no       |               | triggered event when error                                                                 |
-| onPending           | function     | no       |               | triggered event when pending                                                               |
-| onStartPayment      | function     | no       |               | triggered event on start payment                                                           |
-| theme               | object       | no       |               | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-| totalAmount         | number       | no       |               | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
-| supportedCurrencies | string array | no       |               | currencies you want to support.                                                            |
+| Property            | Type                | Required | Default value               | Description                                                                                |
+|:--------------------|:--------------------|:---------|:----------------------------|:-------------------------------------------------------------------------------------------|
+| cluster             | string              | yes      |                             | **available values:** devnet, mainnet-beta, testnet                                        |
+| paymentRequestId    | string              | yes      |                             | Your paylink ID                                                                            |
+| onSuccess           | function            | no       |                             | triggered event when success                                                               |
+| onError             | function            | no       |                             | triggered event when error                                                                 |
+| onPending           | function            | no       |                             | triggered event when pending                                                               |
+| onStartPayment      | function            | no       |                             | triggered event on start payment                                                           |
+| theme               | object              | no       |                             | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
+| totalAmount         | number              | no       |                             | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
+| supportedCurrencies | string array        | no       |                             | currencies you want to support.                                                            |
+| paymentType         | PaymentRequestType  | no       | PaymentRequestType.PAYLINK  | **available values:** PAYLINK, PAYSTREAM                                                   |
 
 ### Support Currencies
 
