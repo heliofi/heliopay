@@ -112,7 +112,8 @@ const App = () => {
     <div>
       <HelioPay
         cluster="mainnet-beta"
-        paymentRequestId={"your_paylink_id"}
+        paymentRequestId={"your_paystream_id"}
+        paymentType={PaymentRequestType.PAYSTREAM}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log("onSuccess", event);
         }}
@@ -132,17 +133,18 @@ const App = () => {
 ```
 #### Properties table for the Helio components
 
-| Property            | Type         | Required | Default value | Description                                                                                |
-|:--------------------|:-------------|:---------|:--------------|:-------------------------------------------------------------------------------------------|
-| cluster             | string       | yes      |               | **available values;** devnet, mainnet-beta, testnet                                        |
-| paymentRequestId    | string       | yes      |               | Your paylink ID                                                                            |
-| onSuccess           | function     | no       |               | triggered event when success                                                               |
-| onError             | function     | no       |               | triggered event when error                                                                 |
-| onPending           | function     | no       |               | triggered event when pending                                                               |
-| onStartPayment      | function     | no       |               | triggered event on start payment                                                           |
-| theme               | object       | no       |               | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-| totalAmount         | number       | no       |               | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
-| supportedCurrencies | string array | no       |               | currencies you want to support.                                                            |
+| Property            | Type                | Required | Default value               | Description                                                                                |
+|:--------------------|:--------------------|:---------|:----------------------------|:-------------------------------------------------------------------------------------------|
+| cluster             | string              | yes      |                             | **available values:** devnet, mainnet-beta, testnet                                        |
+| paymentRequestId    | string              | yes      |                             | Your paylink ID                                                                            |
+| onSuccess           | function            | no       |                             | triggered event when success                                                               |
+| onError             | function            | no       |                             | triggered event when error                                                                 |
+| onPending           | function            | no       |                             | triggered event when pending                                                               |
+| onStartPayment      | function            | no       |                             | triggered event on start payment                                                           |
+| theme               | object              | no       |                             | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
+| totalAmount         | number              | no       |                             | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
+| supportedCurrencies | string array        | no       |                             | currencies you want to support.                                                            |
+| paymentType         | PaymentRequestType  | no       | PaymentRequestType.PAYLINK  | **available values:** PAYLINK, PAYSTREAM                                                   |
 
 ### Support Currencies
 
