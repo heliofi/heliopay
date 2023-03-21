@@ -7,15 +7,15 @@ export type SubmitPaymentProps = {
   productDetails?: ProductDetails;
 };
 
-export type SubmitPaymentPaylinkProps = SubmitPaymentProps & {
+export type SubmitPaylinkProps = SubmitPaymentProps & {
   quantity: bigint;
 };
 
-export type SubmitPaymentPaystreamProps = SubmitPaymentProps & {
+export type SubmitPaystreamProps = SubmitPaymentProps & {
   interval: number;
   maxTime: number;
 };
 
 export type SubmitPaymentsTypesProps =
-  | SubmitPaymentPaylinkProps
-  | SubmitPaymentPaystreamProps;
+  | SubmitPaylinkProps
+  | SubmitPaystreamProps;
