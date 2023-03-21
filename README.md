@@ -112,7 +112,8 @@ const App = () => {
     <div>
       <HelioPay
         cluster="mainnet-beta"
-        paymentRequestId={"your_paylink_id"}
+        paymentRequestId={"your_paystream_id"}
+        paymentType={PaymentRequestType.PAYSTREAM}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log("onSuccess", event);
         }}
