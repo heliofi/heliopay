@@ -164,14 +164,17 @@ const App = () => {
 };
 ```
 
-### 4. Autofill customer details info in fields with url params or Helio Pay button
+### 4. Populate customer details with parameter passthrough on the Helio Pay button
 
-**Available params for customer info:** fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.
+**Available parameter passthroughs for customer information**
 
-<br>**Use this if you want to autofill customer info by url:**
-<br>http://your_domain/?fullName=full%20name&city=your_city
+`fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.`
 
-<br>**Use this option if you want to embed the Helio Pay Button on your site for autofill customer info:**
+<br>**Example parameter passthrough for name and city**
+
+`http://your_domain/?fullName=full%20name&city=your_city`
+
+<br>**Use this option if you want to embed the Helio Pay Button on your site for parameter passthrough for customer information:**
 
 ```ts
 import { HelioPay } from "@heliofi/react";
