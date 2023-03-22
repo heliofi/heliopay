@@ -102,7 +102,12 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
   const paymentDetails = getPaymentDetails();
-  const queryString = window.location.href.split('?')[1];
+
+  /* typeof window === 'undefined' we're on the server */
+  const queryString =
+    typeof window !== 'undefined'
+      ? window.location.href.split('?')[1]
+      : undefined;
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter(
