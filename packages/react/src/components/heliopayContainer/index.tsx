@@ -41,6 +41,11 @@ import {
   StyledRow,
   StyledWrapper,
 } from './styles';
+import {
+  CheckoutSearchParams,
+  CheckoutSearchParamsValues,
+} from '../../domain/services/CheckoutSearchParams';
+import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -53,6 +58,7 @@ interface HeliopayContainerProps {
   supportedCurrencies?: string[];
   totalAmount?: number;
   paymentType: PaymentRequestType;
+  searchCustomerDetails?: CheckoutSearchParamsValues;
 }
 
 const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -66,6 +72,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   supportedCurrencies,
   totalAmount,
   paymentType,
+  searchCustomerDetails,
 }) => {
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
@@ -84,6 +91,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setPaymentType,
   } = useHelioProvider();
   const { HelioSDK } = useCompositionRoot();
+  const { setCustomerDetails } = useCheckoutSearchParamsProvider();
   const connectionProvider = useConnection();
 
   const [result, setResult] = useState<
@@ -94,6 +102,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
   const paymentDetails = getPaymentDetails();
+  const queryString = window.location.href.split('?')[1];
 
   const generateAllowedCurrencies = () => {
     const allowedCurrenciesTemp = currencyList.filter(
@@ -250,6 +259,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       initPaymentDetails(paymentRequestId);
     }
   }, [paymentRequestId, mainCluster, paymentRequestType]);
+
+  useEffect(() => {
+    if (queryString) {
+      const checkoutSearchParams = new CheckoutSearchParams(queryString);
+      setCustomerDetails(checkoutSearchParams.getParsedCheckoutSearchParams());
+    } else if (searchCustomerDetails) {
+      setCustomerDetails(searchCustomerDetails);
+    }
+  }, [searchCustomerDetails, queryString]);
 
   return (
     <StyledWrapper>

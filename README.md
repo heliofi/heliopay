@@ -133,7 +133,7 @@ const App = () => {
 
 ### 3. Embed a Pay Stream with the Helio Pay button
 
-Use this option if you want to embed the Helio Pay Button on your site for Streams
+Use this option if you want to embed the Helio Pay Button on your site for Pay Streams
 
 ```ts
 import { HelioPay } from "@heliofi/react";
@@ -163,6 +163,48 @@ const App = () => {
   );
 };
 ```
+
+### 4. Populate customer details with parameter passthrough on the Helio Pay button
+
+**Available parameter passthroughs for customer information**
+
+`fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.`
+
+<br>**Example parameter passthrough for name and city**
+
+`http://your_domain/?fullName=full%20name&city=your_city`
+
+<br>**Use this option if you want to embed the Helio Pay Button on your site for parameter passthrough for customer information:**
+
+```ts
+import { HelioPay } from "@heliofi/react";
+import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+
+const App = () => {
+  return (
+    <div>
+      <HelioPay
+        cluster="mainnet-beta"
+        paymentRequestId={"your_paylink_id"}
+        onSuccess={function (event: SuccessPaymentEvent): void {
+          console.log("onSuccess", event);
+        }}
+        onError={function (event: ErrorPaymentEvent): void {
+          console.log("onError", event);
+        }}
+        onPending={function (event: PendingPaymentEvent): void {
+          console.log("onPending", event);
+        }}
+        onStartPayment={function (): void {
+          console.log("onStartPayment");
+        }}
+        searchCustomerDetails={{ fullName: 'full name', email: 'email@email.com', ... }}
+      />
+    </div>
+  );
+};
+```
+
 #### Properties table for the Helio components
 
 | Property            | Type                | Required | Default value               | Description                                                                                |
