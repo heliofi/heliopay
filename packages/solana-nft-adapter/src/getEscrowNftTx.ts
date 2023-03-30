@@ -11,43 +11,37 @@ import {
 } from '@solana/spl-token';
 import { BN, Program } from '@project-serum/anchor';
 import { HelioNftIdl } from './program';
-import { SinglePaymentRequest } from './types';
-import { helioFeeWalletKey, daoFeeWalletKey } from './config';
+import { EscrowNftRequest } from './types';
 
-export const getSingleSolPaymentEscrowTx = async (
+export const getEscrowNftTx = async (
   program: Program<HelioNftIdl>,
-  req: SinglePaymentRequest,
+  req: EscrowNftRequest,
   fee: number = 0
 ): Promise<Transaction> => {
   const escrowAccount = req.escrowAccount;
 
-  const senderNftAccount = await getAssociatedTokenAddress(
-    req.nftMint,
-    req.sender
-  );
+  const ownerNftAccount = await getAssociatedTokenAddress(req.mint, req.owner);
 
   const escrowNftAccount = await getAssociatedTokenAddress(
-    req.nftMint,
-    daoFeeWalletKey
+    req.mint,
+    req.escrowAccount
   );
 
-  const [escrowPda, _] = await PublicKey.findProgramAddress(
+  const [escrowPda, bump] = await PublicKey.findProgramAddress(
     [escrowAccount.toBytes()],
     program.programId
   );
 
   return await program.methods
-    .singleSolPaymentEscrow(new BN(String(req.amount)), new BN(fee))
+    .escrowfNft(new BN(String(req.price)), bump)
     .accounts({
-      sender: req.sender,
-      senderNftAccount,
-      recipient: req.recipient,
+      owner: req.owner,
+      ownerNftAccount,
       escrowAccount,
       escrowNftAccount,
       escrowPda,
-      helioFeeAccount: helioFeeWalletKey,
-      daoFeeAccount: daoFeeWalletKey,
-      mint: req.nftMint,
+      mint: req.mint,
+      currency: req.currency,
       rent: SYSVAR_RENT_PUBKEY,
       tokenProgram: TOKEN_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

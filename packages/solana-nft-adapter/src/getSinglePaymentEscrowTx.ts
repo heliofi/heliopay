@@ -57,7 +57,7 @@ export const getSinglePaymentEscrowTx = async (
   );
 
   return await program.methods
-    .singlePaymentEscrow(new BN(req.amount), new BN(fee))
+    .singlePaymentEscrow(new BN(String(req.amount)), new BN(fee))
     .accounts({
       sender: req.sender,
       senderTokenAccount,

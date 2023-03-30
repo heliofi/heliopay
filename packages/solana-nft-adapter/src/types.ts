@@ -4,13 +4,15 @@ export type SinglePaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   escrowAccount: PublicKey;
-  amount: string;
-  currency: PublicKey;
+  amount: BigInt;
   nftMint: PublicKey;
+  currency: PublicKey;
 };
 
-export interface Account {
-  pubkey: PublicKey;
-  isWritable: boolean;
-  isSigner: boolean;
-}
+export type EscrowNftRequest = {
+  price: BigInt;
+  owner: PublicKey;
+  escrowAccount: PublicKey;
+  mint: PublicKey;
+  currency: PublicKey;
+};
