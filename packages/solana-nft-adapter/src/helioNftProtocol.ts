@@ -222,16 +222,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'currencyAmount',
-          type: 'u64',
-        },
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
     {
       name: 'singleSolPaymentEscrow',
@@ -302,16 +293,7 @@ export default {
           isSigner: false,
         },
       ],
-      args: [
-        {
-          name: 'currencyAmount',
-          type: 'u64',
-        },
-        {
-          name: 'baseFee',
-          type: 'u64',
-        },
-      ],
+      args: [],
     },
   ],
   accounts: [
@@ -342,6 +324,10 @@ export default {
           },
           {
             name: 'unitPrice',
+            type: 'u64',
+          },
+          {
+            name: 'fee',
             type: 'u64',
           },
           {
@@ -385,6 +371,6 @@ export default {
     },
   ],
   metadata: {
-    address: 'Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS',
+    address: '5enpPK1sBhBSWwEjmKjVuBkDoMo5nKd6Su7WjFLtza3a',
   },
 };
