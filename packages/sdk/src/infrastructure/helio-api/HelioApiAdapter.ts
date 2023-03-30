@@ -2,24 +2,43 @@ import {
   Currency,
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
+  PaymentRequest,
   PaymentRequestType,
   PrepareSwapTransaction,
   PrepareTransaction,
   SwapRouteToken,
   TokenQuoting,
 } from '@heliofi/common';
+
 import type { ConfigService, HelioApiConnector } from '../../domain';
 import { enhanceOptions, FetchOptions, request } from '../fetch-middleware';
 
 export class HelioApiAdapter implements HelioApiConnector {
   constructor(private configService: ConfigService) {}
 
-  async getPaymentRequestByIdPublic(id: string): Promise<any> {
-    return this.publicRequest<any>(
-      `/paylink/${id}/public`,
+  async getPaymentRequestByIdPublic(
+    id: string,
+    paymentType: PaymentRequestType
+  ): Promise<PaymentRequest> {
+    let param;
+    switch (paymentType) {
+      case PaymentRequestType.PAYLINK:
+        param = 'paylink';
+        break;
+      case PaymentRequestType.PAYSTREAM:
+        param = 'paystream';
+        break;
+      default:
+        break;
+    }
+
+    const res = this.publicRequest<PaymentRequest>(
+      `/${param}/${id}/public`,
       { method: 'GET' },
       true
     );
+
+    return PaymentRequest.fromObject(res);
   }
 
   async findAddress(
@@ -45,7 +64,7 @@ export class HelioApiAdapter implements HelioApiConnector {
   }
 
   async listCurrencies(): Promise<Currency[]> {
-    return this.publicRequest<any>('/currency', { method: 'GET' }, true);
+    return this.publicRequest<Currency[]>('/currency', { method: 'GET' }, true);
   }
 
   async getTokenSwapMintAddresses(mintAddress: string): Promise<string[]> {
@@ -117,7 +136,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity?: number,
-    normalizedPrice?: number,
+    totalDecimalAmount?: number,
     toMint?: string
   ): Promise<SwapRouteToken> {
     const url = `/swap/route-token`;
@@ -131,12 +150,12 @@ export class HelioApiAdapter implements HelioApiConnector {
       ...(toMint ? { toMint } : {}),
     };
 
-    if (quantity != null) {
+    if (quantity) {
       options.quantity = quantity.toString();
     }
 
-    if (normalizedPrice != null) {
-      options.amount = normalizedPrice.toString();
+    if (totalDecimalAmount != null) {
+      options.amount = totalDecimalAmount.toString();
     }
 
     const urlParams = new URLSearchParams(options);

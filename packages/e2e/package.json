@@ -1,6 +1,6 @@
 {
   "name": "e2e",
-  "version": "3.1.2",
+  "version": "3.3.0",
   "private": true,
   "main": "index.js",
   "license": "MIT",
@@ -11,7 +11,9 @@
     "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@heliofi/react": "^3.1.2",
+    "@heliofi/common": "0.1.195",
+    "@heliofi/react": "^3.3.0",
+    "@heliofi/sdk": "^0.1.6-alpha.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -48,6 +50,7 @@
       "prettier/prettier": "error"
     },
     "extends": [
+      "@heliofi/eslint-config-helio",
       "prettier"
     ],
     "parserOptions": {

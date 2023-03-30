@@ -1,12 +1,13 @@
 import {
   Currency,
-  FetchifyFindAddress,
-  FetchifyRetrieveAddress,
-  PaymentRequestType,
-  PrepareSwapTransaction,
-  PrepareTransaction,
-  SwapRouteToken,
   TokenQuoting,
+  SwapRouteToken,
+  PaymentRequest,
+  PrepareTransaction,
+  PaymentRequestType,
+  FetchifyFindAddress,
+  PrepareSwapTransaction,
+  FetchifyRetrieveAddress,
 } from '@heliofi/common';
 
 export interface HelioApiConnector {
@@ -22,7 +23,10 @@ export interface HelioApiConnector {
 
   listCurrencies(): Promise<Currency[]>;
 
-  getPaymentRequestByIdPublic(id: string): Promise<any>;
+  getPaymentRequestByIdPublic(
+    id: string,
+    paymentType: PaymentRequestType
+  ): Promise<PaymentRequest>;
 
   getTokenSwapMintAddresses(mintAddress: string): Promise<string[]>;
 
@@ -31,7 +35,7 @@ export interface HelioApiConnector {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity?: number,
-    normalizedPrice?: number,
+    totalDecimalAmount?: number,
     toMint?: string
   ): Promise<SwapRouteToken>;
 

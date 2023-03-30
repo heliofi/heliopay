@@ -17,6 +17,7 @@ import { AddressProvider } from '../address';
 import { AnchorProvider } from '../anchor';
 import { HelioProvider } from '../helio';
 import { getClusterEndpoint } from './clusterEndpoint';
+import CheckoutSearchParamsProvider from '../checkoutSearchParams';
 
 export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
   children,
@@ -43,7 +44,11 @@ export const SolanaProvider: FC<{ children: ReactNode; cluster: Cluster }> = ({
         <WalletModalProvider>
           <AnchorProvider>
             <HelioProvider>
-              <AddressProvider>{children}</AddressProvider>
+              <AddressProvider>
+                <CheckoutSearchParamsProvider>
+                  {children}
+                </CheckoutSearchParamsProvider>
+              </AddressProvider>
             </HelioProvider>
           </AnchorProvider>
         </WalletModalProvider>

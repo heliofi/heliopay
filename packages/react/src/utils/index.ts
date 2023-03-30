@@ -58,3 +58,6 @@ export const removeUndefinedFields = <T>(
   });
   return newObj as unknown as T;
 };
+
+export const shortenString = (str: string, len: number): string =>
+  str.length > len ? `${str.slice(0, len)}...` : str;

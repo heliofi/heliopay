@@ -2,18 +2,27 @@ import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
 import {
   Currency,
+  LinkFeaturesDto,
+  Paylink,
+  PaymentRequest,
+  PaymentRequestFeatures,
   PaymentRequestType,
+  Paystream,
   SOL_MINT,
   WRAPPED_SOL_MINT,
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
-import { useCompositionRoot } from '../../hooks/compositionRoot';
+
 import { TokenSwapQuote } from '../../domain';
+import { useCompositionRoot } from '../../hooks/compositionRoot';
+
+export type PaymentDetailsType = Paylink | Paystream;
+export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
-  currencyList: any[];
-  setCurrencyList: (currencyList: any[]) => void;
-  paymentDetails: any; // @TODO change type
+  currencyList: Currency[];
+  setCurrencyList: (currencyList: Currency[]) => void;
+  paymentDetails?: PaymentRequest;
   setPaymentDetails: (paymentDetails: any) => void;
   cluster: Cluster | null;
   setCluster: (cluster: Cluster) => void;
@@ -27,10 +36,12 @@ export const HelioContext = createContext<{
   setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote) => void;
   tokenSwapError: string;
   setTokenSwapError: (error: string) => void;
+  paymentType?: PaymentRequestType;
+  setPaymentType: (requestType: PaymentRequestType) => void;
 }>({
   currencyList: [],
   setCurrencyList: () => {},
-  paymentDetails: null,
+  paymentDetails: undefined,
   setPaymentDetails: () => {},
   cluster: null,
   setCluster: () => {},
@@ -44,6 +55,8 @@ export const HelioContext = createContext<{
   setTokenSwapQuote: () => {},
   tokenSwapError: '',
   setTokenSwapError: () => {},
+  paymentType: undefined,
+  setPaymentType: () => {},
 });
 
 export const useHelioProvider = () => {
@@ -64,6 +77,8 @@ export const useHelioProvider = () => {
     setTokenSwapQuote,
     tokenSwapError,
     setTokenSwapError,
+    paymentType,
+    setPaymentType,
   } = useContext(HelioContext);
 
   const { HelioSDK } = useCompositionRoot();
@@ -75,27 +90,38 @@ export const useHelioProvider = () => {
     }
   };
 
-  const checkCustomerDetailsRequired = () => {
+  const getPaymentDetails = <T extends PaymentDetailsType>(): T =>
+    paymentDetails as T;
+
+  const getPaymentFeatures = <T extends PaymentFeatures>(): T =>
+    getPaymentDetails()?.features as T;
+
+  const checkCustomerDetailsRequired = (): boolean => {
     if (!paymentDetails) return false;
-    return (
-      paymentDetails.features?.requireEmail ||
-      paymentDetails.features?.requireFullName ||
-      paymentDetails.features?.requireDiscordUsername ||
-      paymentDetails.features?.requireTwitterUsername ||
-      paymentDetails.features?.requireCountry ||
-      paymentDetails.features?.requireDeliveryAddress ||
-      paymentDetails.features?.canChangeQuantity || // @TODO remove
-      paymentDetails.features?.canChangePrice
+
+    return !!(
+      getPaymentFeatures()?.requireEmail ||
+      getPaymentFeatures()?.requireFullName ||
+      getPaymentFeatures()?.requireDiscordUsername ||
+      getPaymentFeatures()?.requireTwitterUsername ||
+      getPaymentFeatures()?.requireCountry ||
+      getPaymentFeatures()?.requireDeliveryAddress ||
+      getPaymentFeatures<LinkFeaturesDto>()?.canChangeQuantity || // @TODO remove
+      getPaymentFeatures<LinkFeaturesDto>()?.canChangePrice
     );
   };
 
-  const getPaymentDetails = async (paymentRequestId: string) => {
+  const initPaymentDetails = async (paymentRequestId: string) => {
     setPaymentDetails(null);
     if (!cluster) {
       throw new Error('Please provide a cluster');
     }
+    if (!paymentType) {
+      throw new Error('Please provide a payment type');
+    }
     const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
-      paymentRequestId
+      paymentRequestId,
+      paymentType
     );
     setPaymentDetails(result || {});
   };
@@ -148,7 +174,7 @@ export const useHelioProvider = () => {
     paymentRequestType: PaymentRequestType,
     fromMint: string,
     quantity: number,
-    normalizedPrice: number,
+    totalDecimalAmount: number,
     toMint?: string
   ) => {
     setTokenSwapLoading(true);
@@ -159,10 +185,12 @@ export const useHelioProvider = () => {
             paymentRequestId,
             paymentRequestType,
             fromMint,
-            quantity ?? 1,
+            paymentRequestType === PaymentRequestType.PAYLINK
+              ? quantity ?? 1
+              : undefined,
             HelioSDK.tokenConversionService.convertToMinimalUnits(
-              paymentDetails.currency.symbol,
-              normalizedPrice
+              paymentDetails?.currency.symbol,
+              totalDecimalAmount
             ),
             toMint
           );
@@ -203,6 +231,8 @@ export const useHelioProvider = () => {
     currencyList,
     paymentDetails,
     getCurrencyList,
+    initPaymentDetails,
+    getPaymentFeatures,
     getPaymentDetails,
     cluster,
     initCluster,
@@ -214,5 +244,7 @@ export const useHelioProvider = () => {
     tokenSwapError,
     getTokenSwapQuote,
     removeTokenSwapError,
+    paymentType,
+    setPaymentType,
   };
 };

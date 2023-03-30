@@ -9,7 +9,7 @@ export const getPaymentTx = async (
   provider: BaseProvider,
   req: PaymentRequest
 ) => {
-  const chainId = (await provider.getNetwork()).chainId;
+  const { chainId } = await provider.getNetwork();
   const contractAddress = getContractAddress(chainId);
   if (!contractAddress) {
     throw new Error(`Non existant contract address for chainId ${chainId}`);

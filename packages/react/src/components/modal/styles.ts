@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { TickIcon } from '@heliofi/helio-icons';
-import Button from '../button';
+import { Button } from '../../ui-kits';
 
 export const StyledModalWrapper = styled.div`
   position: fixed;
