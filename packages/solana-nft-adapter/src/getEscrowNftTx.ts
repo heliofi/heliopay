@@ -15,8 +15,7 @@ import { EscrowNftRequest } from './types';
 
 export const getEscrowNftTx = async (
   program: Program<HelioNftIdl>,
-  req: EscrowNftRequest,
-  fee: number = 0
+  req: EscrowNftRequest
 ): Promise<Transaction> => {
   const escrowAccount = req.escrowAccount;
 
@@ -27,7 +26,7 @@ export const getEscrowNftTx = async (
     req.escrowAccount
   );
 
-  const [escrowPda, bump] = await PublicKey.findProgramAddress(
+  const [escrowPda, bump] = PublicKey.findProgramAddressSync(
     [escrowAccount.toBytes()],
     program.programId
   );

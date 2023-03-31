@@ -50,7 +50,7 @@ export const getSinglePaymentEscrowTx = async (
     daoFeeWalletKey
   );
 
-  const [escrowPda, _] = await PublicKey.findProgramAddress(
+  const [escrowPda, _] = PublicKey.findProgramAddressSync(
     [escrowAccount.toBytes()],
     program.programId
   );
