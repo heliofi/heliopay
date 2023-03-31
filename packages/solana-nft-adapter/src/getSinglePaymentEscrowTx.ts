@@ -16,8 +16,7 @@ import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 
 export const getSinglePaymentEscrowTx = async (
   program: Program<HelioNftIdl>,
-  req: SinglePaymentRequest,
-  fee: number = 0
+  req: SinglePaymentRequest
 ): Promise<Transaction> => {
   const currency = req.currency;
   const escrowAccount = req.escrowAccount;
@@ -57,7 +56,7 @@ export const getSinglePaymentEscrowTx = async (
   );
 
   return await program.methods
-    .singlePaymentEscrow(new BN(String(req.amount)), new BN(fee))
+    .singlePaymentEscrow()
     .accounts({
       sender: req.sender,
       senderTokenAccount,
