@@ -9,7 +9,7 @@ import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { BN, Program } from '@project-serum/anchor';
+import { Program } from '@coral-xyz/anchor';
 import { HelioNftIdl } from './program';
 import { CancelEscrowRequest } from './types';
 
