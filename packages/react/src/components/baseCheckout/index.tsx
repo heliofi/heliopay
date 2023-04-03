@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
 import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
@@ -10,7 +10,7 @@ import {
   handleSubmit,
 } from './actions';
 import {
-  Button,
+  ButtonWithTooltip,
   CurrencyIcon,
   PhantomCompatibleCard,
   PriceBanner,
@@ -35,6 +35,7 @@ import {
 } from './styles';
 import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { AvailableBalanceService } from '../../domain/services/AvailableBalanceService';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -56,10 +57,9 @@ const BaseCheckout = ({
     tokenSwapError,
     removeTokenSwapError,
     paymentType,
+    availableBalances,
   } = useHelioProvider();
-
   const { customerDetails } = useCheckoutSearchParamsProvider();
-
   const { HelioSDK } = useCompositionRoot();
 
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
@@ -101,6 +101,30 @@ const BaseCheckout = ({
     getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
     getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
     searchParams
+  );
+
+  const getIsBalanceEnough = useCallback(
+    (
+      customPrice?: number,
+      quantity?: number,
+      currency?: string,
+      interval?: number
+    ) =>
+      AvailableBalanceService.getIsBalanceEnough({
+        tokenConversionService: HelioSDK.tokenConversionService,
+        availableBalances,
+        currency: currency || paymentDetails?.currency.symbol,
+        decimalAmount:
+          customPrice ||
+          HelioSDK.tokenConversionService.convertFromMinimalUnits(
+            paymentDetails?.currency.symbol,
+            paymentDetails?.normalizedPrice
+          ),
+        tokenSwapQuote,
+        quantity,
+        interval,
+      }),
+    [paymentDetails, availableBalances, tokenSwapQuote]
   );
 
   useEffect(() => {
@@ -213,9 +237,29 @@ const BaseCheckout = ({
                       setFieldValue={setFieldValue}
                     />
 
-                    <Button type="submit" disabled={payButtonDisable}>
+                    <ButtonWithTooltip
+                      type="submit"
+                      disabled={
+                        payButtonDisable ||
+                        !getIsBalanceEnough(
+                          values.customPrice,
+                          values.quantity,
+                          values.currency,
+                          values.interval
+                        )
+                      }
+                      showTooltip={
+                        !getIsBalanceEnough(
+                          values.customPrice,
+                          values.quantity,
+                          values.currency,
+                          values.interval
+                        )
+                      }
+                      tooltipText="Not enough funds in your wallet"
+                    >
                       {payButtonText}
-                    </Button>
+                    </ButtonWithTooltip>
                   </Form>
                 )}
               </Formik>

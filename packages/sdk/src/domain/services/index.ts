@@ -5,3 +5,4 @@ export * from './SolExplorerService';
 export * from './TimeFormatterService';
 export * from './TokenConversionService';
 export * from './checkoutService/StreamTimeService';
+export * from './CreatePaymentService';

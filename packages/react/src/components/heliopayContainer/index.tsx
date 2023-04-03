@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   ClusterType,
   CreatePaystreamResponse,
@@ -22,7 +22,7 @@ import { SubmitPaylinkProps, SubmitPaystreamProps } from './constants';
 import PaymentResult from '../paymentResult';
 import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
-import { Button, ConnectButton } from '../../ui-kits';
+import { ButtonWithTooltip, ConnectButton } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
 import PaystreamCheckout from '../payStream/paystreamCheckout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
@@ -46,6 +46,7 @@ import {
   CheckoutSearchParamsValues,
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { AvailableBalanceService } from '../../domain/services/AvailableBalanceService';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -89,10 +90,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     tokenSwapQuote,
     paymentType: paymentRequestType,
     setPaymentType,
+    getAvailableBalances,
+    availableBalances,
   } = useHelioProvider();
+  const connectionProvider = useConnection();
+
+  const paymentDetails = getPaymentDetails();
+
   const { HelioSDK } = useCompositionRoot();
   const { setCustomerDetails } = useCheckoutSearchParamsProvider();
-  const connectionProvider = useConnection();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | null
@@ -101,9 +107,26 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
-  const paymentDetails = getPaymentDetails();
+  const isBalanceEnough = useMemo(
+    () =>
+      AvailableBalanceService.getIsBalanceEnough({
+        tokenConversionService: HelioSDK.tokenConversionService,
+        availableBalances,
+        currency: paymentDetails?.currency.symbol,
+        decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
+          paymentDetails?.currency.symbol,
+          paymentDetails?.normalizedPrice
+        ),
+        tokenSwapQuote,
+      }),
+    [paymentDetails, availableBalances, tokenSwapQuote]
+  );
 
-  /* typeof window === 'undefined' we're on the server */
+  const notEnoughFunds =
+    !(isCustomerDetailsRequired || supportedCurrencies?.length) &&
+    !isBalanceEnough;
+
+  /** typeof window === 'undefined' means we're on the server */
   const queryString =
     typeof window !== 'undefined'
       ? window.location.href.split('?')[1]
@@ -248,8 +271,12 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [paymentType]);
 
   useEffect(() => {
+    getAvailableBalances().catch();
+  }, [wallet, connectionProvider]);
+
+  useEffect(() => {
     if (mainCluster) {
-      getCurrencyList();
+      getCurrencyList().catch();
     }
   }, [mainCluster]);
 
@@ -261,7 +288,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   useEffect(() => {
     if (mainCluster && paymentRequestType && paymentRequestId) {
-      initPaymentDetails(paymentRequestId);
+      initPaymentDetails(paymentRequestId).catch();
     }
   }, [paymentRequestId, mainCluster, paymentRequestType]);
 
@@ -282,7 +309,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
             <StyledLeft>
               {wallet ? (
                 <div>
-                  <Button
+                  <ButtonWithTooltip
                     onClick={() => {
                       if (
                         isCustomerDetailsRequired ||
@@ -298,10 +325,14 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         });
                       }
                     }}
-                    disabled={!paymentRequestId || !paymentDetails?.id}
+                    disabled={
+                      !paymentRequestId || !paymentDetails?.id || notEnoughFunds
+                    }
+                    showTooltip={notEnoughFunds}
+                    tooltipText="Not enough funds in your wallet"
                   >
                     {payButtonTitle}
-                  </Button>
+                  </ButtonWithTooltip>
                 </div>
               ) : (
                 <ConnectButton />
