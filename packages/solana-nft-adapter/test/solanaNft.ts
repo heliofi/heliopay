@@ -23,6 +23,7 @@ import { txOpts } from '../src/config';
 import { HelioNftIdl, IDL, PROGRAM_ID } from '../src/program';
 import chai, { assert } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import testWallet from './test-wallet.json';
 
 chai.use(chaiAsPromised);
 
@@ -35,12 +36,12 @@ describe('solana-nft', () => {
     buyerTokenAccount: PublicKey,
     buyerCurrencyAccount: PublicKey,
     ownerCurrencyAccount: PublicKey;
-  let mintKey: PublicKey, currencyKey;
+  let mintKey: PublicKey, currencyKey: PublicKey;
   let escrowAccount: Keypair,
     escrowNftAccountKey: PublicKey,
     pda: PublicKey,
     bump: number;
-  const payer = Keypair.generate();
+  const payer = Keypair.fromSecretKey(Uint8Array.from(testWallet));
   const ownerMainAccount = Keypair.generate();
   const buyerMainAccount = Keypair.generate();
   let metaMint: PublicKey, metaTokenAccount: PublicKey;
@@ -73,10 +74,11 @@ describe('solana-nft', () => {
       },
       'confirmed'
     );
-    await sleep(10_000);
+    await sleep(20_000);
+    // console.log('Airdrop signature: ', signature);
 
     const payerBalance = await provider.connection.getBalance(payer.publicKey);
-    console.log('Payer balance: ', payerBalance);
+    console.log('Payer ', payer.publicKey, ' balance: ', payerBalance);
     // Fund Main Accounts
     const tx = new Transaction();
     tx.add(
@@ -93,8 +95,14 @@ describe('solana-nft', () => {
         lamports: LAMPORTS_PER_SOL / 2,
       })
     );
-    await provider.sendAndConfirm(tx, [payer]);
-    await sleep(10_000);
+    await provider.connection.sendTransaction(tx, [payer]);
+    console.log(
+      'Owner: ',
+      ownerMainAccount.publicKey,
+      ' buyer: ',
+      buyerMainAccount.publicKey
+    );
+    await sleep(40_000);
     const ownerMainAccountBalance = await provider.connection.getBalance(
       ownerMainAccount.publicKey
     );
@@ -114,7 +122,7 @@ describe('solana-nft', () => {
       mintKey,
       ownerMainAccount.publicKey
     );
-    await await mintTo(
+    await mintTo(
       provider.connection,
       payer,
       mintKey,
