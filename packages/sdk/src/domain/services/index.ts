@@ -6,3 +6,4 @@ export * from './TimeFormatterService';
 export * from './TokenConversionService';
 export * from './checkoutService/StreamTimeService';
 export * from './CreatePaymentService';
+export * from './AvailableBalanceService';

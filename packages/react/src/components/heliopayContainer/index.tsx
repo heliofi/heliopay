@@ -46,7 +46,6 @@ import {
   CheckoutSearchParamsValues,
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
-import { AvailableBalanceService } from '../../domain/services/AvailableBalanceService';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -90,8 +89,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     tokenSwapQuote,
     paymentType: paymentRequestType,
     setPaymentType,
-    getAvailableBalances,
-    availableBalances,
   } = useHelioProvider();
   const connectionProvider = useConnection();
 
@@ -109,9 +106,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const isBalanceEnough = useMemo(
     () =>
-      AvailableBalanceService.getIsBalanceEnough({
-        tokenConversionService: HelioSDK.tokenConversionService,
-        availableBalances,
+      HelioSDK.availableBalanceService.isBalanceEnough({
         currency: paymentDetails?.currency.symbol,
         decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency.symbol,
@@ -119,7 +114,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         ),
         tokenSwapQuote,
       }),
-    [paymentDetails, availableBalances, tokenSwapQuote]
+    [paymentDetails, tokenSwapQuote]
   );
 
   const notEnoughFunds =
@@ -271,7 +266,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [paymentType]);
 
   useEffect(() => {
-    getAvailableBalances().catch();
+    if (wallet) {
+      HelioSDK.availableBalanceService
+        .fetchAvailableBalances(wallet.publicKey, connectionProvider.connection)
+        .catch();
+    }
   }, [wallet, connectionProvider]);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
 import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
@@ -35,7 +35,6 @@ import {
 } from './styles';
 import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
-import { AvailableBalanceService } from '../../domain/services/AvailableBalanceService';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -57,7 +56,6 @@ const BaseCheckout = ({
     tokenSwapError,
     removeTokenSwapError,
     paymentType,
-    availableBalances,
   } = useHelioProvider();
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
@@ -103,29 +101,24 @@ const BaseCheckout = ({
     searchParams
   );
 
-  const getIsBalanceEnough = useCallback(
-    (
-      customPrice?: number,
-      quantity?: number,
-      currency?: string,
-      interval?: number
-    ) =>
-      AvailableBalanceService.getIsBalanceEnough({
-        tokenConversionService: HelioSDK.tokenConversionService,
-        availableBalances,
-        currency: currency || paymentDetails?.currency.symbol,
-        decimalAmount:
-          customPrice ||
-          HelioSDK.tokenConversionService.convertFromMinimalUnits(
-            paymentDetails?.currency.symbol,
-            paymentDetails?.normalizedPrice
-          ),
-        tokenSwapQuote,
-        quantity,
-        interval,
-      }),
-    [paymentDetails, availableBalances, tokenSwapQuote]
-  );
+  const isBalanceEnough = (
+    customPrice?: number,
+    quantity?: number,
+    currency?: string,
+    interval?: number
+  ) =>
+    HelioSDK.availableBalanceService.isBalanceEnough({
+      currency: currency || paymentDetails?.currency.symbol,
+      decimalAmount:
+        customPrice ||
+        HelioSDK.tokenConversionService.convertFromMinimalUnits(
+          paymentDetails?.currency.symbol,
+          paymentDetails?.normalizedPrice
+        ),
+      tokenSwapQuote,
+      quantity,
+      interval,
+    });
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
@@ -241,7 +234,7 @@ const BaseCheckout = ({
                       type="submit"
                       disabled={
                         payButtonDisable ||
-                        !getIsBalanceEnough(
+                        !isBalanceEnough(
                           values.customPrice,
                           values.quantity,
                           values.currency,
@@ -249,7 +242,7 @@ const BaseCheckout = ({
                         )
                       }
                       showTooltip={
-                        !getIsBalanceEnough(
+                        !isBalanceEnough(
                           values.customPrice,
                           values.quantity,
                           values.currency,

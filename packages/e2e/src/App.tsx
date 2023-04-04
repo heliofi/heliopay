@@ -27,19 +27,19 @@ const App = () => {
       <HelioPay
         cluster="devnet"
         paymentRequestId={paymentId}
-        onSuccess={function (event: SuccessPaymentEvent): void {
+        onSuccess={(event: SuccessPaymentEvent) => {
           console.log('onSuccess', event);
         }}
-        onError={function (event: ErrorPaymentEvent): void {
+        onError={(event: ErrorPaymentEvent) => {
           console.log('onError', event);
         }}
-        onPending={function (event: PendingPaymentEvent): void {
+        onPending={(event: PendingPaymentEvent) => {
           console.log('onPending', event);
         }}
-        onStartPayment={function (): void {
+        onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={['USDC', 'SOL']}
+        supportedCurrencies={['USDC', 'SOL']}
         paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />

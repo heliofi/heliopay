@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Tooltip } from '../tooltip';
-import { Button, ButtonProps } from '../index'; // eslint-disable-line import/no-cycle
+import { Button, ButtonProps } from '../button';
 
 interface Props extends ButtonProps {
   showTooltip: boolean;

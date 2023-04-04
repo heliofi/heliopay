@@ -1,8 +1,9 @@
 import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Currency, PaymentRequestType } from '@heliofi/common';
+import { TokenSwapQuote } from '@heliofi/sdk';
+
 import { HelioContext } from './HelioContext';
-import { AvailableBalance, TokenSwapQuote } from '../../domain';
 
 export const HelioProvider: FC<{
   children: ReactNode;
@@ -21,9 +22,6 @@ export const HelioProvider: FC<{
   );
   const [tokenSwapError, setTokenSwapError] = useState('');
   const [paymentType, setPaymentType] = useState<PaymentRequestType>();
-  const [availableBalances, setAvailableBalances] = useState<
-    AvailableBalance[]
-  >([]);
 
   const helioProviderValue = useMemo(
     () => ({
@@ -45,8 +43,6 @@ export const HelioProvider: FC<{
       setTokenSwapError,
       paymentType,
       setPaymentType,
-      availableBalances,
-      setAvailableBalances,
     }),
     [
       currencyList,
@@ -67,8 +63,6 @@ export const HelioProvider: FC<{
       setTokenSwapError,
       paymentType,
       setPaymentType,
-      availableBalances,
-      setAvailableBalances,
     ]
   );
 

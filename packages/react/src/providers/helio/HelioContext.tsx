@@ -13,10 +13,8 @@ import {
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
-import { AvailableBalance, TokenSwapQuote } from '../../domain';
+import { TokenSwapQuote } from '@heliofi/sdk';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
-import { fetchAvailableBalances } from './actions';
 
 export type PaymentDetailsType = Paylink | Paystream;
 export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
@@ -40,8 +38,6 @@ export const HelioContext = createContext<{
   setTokenSwapError: (error: string) => void;
   paymentType?: PaymentRequestType;
   setPaymentType: (requestType: PaymentRequestType) => void;
-  availableBalances: AvailableBalance[];
-  setAvailableBalances: (availableBalances: AvailableBalance[]) => void;
 }>({
   currencyList: [],
   setCurrencyList: () => {},
@@ -61,8 +57,6 @@ export const HelioContext = createContext<{
   setTokenSwapError: () => {},
   paymentType: undefined,
   setPaymentType: () => {},
-  availableBalances: [],
-  setAvailableBalances: () => {},
 });
 
 export const useHelioProvider = () => {
@@ -85,12 +79,7 @@ export const useHelioProvider = () => {
     setTokenSwapError,
     paymentType,
     setPaymentType,
-    availableBalances,
-    setAvailableBalances,
   } = useContext(HelioContext);
-
-  const wallet = useAnchorWallet();
-  const { connection } = useConnection();
 
   const { HelioSDK } = useCompositionRoot();
 
@@ -234,18 +223,6 @@ export const useHelioProvider = () => {
     }
   };
 
-  const getAvailableBalances = async () => {
-    if (wallet) {
-      const balances = await fetchAvailableBalances(
-        wallet.publicKey,
-        connection,
-        HelioSDK.tokenConversionService,
-        HelioSDK.currencyService
-      );
-      setAvailableBalances(balances);
-    }
-  };
-
   useEffect(() => {
     setIsCustomerDetailsRequired(checkCustomerDetailsRequired());
   }, [paymentDetails]);
@@ -269,7 +246,5 @@ export const useHelioProvider = () => {
     removeTokenSwapError,
     paymentType,
     setPaymentType,
-    availableBalances,
-    getAvailableBalances,
   };
 };
