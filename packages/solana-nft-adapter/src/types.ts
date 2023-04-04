@@ -10,6 +10,7 @@ export type SinglePaymentRequest = {
 
 export type EscrowNftRequest = {
   price: BigInt;
+  fee: number;
   owner: PublicKey;
   escrowAccount: PublicKey;
   mint: PublicKey;

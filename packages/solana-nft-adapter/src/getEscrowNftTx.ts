@@ -32,7 +32,7 @@ export const getEscrowNftTx = async (
   );
 
   return await program.methods
-    .escrowfNft(new BN(String(req.price)), bump)
+    .escrowfNft(new BN(String(req.price)), new BN(req.fee), bump)
     .accounts({
       owner: req.owner,
       ownerNftAccount,

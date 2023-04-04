@@ -26,7 +26,7 @@ export const getCancelEscrowTx = async (
     req.escrowAccount
   );
 
-  const [escrowPda, bump] = PublicKey.findProgramAddressSync(
+  const [escrowPda, _bump] = PublicKey.findProgramAddressSync(
     [escrowAccount.toBytes()],
     program.programId
   );

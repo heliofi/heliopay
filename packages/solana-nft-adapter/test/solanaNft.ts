@@ -62,47 +62,52 @@ describe('solana-nft', () => {
     // Airdropping tokens to a payer.
     const latestBlockHash = await provider.connection.getLatestBlockhash();
 
-    const signature = await provider.connection.requestAirdrop(
-      payer.publicKey,
-      1.5 * LAMPORTS_PER_SOL
-    );
-    await provider.connection.confirmTransaction(
-      {
-        blockhash: latestBlockHash.blockhash,
-        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-        signature,
-      },
-      'confirmed'
-    );
-    await sleep(20_000);
+    // const signature = await provider.connection.requestAirdrop(
+    //   payer.publicKey,
+    //   1.5 * LAMPORTS_PER_SOL
+    // );
+    // await provider.connection.confirmTransaction(
+    //   {
+    //     blockhash: latestBlockHash.blockhash,
+    //     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+    //     signature,
+    //   },
+    //   'confirmed'
+    // );
+    // await sleep(20_000);
     // console.log('Airdrop signature: ', signature);
 
     const payerBalance = await provider.connection.getBalance(payer.publicKey);
-    console.log('Payer ', payer.publicKey, ' balance: ', payerBalance);
+    console.log(
+      'Payer ',
+      payer.publicKey.toBase58(),
+      ' balance: ',
+      payerBalance
+    );
     // Fund Main Accounts
     const tx = new Transaction();
     tx.add(
       SystemProgram.transfer({
         fromPubkey: payer.publicKey,
         toPubkey: ownerMainAccount.publicKey,
-        lamports: LAMPORTS_PER_SOL / 2,
+        lamports: LAMPORTS_PER_SOL / 10,
       })
     );
     tx.add(
       SystemProgram.transfer({
         fromPubkey: payer.publicKey,
         toPubkey: buyerMainAccount.publicKey,
-        lamports: LAMPORTS_PER_SOL / 2,
+        lamports: LAMPORTS_PER_SOL / 10,
       })
     );
     await provider.connection.sendTransaction(tx, [payer]);
     console.log(
       'Owner: ',
-      ownerMainAccount.publicKey,
+      ownerMainAccount.publicKey.toBase58(),
       ' buyer: ',
-      buyerMainAccount.publicKey
+      buyerMainAccount.publicKey.toBase58()
     );
-    await sleep(40_000);
+    await sleep(20_000);
     const ownerMainAccountBalance = await provider.connection.getBalance(
       ownerMainAccount.publicKey
     );
@@ -122,6 +127,7 @@ describe('solana-nft', () => {
       mintKey,
       ownerMainAccount.publicKey
     );
+    console.log('Owner nft account: ', ownerTokenAccount.toString());
     await mintTo(
       provider.connection,
       payer,
@@ -130,10 +136,16 @@ describe('solana-nft', () => {
       payer,
       1
     );
+
     await sleep(10_000);
+    console.log('Here');
     const _ownerTokenAccount = await getAccount(
       provider.connection,
       ownerTokenAccount
+    );
+    console.log(
+      'Owner token account amount: ',
+      Number(_ownerTokenAccount.amount)
     );
     assert.ok(Number(_ownerTokenAccount.amount) === 1);
 
@@ -144,6 +156,7 @@ describe('solana-nft', () => {
       null,
       6
     );
+    console.log('Here');
 
     buyerCurrencyAccount = await createAssociatedTokenAccount(
       provider.connection,
@@ -152,6 +165,7 @@ describe('solana-nft', () => {
       buyerMainAccount.publicKey
     );
 
+    console.log('Buyer currency account: ', buyerCurrencyAccount.toString());
     const mintAmount = LAMPORTS_PER_SOL;
     await mintTo(
       provider.connection,
@@ -161,6 +175,7 @@ describe('solana-nft', () => {
       payer,
       mintAmount
     );
+    console.log('Here');
     let _buyerCurrencyAccount = await getAccount(
       provider.connection,
       buyerCurrencyAccount
@@ -185,7 +200,7 @@ describe('solana-nft', () => {
     bump = _bump;
     const unitPrice = new BN(currencyAmount);
     await program.methods
-      .escrowNft(unitPrice, bump)
+      .escrowNft(unitPrice, new BN(0), bump)
       .accounts({
         owner: ownerMainAccount.publicKey,
         ownerNftAccount: ownerTokenAccount,
