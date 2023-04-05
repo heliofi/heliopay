@@ -13,7 +13,7 @@ import {
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { TokenSwapQuote } from '../../domain';
+import { TokenSwapQuote } from '@heliofi/sdk';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type PaymentDetailsType = Paylink | Paystream;

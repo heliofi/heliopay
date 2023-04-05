@@ -9,12 +9,10 @@ export type ButtonProps = {
   disabled?: boolean;
 } & React.ComponentPropsWithRef<'button'>;
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, ...props }, ref) => (
     <StyledButton ref={ref} {...props}>
       {children}
     </StyledButton>
   )
 );
-
-export default Button;

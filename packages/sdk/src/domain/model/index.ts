@@ -6,3 +6,5 @@ export { HttpCodes } from './HttpCodes';
 export { ClusterType } from './Cluster';
 export * from './HelioApiConnector';
 export * from './CurrencySymbol';
+export * from './AvailableBalance';
+export * from './TokenSwapQuote';

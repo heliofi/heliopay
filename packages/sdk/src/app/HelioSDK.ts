@@ -1,6 +1,7 @@
 import { Cluster } from '@solana/web3.js';
 
 import {
+  AvailableBalanceService,
   ConfigService,
   CurrencyService,
   HelioApiConnector,
@@ -33,6 +34,8 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
+  private _availableBalanceService: AvailableBalanceService;
+
   constructor(options?: { cluster: Cluster }) {
     this._cluster = options?.cluster;
     this._configService = new ConfigService(options?.cluster);
@@ -56,6 +59,10 @@ export class HelioSDK {
       this._apiService,
       this._currencyService,
       this._configService
+    );
+    this._availableBalanceService = new AvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService
     );
   }
 
@@ -108,5 +115,10 @@ export class HelioSDK {
   get configService(): ConfigService | never {
     this.checkCluster();
     return this._configService;
+  }
+
+  get availableBalanceService(): AvailableBalanceService | never {
+    this.checkCluster();
+    return this._availableBalanceService;
   }
 }
