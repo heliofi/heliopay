@@ -67,6 +67,10 @@ export default {
           type: 'u64',
         },
         {
+          name: 'fee',
+          type: 'u64',
+        },
+        {
           name: 'bump',
           type: 'u8',
         },
