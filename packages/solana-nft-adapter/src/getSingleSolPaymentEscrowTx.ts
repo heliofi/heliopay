@@ -27,7 +27,7 @@ export const getSingleSolPaymentEscrowTx = async (
 
   const escrowNftAccount = await getAssociatedTokenAddress(
     req.nftMint,
-    daoFeeWalletKey
+    escrowAccount
   );
 
   const [escrowPda, _] = PublicKey.findProgramAddressSync(
