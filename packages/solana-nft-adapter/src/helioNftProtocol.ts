@@ -151,6 +151,11 @@ export default {
           isSigner: false,
         },
         {
+          name: 'recipient',
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: 'recipientTokenAccount',
           isMut: true,
           isSigner: false,
@@ -173,11 +178,6 @@ export default {
         {
           name: 'daoFeeTokenAccount',
           isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'recipient',
-          isMut: false,
           isSigner: false,
         },
         {
