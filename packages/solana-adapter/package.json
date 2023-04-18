@@ -39,7 +39,7 @@
     "@solana/wallet-adapter-react": "^0.15.20",
     "@solana/web3.js": "^1.66.2",
     "bs58": "^5.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
