@@ -375,6 +375,6 @@ export default {
     },
   ],
   metadata: {
-    address: '5enpPK1sBhBSWwEjmKjVuBkDoMo5nKd6Su7WjFLtza3a',
+    address: 'Gfz4VD7NmjyxeQexzLtwqpxUVkXHGQ61BTD6XUB5j55x',
   },
 };
