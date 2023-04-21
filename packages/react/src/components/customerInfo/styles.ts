@@ -23,25 +23,6 @@ export const StyledProductWrapper = styled.div`
   position: relative;
 `;
 
-export const StyledProductTooltip = styled.div`
-  position: absolute;
-  right: 0;
-  top: -30px;
-`;
-
-export const StyledProductTooltipText = styled.div`
-  margin-right: 0;
-  margin-left: auto;
-  width: content;
-  max-width: 100%;
-  overflow: hidden;
-  border-radius: 8px;
-  background: black;
-  padding: 8px;
-  font-size: 12px;
-  color: #ffd4a3;
-`;
-
 export const StyledProductTooltipIcon = styled.div`
   display: flex;
   align-items: center;

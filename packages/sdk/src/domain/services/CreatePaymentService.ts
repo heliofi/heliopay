@@ -1,13 +1,6 @@
 import { IntervalType } from '@heliofi/common';
 
-import {
-  DAY,
-  HOUR,
-  MINUTE,
-  MONTH,
-  SECOND_MS,
-  WEEK,
-} from '../constants/exportTime';
+import { DAY, HOUR, MINUTE, MONTH, SECOND_MS, WEEK } from '../constants';
 
 export class CreatePaymentService {
   static shortenTransaction(transactionAddress: string): string {

@@ -38,6 +38,14 @@ export class CurrencyService {
     return foundCurrency;
   }
 
+  getCurrencyByMintOptional(mint: string): Currency | undefined {
+    try {
+      return this.getCurrencyByMint(mint);
+    } catch (e) {
+      return undefined;
+    }
+  }
+
   async getCurrencies(): Promise<Currency[]> {
     const result = await this.apiService.listCurrencies();
 
