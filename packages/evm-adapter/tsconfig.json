@@ -1,5 +1,5 @@
 {
-  "exclude": ["dist", "test"],
+  "exclude": ["dist", "test", "node_modules"],
   "include": ["."],
   "compilerOptions": {
     "target": "ES2020",

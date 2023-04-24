@@ -15,6 +15,8 @@ import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
+import { EVMProvider } from '../../providers/wagmi';
+import ConnectProvider from '../../providers/connect';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -60,22 +62,26 @@ export const HelioPay = ({
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <SolanaProvider cluster={cluster}>
-        <HelioPayContainer
-          paymentRequestId={paymentRequestId}
-          onStartPayment={onStartPayment}
-          onSuccess={onSuccess}
-          onError={onError}
-          onPending={onPending}
-          cluster={cluster}
-          payButtonTitle={payButtonTitle}
-          supportedCurrencies={supportedCurrencies}
-          totalAmount={totalAmount}
-          paymentType={paymentType}
-          searchCustomerDetails={searchCustomerDetails}
-        />
-        <Toaster />
-      </SolanaProvider>
+      <EVMProvider>
+        <SolanaProvider cluster={cluster}>
+          <ConnectProvider>
+            <HelioPayContainer
+              paymentRequestId={paymentRequestId}
+              onStartPayment={onStartPayment}
+              onSuccess={onSuccess}
+              onError={onError}
+              onPending={onPending}
+              cluster={cluster}
+              payButtonTitle={payButtonTitle}
+              supportedCurrencies={supportedCurrencies}
+              totalAmount={totalAmount}
+              paymentType={paymentType}
+              searchCustomerDetails={searchCustomerDetails}
+            />
+            <Toaster />
+          </ConnectProvider>
+        </SolanaProvider>
+      </EVMProvider>
     </ThemeProvider>
   );
 };

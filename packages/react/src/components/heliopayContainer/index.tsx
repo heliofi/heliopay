@@ -22,7 +22,7 @@ import { SubmitPaylinkProps, SubmitPaystreamProps } from './constants';
 import PaymentResult from '../paymentResult';
 import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
-import { ButtonWithTooltip, ConnectButton } from '../../ui-kits';
+import { ButtonWithTooltip } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
 import PaystreamCheckout from '../payStream/paystreamCheckout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
@@ -46,6 +46,7 @@ import {
   CheckoutSearchParamsValues,
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { ConnectButton } from '../../ui-kits/connectButton';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -334,7 +335,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                   </ButtonWithTooltip>
                 </div>
               ) : (
-                <ConnectButton />
+                <ConnectButton paymentRequestType={paymentRequestType} />
               )}
             </StyledLeft>
             <StyledRight>
