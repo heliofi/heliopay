@@ -358,7 +358,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           )}
           @todo-v fix this case
            */}
-          {wallet && <WalletController />}
+          {(wallet || isConnected) && <WalletController />}
         </>
       ) : (
         <>

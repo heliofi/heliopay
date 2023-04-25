@@ -21,6 +21,7 @@ export class HelioApiAdapter implements HelioApiConnector {
     paymentType: PaymentRequestType
   ): Promise<PaymentRequest> {
     let param;
+
     switch (paymentType) {
       case PaymentRequestType.PAYLINK:
         param = 'paylink';

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { ExitIcon, ArrowsDoubleIcon } from '@heliofi/helio-icons';
 import { useDisconnect } from 'wagmi';
 
+import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
 import { shortenWalletAddress } from '../../utils';
 import useOnClickOutside from '../../hooks/useClickOutside';
 
@@ -16,23 +16,40 @@ import {
   StyledMenuWrapper,
   StyledWalletAddress,
 } from './styles';
+import { useConnect } from '../../hooks/useConnect';
+import { useHelioProvider } from '../../providers/helio/HelioContext';
 
-const WalletController = () => {
-  const { setVisible } = useWalletModal();
+export interface WalletControllerProps {
+  paymentRequestType?: PaymentRequestType;
+  onError?: (err: unknown) => void;
+}
+
+const WalletController = ({
+  paymentRequestType,
+  onError,
+}: WalletControllerProps) => {
   const { disconnect, publicKey } = useWallet();
   const { disconnect: disconnectEVM } = useDisconnect();
   const [isOpen, setIsOpen] = useState(false);
+  const { onConnect, setErrorHandler } = useConnect();
+  const { getPaymentDetails } = useHelioProvider();
 
   const dropdownRef = useOnClickOutside(() => {
     setIsOpen(false);
   });
+
+  const paymentDetails = getPaymentDetails();
+  const blockchainEngine =
+    paymentRequestType === PaymentRequestType.PAYLINK
+      ? paymentDetails?.currency?.blockchain?.engine?.type
+      : BlockchainEngineType.SOL;
 
   const items = [
     {
       label: 'Change wallet',
       action: () => {
         setIsOpen(false);
-        setVisible(true);
+        onConnect({ blockchainEngine });
       },
       icon: <ArrowsDoubleIcon />,
     },
@@ -46,6 +63,12 @@ const WalletController = () => {
       icon: <ExitIcon />,
     },
   ];
+
+  useEffect(() => {
+    if (setErrorHandler) {
+      setErrorHandler(onError);
+    }
+  }, [onError, setErrorHandler]);
 
   return (
     <StyledMenuWrapper ref={dropdownRef}>

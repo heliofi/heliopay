@@ -4,6 +4,7 @@ import React from 'react';
 
 import WalletListItem from '../walletListItem';
 import { InheritedModalProps } from '../../index';
+import { StyledWalletListItemWrapper } from './styles';
 
 interface SolanaNotFoundWalletsProps extends InheritedModalProps {
   notFoundWallets: Wallet[];
@@ -23,16 +24,13 @@ export const SolanaNotFoundWallets = ({
   return (
     <>
       {notFoundWallets.map((wallet) => (
-        <div
-          key={wallet.adapter.name}
-          className="flex h-[32px] flex-row items-start justify-start"
-        >
+        <StyledWalletListItemWrapper key={wallet.adapter.name}>
           <WalletListItem
             walletName={wallet.adapter.name}
             icon={wallet.adapter.icon}
             walletOnClick={() => handleNotFoundWalletClick(wallet.adapter.name)}
           />
-        </div>
+        </StyledWalletListItemWrapper>
       ))}
     </>
   );
