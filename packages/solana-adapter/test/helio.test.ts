@@ -25,7 +25,7 @@ import {
   WithdrawRequest,
   TopupRequest,
 } from '../src/types';
-
+import testWallet from './test-wallet.json';
 import {
   getSinglePaymentTx,
   getSingleSolPaymentTx,
@@ -64,7 +64,7 @@ describe('api', () => {
     sender = Keypair.generate();
     recipient = Keypair.generate();
     connection = new Connection('https://api.devnet.solana.com');
-    wallet = new Wallet(sender);
+    wallet = new Wallet(Keypair.fromSeed(testWallet as Uint8Array));
     provider = new anchor.AnchorProvider(connection, wallet, txOpts);
     anchor.setProvider(provider);
     program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);
