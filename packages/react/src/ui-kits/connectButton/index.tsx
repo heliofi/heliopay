@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
-// import { PuffLoader } from 'react-spinners';
 import { useConnect as useConnectWagmi } from 'wagmi';
 import { ConnectButtonConnecting, StyledButton } from './styles';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
@@ -62,7 +61,6 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
     >
       {connecting || connectingEVM ? (
         <ConnectButtonConnecting>
-          {/*<PuffLoader size={24} color="white" />*/}
           <span>CONNECTING...</span>
         </ConnectButtonConnecting>
       ) : (
