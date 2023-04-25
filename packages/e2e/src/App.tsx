@@ -6,7 +6,6 @@ import {
 } from '@heliofi/sdk';
 
 import { HelioPay } from '@heliofi/react/dist';
-import { PaymentRequestType } from '@heliofi/common';
 
 import './styles/style.scss';
 
