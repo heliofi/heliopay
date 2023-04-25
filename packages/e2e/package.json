@@ -1,6 +1,6 @@
 {
   "name": "e2e",
-  "version": "3.3.9-alpha.0",
+  "version": "3.3.10-alpha.0",
   "private": true,
   "main": "index.js",
   "license": "MIT",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@heliofi/common": "0.1.219",
-    "@heliofi/react": "^3.3.9-alpha.0",
-    "@heliofi/sdk": "^0.1.14-alpha.0",
+    "@heliofi/react": "^3.3.10-alpha.0",
+    "@heliofi/sdk": "^0.1.15-alpha.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
