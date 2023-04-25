@@ -61,6 +61,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
     >
       {connecting || connectingEVM ? (
         <ConnectButtonConnecting>
+
           <span>CONNECTING...</span>
         </ConnectButtonConnecting>
       ) : (
