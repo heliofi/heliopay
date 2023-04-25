@@ -78,6 +78,7 @@ const WalletController = ({
           {shortenWalletAddress(String(publicKey))}
         </StyledWalletAddress>
       </StyledDropdownButton>
+
       {isOpen && (
         <StyledMenu>
           {items.map(({ label, action, icon }) => (
