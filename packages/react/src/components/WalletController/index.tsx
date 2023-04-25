@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { ExitIcon, ArrowsDoubleIcon } from '@heliofi/helio-icons';
+import { useDisconnect } from 'wagmi';
 
 import { shortenWalletAddress } from '../../utils';
 import useOnClickOutside from '../../hooks/useClickOutside';
@@ -19,6 +20,7 @@ import {
 const WalletController = () => {
   const { setVisible } = useWalletModal();
   const { disconnect, publicKey } = useWallet();
+  const { disconnect: disconnectEVM } = useDisconnect();
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useOnClickOutside(() => {
@@ -36,9 +38,10 @@ const WalletController = () => {
     },
     {
       label: 'Disconnect Wallet',
-      action: () => {
+      action: async () => {
         setIsOpen(false);
-        disconnect();
+        await disconnect();
+        await disconnectEVM();
       },
       icon: <ExitIcon />,
     },

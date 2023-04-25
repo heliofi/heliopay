@@ -18,6 +18,7 @@ import {
   PaymentRequestType,
 } from '@heliofi/common';
 
+import { useAccount } from 'wagmi';
 import { SubmitPaylinkProps, SubmitPaystreamProps } from './constants';
 import PaymentResult from '../paymentResult';
 import { LoadingModal } from '../loadingModal';
@@ -76,6 +77,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   searchCustomerDetails,
 }) => {
   const wallet = useAnchorWallet();
+  const { isConnected } = useAccount();
+
   const helioProvider = useAnchorProvider();
   const { dynamicRateToken } = useTokenConversion();
   const {
@@ -307,7 +310,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         <>
           <StyledRow>
             <StyledLeft>
-              {wallet ? (
+              {wallet || isConnected ? (
                 <div>
                   <ButtonWithTooltip
                     onClick={() => {

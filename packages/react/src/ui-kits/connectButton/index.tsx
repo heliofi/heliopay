@@ -3,6 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
 import { PuffLoader } from 'react-spinners';
+import { useConnect as useConnectWagmi } from 'wagmi';
 import { ConnectButtonConnecting, StyledButton } from './styles';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { DeeplinkService } from '../../domain/services/DeeplinkService';
@@ -18,6 +19,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
   onError,
 }) => {
   const { connecting } = useWallet();
+  const { isLoading: connectingEVM } = useConnectWagmi();
   const { onConnect, setErrorHandler } = useConnect();
 
   const { getPaymentDetails } = useHelioProvider();
@@ -54,8 +56,11 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
   }, [onError, setErrorHandler]);
 
   return (
-    <StyledButton onClick={() => connectOrRedirect()} disabled={connecting}>
-      {connecting ? (
+    <StyledButton
+      onClick={() => connectOrRedirect()}
+      disabled={connecting || connectingEVM}
+    >
+      {connecting || connectingEVM ? (
         <ConnectButtonConnecting>
           <PuffLoader size={24} color="white" />
           <span>CONNECTING...</span>
