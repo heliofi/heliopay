@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "3.3.8-alpha.0",
+  "version": "3.3.9-alpha.0",
   "description": "React components for Helio",
   "main": "dist/index.js",
   "module": "dist/module.js",
@@ -15,7 +15,7 @@
     "@aws-amplify/api-graphql": "^2.3.12",
     "@heliofi/common": "0.1.219",
     "@heliofi/helio-icons": "^1.0.5",
-    "@heliofi/sdk": "^0.1.13-alpha.0",
+    "@heliofi/sdk": "^0.1.14-alpha.0",
     "@heliofi/solana-adapter": "^3.1.13-alpha.0",
     "@popperjs/core": "^2.11.7",
     "@project-serum/anchor": "^0.25.0",
