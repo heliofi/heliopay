@@ -7,8 +7,6 @@ import { ConnectButtonConnecting, StyledButton } from './styles';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { DeeplinkService } from '../../domain/services/DeeplinkService';
 import { useConnect } from '../../hooks/useConnect';
-import ReactSpinners from 'react-spinners';
-const { PuffLoader } = ReactSpinners;
 export interface ConnectButtonProps {
   paymentRequestType?: PaymentRequestType;
   onError?: (err: unknown) => void;
@@ -62,7 +60,6 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
     >
       {connecting || connectingEVM ? (
         <ConnectButtonConnecting>
-          <PuffLoader size={24} color='white' />
           <span>CONNECTING...</span>
         </ConnectButtonConnecting>
       ) : (
