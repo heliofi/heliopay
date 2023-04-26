@@ -6,17 +6,14 @@ import {
   ErrorPaymentEvent,
   SuccessPaymentEvent,
   PendingPaymentEvent,
-} from '@heliofi/sdk';
-import {
   SECOND_MS,
   StringService,
   TimeFormatterService,
-} from '@heliofi/sdk/dist/src/domain';
+  CreatePaymentService,
+  getTransactionSignature
+} from '@heliofi/sdk';
 import { Currency, IntervalType, Paystream } from '@heliofi/common';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
-import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
-import { getTransactionSignature } from '@heliofi/sdk/dist/src/infrastructure/solana-utils/getTransactionSignature';
-
 import { timeUnitLabels } from '../time-units';
 import { ExplorerLink } from '../../../ui-kits';
 import Alarm from '../../../assets/icons/Alarm';
