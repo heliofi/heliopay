@@ -15,7 +15,7 @@ export const EVMNotFoundWallets = ({ onHide }: EVMNotFoundWalletsProps) => {
     <div className="flex h-[32px] flex-row items-start justify-start">
       <WalletListItem
         walletName="MetaMask"
-        icon="MetaMask"
+        icon="https://helio-assets.s3.eu-west-1.amazonaws.com/MetaMask.png"
         walletOnClick={handleNotFoundWalletClick}
       />
     </div>

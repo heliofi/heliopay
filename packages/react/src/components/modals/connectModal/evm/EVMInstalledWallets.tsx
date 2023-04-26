@@ -29,7 +29,7 @@ export const EVMInstalledWallets = () => {
   return (
     <InstalledWallet
       name="MetaMask"
-      icon="MetaMask"
+      icon="https://helio-assets.s3.eu-west-1.amazonaws.com/MetaMask.png"
       handleWalletClick={handleMetaMaskClick}
     />
   );
