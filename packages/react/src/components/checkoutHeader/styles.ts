@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../ui-kits/styledComponents';
 import { Button } from '../../ui-kits';
 
 export const StyledCHContainer = styled.div`

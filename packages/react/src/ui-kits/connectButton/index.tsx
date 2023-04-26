@@ -7,7 +7,6 @@ import { ConnectButtonConnecting, StyledButton } from './styles';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 import { DeeplinkService } from '../../domain/services/DeeplinkService';
 import { useConnect } from '../../hooks/useConnect';
-
 export interface ConnectButtonProps {
   paymentRequestType?: PaymentRequestType;
   onError?: (err: unknown) => void;
@@ -61,7 +60,6 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
     >
       {connecting || connectingEVM ? (
         <ConnectButtonConnecting>
-
           <span>CONNECTING...</span>
         </ConnectButtonConnecting>
       ) : (

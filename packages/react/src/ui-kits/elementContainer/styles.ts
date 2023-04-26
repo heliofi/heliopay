@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const StyledContainer = styled.div<{ focus?: boolean }>`
   display: flex;

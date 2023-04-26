@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 import { rgba } from '../../utils';
 
 export const StyledButton = styled.button`

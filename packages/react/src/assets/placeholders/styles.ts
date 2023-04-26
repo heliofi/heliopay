@@ -1,4 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from 'styled-components';
+import styled from '../../ui-kits/styledComponents';
 
 const spin = keyframes`
   from {

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const QRButtonWrapper = styled.div`
   display: flex;

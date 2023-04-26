@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../ui-kits/styledComponents';
 import { rgba } from '../../utils';
 
 export const StyledMenuWrapper = styled.div`

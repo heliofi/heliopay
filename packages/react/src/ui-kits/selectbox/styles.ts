@@ -1,5 +1,5 @@
 import { ErrorMessage } from 'formik';
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const StyledSelectWrapper = styled.div`
   margin-bottom: 12px;
