@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const StyledNumberButtons = styled.div`
   display: flex;

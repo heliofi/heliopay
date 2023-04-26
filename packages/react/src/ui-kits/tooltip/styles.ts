@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const StyledTooltipContainer = styled.div`
   position: relative;

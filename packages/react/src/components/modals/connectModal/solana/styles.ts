@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../../../ui-kits/styledComponents';
 
 export const StyledWalletListItemWrapper = styled.div`
   display: flex;

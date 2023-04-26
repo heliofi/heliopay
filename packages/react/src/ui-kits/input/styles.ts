@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Field, ErrorMessage } from 'formik';
+import styled from '../styledComponents';
 
 export const StyledInput = styled.div`
   margin-bottom: 12px;

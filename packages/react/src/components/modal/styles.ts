@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../ui-kits/styledComponents';
 import { TickIcon } from '@heliofi/helio-icons';
 import { Button } from '../../ui-kits';
 

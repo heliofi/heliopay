@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 import { ErrorMessage } from 'formik';
 
 export const StyledWrapper = styled.div`
