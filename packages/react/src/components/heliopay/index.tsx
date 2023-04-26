@@ -18,8 +18,6 @@ import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearch
 import { EVMProvider } from '../../providers/wagmi';
 import ConnectProvider from '../../providers/connect';
 
-import './style.scss';
-
 interface HelioPayProps {
   paymentRequestId: string;
   onSuccess?: (event: SuccessPaymentEvent) => void;
