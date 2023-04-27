@@ -10,7 +10,7 @@ import {
   handleSubmit,
 } from './actions';
 import {
-  Button,
+  ButtonWithTooltip,
   CurrencyIcon,
   PhantomCompatibleCard,
   PriceBanner,
@@ -57,9 +57,7 @@ const BaseCheckout = ({
     removeTokenSwapError,
     paymentType,
   } = useHelioProvider();
-
   const { customerDetails } = useCheckoutSearchParamsProvider();
-
   const { HelioSDK } = useCompositionRoot();
 
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
@@ -102,6 +100,25 @@ const BaseCheckout = ({
     getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
     searchParams
   );
+
+  const isBalanceEnough = (
+    customPrice?: number,
+    quantity?: number,
+    currency?: string,
+    interval?: number
+  ) =>
+    HelioSDK.availableBalanceService.isBalanceEnough({
+      currency: currency || paymentDetails?.currency.symbol,
+      decimalAmount:
+        customPrice ||
+        HelioSDK.tokenConversionService.convertFromMinimalUnits(
+          paymentDetails?.currency.symbol,
+          paymentDetails?.normalizedPrice
+        ),
+      tokenSwapQuote,
+      quantity,
+      interval,
+    });
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
@@ -213,9 +230,29 @@ const BaseCheckout = ({
                       setFieldValue={setFieldValue}
                     />
 
-                    <Button type="submit" disabled={payButtonDisable}>
+                    <ButtonWithTooltip
+                      type="submit"
+                      disabled={
+                        payButtonDisable ||
+                        !isBalanceEnough(
+                          values.customPrice,
+                          values.quantity,
+                          values.currency,
+                          values.interval
+                        )
+                      }
+                      showTooltip={
+                        !isBalanceEnough(
+                          values.customPrice,
+                          values.quantity,
+                          values.currency,
+                          values.interval
+                        )
+                      }
+                      tooltipText="Not enough funds in your wallet"
+                    >
                       {payButtonText}
-                    </Button>
+                    </ButtonWithTooltip>
                   </Form>
                 )}
               </Formik>

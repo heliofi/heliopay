@@ -1,13 +1,11 @@
 import { FormikValues } from 'formik';
-import { StreamTimeService } from '@heliofi/sdk';
+import { StreamTimeService, CreatePaymentService } from '@heliofi/sdk';
 import {
   CustomerDetails,
   Paystream,
   ProductDetails,
   PaymentRequestType,
 } from '@heliofi/common';
-
-import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
 import {
   PaymentDetailsType,
   PaymentFeatures,

@@ -7,6 +7,7 @@ import {
   PhoneNumberInput,
   SelectBox,
   SelectBoxOption,
+  Tooltip,
 } from '../../ui-kits';
 import AddressSection from '../addressSection';
 import { countries, Country } from '../../domain';
@@ -16,9 +17,7 @@ import { FormikProps, FormikSetFieldValue } from '../baseCheckout/constants';
 import {
   StyledFormText,
   StyledFormTitle,
-  StyledProductTooltip,
   StyledProductTooltipIcon,
-  StyledProductTooltipText,
   StyledProductWrapper,
 } from './styles';
 
@@ -32,8 +31,6 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
     label: '',
     value: '',
   });
-  const [productDetailsDescriptionShown, setProductDetailsDescriptionShown] =
-    useState(false);
 
   const countryOptions = countries.map((countryItem: Country) => ({
     label: countryItem.name,
@@ -177,23 +174,11 @@ const CustomerInfo: FC<CustomerInfoProps> = ({ formValues, setFieldValue }) => {
               placeholder="Insert data here..."
               label={paymentDetails?.product.name}
               labelSuffix={
-                <>
-                  {productDetailsDescriptionShown && (
-                    <StyledProductTooltip>
-                      <StyledProductTooltipText>
-                        {paymentDetails?.product.description}
-                      </StyledProductTooltipText>
-                    </StyledProductTooltip>
-                  )}
-                  <StyledProductTooltipIcon
-                    onMouseLeave={() =>
-                      setProductDetailsDescriptionShown(false)
-                    }
-                    onMouseEnter={() => setProductDetailsDescriptionShown(true)}
-                  >
+                <Tooltip tooltipText={paymentDetails?.product.description}>
+                  <StyledProductTooltipIcon>
                     <InfoIcon />
                   </StyledProductTooltipIcon>
-                </>
+                </Tooltip>
               }
             />
           </StyledProductWrapper>
