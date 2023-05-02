@@ -31,7 +31,7 @@ const WalletController = ({
   const { disconnect, publicKey } = useWallet();
   const { disconnect: disconnectEVM } = useDisconnect();
   const [isOpen, setIsOpen] = useState(false);
-  const { onConnect, setErrorHandler } = useConnect();
+  const { onConnect, setErrorHandler, blockchainEngineRef } = useConnect();
   const { getPaymentDetails } = useHelioProvider();
 
   const dropdownRef = useOnClickOutside(() => {
@@ -59,6 +59,7 @@ const WalletController = ({
         setIsOpen(false);
         await disconnect();
         await disconnectEVM();
+        blockchainEngineRef.current = undefined;
       },
       icon: <ExitIcon />,
     },

@@ -66,8 +66,12 @@ export class HelioApiAdapter implements HelioApiConnector {
     );
   }
 
-  async listCurrencies(): Promise<Currency[]> {
-    return this.publicRequest<Currency[]>('/currency', { method: 'GET' }, true);
+  async getCurrencies(): Promise<Currency[]> {
+    return this.publicRequest<Currency[]>(
+      '/currency/all',
+      { method: 'GET' },
+      true
+    );
   }
 
   async getTokenSwapMintAddresses(mintAddress: string): Promise<string[]> {

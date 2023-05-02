@@ -1,7 +1,7 @@
 import { Cluster } from '@solana/web3.js';
 
 import {
-  AvailableBalanceService,
+  SolAvailableBalanceService,
   ConfigService,
   CurrencyService,
   HelioApiConnector,
@@ -34,7 +34,11 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
-  private _availableBalanceService: AvailableBalanceService;
+  private _solAvailableBalanceService: SolAvailableBalanceService;
+
+  private _ethAvailableBalanceService: SolAvailableBalanceService;
+
+  private _polygonAvailableBalanceService: SolAvailableBalanceService;
 
   constructor(options?: { cluster: Cluster }) {
     this._cluster = options?.cluster;
@@ -60,7 +64,15 @@ export class HelioSDK {
       this._currencyService,
       this._configService
     );
-    this._availableBalanceService = new AvailableBalanceService(
+    this._solAvailableBalanceService = new SolAvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService
+    );
+    this._ethAvailableBalanceService = new SolAvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService
+    );
+    this._polygonAvailableBalanceService = new SolAvailableBalanceService(
       this._tokenConversionService,
       this._currencyService
     );
@@ -117,8 +129,18 @@ export class HelioSDK {
     return this._configService;
   }
 
-  get availableBalanceService(): AvailableBalanceService | never {
+  get solAvailableBalanceService(): SolAvailableBalanceService | never {
     this.checkCluster();
-    return this._availableBalanceService;
+    return this._solAvailableBalanceService;
+  }
+
+  get ethAvailableBalanceService(): SolAvailableBalanceService | never {
+    this.checkCluster();
+    return this._ethAvailableBalanceService;
+  }
+
+  get polygonAvailableBalanceService(): SolAvailableBalanceService | never {
+    this.checkCluster();
+    return this._polygonAvailableBalanceService;
   }
 }

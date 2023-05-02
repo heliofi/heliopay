@@ -22,7 +22,7 @@ export interface HelioApiConnector {
     country_code: string
   ): Promise<FetchifyRetrieveAddress>;
 
-  listCurrencies(): Promise<Currency[]>;
+  getCurrencies(): Promise<Currency[]>;
 
   getPaymentRequestByIdPublic(
     id: string,

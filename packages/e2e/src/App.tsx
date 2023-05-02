@@ -13,7 +13,8 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '643d47cee509bc5eb64cff48'
+    // '643d47cee509bc5eb64cff48'
+    '64492a4272e83d39da9e2ee0'
   );
 
   return (
@@ -38,7 +39,8 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC', 'SOL']}
+        // supportedCurrencies={['USDC', 'SOL', 'MATIC']}
+        supportedCurrencies={['MATIC']}
         // paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />

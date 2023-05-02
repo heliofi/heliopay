@@ -1,5 +1,9 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 
+import { BlockchainSymbol, CurrencyType } from '@heliofi/common';
+import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
+import { Contract } from 'ethers';
+import { erc20 } from '@heliofi/evm-adapter';
 import { TokenConversionService } from './TokenConversionService';
 import { AvailableBalance, TokenSwapQuote } from '../model';
 import { CurrencyService } from './CurrencyService';
@@ -19,7 +23,7 @@ interface Props {
   tokenSwapQuote: TokenSwapQuote | null;
 }
 
-export class AvailableBalanceService {
+export class PolygonAvailableBalanceService {
   availableBalances: AvailableBalance[] = [];
 
   constructor(
@@ -135,4 +139,52 @@ export class AvailableBalanceService {
       return [];
     }
   }
+
+  getAvailableBalances = async (
+    publicKey: EVMPublicKey | string,
+    currencies: Currency[]
+  ): Promise<AvailableBalance[]> => {
+    try {
+      const tokenConversionService = new TokenConversionServiceV2(currencies);
+
+      const localCurrencies =
+        this.currencyService.getCurrenciesByTypeAndBlockchain({
+          type: CurrencyType.DIGITAL,
+          blockchain: BlockchainSymbol.POLYGON,
+        });
+
+      const provider = new Web3Provider(window.ethereum as ExternalProvider);
+
+      const balancesSettledResult = await Promise.allSettled(
+        localCurrencies.map(async (currency) => {
+          const contract = new Contract(
+            String(currency.mintAddress),
+            erc20.abi,
+            provider
+          );
+          const balance: BigNumber = await contract.balanceOf(publicKey);
+
+          const decimalAmount = tokenConversionService.convertFromMinimalUnits({
+            symbol: currency.symbol,
+            minimalAmount: balance.toBigInt(),
+            blockchain: BlockchainSymbol.POLYGON,
+          });
+
+          return {
+            value: decimalAmount.toString(),
+            tokenSymbol: currency.symbol,
+          };
+        })
+      );
+
+      return balancesSettledResult
+        .filter(
+          (item): item is PromiseFulfilledResult<AvailableBalance> =>
+            item.status === 'fulfilled'
+        )
+        .map((item) => item.value);
+    } catch (error) {
+      throw Error('Cannot fetch available polygon balances');
+    }
+  };
 }

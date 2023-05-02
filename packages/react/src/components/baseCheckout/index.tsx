@@ -1,8 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
-import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
+import {
+  BlockchainSymbol,
+  Currency,
+  IntervalType,
+  LinkFeaturesDto,
+  PaymentRequestType,
+} from '@heliofi/common';
 
+import { DAY, HOUR, MINUTE, MONTH, WEEK } from '@heliofi/sdk/dist/src';
+import { useAccount } from 'wagmi';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
   formatTotalPrice,
   getCurrency,
@@ -60,6 +69,9 @@ const BaseCheckout = ({
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
 
+  const { connection } = useConnection();
+  const { publicKey } = useWallet();
+
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
@@ -106,19 +118,43 @@ const BaseCheckout = ({
     quantity?: number,
     currency?: string,
     interval?: number
-  ) =>
-    HelioSDK.availableBalanceService.isBalanceEnough({
-      currency: currency || paymentDetails?.currency.symbol,
-      decimalAmount:
-        customPrice ||
-        HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency.symbol,
-          paymentDetails?.normalizedPrice
-        ),
-      tokenSwapQuote,
-      quantity,
-      interval,
-    });
+  ): boolean => {
+    const areCurrenciesDefined = currencyList.length > 0;
+
+    const { address: evmPublicKey } = useAccount();
+
+    if (
+      evmPublicKey &&
+      paymentDetails?.currency.blockchain.symbol === BlockchainSymbol.POLYGON &&
+      areCurrenciesDefined
+    ) {
+    } else if (
+      evmPublicKey &&
+      paymentDetails?.currency.blockchain.symbol === BlockchainSymbol.ETH &&
+      areCurrenciesDefined
+    ) {
+    } else if (
+      publicKey != null &&
+      connection != null &&
+      areCurrenciesDefined
+    ) {
+      return HelioSDK.solAvailableBalanceService.isBalanceEnough({
+        currency: currency || paymentDetails?.currency.symbol,
+        decimalAmount:
+          customPrice ||
+          HelioSDK.tokenConversionService.convertFromMinimalUnits(
+            paymentDetails?.currency.symbol,
+            paymentDetails?.normalizedPrice,
+            paymentDetails?.currency?.blockchain?.symbol
+          ),
+        tokenSwapQuote,
+        quantity,
+        interval,
+      });
+    }
+
+    return false;
+  };
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
@@ -138,11 +174,16 @@ const BaseCheckout = ({
       setDecimalAmount(
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency?.symbol,
-          paymentDetails?.normalizedPrice
+          paymentDetails?.normalizedPrice,
+          paymentDetails?.currency?.blockchain?.symbol
         )
       );
     }
-  }, [paymentDetails?.currency, paymentDetails?.normalizedPrice]);
+  }, [
+    paymentDetails?.currency,
+    paymentDetails?.normalizedPrice,
+    paymentDetails?.currency?.blockchain?.symbol,
+  ]);
 
   useEffect(() => {
     if (!showSwapMenu) {

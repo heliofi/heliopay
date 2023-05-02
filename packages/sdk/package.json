@@ -30,7 +30,8 @@
     "ethers": "^5.7.2",
     "jwt-decode": "^3.1.2",
     "@heliofi/evm-adapter": "0.0.30-beta",
-    "@ethersproject/providers": "^5.7.0"
+    "@ethersproject/providers": "^5.7.0",
+    "wagmi": "^0.8.6"
   },
   "devDependencies": {
     "@heliofi/eslint-config-helio": "^0.1.1",

@@ -1,4 +1,4 @@
-import { Currency } from '@heliofi/common';
+import { BlockchainSymbol, Currency } from '@heliofi/common';
 import { HelioApiConnector } from '../model';
 
 export class CurrencyService {
@@ -46,8 +46,39 @@ export class CurrencyService {
     }
   }
 
+  getCurrencyBySymbolAndBlockchain({
+    symbol,
+    blockchain,
+  }: {
+    symbol: string;
+    blockchain?: BlockchainSymbol;
+  }): Currency | undefined {
+    if (!this.hasCurrencyResult()) {
+      throw new Error(`You should call currencyService.getCurrencies() before`);
+    }
+
+    const currency = this.currencies?.find((curr) => {
+      if (blockchain) {
+        // console.log(symbol, blockchain); MATIC POLYGON
+        // console.log(curr.symbol, curr.blockchain?.symbol);
+        return curr.symbol === symbol && curr.blockchain?.symbol === blockchain;
+      }
+      return false;
+    });
+
+    return currency || this.currencies?.find((curr) => curr.symbol === symbol);
+
+    // if (currency) {
+    //   return currency;
+    // }
+    //
+    // currency = this.currencies?.find((curr) => curr.symbol === symbol);
+    //
+    // return currency;
+  }
+
   async getCurrencies(): Promise<Currency[]> {
-    const result = await this.apiService.listCurrencies();
+    const result = await this.apiService.getCurrencies();
 
     if (!this.hasCurrencyResult()) {
       this.setCurrencies(result);

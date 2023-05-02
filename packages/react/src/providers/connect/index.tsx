@@ -57,6 +57,16 @@ const ConnectProvider: FC<{
   const getErrorHandler = useCallback(() => onErrorRef.current, []);
 
   useEffect(() => {
+    if (!isConnecting && (connected || isConnected)) {
+      if (isConnected) {
+        blockchainEngineRef.current = BlockchainEngineType.EVM;
+      } else {
+        blockchainEngineRef.current = BlockchainEngineType.SOL;
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (isConnecting && (connected || isConnected)) {
       setIsConnecting(false);
       setIsExtensionOpen(true);

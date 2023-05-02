@@ -48,6 +48,7 @@ import {
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
 import { ConnectButton } from '../../ui-kits/connectButton';
+import { useConnect } from '../../hooks/useConnect';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -78,7 +79,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const { isConnected } = useAccount();
-
+  const { blockchainEngineRef } = useConnect();
   const helioProvider = useAnchorProvider();
   const { dynamicRateToken } = useTokenConversion();
   const {
@@ -108,13 +109,16 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
+  const walletConnected = wallet || isConnected;
+
   const isBalanceEnough = useMemo(
     () =>
-      HelioSDK.availableBalanceService.isBalanceEnough({
+      HelioSDK.solAvailableBalanceService.isBalanceEnough({
         currency: paymentDetails?.currency.symbol,
         decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency.symbol,
-          paymentDetails?.normalizedPrice
+          paymentDetails?.normalizedPrice,
+          paymentDetails?.currency?.blockchain?.symbol
         ),
         tokenSwapQuote,
       }),
@@ -136,7 +140,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       (currency) =>
         supportedCurrencies?.includes(currency.symbol) &&
         (!currency?.blockchain ||
-          currency?.blockchain?.engine?.type === BlockchainEngineType.SOL)
+          currency?.blockchain?.engine?.type === BlockchainEngineType.SOL ||
+          currency?.blockchain?.engine?.type === BlockchainEngineType.EVM)
     );
     setAllowedCurrencies(allowedCurrenciesTemp || []);
   };
@@ -271,7 +276,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   useEffect(() => {
     if (wallet) {
-      HelioSDK.availableBalanceService
+      HelioSDK.solAvailableBalanceService
         .fetchAvailableBalances(wallet.publicKey, connectionProvider.connection)
         .catch();
     }
@@ -310,7 +315,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         <>
           <StyledRow>
             <StyledLeft>
-              {wallet || isConnected ? (
+              {walletConnected ? (
                 <div>
                   <ButtonWithTooltip
                     onClick={() => {
@@ -358,7 +363,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           )}
           @todo-v fix this case
            */}
-          {(wallet || isConnected) && <WalletController />}
+          {walletConnected && (
+            <WalletController paymentRequestType={paymentRequestType} />
+          )}
         </>
       ) : (
         <>
