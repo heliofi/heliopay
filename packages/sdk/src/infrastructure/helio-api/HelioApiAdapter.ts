@@ -2,12 +2,14 @@ import {
   Currency,
   FetchifyFindAddress,
   FetchifyRetrieveAddress,
+  OnlyContentAndTransactionPaylink,
   PaymentRequest,
   PaymentRequestType,
   PrepareSwapTransaction,
   PrepareTransaction,
   SwapRouteToken,
   TokenQuoting,
+  transactionStatusTokenHeaderName,
 } from '@heliofi/common';
 
 import type { ConfigService, HelioApiConnector } from '../../domain';
@@ -166,6 +168,22 @@ export class HelioApiAdapter implements HelioApiConnector {
       { method: 'GET' },
       true
     );
+  }
+
+  async getTransactionStatus(
+    statusToken: string,
+    endpoint = '/transaction/status'
+  ): Promise<OnlyContentAndTransactionPaylink> {
+    const res = await this.publicRequest<OnlyContentAndTransactionPaylink>(
+      endpoint,
+      {
+        method: 'GET',
+        headers: { [transactionStatusTokenHeaderName]: statusToken },
+      },
+      true
+    );
+
+    return OnlyContentAndTransactionPaylink.fromObject(res);
   }
 
   private async publicRequest<T>(

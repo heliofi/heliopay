@@ -8,3 +8,4 @@ export * from './HelioApiConnector';
 export * from './CurrencySymbol';
 export * from './AvailableBalance';
 export * from './TokenSwapQuote';
+export * from './LoadingModalStep';

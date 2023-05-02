@@ -33,7 +33,7 @@ const Tabs: FC<TabsProps> = ({ tabs, activeTab = tabs[0], onTabChange }) => {
           active={currentTab.id === tab.id}
           onClick={() => !tab.disabled && handleTabChange(tab)}
         >
-          <p>{tab.title}</p>
+          <span>{tab.title}</span>
         </StyledTabItem>
       ))}
     </StyledTabWrapper>

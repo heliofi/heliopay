@@ -2974,6 +2974,13 @@
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
 
+"@heliofi/evm-adapter@0.0.30-beta":
+  version "0.0.30-beta"
+  resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.30-beta.tgz#ee82f2813b6f827a6b9cd274ef0ef962f430fcac"
+  integrity sha512-B0tAEUKU7+VqqL/5esaR45TPkqTkHX0/Xb6Y8fGGjdiHosMjnEB5+1KZ/Crth7F5gfzOD0yxTSZltA3i3ZHWOA==
+  dependencies:
+    ethers "^5.7.2"
+
 "@heliofi/evm-adapter@^0.0.28-beta":
   version "0.0.28-beta"
   resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.28-beta.tgz#3e55af3e6a34cf2c956728610396833265587dbe"
@@ -9637,7 +9644,7 @@ dotenv@~10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
-downshift@^6.1.7f:
+downshift@^6.1.7:
   version "6.1.12"
   resolved "https://registry.yarnpkg.com/downshift/-/downshift-6.1.12.tgz#f14476b41a6f6fd080c340bad1ddf449f7143f6f"
   integrity sha512-7XB/iaSJVS4T8wGFT3WRXmSF1UlBHAA40DshZtkrIscIN+VC+Lh363skLxFTvJwtNgHxAMDGEHT4xsyQFWL+UA==

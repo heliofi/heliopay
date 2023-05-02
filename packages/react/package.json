@@ -30,7 +30,7 @@
     "bs58": "^5.0.0",
     "class-transformer": "^0.5.1",
     "crypto-js": "^4.1.1",
-    "downshift": "^6.1.7f",
+    "downshift": "^6.1.7",
     "formik": "^2.2.9",
     "jest": "^28.1.1",
     "json5": "^2.2.2",

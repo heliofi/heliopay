@@ -17,7 +17,7 @@ export const getCancelEscrowTx = async (
   program: Program<HelioNftIdl>,
   req: CancelEscrowRequest
 ): Promise<Transaction> => {
-  const escrowAccount = req.escrowAccount;
+  const { escrowAccount } = req;
 
   const ownerNftAccount = await getAssociatedTokenAddress(req.mint, req.owner);
 
@@ -31,7 +31,7 @@ export const getCancelEscrowTx = async (
     program.programId
   );
 
-  return await program.methods
+  return program.methods
     .cancelEscrow()
     .accounts({
       owner: req.owner,
