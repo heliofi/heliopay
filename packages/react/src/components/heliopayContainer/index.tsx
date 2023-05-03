@@ -79,6 +79,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 }) => {
   const wallet = useAnchorWallet();
   const { isConnected } = useAccount();
+  const { address: evmPublicKey } = useAccount();
   const { blockchainEngineRef } = useConnect();
   const helioProvider = useAnchorProvider();
   const { dynamicRateToken } = useTokenConversion();
@@ -111,18 +112,18 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const walletConnected = wallet || isConnected;
 
+  // @todo-v swapCurrency
   const isBalanceEnough = useMemo(
     () =>
-      HelioSDK.solAvailableBalanceService.isBalanceEnough({
-        currency: paymentDetails?.currency.symbol,
+      HelioSDK.availableBalanceService.isBalanceEnough({
         decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
           paymentDetails?.currency.symbol,
           paymentDetails?.normalizedPrice,
           paymentDetails?.currency?.blockchain?.symbol
         ),
-        tokenSwapQuote,
+        isTokenSwapped: false,
       }),
-    [paymentDetails, tokenSwapQuote]
+    [paymentDetails, HelioSDK]
   );
 
   const notEnoughFunds =
@@ -274,13 +275,26 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setPaymentType(paymentType);
   }, [paymentType]);
 
+  // @todo-v swapCurrency
   useEffect(() => {
-    if (wallet) {
-      HelioSDK.solAvailableBalanceService
-        .fetchAvailableBalances(wallet.publicKey, connectionProvider.connection)
-        .catch();
+    if (walletConnected) {
+      HelioSDK.availableBalanceService.fetchAvailableBalance({
+        publicKey: wallet?.publicKey,
+        evmPublicKey,
+        blockchain: paymentDetails?.currency.blockchain.symbol,
+        areCurrenciesDefined: currencyList.length > 0,
+        currency: paymentDetails?.currency.symbol,
+        canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
+        swapCurrency: 'SOL',
+        tokenSwapQuote: tokenSwapQuote ?? undefined,
+        decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
+          paymentDetails?.currency.symbol,
+          paymentDetails?.normalizedPrice,
+          paymentDetails?.currency?.blockchain?.symbol
+        ),
+      });
     }
-  }, [wallet, connectionProvider]);
+  }, [walletConnected]);
 
   useEffect(() => {
     if (mainCluster) {

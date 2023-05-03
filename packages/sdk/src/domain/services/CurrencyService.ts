@@ -1,4 +1,4 @@
-import { BlockchainSymbol, Currency } from '@heliofi/common';
+import { BlockchainSymbol, Currency, CurrencyType } from '@heliofi/common';
 import { HelioApiConnector } from '../model';
 
 export class CurrencyService {
@@ -75,6 +75,19 @@ export class CurrencyService {
     // currency = this.currencies?.find((curr) => curr.symbol === symbol);
     //
     // return currency;
+  }
+
+  getCurrenciesByTypeAndBlockchain({
+    type,
+    blockchain,
+  }: {
+    type: CurrencyType;
+    blockchain?: BlockchainSymbol;
+  }): Currency[] {
+    return this.currencies.filter(
+      (currency) =>
+        currency.type === type && currency?.blockchain?.symbol === blockchain
+    );
   }
 
   async getCurrencies(): Promise<Currency[]> {

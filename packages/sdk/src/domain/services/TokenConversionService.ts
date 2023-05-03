@@ -6,7 +6,7 @@ export class TokenConversionService {
   constructor(private currencyService: CurrencyService) {}
 
   convertFromMinimalUnits(
-    symbol: any,
+    symbol: string,
     minimalAmount: bigint,
     blockchain?: BlockchainSymbol
   ): number {

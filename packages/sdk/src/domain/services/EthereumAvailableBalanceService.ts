@@ -7,7 +7,8 @@ import { AvailableBalance } from '../model';
 import { CurrencyService } from './CurrencyService';
 import { EVMPublicKey } from '../model/blockchain';
 
-export class PolygonAvailableBalanceService {
+// @todo-v
+export class EthereumAvailableBalanceService {
   constructor(
     private tokenConversionService: TokenConversionService,
     private currencyService: CurrencyService
@@ -19,7 +20,7 @@ export class PolygonAvailableBalanceService {
     const localCurrencies =
       this.currencyService.getCurrenciesByTypeAndBlockchain({
         type: CurrencyType.DIGITAL,
-        blockchain: BlockchainSymbol.POLYGON,
+        blockchain: BlockchainSymbol.ETH,
       });
 
     const provider = new Web3Provider(window.ethereum as ExternalProvider);
@@ -37,7 +38,7 @@ export class PolygonAvailableBalanceService {
           this.tokenConversionService.convertFromMinimalUnits(
             currency.symbol,
             balance.toBigInt(),
-            BlockchainSymbol.POLYGON
+            BlockchainSymbol.ETH
           );
 
         return {

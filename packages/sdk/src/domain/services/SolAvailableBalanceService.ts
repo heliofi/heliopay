@@ -1,7 +1,8 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 
+import { useConnection } from '@solana/wallet-adapter-react';
 import { TokenConversionService } from './TokenConversionService';
-import { AvailableBalance, TokenSwapQuote } from '../model';
+import { AvailableBalance } from '../model';
 import { CurrencyService } from './CurrencyService';
 
 interface TokenBalanceInfo {
@@ -9,26 +10,18 @@ interface TokenBalanceInfo {
   amount: number;
 }
 
-interface Props {
-  decimalAmount: number;
-  currency?: string;
-  canSwapTokens?: boolean;
-  swapCurrency?: string;
-  quantity?: number;
-  interval?: number;
-  tokenSwapQuote: TokenSwapQuote | null;
-}
-
 export class SolAvailableBalanceService {
-  availableBalances: AvailableBalance[] = [];
-
   constructor(
     private tokenConversionService: TokenConversionService,
     private currencyService: CurrencyService
   ) {}
 
-  async fetchAvailableBalances(publicKey: PublicKey, connection: Connection) {
-    const solMinimalAmount = await connection.getBalance(publicKey);
+  async getAvailableBalance(publicKey: PublicKey): Promise<AvailableBalance[]> {
+    const connectionProvider = useConnection();
+
+    const solMinimalAmount = await connectionProvider.connection.getBalance(
+      publicKey
+    );
     const solDecimalAmount =
       this.tokenConversionService.convertFromMinimalUnits(
         'SOL',
@@ -42,7 +35,7 @@ export class SolAvailableBalanceService {
 
     const userTokens: TokenBalanceInfo[] = await this.getTokenBalances(
       publicKey,
-      connection
+      connectionProvider.connection
     );
 
     const splTokenBalances: AvailableBalance[] = [];
@@ -60,42 +53,7 @@ export class SolAvailableBalanceService {
       }
     });
 
-    this.availableBalances = splTokenBalances.concat(solBalance);
-  }
-
-  isBalanceEnough({
-    decimalAmount,
-    currency,
-    canSwapTokens,
-    swapCurrency,
-    quantity,
-    interval,
-    tokenSwapQuote,
-  }: Props): boolean {
-    const isTokenSwapped = !!(canSwapTokens && swapCurrency);
-
-    const swappedPrice =
-      swapCurrency && tokenSwapQuote?.inAmount
-        ? this.tokenConversionService.convertFromMinimalUnits(
-            swapCurrency,
-            BigInt(tokenSwapQuote?.inAmount)
-          )
-        : 0;
-
-    const availableSolBalance =
-      Number(
-        this.availableBalances.find(
-          (balance) =>
-            balance.tokenSymbol === (isTokenSwapped ? swapCurrency : currency)
-        )?.value
-      ) || 0;
-
-    return (
-      availableSolBalance >=
-      (isTokenSwapped
-        ? swappedPrice
-        : (quantity ?? 1) * (interval ?? 1) * decimalAmount)
-    );
+    return splTokenBalances.concat(solBalance);
   }
 
   private async getTokenBalances(

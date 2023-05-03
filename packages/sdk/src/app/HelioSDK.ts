@@ -7,6 +7,9 @@ import {
   HelioApiConnector,
   SolExplorerService,
   TokenConversionService,
+  PolygonAvailableBalanceService,
+  AvailableBalanceService,
+  EthereumAvailableBalanceService,
 } from '../domain';
 import {
   HelioApiAdapter,
@@ -36,9 +39,11 @@ export class HelioSDK {
 
   private _solAvailableBalanceService: SolAvailableBalanceService;
 
-  private _ethAvailableBalanceService: SolAvailableBalanceService;
+  private _ethAvailableBalanceService: EthereumAvailableBalanceService;
 
-  private _polygonAvailableBalanceService: SolAvailableBalanceService;
+  private _polygonAvailableBalanceService: PolygonAvailableBalanceService;
+
+  private _availableBalanceService: AvailableBalanceService;
 
   constructor(options?: { cluster: Cluster }) {
     this._cluster = options?.cluster;
@@ -68,13 +73,20 @@ export class HelioSDK {
       this._tokenConversionService,
       this._currencyService
     );
-    this._ethAvailableBalanceService = new SolAvailableBalanceService(
+    this._ethAvailableBalanceService = new EthereumAvailableBalanceService(
       this._tokenConversionService,
       this._currencyService
     );
-    this._polygonAvailableBalanceService = new SolAvailableBalanceService(
+    this._polygonAvailableBalanceService = new PolygonAvailableBalanceService(
       this._tokenConversionService,
       this._currencyService
+    );
+    this._availableBalanceService = new AvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService,
+      this._solAvailableBalanceService,
+      this._polygonAvailableBalanceService,
+      this._ethAvailableBalanceService
     );
   }
 
@@ -134,13 +146,18 @@ export class HelioSDK {
     return this._solAvailableBalanceService;
   }
 
-  get ethAvailableBalanceService(): SolAvailableBalanceService | never {
+  get ethAvailableBalanceService(): EthereumAvailableBalanceService | never {
     this.checkCluster();
     return this._ethAvailableBalanceService;
   }
 
-  get polygonAvailableBalanceService(): SolAvailableBalanceService | never {
+  get polygonAvailableBalanceService(): PolygonAvailableBalanceService | never {
     this.checkCluster();
     return this._polygonAvailableBalanceService;
+  }
+
+  get availableBalanceService(): AvailableBalanceService | never {
+    this.checkCluster();
+    return this._availableBalanceService;
   }
 }

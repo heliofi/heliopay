@@ -78,6 +78,7 @@ const BaseCheckout = ({
   const [showQRCode, setShowQRCode] = useState(false);
 
   const canSelectCurrency = allowedCurrencies.length > 1;
+  const canSwapTokens = !!getPaymentFeatures().canSwapTokens;
 
   const payButtonText =
     showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError
@@ -113,48 +114,19 @@ const BaseCheckout = ({
     searchParams
   );
 
-  const isBalanceEnough = (
-    customPrice?: number,
-    quantity?: number,
-    currency?: string,
-    interval?: number
-  ): boolean => {
-    const areCurrenciesDefined = currencyList.length > 0;
-
-    const { address: evmPublicKey } = useAccount();
-
-    if (
-      evmPublicKey &&
-      paymentDetails?.currency.blockchain.symbol === BlockchainSymbol.POLYGON &&
-      areCurrenciesDefined
-    ) {
-    } else if (
-      evmPublicKey &&
-      paymentDetails?.currency.blockchain.symbol === BlockchainSymbol.ETH &&
-      areCurrenciesDefined
-    ) {
-    } else if (
-      publicKey != null &&
-      connection != null &&
-      areCurrenciesDefined
-    ) {
-      return HelioSDK.solAvailableBalanceService.isBalanceEnough({
-        currency: currency || paymentDetails?.currency.symbol,
-        decimalAmount:
-          customPrice ||
-          HelioSDK.tokenConversionService.convertFromMinimalUnits(
-            paymentDetails?.currency.symbol,
-            paymentDetails?.normalizedPrice,
-            paymentDetails?.currency?.blockchain?.symbol
-          ),
-        tokenSwapQuote,
-        quantity,
-        interval,
-      });
-    }
-
-    return false;
-  };
+  // @todo-v swapCurrency
+  const isBalanceEnough = (customPrice?: number, quantity?: number): boolean =>
+    HelioSDK.availableBalanceService.isBalanceEnough({
+      quantity,
+      decimalAmount:
+        customPrice ||
+        HelioSDK.tokenConversionService.convertFromMinimalUnits(
+          paymentDetails?.currency.symbol,
+          paymentDetails?.normalizedPrice,
+          paymentDetails?.currency?.blockchain?.symbol
+        ),
+      isTokenSwapped: !!(canSwapTokens && 'SOL'),
+    });
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
@@ -201,7 +173,7 @@ const BaseCheckout = ({
             )
           }
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
-          showSwap={!!getPaymentFeatures().canSwapTokens}
+          showSwap={canSwapTokens}
           isSwapShown={showSwapMenu}
           toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
           onHide={onHide}
@@ -275,20 +247,10 @@ const BaseCheckout = ({
                       type="submit"
                       disabled={
                         payButtonDisable ||
-                        !isBalanceEnough(
-                          values.customPrice,
-                          values.quantity,
-                          values.currency,
-                          values.interval
-                        )
+                        !isBalanceEnough(values.customPrice, values.quantity)
                       }
                       showTooltip={
-                        !isBalanceEnough(
-                          values.customPrice,
-                          values.quantity,
-                          values.currency,
-                          values.interval
-                        )
+                        !isBalanceEnough(values.customPrice, values.quantity)
                       }
                       tooltipText="Not enough funds in your wallet"
                     >
