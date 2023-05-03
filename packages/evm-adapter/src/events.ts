@@ -1,3 +1,5 @@
+import { RecipientAndAmount } from './types';
+
 export type PaymentEvent = {
   sender: string;
   recipient: string;
@@ -12,6 +14,25 @@ export type EthPaymentEvent = {
   recipient: string;
   transferAmount: bigint;
   feeAmount: bigint;
+  transactionDbId: string;
+};
+
+export type SplitPaymentEvent = {
+  sender: string;
+  recipient: string;
+  tokenAddress: string;
+  transferAmount: bigint;
+  feeAmount: bigint;
+  splitData: RecipientAndAmount[];
+  transactionDbId: string;
+};
+
+export type SplitEthPaymentEvent = {
+  sender: string;
+  recipient: string;
+  transferAmount: bigint;
+  feeAmount: bigint;
+  splitData: RecipientAndAmount[];
   transactionDbId: string;
 };
 
