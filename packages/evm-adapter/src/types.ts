@@ -1,8 +1,6 @@
-import { BigNumber } from 'ethers';
-
 export type RecipientAndAmount = {
   recipient: string;
-  amount: BigNumber;
+  amount: bigint;
 };
 
 export type PaymentRequest = {
