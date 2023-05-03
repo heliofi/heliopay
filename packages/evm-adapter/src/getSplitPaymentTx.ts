@@ -26,7 +26,6 @@ export const getSplitPaymentTx = async (
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),
-      nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
   unsignedTx.chainId = chainId;
