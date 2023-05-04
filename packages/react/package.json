@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aws-amplify/api-graphql": "^2.3.12",
-    "@heliofi/common": "0.1.219",
+    "@heliofi/common": "0.1.248",
     "@heliofi/helio-icons": "^1.0.5",
     "@heliofi/sdk": "^0.1.18-alpha.0",
     "@heliofi/solana-adapter": "^3.1.15-alpha.0",
@@ -47,7 +47,8 @@
     "ts-jest": "^28.0.5",
     "tweetnacl": "^1.0.3",
     "wagmi": "^0.8.6",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@ethersproject/providers": "^5.7.0"
   },
   "devDependencies": {
     "@heliofi/eslint-config-helio": "^0.1.1",

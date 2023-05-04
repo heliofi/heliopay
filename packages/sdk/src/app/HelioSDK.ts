@@ -17,6 +17,8 @@ import {
   PaystreamStartService,
   PaystreamCancelService,
 } from '../infrastructure';
+import { PolygonPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/PolygonPaylinkSubmitService';
+import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/EthPaylinkSubmitService';
 
 export class HelioSDK {
   private _cluster?: Cluster;
@@ -30,6 +32,10 @@ export class HelioSDK {
   private _solExplorerService: SolExplorerService;
 
   private _paylinkService: PaylinkSubmitService;
+
+  private _polygonPaylinkService: PolygonPaylinkSubmitService;
+
+  private _ethPaylinkService: EthPaylinkSubmitService;
 
   private _paystreamStartService: PaystreamStartService;
 
@@ -55,6 +61,16 @@ export class HelioSDK {
     );
     this._solExplorerService = new SolExplorerService(this._configService);
     this._paylinkService = new PaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._polygonPaylinkService = new PolygonPaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._ethPaylinkService = new EthPaylinkSubmitService(
       this._apiService,
       this._currencyService,
       this._configService
@@ -124,6 +140,16 @@ export class HelioSDK {
   get paylinkService(): PaylinkSubmitService | never {
     this.checkCluster();
     return this._paylinkService;
+  }
+
+  get polygonPaylinkService(): PolygonPaylinkSubmitService | never {
+    this.checkCluster();
+    return this._polygonPaylinkService;
+  }
+
+  get ethPaylinkService(): EthPaylinkSubmitService | never {
+    this.checkCluster();
+    return this._ethPaylinkService;
   }
 
   get paystreamStartService(): PaystreamStartService | never {

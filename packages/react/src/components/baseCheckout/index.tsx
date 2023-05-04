@@ -115,8 +115,11 @@ const BaseCheckout = ({
   );
 
   // @todo-v swapCurrency
-  const isBalanceEnough = (customPrice?: number, quantity?: number): boolean =>
-    HelioSDK.availableBalanceService.isBalanceEnough({
+  const isBalanceEnough = (
+    customPrice?: number,
+    quantity?: number
+  ): boolean => {
+    const ret = HelioSDK.availableBalanceService.isBalanceEnough({
       quantity,
       decimalAmount:
         customPrice ||
@@ -127,6 +130,9 @@ const BaseCheckout = ({
         ),
       isTokenSwapped: !!(canSwapTokens && 'SOL'),
     });
+    console.log('isBalanceEnough', ret);
+    return ret;
+  };
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
