@@ -93,9 +93,7 @@ export abstract class BaseEvmPaymentService<
   }
 
   public async handleTransaction(props: Props): Promise<void> {
-    console.log(1111111111111111111111111111111111111111111111111);
     await this.init(props);
-    console.log(22222222222222222222222222222222222222222222222);
     const properties = props as Record<string, unknown>;
     const requestOrPaymentId =
       properties.paymentId ??
