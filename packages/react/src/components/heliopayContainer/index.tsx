@@ -446,7 +446,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           @todo-v fix this case
            */}
           {walletConnected && (
-            <WalletController paymentRequestType={paymentRequestType} />
+            <WalletController
+              paymentRequestType={paymentRequestType}
+              blockchain={blockchain}
+            />
           )}
         </>
       ) : (

@@ -11,13 +11,6 @@ export const deepMerge = (target: any, source: any) => {
   return target;
 };
 
-export const shortenWalletAddress = (address: string): string => {
-  if (address === 'null') {
-    return 'N/A';
-  }
-  return `${address.slice(0, 6)}..${address.slice(-3)}`;
-};
-
 export const hexToRgb = (hex: string) => {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   const hexTemp = hex.replace(

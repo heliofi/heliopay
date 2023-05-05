@@ -3,8 +3,11 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { ExitIcon, ArrowsDoubleIcon } from '@heliofi/helio-icons';
 import { useDisconnect } from 'wagmi';
 
-import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
-import { shortenWalletAddress } from '../../utils';
+import {
+  BlockchainEngineType,
+  BlockchainSymbol,
+  PaymentRequestType,
+} from '@heliofi/common';
 import useOnClickOutside from '../../hooks/useClickOutside';
 
 import {
@@ -20,6 +23,7 @@ import { useConnect } from '../../hooks/useConnect';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
 export interface WalletControllerProps {
+  blockchain?: BlockchainSymbol;
   paymentRequestType?: PaymentRequestType;
   onError?: (err: unknown) => void;
 }
@@ -27,8 +31,9 @@ export interface WalletControllerProps {
 const WalletController = ({
   paymentRequestType,
   onError,
+  blockchain,
 }: WalletControllerProps) => {
-  const { disconnect, publicKey } = useWallet();
+  const { disconnect } = useWallet();
   const { disconnect: disconnectEVM } = useDisconnect();
   const [isOpen, setIsOpen] = useState(false);
   const { onConnect, setErrorHandler, blockchainEngineRef } = useConnect();
@@ -65,6 +70,17 @@ const WalletController = ({
     },
   ];
 
+  const getConnectionName = (blockchainSymbol?: BlockchainSymbol): string => {
+    switch (blockchainSymbol) {
+      case BlockchainSymbol.POLYGON:
+        return 'Polygon Newtwok';
+      case BlockchainSymbol.ETH:
+        return 'Ethereum Network';
+      default:
+        return 'Solana Network';
+    }
+  };
+
   useEffect(() => {
     if (setErrorHandler) {
       setErrorHandler(onError);
@@ -76,7 +92,7 @@ const WalletController = ({
       <StyledDropdownButton onClick={() => setIsOpen(!isOpen)}>
         Connected
         <StyledWalletAddress>
-          {shortenWalletAddress(String(publicKey))}
+          {getConnectionName(blockchain)}
         </StyledWalletAddress>
       </StyledDropdownButton>
       {isOpen && (
