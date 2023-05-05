@@ -19,6 +19,8 @@ import {
 } from '../infrastructure';
 import { PolygonPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/PolygonPaylinkSubmitService';
 import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/EthPaylinkSubmitService';
+import { PolygonExplorerService } from '../domain/services/PolygonExplorerService';
+import { EthereumExplorerService } from '../domain/services/EthereumExplorerService';
 
 export class HelioSDK {
   private _cluster?: Cluster;
@@ -30,6 +32,10 @@ export class HelioSDK {
   private _tokenConversionService: TokenConversionService;
 
   private _solExplorerService: SolExplorerService;
+
+  private _polygonExplorerService: PolygonExplorerService;
+
+  private _ethExplorerService: EthereumExplorerService;
 
   private _paylinkService: PaylinkSubmitService;
 
@@ -60,6 +66,10 @@ export class HelioSDK {
       this._currencyService
     );
     this._solExplorerService = new SolExplorerService(this._configService);
+    this._polygonExplorerService = new PolygonExplorerService(
+      this._configService
+    );
+    this._ethExplorerService = new EthereumExplorerService(this._configService);
     this._paylinkService = new PaylinkSubmitService(
       this._apiService,
       this._currencyService,
@@ -130,6 +140,16 @@ export class HelioSDK {
   get solExplorerService(): SolExplorerService | never {
     this.checkCluster();
     return this._solExplorerService;
+  }
+
+  get polygonExplorerService(): PolygonExplorerService | never {
+    this.checkCluster();
+    return this._polygonExplorerService;
+  }
+
+  get ethExplorerService(): EthereumExplorerService | never {
+    this.checkCluster();
+    return this._ethExplorerService;
   }
 
   get tokenConversionService(): TokenConversionService | never {

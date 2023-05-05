@@ -59,22 +59,12 @@ export class CurrencyService {
 
     const currency = this.currencies?.find((curr) => {
       if (blockchain) {
-        // console.log(symbol, blockchain); MATIC POLYGON
-        // console.log(curr.symbol, curr.blockchain?.symbol);
         return curr.symbol === symbol && curr.blockchain?.symbol === blockchain;
       }
       return false;
     });
 
     return currency || this.currencies?.find((curr) => curr.symbol === symbol);
-
-    // if (currency) {
-    //   return currency;
-    // }
-    //
-    // currency = this.currencies?.find((curr) => curr.symbol === symbol);
-    //
-    // return currency;
   }
 
   getCurrenciesByTypeAndBlockchain({

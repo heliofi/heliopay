@@ -130,7 +130,6 @@ const BaseCheckout = ({
         ),
       isTokenSwapped: !!(canSwapTokens && 'SOL'),
     });
-    console.log('isBalanceEnough', ret);
     return ret;
   };
 

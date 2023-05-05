@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   ClusterType,
   CreatePaystreamResponse,
@@ -49,7 +49,6 @@ import {
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
 import { ConnectButton } from '../../ui-kits/connectButton';
-// import { useConnect } from '../../hooks/useConnect';
 import { useEVMProvider } from '../../hooks/useEVMProvider';
 
 interface HeliopayContainerProps {
@@ -82,7 +81,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const wallet = useAnchorWallet();
   const { isConnected } = useAccount();
   const { address: evmPublicKey } = useAccount();
-  // const { blockchainEngineRef } = useConnect();
 
   const solProvider = useAnchorProvider();
   const evmProvider = useEVMProvider();
@@ -116,6 +114,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
   const walletConnected = wallet || isConnected;
+  const blockchain = paymentDetails?.currency?.blockchain?.symbol;
 
   // @todo-v swapCurrency
   const isBalanceEnough = HelioSDK.availableBalanceService.isBalanceEnough({
@@ -228,8 +227,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     customerDetails,
     productDetails,
   }: SubmitPaylinkProps): Promise<void> => {
-    const blockchain = paymentDetails?.currency?.blockchain?.symbol;
-
     const mintAddress =
       currency &&
       HelioSDK.currencyService.getCurrencyBySymbolAndBlockchain({
@@ -242,6 +239,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       evmPublicKey != null &&
       mintAddress
     ) {
+      onStartPayment?.();
+      setShowLoadingModal(true);
+      setShowFormModal(false);
       const { symbol } = getCurrency(currency.symbol);
 
       const props = {
@@ -253,10 +253,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         blockchain,
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
-        onPending: () => '', // @todo-v
-        onCancel: () => '', // @todo-v
-        onInitiated: () => '', // @todo-v
-        setLoadingModalStep: () => {}, // @todo-v
+        onPending,
+        onCancel: handleErrorPayment,
+        onInitiated: onPending,
+        setLoadingModalStep: () => setShowLoadingModal(true),
         customerDetails,
         quantity: Number(quantity),
         productDetails,
@@ -266,7 +266,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
         mintAddress,
-        isNativeMintAddress: false,
+        isNativeMintAddress: true, // @todo-v
         cluster,
       };
 
@@ -452,7 +452,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       ) : (
         <>
           {paymentRequestType === PaymentRequestType.PAYLINK && (
-            <PaymentResult result={result} />
+            <PaymentResult result={result} blockchain={blockchain} />
           )}
           {paymentRequestType === PaymentRequestType.PAYSTREAM && (
             <PaystreamPaymentResult

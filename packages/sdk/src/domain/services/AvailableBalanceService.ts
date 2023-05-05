@@ -54,7 +54,6 @@ export class AvailableBalanceService {
   }): Promise<void> {
     let availableBalance = 0;
     const isTokenSwapped = !!(canSwapTokens && swapCurrency);
-    console.log('FETCH', evmPublicKey, blockchain, areCurrenciesDefined);
 
     if (
       evmPublicKey &&
@@ -112,7 +111,6 @@ export class AvailableBalanceService {
     quantity?: number;
     decimalAmount: number;
   }): boolean {
-    console.log('availableBalance', this.availableBalance, decimalAmount);
     return (
       this.availableBalance >=
       (isTokenSwapped ? this.swappedPrice : (quantity ?? 1) * decimalAmount)
