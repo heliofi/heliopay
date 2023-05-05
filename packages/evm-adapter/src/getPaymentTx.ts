@@ -27,7 +27,6 @@ export const getPaymentTx = async (
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),
-      nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
   unsignedTx.chainId = chainId;
