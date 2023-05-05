@@ -41,3 +41,8 @@ export const StyledBaseCheckoutContainer = styled.div`
 export const StyledBaseCheckoutBody = styled.div`
   padding: 24px;
 `;
+
+export const StyledBaseCheckoutBodyFooter = styled.div`
+  display: flex;
+  margin-top: 16px;
+`;

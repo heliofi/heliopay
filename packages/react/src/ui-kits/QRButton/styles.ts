@@ -4,7 +4,6 @@ export const QRButtonWrapper = styled.div`
   display: flex;
   margin-right: 0;
   margin-left: auto;
-  margin-top: 16px;
   width: fit-content;
   cursor: pointer;
   flex-direction: row;

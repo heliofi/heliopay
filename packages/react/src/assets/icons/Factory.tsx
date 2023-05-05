@@ -13,6 +13,9 @@ import ETH from './ETH';
 import ArrowRightCircle from './ArrowRightCircle';
 import ArrowUp from './ArrowUp';
 import ArrowDown from './ArrowDown';
+import PolygonSM from './PolygonSM';
+import EthSM from './EthSm';
+import SOLSM from './SOLSM';
 
 export type IconProps = {
   iconName?: string;
@@ -45,6 +48,12 @@ export const Factory: FC<IconProps> = ({ iconName, gradient }) => {
       return <ArrowUp />;
     case 'ArrowDown':
       return <ArrowDown />;
+    case 'PolygonSM':
+      return <PolygonSM />;
+    case 'EthSM':
+      return <EthSM />;
+    case 'SOLSM':
+      return <SOLSM />;
     default:
       return <HelioIcon />;
   }

@@ -1,17 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
-import {
-  BlockchainSymbol,
-  Currency,
-  IntervalType,
-  LinkFeaturesDto,
-  PaymentRequestType,
-} from '@heliofi/common';
+import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
-import { DAY, HOUR, MINUTE, MONTH, WEEK } from '@heliofi/sdk/dist/src';
-import { useAccount } from 'wagmi';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import {
   formatTotalPrice,
   getCurrency,
@@ -39,11 +30,13 @@ import { PaystreamPricingProps } from '../payStream/paystreamPricing';
 
 import {
   StyledBaseCheckoutBody,
+  StyledBaseCheckoutBodyFooter,
   StyledBaseCheckoutContainer,
   StyledBaseCheckoutWrapper,
 } from './styles';
 import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { NetworkIndicator } from '../../ui-kits/networkIndicator';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -69,9 +62,6 @@ const BaseCheckout = ({
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
 
-  const { connection } = useConnection();
-  const { publicKey } = useWallet();
-
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
   const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
@@ -88,6 +78,8 @@ const BaseCheckout = ({
     (showSwapMenu && !!tokenSwapError) || tokenSwapLoading;
 
   const paymentDetails = getPaymentDetails();
+
+  const blockchain = paymentDetails?.currency?.blockchain?.symbol;
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
     const amount = (decimalAmount || totalAmount) ?? 0;
@@ -234,7 +226,6 @@ const BaseCheckout = ({
                       allowedCurrencies={allowedCurrencies}
                       setActiveCurrency={setActiveCurrency}
                     />
-
                     {showSwapMenu && (
                       <SwapsForm
                         formValues={values}
@@ -242,12 +233,10 @@ const BaseCheckout = ({
                         totalDecimalAmount={getSwapsFormPrice(values)}
                       />
                     )}
-
                     <CustomerInfo
                       formValues={values}
                       setFieldValue={setFieldValue}
                     />
-
                     <ButtonWithTooltip
                       type="submit"
                       disabled={
@@ -268,7 +257,10 @@ const BaseCheckout = ({
               <h2>Failed to load payment details.</h2>
             ))}
 
-          <QRButton showQRCode={showQRCode} setShowQRCode={setShowQRCode} />
+          <StyledBaseCheckoutBodyFooter>
+            {blockchain && <NetworkIndicator blockchain={blockchain} />}
+            <QRButton showQRCode={showQRCode} setShowQRCode={setShowQRCode} />
+          </StyledBaseCheckoutBodyFooter>
         </StyledBaseCheckoutBody>
       </StyledBaseCheckoutContainer>
     </StyledBaseCheckoutWrapper>,

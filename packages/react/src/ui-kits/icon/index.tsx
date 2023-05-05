@@ -7,10 +7,8 @@ export type IconProps = {
   gradient?: boolean;
 };
 
-export const Icon = ({ className, gradient = false, ...rest }: IconProps) => {
-  return (
-    <div className={className}>
-      <Factory gradient={gradient} {...rest} />
-    </div>
-  );
-};
+export const Icon = ({ className, gradient = false, ...rest }: IconProps) => (
+  <div className={className}>
+    <Factory gradient={gradient} {...rest} />
+  </div>
+);
