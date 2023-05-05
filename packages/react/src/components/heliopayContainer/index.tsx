@@ -448,7 +448,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           {walletConnected && (
             <WalletController
               paymentRequestType={paymentRequestType}
-              blockchain={blockchain}
+              publicKey={
+                wallet?.publicKey
+                  ? String(wallet?.publicKey)
+                  : String(evmPublicKey)
+              }
             />
           )}
         </>
