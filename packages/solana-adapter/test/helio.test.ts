@@ -1,4 +1,4 @@
-import * as anchor from '@project-serum/anchor';
+import * as anchor from '@coral-xyz/anchor';
 import {
   Connection,
   PublicKey,
@@ -7,7 +7,7 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
-import { Program, Wallet } from '@project-serum/anchor';
+import { Program, Wallet } from '@coral-xyz/anchor';
 import {
   createAssociatedTokenAccount,
   createMint,
@@ -64,7 +64,9 @@ describe('api', () => {
     sender = Keypair.generate();
     recipient = Keypair.generate();
     connection = new Connection('https://api.devnet.solana.com');
-    wallet = new Wallet(Keypair.fromSeed(testWallet as Uint8Array));
+    const uintArray = new Uint8Array(testWallet);
+    const walletKeyPair = Keypair.fromSeed(uintArray.slice(0, 32));
+    wallet = new Wallet(walletKeyPair);
     provider = new anchor.AnchorProvider(connection, wallet, txOpts);
     anchor.setProvider(provider);
     program = new Program<HelioIdl>(IDL, PROGRAM_ID, provider);

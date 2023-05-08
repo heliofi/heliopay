@@ -33,11 +33,11 @@
   },
   "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
-    "@project-serum/anchor": "^0.25.0",
-    "@sideway/formula": "^3.0.1",
-    "@solana/spl-token": "^0.2.0",
+    "@coral-xyz/anchor": "^0.27.0",
+    "@solana/spl-token": "^0.3.7",
     "@solana/wallet-adapter-react": "^0.15.20",
-    "@solana/web3.js": "^1.66.2",
+    "@solana/web3.js": "^1.68.0",
+    "@sideway/formula": "^3.0.1",
     "bs58": "^5.0.0",
     "jsonwebtoken": "^9.0.0",
     "tweetnacl": "^1.0.3"
