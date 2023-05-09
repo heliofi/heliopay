@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../../../ui-kits/styledComponents';
 
 export const LoadingModalContentHeader = styled.h1`
   font-size: 1.875rem;
