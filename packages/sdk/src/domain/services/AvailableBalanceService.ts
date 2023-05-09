@@ -1,7 +1,7 @@
-import { Connection, PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { BlockchainSymbol } from '@heliofi/common';
 import { TokenConversionService } from './TokenConversionService';
-import { AvailableBalance, TokenSwapQuote } from '../model';
+import { TokenSwapQuote } from '../model';
 import { CurrencyService } from './CurrencyService';
 import { SolAvailableBalanceService } from './SolAvailableBalanceService';
 import { PolygonAvailableBalanceService } from './PolygonAvailableBalanceService';

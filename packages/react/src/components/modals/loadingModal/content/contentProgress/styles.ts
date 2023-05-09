@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../../../../../ui-kits/styledComponents';
 
 export const ContentProgressContainer = styled.div`
   margin-top: 0.5rem;
