@@ -3,6 +3,7 @@ export enum LoadingModalStep {
   SIGN_TRANSACTION = 'SIGN_TRANSACTION',
   SUBMIT_TRANSACTION = 'SUBMIT_TRANSACTION',
   DEFAULT = 'DEFAULT',
+  CLOSE = 'CLOSE',
 }
 
 export enum LoadingModalStepsCount {

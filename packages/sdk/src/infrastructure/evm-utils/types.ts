@@ -1,5 +1,5 @@
 import { CustomerDetails, ProductDetails, SplitWallet } from '@heliofi/common';
-import { LoadingModalStep } from '../../domain/model/LoadingModalStep';
+import { LoadingModalStep } from '../../domain';
 
 export type SignedTxAndToken = {
   swapSignedTx?: string;

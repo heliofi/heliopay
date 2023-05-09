@@ -10,7 +10,8 @@ import {
   StringService,
   TimeFormatterService,
   CreatePaymentService,
-  getTransactionSignature
+  getTransactionSignature,
+  LoadingModalStep,
 } from '@heliofi/sdk';
 import { Currency, IntervalType, Paystream } from '@heliofi/common';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -46,7 +47,7 @@ interface Props {
   result: {
     errorMessage?: string;
   } & (SuccessPaymentEvent<CreatePaystreamResponse> | ErrorPaymentEvent);
-  setShowLoadingModal: (showLoadingModal: boolean) => void;
+  setShowLoadingModal: (showLoadingModal: LoadingModalStep) => void;
   currency: Currency;
   onError: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
@@ -90,7 +91,7 @@ const PaystreamPaymentResult = ({
   );
 
   const cancelPayment = useCallback(async () => {
-    setShowLoadingModal(true);
+    setShowLoadingModal(LoadingModalStep.DEFAULT);
     if (helioProvider && wallet && connectionProvider && paymentId) {
       await HelioSDK.paystreamCancelService.handleTransaction({
         anchorProvider: helioProvider,

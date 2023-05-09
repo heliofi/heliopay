@@ -1,11 +1,9 @@
-import { BlockchainSymbol, Currency } from '@heliofi/common';
+import { BlockchainSymbol } from '@heliofi/common';
 
-import { CurrencyService } from './CurrencyService';
 import { DefaultCurrencies } from '../constants/currency';
-import { TokenConversionService } from './TokenConversionService';
 
 export class DefaultCurrencyService {
-  static getNativeCurrencyByBlockchainToSymbol(
+  getNativeCurrencyByBlockchainToSymbol(
     blockchain: string
   ): string | undefined {
     switch (blockchain) {
@@ -20,19 +18,19 @@ export class DefaultCurrencyService {
     }
   }
 
-  static getSolCurrencySymbol(): string {
+  getSolCurrencySymbol(): string {
     return DefaultCurrencies.SOL;
   }
 
-  static getMaticCurrencySymbol(): string {
+  getMaticCurrencySymbol(): string {
     return DefaultCurrencies.MATIC;
   }
 
-  static getEthCurrencySymbol(): string {
+  getEthCurrencySymbol(): string {
     return DefaultCurrencies.ETH;
   }
 
-  static getDefaultCurrencySymbol(): string {
+  getDefaultCurrencySymbol(): string {
     return DefaultCurrencies.USDC;
   }
 }

@@ -20,7 +20,7 @@ import {
 } from './styles';
 
 interface Props {
-  blockchain: BlockchainSymbol;
+  blockchain?: BlockchainSymbol;
   result: {
     transaction?: string;
     errorMessage?: string;

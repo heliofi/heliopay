@@ -8,6 +8,7 @@ import {
 import { HelioPay } from '@heliofi/react/dist';
 
 import './styles/style.scss';
+import { PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -40,7 +41,7 @@ const App = () => {
           console.log('onStartPayment');
         }}
         // supportedCurrencies={['USDC', 'SOL', 'MATIC']}
-        supportedCurrencies={['MATIC']}
+        // supportedCurrencies={['MATIC', 'USDC']}
         // paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />

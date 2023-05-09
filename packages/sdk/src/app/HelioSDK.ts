@@ -21,11 +21,14 @@ import { PolygonPaylinkSubmitService } from '../infrastructure/evm-utils/payment
 import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/EthPaylinkSubmitService';
 import { PolygonExplorerService } from '../domain/services/PolygonExplorerService';
 import { EthereumExplorerService } from '../domain/services/EthereumExplorerService';
+import { DefaultCurrencyService } from '../domain/services/DefaultCurrencyService';
 
 export class HelioSDK {
   private _cluster?: Cluster;
 
   private _currencyService: CurrencyService;
+
+  private _defaultCurrencyService: DefaultCurrencyService;
 
   private _apiService: HelioApiConnector;
 
@@ -62,6 +65,7 @@ export class HelioSDK {
     this._configService = new ConfigService(options?.cluster);
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
+    this._defaultCurrencyService = new DefaultCurrencyService();
     this._tokenConversionService = new TokenConversionService(
       this._currencyService
     );
@@ -130,6 +134,11 @@ export class HelioSDK {
   get currencyService(): CurrencyService | never {
     this.checkCluster();
     return this._currencyService;
+  }
+
+  get defaultCurrencyService(): DefaultCurrencyService | never {
+    this.checkCluster();
+    return this._defaultCurrencyService;
   }
 
   get apiService(): HelioApiConnector | never {
