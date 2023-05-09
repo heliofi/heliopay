@@ -6,7 +6,7 @@ The Helio SDK is a packaged module to make integrating Helio and our components 
 
 It wraps and enhances the Helio [API](https://api.hel.io/v1/docs) away into one NPM package which is easy to install and upgrade.
 
-The Helio SDK is is written in Typescript. 
+The Helio SDK is written in Typescript. 
 
 Please use the latest production version. Only used ALPHA versions if advised to do so.
 
