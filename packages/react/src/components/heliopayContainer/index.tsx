@@ -375,6 +375,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const fetchData = async () => {
         await HelioSDK.availableBalanceService.fetchAvailableBalance({
           publicKey: wallet?.publicKey,
+          connection: connectionProvider?.connection,
           evmPublicKey,
           blockchain: paymentDetails?.currency.blockchain.symbol,
           areCurrenciesDefined: currencyList.length > 0,

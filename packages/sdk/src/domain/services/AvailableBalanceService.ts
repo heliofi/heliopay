@@ -1,4 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { BlockchainSymbol } from '@heliofi/common';
 import { TokenConversionService } from './TokenConversionService';
 import { TokenSwapQuote } from '../model';
@@ -33,6 +33,7 @@ export class AvailableBalanceService {
 
   async fetchAvailableBalance({
     publicKey,
+    connection,
     evmPublicKey,
     blockchain,
     areCurrenciesDefined,
@@ -42,6 +43,7 @@ export class AvailableBalanceService {
     tokenSwapQuote,
   }: {
     publicKey?: PublicKey;
+    connection?: Connection;
     evmPublicKey?: EVMPublicKey;
     decimalAmount: number;
     currency?: string;
@@ -79,9 +81,12 @@ export class AvailableBalanceService {
         ethAvailableBalances?.find(
           (balance) => balance.tokenSymbol === currency
         )?.value || 0;
-    } else if (publicKey && areCurrenciesDefined) {
+    } else if (publicKey && areCurrenciesDefined && connection) {
       const solAvailableBalances =
-        await this.solAvailableBalanceService.getAvailableBalance(publicKey);
+        await this.solAvailableBalanceService.getAvailableBalance(
+          publicKey,
+          connection
+        );
       availableBalance =
         solAvailableBalances?.find(
           (balance) =>

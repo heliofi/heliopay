@@ -1,6 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 
-import { useConnection } from '@solana/wallet-adapter-react';
 import { TokenConversionService } from './TokenConversionService';
 import { AvailableBalance } from '../model';
 import { CurrencyService } from './CurrencyService';
@@ -16,12 +15,11 @@ export class SolAvailableBalanceService {
     private currencyService: CurrencyService
   ) {}
 
-  async getAvailableBalance(publicKey: PublicKey): Promise<AvailableBalance[]> {
-    const connectionProvider = useConnection();
-
-    const solMinimalAmount = await connectionProvider.connection.getBalance(
-      publicKey
-    );
+  async getAvailableBalance(
+    publicKey: PublicKey,
+    connection: Connection
+  ): Promise<AvailableBalance[]> {
+    const solMinimalAmount = await connection.getBalance(publicKey);
     const solDecimalAmount =
       this.tokenConversionService.convertFromMinimalUnits(
         'SOL',
@@ -35,7 +33,7 @@ export class SolAvailableBalanceService {
 
     const userTokens: TokenBalanceInfo[] = await this.getTokenBalances(
       publicKey,
-      connectionProvider.connection
+      connection
     );
 
     const splTokenBalances: AvailableBalance[] = [];
