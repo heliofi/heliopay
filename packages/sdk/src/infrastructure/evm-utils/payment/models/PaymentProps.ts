@@ -11,9 +11,8 @@ import {
   SuccessPaymentEvent,
   PaymentEvent,
   LoadingModalStep,
+  ClusterHelioType,
 } from '../../../../domain';
-
-import { Cluster } from '../../../../domain/constants/blockchainNetworks';
 
 export interface BasePaymentProps<T> {
   onSuccess: (event: SuccessPaymentEvent<T>) => void;
@@ -30,5 +29,5 @@ export interface BasePaymentProps<T> {
   productDetails?: ProductDetails;
   mintAddress: string;
   isNativeMintAddress: boolean;
-  cluster: Cluster;
+  cluster: ClusterHelioType;
 }

@@ -1,10 +1,9 @@
 import { PaymentRequestType } from '@heliofi/common';
-import { ClusterType } from '../model';
+import { ClusterHelio, ClusterHelioType } from '../model';
 import { ASSET_URL } from '../constants';
-import { Cluster } from '../constants/blockchainNetworks';
 
 export class ConfigService {
-  private cluster?: Cluster;
+  private cluster?: ClusterHelioType;
 
   static DEV_HELIO_SERVICE_BASE_URL = 'https://dev.api.hel.io/v1';
 
@@ -14,7 +13,7 @@ export class ConfigService {
 
   static PROD_HELIO_BASE_URL = 'https://www.hel.io';
 
-  constructor(cluster?: Cluster) {
+  constructor(cluster?: ClusterHelioType) {
     this.cluster = cluster;
   }
 
@@ -22,23 +21,23 @@ export class ConfigService {
     return ASSET_URL;
   }
 
-  getCluster(): Cluster {
+  getCluster(): ClusterHelioType {
     if (!this.cluster) {
       throw new Error('Please set cluster before getCluster');
     }
     return this.cluster;
   }
 
-  setCluster(cluster: Cluster) {
+  setCluster(cluster: ClusterHelioType) {
     this.cluster = cluster;
   }
 
   getHelioApiBaseUrl(): string {
     switch (this.cluster) {
-      case ClusterType.Testnet:
-      case ClusterType.Devnet:
+      case ClusterHelio.Testnet:
+      case ClusterHelio.Devnet:
         return ConfigService.DEV_HELIO_SERVICE_BASE_URL;
-      case ClusterType.Mainnet:
+      case ClusterHelio.Mainnet:
         return ConfigService.PROD_HELIO_SERVICE_BASE_URL;
       default:
         return ConfigService.PROD_HELIO_SERVICE_BASE_URL;
@@ -47,10 +46,10 @@ export class ConfigService {
 
   getHelioBaseUrl(): string {
     switch (this.cluster) {
-      case ClusterType.Testnet:
-      case ClusterType.Devnet:
+      case ClusterHelio.Testnet:
+      case ClusterHelio.Devnet:
         return ConfigService.DEV_HELIO_BASE_URL;
-      case ClusterType.Mainnet:
+      case ClusterHelio.Mainnet:
         return ConfigService.PROD_HELIO_BASE_URL;
       default:
         return ConfigService.PROD_HELIO_BASE_URL;

@@ -12,7 +12,8 @@ import {
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { Cluster, TokenSwapQuote } from '@heliofi/sdk';
+import { ClusterHelioType, TokenSwapQuote } from '@heliofi/sdk';
+import { BlockchainSymbol } from '@heliofi/common/dist/src/domain/model/blockchain/constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type PaymentDetailsType = Paylink | Paystream;
@@ -25,8 +26,8 @@ export const HelioContext = createContext<{
   setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails?: PaymentRequest;
   setPaymentDetails: (paymentDetails: any) => void;
-  cluster: Cluster | null;
-  setCluster: (cluster: Cluster) => void;
+  cluster: ClusterHelioType | null;
+  setCluster: (cluster: ClusterHelioType) => void;
   isCustomerDetailsRequired: boolean;
   setIsCustomerDetailsRequired: (isCustomerDetailsRequired: boolean) => void;
   tokenSwapLoading: boolean;
@@ -88,10 +89,13 @@ export const useHelioProvider = () => {
 
   const { HelioSDK } = useCompositionRoot();
 
-  const getCurrencyList = async () => {
+  const getCurrencyList = async (blockchain: BlockchainSymbol) => {
     if (cluster) {
       const result = await HelioSDK.currencyService.getCurrencies();
-      setCurrencyList(result || []);
+      const allowedCurrenciesTemp = result.filter(
+        (currency) => currency?.blockchain?.symbol === blockchain
+      );
+      setCurrencyList(allowedCurrenciesTemp || []);
     }
   };
 
@@ -131,7 +135,7 @@ export const useHelioProvider = () => {
     setPaymentDetails(result || {});
   };
 
-  const initCluster = (initialCluster: Cluster) => {
+  const initCluster = (initialCluster: ClusterHelioType) => {
     setCluster(initialCluster);
   };
 

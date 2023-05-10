@@ -11,7 +11,7 @@ export type InheritedOnSubmit = (
 export type InheritedBaseCheckoutProps = {
   onHide: () => void;
   onSubmit: InheritedOnSubmit;
-  allowedCurrencies: Currency[];
+  supportedAllowedCurrencies: Currency[];
   totalAmount?: number;
 };
 

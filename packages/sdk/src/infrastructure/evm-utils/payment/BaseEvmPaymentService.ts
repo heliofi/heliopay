@@ -12,6 +12,7 @@ import {
   CurrencyService,
   HelioApiConnector,
   SECOND_MS,
+  ClusterHelioType,
 } from '../../../domain';
 
 import {
@@ -25,7 +26,6 @@ import { BaseTransactionPayload } from './models/TransactionPayload';
 import { EvmTransactionTimeoutError } from '../EvmTransactionTimeoutError';
 import { SignedTxAndToken, ExecuteTransactionPayload } from '../types';
 import { delay } from '../../../utils';
-import { Cluster } from '../../../domain/constants/blockchainNetworks';
 import { VerificationError } from '../../solana-adapter/VerificationError';
 
 export abstract class BaseEvmPaymentService<
@@ -40,7 +40,7 @@ export abstract class BaseEvmPaymentService<
 
   protected mintAddress?: Address | string;
 
-  protected cluster?: Cluster;
+  protected cluster?: ClusterHelioType;
 
   protected isNativeMintAddress?: boolean;
 

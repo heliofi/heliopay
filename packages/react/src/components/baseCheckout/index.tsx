@@ -45,7 +45,7 @@ type BaseCheckoutProps = InheritedBaseCheckoutProps & {
 const BaseCheckout = ({
   onHide,
   onSubmit,
-  allowedCurrencies,
+  supportedAllowedCurrencies,
   totalAmount,
   PricingComponent,
 }: BaseCheckoutProps) => {
@@ -67,7 +67,7 @@ const BaseCheckout = ({
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
 
-  const canSelectCurrency = allowedCurrencies.length > 1;
+  const canSelectCurrency = supportedAllowedCurrencies.length > 1;
   const canSwapTokens = !!getPaymentFeatures().canSwapTokens;
 
   const payButtonText =
@@ -98,7 +98,7 @@ const BaseCheckout = ({
     canSelectCurrency,
     getPaymentDetails,
     paymentDetails?.dynamic
-      ? allowedCurrencies?.[0].symbol
+      ? supportedAllowedCurrencies?.[0].symbol
       : paymentDetails?.currency?.symbol,
     getPaymentFeatures(),
     getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
@@ -126,8 +126,8 @@ const BaseCheckout = ({
   };
 
   useEffect(() => {
-    if (allowedCurrencies.length === 1) {
-      setActiveCurrency(allowedCurrencies[0]);
+    if (supportedAllowedCurrencies.length === 1) {
+      setActiveCurrency(supportedAllowedCurrencies[0]);
     } else if (!canSelectCurrency) {
       setActiveCurrency(
         getCurrency(currencyList, paymentDetails?.currency?.symbol)
@@ -223,7 +223,7 @@ const BaseCheckout = ({
                       activeCurrency={activeCurrency}
                       totalDecimalAmount={totalAmount || decimalAmount}
                       canSelectCurrency={canSelectCurrency}
-                      allowedCurrencies={allowedCurrencies}
+                      supportedAllowedCurrencies={supportedAllowedCurrencies}
                       setActiveCurrency={setActiveCurrency}
                     />
                     {showSwapMenu && (

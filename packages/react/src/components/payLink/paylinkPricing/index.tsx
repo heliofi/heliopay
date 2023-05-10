@@ -18,7 +18,7 @@ export type PaylinkPricingProps = FormikProps & {
   activeCurrency: Currency | null;
   totalDecimalAmount: number;
   canSelectCurrency: boolean;
-  allowedCurrencies: Currency[];
+  supportedAllowedCurrencies: Currency[];
   setActiveCurrency: (activeCurrency: Currency | null) => void;
 };
 
@@ -28,16 +28,18 @@ const PaylinkPricing = ({
   activeCurrency,
   totalDecimalAmount,
   canSelectCurrency,
-  allowedCurrencies,
+  supportedAllowedCurrencies,
   setActiveCurrency,
 }: PaylinkPricingProps) => {
   const { currencyList, getPaymentFeatures } = useHelioProvider();
 
-  const currenciesOptions = allowedCurrencies.map((currency: Currency) => ({
-    label: currency?.symbol ?? '',
-    value: currency?.symbol ?? '',
-    icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
-  }));
+  const currenciesOptions = supportedAllowedCurrencies.map(
+    (currency: Currency) => ({
+      label: currency?.symbol ?? '',
+      value: currency?.symbol ?? '',
+      icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
+    })
+  );
 
   return (
     <>

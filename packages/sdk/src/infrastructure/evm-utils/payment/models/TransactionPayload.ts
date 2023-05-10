@@ -1,7 +1,7 @@
-import { Cluster } from '../../../../domain/constants/blockchainNetworks';
+import { ClusterHelioType } from '../../../../domain';
 
 export interface BaseTransactionPayload {
-  cluster: Cluster;
+  cluster?: ClusterHelioType;
   signedTransaction: string;
   signedSwapTransaction?: string;
   transactionToken?: string;

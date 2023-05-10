@@ -1,7 +1,6 @@
-import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Currency, PaymentRequestType } from '@heliofi/common';
-import { TokenSwapQuote } from '@heliofi/sdk';
+import { ClusterHelioType, TokenSwapQuote } from '@heliofi/sdk';
 
 import { HelioContext } from './HelioContext';
 
@@ -13,7 +12,7 @@ export const HelioProvider: FC<{
   >();
   const [currencyList, setCurrencyList] = useState<Currency[]>([]);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
-  const [cluster, setCluster] = useState<Cluster | null>(null);
+  const [cluster, setCluster] = useState<ClusterHelioType | null>(null);
   const [isCustomerDetailsRequired, setIsCustomerDetailsRequired] =
     useState(false);
   const [tokenSwapLoading, setTokenSwapLoading] = useState(false);

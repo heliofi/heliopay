@@ -386,10 +386,10 @@ PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
 ## Example
 
 ```Typescript
-import { HelioSDK, ClusterType } from '@heliofi/sdk';
+import { HelioSDK, ClusterHelio } from '@heliofi/sdk';
 import { Cluster } from '@solana/web3.js';
 
-const cluster = ClusterType.Devnet;
+const cluster = ClusterHelio.Devnet;
 
 //create object HelioSDK
 const helioSDK = new HelioSDK({ cluster });

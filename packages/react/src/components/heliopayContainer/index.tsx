@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
-  BLOCKCHAIN_NETWORKS,
   blockchainToNativeToken,
-  Cluster,
+  ClusterHelio,
+  ClusterHelioType,
   CreatePaystreamResponse,
   ErrorPaymentEvent,
   LoadingModalStep,
@@ -60,7 +60,7 @@ interface HeliopayContainerProps {
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
-  cluster: Cluster;
+  cluster: ClusterHelioType;
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
@@ -116,7 +116,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [showLoadingModal, setShowLoadingModal] = useState<LoadingModalStep>(
     LoadingModalStep.CLOSE
   );
-  const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
+  const [supportedAllowedCurrencies, setSupportedAllowedCurrencies] = useState<
+    Currency[]
+  >([]);
 
   const [isOnlyPay, setIsOnlyPay] = useState<boolean>(false);
 
@@ -161,17 +163,16 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       ? window.location.href.split('?')[1]
       : undefined;
 
-  const generateAllowedCurrencies = useCallback(() => {
+  const generateSupportedAllowedCurrencies = useCallback(() => {
     if (isDynamic) {
-      const allowedCurrenciesTemp = currencyList.filter(
+      const supportedAllowedCurrenciesTemp = currencyList.filter(
         (currency) =>
           supportedCurrencies?.includes(currency.symbol) &&
-          currency?.blockchain?.engine?.type ===
-            paymentDetails?.currency?.blockchain?.engine?.type
+          currency?.blockchain?.symbol === blockchain
       );
-      setAllowedCurrencies(allowedCurrenciesTemp || []);
+      setSupportedAllowedCurrencies(supportedAllowedCurrenciesTemp || []);
     }
-  }, [isDynamic, currencyList, supportedCurrencies, paymentDetails]);
+  }, [isDynamic, currencyList, supportedCurrencies, blockchain]);
 
   const getCurrency = (currency?: string): Currency => {
     if (!currency) {
@@ -236,7 +237,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster: cluster as ClusterSol,
+        cluster: cluster as ClusterSol, // @todo delete don't use
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
@@ -349,7 +350,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         rateToken: dynamicRateToken,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
-        cluster: cluster as ClusterSol,
+        cluster: cluster as ClusterSol, // @todo delete don't use
       };
 
       try {
@@ -398,13 +399,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   useEffect(() => {
     if (mainCluster) {
-      getCurrencyList().catch();
+      getCurrencyList(blockchain).catch();
     }
-  }, [mainCluster]);
+  }, [mainCluster, blockchain]);
 
   useEffect(() => {
-    generateAllowedCurrencies();
-  }, [generateAllowedCurrencies]);
+    generateSupportedAllowedCurrencies();
+  }, [generateSupportedAllowedCurrencies]);
 
   useEffect(() => {
     if (mainCluster && paymentRequestType && paymentRequestId) {
@@ -489,7 +490,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <StyledLogo>
                   <HelioLogoGray />
                 </StyledLogo>
-                {cluster === BLOCKCHAIN_NETWORKS[blockchain]?.devnet && (
+                {cluster === ClusterHelio.Devnet && (
                   <StyledEnvironment>DEVNET</StyledEnvironment>
                 )}
               </StyledLogoContainer>
@@ -539,7 +540,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
               ? submitPaylink(data as SubmitPaylinkProps)
               : submitPaylinkEVM(data as SubmitPaylinkProps)
           }
-          allowedCurrencies={allowedCurrencies}
+          supportedAllowedCurrencies={supportedAllowedCurrencies}
           totalAmount={totalAmount}
         />
       )}
@@ -547,7 +548,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         <PaystreamCheckout
           onHide={() => setShowFormModal(false)}
           onSubmit={(data) => submitPaystream(data as SubmitPaystreamProps)}
-          allowedCurrencies={[]}
+          supportedAllowedCurrencies={[]}
           totalAmount={totalAmount}
         />
       )}

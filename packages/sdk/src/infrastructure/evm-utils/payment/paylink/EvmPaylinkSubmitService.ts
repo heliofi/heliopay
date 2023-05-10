@@ -3,8 +3,6 @@ import { CustomerDetails, ProductDetails, SplitWallet } from '@heliofi/common';
 import { isEmpty } from 'lodash';
 import { Address } from 'wagmi';
 
-import { Cluster } from '@solana/web3.js';
-
 import { BigNumber } from '../../../../domain/model/BigNumber';
 
 import { BaseEvmPaymentService } from '../BaseEvmPaymentService';
@@ -180,7 +178,7 @@ export abstract class EvmPaylinkSubmitService extends BaseEvmPaymentService<
       discountToken,
       splitWallets,
       currency: symbol,
-      cluster: this.cluster as Cluster,
+      cluster: this.cluster,
       customerDetails,
       quantity: quantity || 1,
       rateToken,

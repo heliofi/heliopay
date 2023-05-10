@@ -8,6 +8,7 @@ import {
   PolygonAvailableBalanceService,
   AvailableBalanceService,
   EthereumAvailableBalanceService,
+  ClusterHelioType,
 } from '../domain';
 import {
   HelioApiAdapter,
@@ -20,10 +21,9 @@ import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/pay
 import { PolygonExplorerService } from '../domain/services/PolygonExplorerService';
 import { EthereumExplorerService } from '../domain/services/EthereumExplorerService';
 import { DefaultCurrencyService } from '../domain/services/DefaultCurrencyService';
-import { Cluster } from '../domain/constants/blockchainNetworks';
 
 export class HelioSDK {
-  private _cluster?: Cluster;
+  private _cluster?: ClusterHelioType;
 
   private _currencyService: CurrencyService;
 
@@ -59,7 +59,7 @@ export class HelioSDK {
 
   private _availableBalanceService: AvailableBalanceService;
 
-  constructor(options?: { cluster: Cluster }) {
+  constructor(options?: { cluster: ClusterHelioType }) {
     this._cluster = options?.cluster;
     this._configService = new ConfigService(options?.cluster);
     this._apiService = new HelioApiAdapter(this._configService);
@@ -125,7 +125,7 @@ export class HelioSDK {
     }
   }
 
-  setCluster(cluster: Cluster) {
+  setCluster(cluster: ClusterHelioType) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
   }
