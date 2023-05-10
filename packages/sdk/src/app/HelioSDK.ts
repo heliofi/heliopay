@@ -1,5 +1,3 @@
-import { Cluster } from '@solana/web3.js';
-
 import {
   SolAvailableBalanceService,
   ConfigService,
@@ -22,6 +20,7 @@ import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/pay
 import { PolygonExplorerService } from '../domain/services/PolygonExplorerService';
 import { EthereumExplorerService } from '../domain/services/EthereumExplorerService';
 import { DefaultCurrencyService } from '../domain/services/DefaultCurrencyService';
+import { Cluster } from '../domain/constants/blockchainNetworks';
 
 export class HelioSDK {
   private _cluster?: Cluster;

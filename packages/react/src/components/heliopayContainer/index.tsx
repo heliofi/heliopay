@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
+  BLOCKCHAIN_NETWORKS,
   blockchainToNativeToken,
-  ClusterType,
   CreatePaystreamResponse,
   ErrorPaymentEvent,
   LoadingModalStep,
@@ -488,7 +488,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <StyledLogo>
                   <HelioLogoGray />
                 </StyledLogo>
-                {cluster === ClusterType.Devnet && (
+                {cluster === BLOCKCHAIN_NETWORKS[blockchain]?.devnet && (
                   <StyledEnvironment>DEVNET</StyledEnvironment>
                 )}
               </StyledLogoContainer>
