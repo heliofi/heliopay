@@ -1,4 +1,3 @@
-import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
 import {
   Currency,
@@ -13,7 +12,7 @@ import {
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { TokenSwapQuote } from '@heliofi/sdk';
+import { Cluster, TokenSwapQuote } from '@heliofi/sdk';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type PaymentDetailsType = Paylink | Paystream;

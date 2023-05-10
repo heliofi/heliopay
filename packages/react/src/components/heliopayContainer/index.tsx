@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   BLOCKCHAIN_NETWORKS,
   blockchainToNativeToken,
+  Cluster,
   CreatePaystreamResponse,
   ErrorPaymentEvent,
   LoadingModalStep,
@@ -14,7 +15,7 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { Cluster } from '@solana/web3.js';
+import { Cluster as ClusterSol } from '@solana/web3.js';
 import {
   BlockchainSymbol,
   Currency,
@@ -235,7 +236,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster,
+        cluster: cluster as ClusterSol,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
@@ -348,7 +349,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         rateToken: dynamicRateToken,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
-        cluster,
+        cluster: cluster as ClusterSol,
       };
 
       try {
