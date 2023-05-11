@@ -7,9 +7,7 @@ import { HelioContext } from './HelioContext';
 export const HelioProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const [selectedCurrency, setSelectedCurrency] = useState<
-    Currency | undefined
-  >();
+  const [activeCurrency, setActiveCurrency] = useState<Currency | undefined>();
   const [currencyList, setCurrencyList] = useState<Currency[]>([]);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [cluster, setCluster] = useState<ClusterHelioType | null>(null);
@@ -27,8 +25,8 @@ export const HelioProvider: FC<{
 
   const helioProviderValue = useMemo(
     () => ({
-      selectedCurrency,
-      setSelectedCurrency,
+      activeCurrency,
+      setActiveCurrency,
       currencyList,
       setCurrencyList,
       paymentDetails,
@@ -49,8 +47,8 @@ export const HelioProvider: FC<{
       setPaymentType,
     }),
     [
-      selectedCurrency,
-      setSelectedCurrency,
+      activeCurrency,
+      setActiveCurrency,
       currencyList,
       setCurrencyList,
       paymentDetails,

@@ -20,8 +20,8 @@ export type PaymentDetailsType = Paylink | Paystream;
 export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
-  selectedCurrency?: Currency;
-  setSelectedCurrency: (selectedCurrency: Currency) => void;
+  activeCurrency?: Currency;
+  setActiveCurrency: (activeCurrency: Currency) => void;
   currencyList: Currency[];
   setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails?: PaymentRequest;
@@ -41,8 +41,8 @@ export const HelioContext = createContext<{
   paymentType?: PaymentRequestType;
   setPaymentType: (requestType: PaymentRequestType) => void;
 }>({
-  selectedCurrency: undefined,
-  setSelectedCurrency: () => {},
+  activeCurrency: undefined,
+  setActiveCurrency: () => {},
   currencyList: [],
   setCurrencyList: () => {},
   paymentDetails: undefined,
@@ -65,8 +65,8 @@ export const HelioContext = createContext<{
 
 export const useHelioProvider = () => {
   const {
-    selectedCurrency,
-    setSelectedCurrency,
+    activeCurrency,
+    setActiveCurrency,
     currencyList,
     setCurrencyList,
     paymentDetails,
@@ -237,8 +237,8 @@ export const useHelioProvider = () => {
   }, [paymentDetails]);
 
   return {
-    selectedCurrency,
-    setSelectedCurrency,
+    activeCurrency,
+    setActiveCurrency,
     currencyList,
     paymentDetails,
     getCurrencyList,
