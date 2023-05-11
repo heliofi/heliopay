@@ -207,10 +207,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setShowLoadingModal(LoadingModalStep.CLOSE);
   };
 
-  const handlePendingPayment = (event: PendingPaymentEvent) => {
-    onPending?.(event);
-    setResult(event);
-  };
+  // const handleInitiatedPayment = (event: PaymentEvent): void => {
+  //   onPending?.(event);
+  //   setResult(event);
+  // };
+
+  // const handlePendingPayment = (event: PendingPaymentEvent): void => {
+  //   onPending?.(event);
+  //   setResult(event);
+  // };
 
   const submitPaylink = async ({
     amount,
@@ -243,7 +248,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster: cluster as ClusterSol, // @todo-v delete don't use
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
@@ -291,9 +295,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         blockchain,
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
-        onPending: handlePendingPayment,
-        onCancel: handleErrorPayment,
-        onInitiated: onPending,
+        // onPending: handlePendingPayment,
+        // onCancel: handleErrorPayment,
+        // onInitiated: handleInitiatedPayment,
         setLoadingModalStep: setShowLoadingModal,
         customerDetails,
         quantity: Number(quantity),
@@ -356,7 +360,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         rateToken: dynamicRateToken,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
-        cluster: cluster as ClusterSol, // @todo-v delete don't use
       };
 
       try {

@@ -15,7 +15,7 @@ export type ElementContainerProps = {
   prefix?: React.ReactNode | string;
   suffix?: React.ReactNode | string;
   focus?: boolean;
-  children?: React.ReactNode
+  children?: React.ReactNode;
 };
 
 const ElementContainer: FC<ElementContainerProps> = ({

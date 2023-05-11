@@ -1,5 +1,5 @@
-import styled from '../styledComponents';
 import { ErrorMessage } from 'formik';
+import styled from '../styledComponents';
 
 export const StyledWrapper = styled.div`
   margin-bottom: 12px;

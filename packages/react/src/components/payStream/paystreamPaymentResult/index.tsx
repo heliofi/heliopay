@@ -109,7 +109,6 @@ const PaystreamPaymentResult = ({
         onPending: (event: PendingPaymentEvent) => onPending?.(event),
         wallet,
         connection: connectionProvider.connection,
-        cluster: HelioSDK.configService.getCluster(), // @todo-v delete don't use
       });
     }
   }, [

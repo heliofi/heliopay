@@ -123,7 +123,7 @@ export abstract class BaseEvmPaymentService<
     );
 
     if (!sendTransactionResponse?.signedTx) {
-      props.onCancel();
+      props.onCancel?.();
       return;
     }
 

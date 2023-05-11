@@ -18,9 +18,9 @@ export interface BasePaymentProps<T> {
   onSuccess: (event: SuccessPaymentEvent<T>) => void;
   onError: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
-  onInitiated: (event: PaymentEvent) => void;
+  onInitiated?: (event: PaymentEvent) => void;
   setLoadingModalStep: (step: LoadingModalStep) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   symbol: string;
   blockchain?: BlockchainSymbol;
   anchorProvider: Web3Provider;

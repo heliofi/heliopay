@@ -4,7 +4,7 @@ import {
 } from '@heliofi/common';
 import { CreatePaymentRequest } from '@heliofi/solana-adapter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Cluster, Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
 
 import {
   isEmptyObject,
@@ -189,7 +189,6 @@ export class PaystreamStartService extends BasePaystreamService<
       interval,
       rateToken,
       ...details,
-      cluster: this.cluster as Cluster,
     };
   }
 

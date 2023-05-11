@@ -1,5 +1,5 @@
-import styled from '../../ui-kits/styledComponents';
 import { TickIcon } from '@heliofi/helio-icons';
+import styled from '../../ui-kits/styledComponents';
 import { Button } from '../../ui-kits';
 
 export const StyledModalWrapper = styled.div`
