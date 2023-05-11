@@ -132,15 +132,11 @@ export const useHelioProvider = () => {
     if (!paymentType) {
       throw new Error('Please provide a payment type');
     }
-    try {
-      const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
-        paymentRequestId,
-        paymentType
-      );
-      setPaymentDetails(result || {});
-    } catch (e) {
-      console.warn(e);
-    }
+    const result = await HelioSDK.apiService.getPaymentRequestByIdPublic(
+      paymentRequestId,
+      paymentType
+    );
+    setPaymentDetails(result || {});
   };
 
   const initCluster = (initialCluster: ClusterHelioType) => {
