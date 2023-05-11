@@ -2,6 +2,7 @@ import { DefaultTheme, ThemeProvider } from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   ClusterHelio,
+  ClusterHelioType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -25,7 +26,7 @@ interface HelioPayProps {
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
   theme?: DefaultTheme;
-  cluster: ClusterHelio;
+  cluster: ClusterHelioType;
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
@@ -52,7 +53,7 @@ export const HelioPay = ({
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as ClusterHelio);
+    HelioSDK.setCluster(cluster);
   }, [cluster]);
 
   useEffect(() => {

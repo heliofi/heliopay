@@ -53,6 +53,7 @@ import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchP
 import { ConnectButton } from '../../ui-kits/connectButton';
 import { useEVMProvider } from '../../hooks/useEVMProvider';
 import LoadingModal from '../modals/loadingModal';
+import { useConnect } from '../../hooks/useConnect';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -108,6 +109,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const { HelioSDK } = useCompositionRoot();
   const { setCustomerDetails } = useCheckoutSearchParamsProvider();
+
+  const { blockchainEngineRef } = useConnect();
 
   const [result, setResult] = useState<
     SuccessPaymentEvent | ErrorPaymentEvent | PendingPaymentEvent | null
@@ -440,7 +443,14 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     isConnected && paymentRequestType === PaymentRequestType.PAYSTREAM;
 
   const isDisabledPay =
-    !paymentRequestId || !paymentDetails?.id || isPaystreamEVM;
+    !paymentRequestId ||
+    !paymentDetails?.id ||
+    isPaystreamEVM ||
+    !!(
+      blockchainEngineRef.current &&
+      blockchainEngineRef.current !==
+        paymentDetails?.currency?.blockchain?.engine?.type
+    );
 
   return (
     <StyledWrapper>
@@ -470,7 +480,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                     }
                     showTooltip={notEnoughFunds} */
                     disabled={isDisabledPay}
-                    showTooltip={false}
+                    showTooltip={paymentDetails && isDisabledPay}
                     tooltipText={`${
                       isPaystreamEVM
                         ? 'Pay Streams - available on Solana now. Coming to ETH soon.'

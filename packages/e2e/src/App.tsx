@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  ClusterHelio,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -8,7 +9,6 @@ import {
 import { HelioPay } from '@heliofi/react/dist';
 
 import './styles/style.scss';
-import { PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -26,7 +26,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        cluster="devnet"
+        cluster={ClusterHelio.Devnet}
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
           console.log('onSuccess', event);

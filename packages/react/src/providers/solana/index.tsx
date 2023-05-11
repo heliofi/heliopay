@@ -10,7 +10,7 @@ import {
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { FC, ReactNode, useMemo } from 'react';
-import { ClusterHelio } from '@heliofi/sdk';
+import { ClusterHelio, ClusterHelioType } from '@heliofi/sdk';
 import { AddressProvider } from '../address';
 
 import { AnchorProvider } from '../anchor';
@@ -20,7 +20,7 @@ import CheckoutSearchParamsProvider from '../checkoutSearchParams';
 
 export const SolanaProvider: FC<{
   children: ReactNode;
-  cluster: ClusterHelio;
+  cluster: ClusterHelioType;
 }> = ({ children, cluster }) => {
   const network =
     cluster === ClusterHelio.Devnet
