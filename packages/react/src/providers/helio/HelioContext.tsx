@@ -21,7 +21,7 @@ export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
   activeCurrency?: Currency;
-  setActiveCurrency: (activeCurrency: Currency) => void;
+  setActiveCurrency: (activeCurrency?: Currency) => void;
   currencyList: Currency[];
   setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails?: PaymentRequest;
@@ -97,6 +97,10 @@ export const useHelioProvider = () => {
       );
       setCurrencyList(allowedCurrenciesTemp || []);
     }
+  };
+
+  const initActiveCurrency = (symbol?: string): void => {
+    setActiveCurrency(currencyList.find((c: Currency) => c.symbol === symbol));
   };
 
   const getPaymentDetails = <T extends PaymentDetailsType>(): T =>
@@ -198,7 +202,7 @@ export const useHelioProvider = () => {
               ? quantity ?? 1
               : undefined,
             HelioSDK.tokenConversionService.convertToMinimalUnits(
-              paymentDetails?.currency.symbol,
+              activeCurrency?.symbol,
               totalDecimalAmount
             ),
             toMint
@@ -238,7 +242,7 @@ export const useHelioProvider = () => {
 
   return {
     activeCurrency,
-    setActiveCurrency,
+    initActiveCurrency,
     currencyList,
     paymentDetails,
     getCurrencyList,

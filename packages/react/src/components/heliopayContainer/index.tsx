@@ -102,6 +102,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     tokenSwapQuote,
     paymentType: paymentRequestType,
     setPaymentType,
+    activeCurrency,
+    initActiveCurrency,
   } = useHelioProvider();
   const connectionProvider = useConnection();
 
@@ -128,6 +130,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const walletConnected = wallet || isConnected;
   const blockchain = paymentDetails?.currency?.blockchain?.symbol;
   const isDynamic = paymentDetails?.dynamic;
+  const canSelectCurrency = supportedAllowedCurrencies.length > 1;
 
   // @todo-v change dynamic payment
   /* const isBalanceEnough = HelioSDK.availableBalanceService.isBalanceEnough({
@@ -240,7 +243,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         wallet: wallet as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster: cluster as ClusterSol, // @todo delete don't use
+        cluster: cluster as ClusterSol, // @todo-v delete don't use
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
@@ -265,7 +268,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     const mintAddress =
       currency &&
       HelioSDK.currencyService.getCurrencyBySymbolAndBlockchain({
-        symbol: paymentDetails?.currency.symbol, // @todo-v select currency
+        symbol: currency?.symbol ?? '',
         blockchain,
       })?.mintAddress;
     if (
@@ -353,7 +356,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         rateToken: dynamicRateToken,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
-        cluster: cluster as ClusterSol, // @todo delete don't use
+        cluster: cluster as ClusterSol, // @todo-v delete don't use
       };
 
       try {
@@ -384,13 +387,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           evmPublicKey,
           blockchain: paymentDetails?.currency.blockchain.symbol,
           areCurrenciesDefined: currencyList.length > 0,
-          currency: paymentDetails?.currency.symbol,
+          currency: activeCurrency?.symbol,
           canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
           swapCurrency: 'SOL',
           tokenSwapQuote: tokenSwapQuote ?? undefined,
           decimalAmount:
             HelioSDK.tokenConversionService.convertFromMinimalUnits(
-              paymentDetails?.currency.symbol,
+              activeCurrency?.symbol ?? '',
               paymentDetails?.normalizedPrice,
               paymentDetails?.currency?.blockchain?.symbol
             ),
@@ -398,13 +401,30 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       };
       fetchData().catch();
     }
-  }, [walletConnected, paymentDetails, currencyList]);
+  }, [walletConnected, paymentDetails, currencyList, activeCurrency]);
 
   useEffect(() => {
     if (mainCluster) {
       getCurrencyList(blockchain).catch();
     }
   }, [mainCluster, blockchain]);
+
+  useEffect(() => {
+    let symbol;
+    if (supportedAllowedCurrencies.length === 1) {
+      symbol = supportedAllowedCurrencies[0]?.symbol;
+    } else if (!canSelectCurrency) {
+      symbol = paymentDetails?.currency?.symbol;
+    } else if (paymentDetails?.currency?.symbol) {
+      symbol = paymentDetails?.currency?.symbol;
+    }
+    initActiveCurrency(symbol);
+  }, [
+    paymentDetails,
+    currencyList,
+    supportedAllowedCurrencies,
+    canSelectCurrency,
+  ]);
 
   useEffect(() => {
     generateSupportedAllowedCurrencies();
@@ -414,7 +434,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     if (mainCluster && paymentRequestType && paymentRequestId) {
       initPaymentDetails(paymentRequestId).catch();
     }
-  }, [paymentRequestId, mainCluster, paymentRequestType]);
+  }, [paymentRequestId, mainCluster, paymentRequestType, cluster]);
 
   useEffect(() => {
     if (queryString) {

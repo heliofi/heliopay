@@ -63,7 +63,7 @@ const PaystreamPaymentResult = ({
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
   const connectionProvider = useConnection();
-  const { getPaymentDetails } = useHelioProvider();
+  const { getPaymentDetails, activeCurrency } = useHelioProvider();
   const { HelioSDK } = useCompositionRoot();
 
   const [loading, setLoading] = useState(true);
@@ -86,7 +86,7 @@ const PaystreamPaymentResult = ({
   const hasError = 'errorMessage' in result;
 
   const decimalAmount = HelioSDK.tokenConversionService.convertFromMinimalUnits(
-    paymentDetails?.currency?.symbol,
+    activeCurrency?.symbol ?? '',
     paymentDetails?.normalizedPrice
   );
 
@@ -109,7 +109,7 @@ const PaystreamPaymentResult = ({
         onPending: (event: PendingPaymentEvent) => onPending?.(event),
         wallet,
         connection: connectionProvider.connection,
-        cluster: HelioSDK.configService.getCluster(),
+        cluster: HelioSDK.configService.getCluster(), // @todo-v delete don't use
       });
     }
   }, [
@@ -196,7 +196,7 @@ const PaystreamPaymentResult = ({
             <StyledPPResultAmount>
               Pay per {timeUnit}:{' '}
               <StyledPPResultPrice>
-                {decimalAmount} {paymentDetails.currency.symbol} / {timeUnit}
+                {decimalAmount} {activeCurrency?.symbol} / {timeUnit}
               </StyledPPResultPrice>
             </StyledPPResultAmount>
 

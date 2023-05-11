@@ -59,18 +59,13 @@ export const getInitialValues = (
   ...searchParams,
 });
 
-export const getCurrency = (currencyList: any[], currency?: string) => {
-  if (!currency) return null;
-  return currencyList.find((c: any) => c.symbol === currency);
-};
-
 export const handleSubmit =
   ({
     paymentDetails,
     HelioSDK,
     totalDecimalAmount,
     onSubmit,
-    currencyList,
+    currency,
     paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
@@ -102,14 +97,11 @@ export const handleSubmit =
       productDetails: clearProductDetails,
       amount: BigInt(
         HelioSDK.tokenConversionService.convertToMinimalUnits(
-          values.currency || paymentDetails?.currency.symbol,
+          currency.symbol,
           values.canChangePrice ? values.customPrice : totalDecimalAmount
         )
       ),
-      currency: getCurrency(
-        currencyList,
-        values.currency || paymentDetails?.currency.symbol
-      ),
+      currency,
     };
 
     if (paymentType === PaymentRequestType.PAYLINK) {

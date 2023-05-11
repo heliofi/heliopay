@@ -31,7 +31,7 @@ export interface IHandleSubmit {
   HelioSDK: HelioSDKType;
   totalDecimalAmount: number;
   onSubmit: InheritedOnSubmit;
-  currencyList: Currency[];
+  currency: Currency;
   paymentType: PaymentRequestType;
 }
 

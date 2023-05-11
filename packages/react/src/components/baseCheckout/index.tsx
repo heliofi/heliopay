@@ -1,14 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
-import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
+import { LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
-import {
-  formatTotalPrice,
-  getCurrency,
-  getInitialValues,
-  handleSubmit,
-} from './actions';
+import { formatTotalPrice, getInitialValues, handleSubmit } from './actions';
 import {
   ButtonWithTooltip,
   CurrencyIcon,
@@ -58,12 +53,12 @@ const BaseCheckout = ({
     tokenSwapError,
     removeTokenSwapError,
     paymentType,
+    activeCurrency,
   } = useHelioProvider();
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
 
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
-  const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
 
@@ -97,9 +92,7 @@ const BaseCheckout = ({
     totalAmount || decimalAmount,
     canSelectCurrency,
     getPaymentDetails,
-    paymentDetails?.dynamic
-      ? supportedAllowedCurrencies?.[0].symbol
-      : paymentDetails?.currency?.symbol,
+    activeCurrency?.symbol,
     getPaymentFeatures(),
     getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
     getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
@@ -111,48 +104,37 @@ const BaseCheckout = ({
     customPrice?: number,
     quantity?: number
   ): boolean => {
-    const ret = HelioSDK.availableBalanceService.isBalanceEnough({
+    if (!activeCurrency?.symbol) {
+      return true;
+    }
+    return HelioSDK.availableBalanceService.isBalanceEnough({
       quantity,
       decimalAmount:
         customPrice ||
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency.symbol,
+          activeCurrency.symbol,
           paymentDetails?.normalizedPrice,
-          paymentDetails?.currency?.blockchain?.symbol
+          blockchain
         ),
       isTokenSwapped: !!(canSwapTokens && 'SOL'),
     });
-    return ret;
   };
 
   useEffect(() => {
-    if (supportedAllowedCurrencies.length === 1) {
-      setActiveCurrency(supportedAllowedCurrencies[0]);
-    } else if (!canSelectCurrency) {
-      setActiveCurrency(
-        getCurrency(currencyList, paymentDetails?.currency?.symbol)
-      );
-    }
-  }, [paymentDetails?.currency, canSelectCurrency]);
-
-  useEffect(() => {
     if (
+      activeCurrency &&
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
       setDecimalAmount(
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency?.symbol,
+          activeCurrency.symbol,
           paymentDetails?.normalizedPrice,
           paymentDetails?.currency?.blockchain?.symbol
         )
       );
     }
-  }, [
-    paymentDetails?.currency,
-    paymentDetails?.normalizedPrice,
-    paymentDetails?.currency?.blockchain?.symbol,
-  ]);
+  }, [activeCurrency, paymentDetails]);
 
   useEffect(() => {
     if (!showSwapMenu) {
@@ -201,7 +183,7 @@ const BaseCheckout = ({
             </div>
           )}
           {!showQRCode &&
-            (paymentDetails && paymentType ? (
+            (paymentDetails && paymentType && activeCurrency ? (
               <Formik
                 enableReinitialize
                 initialValues={initialValues}
@@ -210,7 +192,7 @@ const BaseCheckout = ({
                   HelioSDK,
                   totalDecimalAmount: totalAmount || decimalAmount,
                   onSubmit,
-                  currencyList,
+                  currency: activeCurrency,
                   paymentType,
                 })}
                 validationSchema={validationSchema}
@@ -220,11 +202,9 @@ const BaseCheckout = ({
                     <PricingComponent
                       formValues={values}
                       setFieldValue={setFieldValue}
-                      activeCurrency={activeCurrency}
                       totalDecimalAmount={totalAmount || decimalAmount}
                       canSelectCurrency={canSelectCurrency}
                       supportedAllowedCurrencies={supportedAllowedCurrencies}
-                      setActiveCurrency={setActiveCurrency}
                     />
                     {showSwapMenu && (
                       <SwapsForm

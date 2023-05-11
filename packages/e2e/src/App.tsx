@@ -9,6 +9,7 @@ import {
 import { HelioPay } from '@heliofi/react/dist';
 
 import './styles/style.scss';
+import { PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 

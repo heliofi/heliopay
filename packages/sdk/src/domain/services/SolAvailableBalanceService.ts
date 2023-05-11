@@ -20,6 +20,8 @@ export class SolAvailableBalanceService {
     connection: Connection
   ): Promise<AvailableBalance[]> {
     const solMinimalAmount = await connection.getBalance(publicKey);
+
+    // @todo-v
     const solDecimalAmount =
       this.tokenConversionService.convertFromMinimalUnits(
         'SOL',
