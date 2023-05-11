@@ -139,7 +139,6 @@ export const useHelioProvider = () => {
       );
       setPaymentDetails(result || {});
     } catch (e) {
-      setPaymentDetails({});
       console.warn(e);
     }
   };
