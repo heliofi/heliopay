@@ -2963,6 +2963,87 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
+"@heliofi/react@^3.3.5":
+  version "3.3.5"
+  resolved "https://registry.npmjs.org/@heliofi/react/-/react-3.3.5.tgz#77639d842c923307b7c252ac4cca45299b9f23b5"
+  integrity sha512-tbL31agn6K6XvfvVCs1Gt3iq7ekL6qAl5DnHC+nw20/l2ZoYBbJzQM5bWgnMyQ8ElDwxXM041fP+B6BZlhk70g==
+  dependencies:
+    "@aws-amplify/api-graphql" "^2.3.12"
+    "@heliofi/common" "0.1.195"
+    "@heliofi/helio-icons" "^1.0.5"
+    "@heliofi/sdk" "^0.1.10"
+    "@heliofi/solana-adapter" "3.1.1-alpha"
+    "@popperjs/core" "^2.11.7"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/spl-token" "^0.3.6"
+    "@solana/wallet-adapter-base" "^0.9.5"
+    "@solana/wallet-adapter-react" "^0.15.5"
+    "@solana/wallet-adapter-react-ui" "^0.9.7"
+    "@solana/wallet-adapter-wallets" "^0.16.1"
+    "@solana/web3.js" "^1.44.0"
+    aws-amplify "^4.3.16"
+    bs58 "^5.0.0"
+    class-transformer "^0.5.1"
+    crypto-js "^4.1.1"
+    downshift "^6.1.7"
+    formik "^2.2.9"
+    jest "^28.1.1"
+    json5 "^2.2.2"
+    jwt-decode "^3.1.2"
+    react "^18.2.0"
+    react-dom "^18.2.0"
+    react-hot-toast "^2.4.0"
+    react-phone-number-input "^3.2.11"
+    react-popper-tooltip "^4.4.2"
+    react-qr-code "^2.0.11"
+    reflect-metadata "^0.1.13"
+    styled-components "^5.3.5"
+    ts-jest "^28.0.5"
+    tweetnacl "^1.0.3"
+    yup "^0.32.11"
+
+"@heliofi/sdk@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.npmjs.org/@heliofi/sdk/-/sdk-0.1.10.tgz#088d4c25e0078661b84f207c6fd424aaa90e397a"
+  integrity sha512-HCnPBP0Dhlbj2e/JXZJvSoKKl0PJVDP1zDDGFeRYtDNR4zd6zZ8dxIqnRwfDZm8zW4WyMV+LUkQcFpGXm/fNgg==
+  dependencies:
+    "@heliofi/common" "0.1.195"
+    "@heliofi/solana-adapter" "^3.1.12"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    reflect-metadata "^0.1.13"
+    tweetnacl "^1.0.3"
+    yarn "^1.22.19"
+
+"@heliofi/solana-adapter@3.1.1-alpha":
+  version "3.1.1-alpha"
+  resolved "https://registry.npmjs.org/@heliofi/solana-adapter/-/solana-adapter-3.1.1-alpha.tgz#84234d71dc1a2141fe815453018fa254e3cd5b3e"
+  integrity sha512-eDWlzhib82g49ooSsqgngd5ThWvVy94cOtxyUIhH+g0icULBD6M+LkL30aIvsW/kAw5bqBankLvXjXb0TNt4Kw==
+  dependencies:
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/spl-token" "^0.2.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    jsonwebtoken "^8.5.1"
+    tweetnacl "^1.0.3"
+
+"@heliofi/solana-adapter@^3.1.12":
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/@heliofi/solana-adapter/-/solana-adapter-3.2.0.tgz#ddce87723be69fd47cf984f61de671f71b6a298a"
+  integrity sha512-NayPkG3mKgBG7AjhCIlZbDZxPalGz9Zm9tAQ4oPYkzIZn7RPHP0q4hT6yCMXgyBymVYk97q0EvIgkp/Iezddwg==
+  dependencies:
+    "@coral-xyz/anchor" "^0.27.0"
+    "@sideway/formula" "^3.0.1"
+    "@solana/spl-token" "^0.3.7"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.68.0"
+    bs58 "^5.0.0"
+    jsonwebtoken "^9.0.0"
+    tweetnacl "^1.0.3"
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
