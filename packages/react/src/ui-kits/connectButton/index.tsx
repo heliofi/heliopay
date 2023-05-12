@@ -17,7 +17,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
   paymentRequestType,
   onError,
 }) => {
-  const { connecting } = useWallet();
+  const { connecting: connectingSOL } = useWallet();
   const { isLoading: connectingEVM } = useConnectWagmi();
   const { onConnect, setErrorHandler } = useConnect();
 
@@ -57,9 +57,9 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
   return (
     <StyledButton
       onClick={() => connectOrRedirect()}
-      disabled={connecting || connectingEVM}
+      disabled={connectingSOL || connectingEVM}
     >
-      {connecting || connectingEVM ? (
+      {connectingSOL || connectingEVM ? (
         <ConnectButtonConnecting>
           <span>CONNECTING...</span>
         </ConnectButtonConnecting>
