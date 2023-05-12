@@ -21,5 +21,3 @@ Full installation and setup details : https://github.com/heliofi/heliopay#readme
 
 - address lookup improvement
 - minor bug fixes
-
-
