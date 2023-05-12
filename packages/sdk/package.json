@@ -72,5 +72,6 @@
   },
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "gitHead": "7f55a11a37ee280d753dc97e3515c88155585fad"
 }
