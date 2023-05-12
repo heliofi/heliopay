@@ -7,6 +7,7 @@ import {
   ErrorPaymentEvent,
   LoadingModalStep,
   LoadingModalStepsCount,
+  PaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
@@ -115,7 +116,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const { blockchainEngineRef } = useConnect();
 
   const [result, setResult] = useState<
-    SuccessPaymentEvent | ErrorPaymentEvent | PendingPaymentEvent | null
+    | SuccessPaymentEvent
+    | ErrorPaymentEvent
+    | PendingPaymentEvent
+    | PaymentEvent
+    | null
   >(null);
   const [showFormModal, setShowFormModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState<LoadingModalStep>(
@@ -207,15 +212,16 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setShowLoadingModal(LoadingModalStep.CLOSE);
   };
 
-  // const handleInitiatedPayment = (event: PaymentEvent): void => {
-  //   onPending?.(event);
-  //   setResult(event);
-  // };
+  const handlePendingPayment = (event: PendingPaymentEvent): void => {
+    onPending?.(event);
+    setResult(event);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
+  };
 
-  // const handlePendingPayment = (event: PendingPaymentEvent): void => {
-  //   onPending?.(event);
-  //   setResult(event);
-  // };
+  const handleCancelPayment = (): void => {
+    setResult(null);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
+  };
 
   const submitPaylink = async ({
     amount,
@@ -295,9 +301,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         blockchain,
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
-        // onPending: handlePendingPayment,
-        // onCancel: handleErrorPayment,
-        // onInitiated: handleInitiatedPayment,
+        onPending: handlePendingPayment,
+        onCancel: handleCancelPayment,
         setLoadingModalStep: setShowLoadingModal,
         customerDetails,
         quantity: Number(quantity),
