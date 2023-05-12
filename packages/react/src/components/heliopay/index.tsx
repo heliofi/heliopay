@@ -29,6 +29,7 @@ interface HelioPayProps {
   totalAmount?: number;
   paymentType?: PaymentRequestType;
   searchCustomerDetails?: CheckoutSearchParamsValues;
+  additionalJSON?: {};
 }
 
 export const HelioPay = ({
@@ -44,6 +45,7 @@ export const HelioPay = ({
   totalAmount,
   paymentType = PaymentRequestType.PAYLINK,
   searchCustomerDetails,
+  additionalJSON,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -73,6 +75,7 @@ export const HelioPay = ({
           totalAmount={totalAmount}
           paymentType={paymentType}
           searchCustomerDetails={searchCustomerDetails}
+          additionalJSON={additionalJSON}
         />
         <Toaster />
       </SolanaProvider>
