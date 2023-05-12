@@ -153,7 +153,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const isNativeToken =
     blockchain &&
-    paymentDetails?.currency.symbol === blockchainToNativeToken.get(blockchain);
+    activeCurrency?.symbol === blockchainToNativeToken.get(blockchain);
 
   const getLoadingModalStartingStep = useCallback(
     (): LoadingModalStep =>
