@@ -116,7 +116,9 @@ const BaseCheckout = ({
           paymentDetails?.normalizedPrice,
           blockchain
         ),
-      isTokenSwapped: !!(canSwapTokens && 'SOL'),
+      isTokenSwapped: !!(
+        canSwapTokens && HelioSDK.defaultCurrencyService.getSolCurrencySymbol()
+      ),
     });
   };
 

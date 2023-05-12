@@ -13,6 +13,8 @@ import { PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
+// @TODO please don't review this file. This file only for development
+
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     // '643d47cee509bc5eb64cff48'
@@ -44,7 +46,7 @@ const App = () => {
         supportedCurrencies={['MATIC']}
         // supportedCurrencies={['MATIC', 'USDC']}
         // paymentType={PaymentRequestType.PAYSTREAM}
-        totalAmount={0.00001} // @TODO bug when also has normalizedPrice
+        totalAmount={0.00001}
       />
     </>
   );

@@ -21,6 +21,14 @@ export class ConfigService {
     return ASSET_URL;
   }
 
+  getImageUrl(name: string): string {
+    switch (name) {
+      case 'MetaMask':
+      default:
+        return `${ASSET_URL}/MetaMask.png`;
+    }
+  }
+
   getCluster(): ClusterHelioType {
     if (!this.cluster) {
       throw new Error('Please set cluster before getCluster');

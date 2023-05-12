@@ -1,4 +1,4 @@
-import { SOLANA_WALLET_INJECTIONS } from '../constants/solanaWalletInjections';
+import { SOLANA_WALLET_INJECTIONS } from '@heliofi/sdk';
 
 export class DeeplinkService {
   static isSolanaInjected = (): boolean =>

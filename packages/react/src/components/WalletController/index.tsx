@@ -22,7 +22,7 @@ import { shortenWalletAddress } from '../../utils';
 export interface WalletControllerProps {
   publicKey: string;
   paymentRequestType?: PaymentRequestType;
-  onError?: (err: unknown) => void;
+  onError?: (err: unknown) => void; // @todo-v check
 }
 
 const WalletController = ({
