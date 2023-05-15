@@ -7,6 +7,8 @@ import { ASSET_URL } from '../constants';
 export class ConfigService {
   private cluster?: Cluster;
 
+  private customApiUrl?: string;
+
   static DEV_HELIO_SERVICE_BASE_URL = 'https://dev.api.hel.io/v1';
 
   static PROD_HELIO_SERVICE_BASE_URL = 'https://api.hel.io/v1';
@@ -15,8 +17,15 @@ export class ConfigService {
 
   static PROD_HELIO_BASE_URL = 'https://www.hel.io';
 
-  constructor(cluster?: Cluster) {
+  constructor({
+    cluster,
+    customApiUrl,
+  }: {
+    cluster?: Cluster;
+    customApiUrl?: string;
+  }) {
     this.cluster = cluster;
+    this.customApiUrl = customApiUrl;
   }
 
   getAssetUrl(): string {
@@ -34,7 +43,17 @@ export class ConfigService {
     this.cluster = cluster;
   }
 
+  setCustomApiUrl(customApiUrl: string) {
+    this.customApiUrl = customApiUrl;
+  }
+
   getHelioApiBaseUrl(): string {
+    const customApiUrl = this.getCustomApiUrl();
+
+    if (customApiUrl) {
+      return customApiUrl;
+    }
+
     switch (this.cluster) {
       case ClusterType.Testnet:
       case ClusterType.Devnet:
@@ -62,5 +81,9 @@ export class ConfigService {
     const baseUrl = this.getHelioBaseUrl();
     const urlParam = paymentType === PaymentRequestType.PAYLINK ? 'pay' : 's';
     return `https://phantom.app/ul/browse/${baseUrl}/${urlParam}/${id}?ref=${baseUrl}`;
+  }
+
+  private getCustomApiUrl(): string | undefined {
+    return this.customApiUrl;
   }
 }

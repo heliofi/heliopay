@@ -18,6 +18,8 @@ import {
 export class HelioSDK {
   private _cluster?: Cluster;
 
+  private _customApiUrl?: string;
+
   private _currencyService: CurrencyService;
 
   private _apiService: HelioApiConnector;
@@ -36,9 +38,13 @@ export class HelioSDK {
 
   private _availableBalanceService: AvailableBalanceService;
 
-  constructor(options?: { cluster: Cluster }) {
+  constructor(options?: { cluster: Cluster; customApiUrl: string }) {
     this._cluster = options?.cluster;
-    this._configService = new ConfigService(options?.cluster);
+    this._customApiUrl = options?.customApiUrl;
+    this._configService = new ConfigService({
+      cluster: options?.cluster,
+      customApiUrl: options?.customApiUrl,
+    });
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
     this._tokenConversionService = new TokenConversionService(
@@ -75,6 +81,11 @@ export class HelioSDK {
   setCluster(cluster: Cluster) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
+  }
+
+  setCustomApiUrl(customApiUrl: string) {
+    this._customApiUrl = customApiUrl;
+    this._configService.setCustomApiUrl(customApiUrl);
   }
 
   get currencyService(): CurrencyService | never {
