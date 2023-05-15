@@ -16,7 +16,6 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { Cluster as ClusterSol } from '@solana/web3.js';
 import {
   BlockchainSymbol,
   Currency,
@@ -579,6 +578,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
               : submitPaylinkEVM(data as SubmitPaylinkProps)
           }
           supportedAllowedCurrencies={supportedAllowedCurrencies}
+          supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
         />
       )}

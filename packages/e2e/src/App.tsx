@@ -43,7 +43,7 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={['MATIC']}
+        supportedCurrencies={['MATIC', 'USDC']}
         // supportedCurrencies={['MATIC', 'USDC']}
         // paymentType={PaymentRequestType.PAYSTREAM}
         totalAmount={0.00001}
