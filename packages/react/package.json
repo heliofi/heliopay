@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "3.3.5",
+  "version": "3.5.2",
   "description": "React components for Helio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,8 +16,8 @@
     "@aws-amplify/api-graphql": "^2.3.12",
     "@heliofi/common": "0.1.195",
     "@heliofi/helio-icons": "^1.0.5",
-    "@heliofi/sdk": "^0.1.10",
-    "@heliofi/solana-adapter": "3.1.12",
+    "@heliofi/sdk": "^0.3.2",
+    "@heliofi/solana-adapter": "^3.3.0",
     "@popperjs/core": "^2.11.7",
     "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.3.6",
@@ -108,5 +108,5 @@
   "prettier": {
     "singleQuote": true
   },
-  "gitHead": "c204944e6e6e861c0b2413a3f3a242cc5ab49ac9"
+  "gitHead": "7f55a11a37ee280d753dc97e3515c88155585fad"
 }
