@@ -41,8 +41,8 @@ export const ConnectContext = createContext<ConnectOptions>({
 const ConnectProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const { connected } = useWallet();
-  const { isConnected } = useAccount();
+  const { connected: isConnectedSOl } = useWallet();
+  const { isConnected: isConnectedEVM } = useAccount();
 
   const { isModalShown, toggleModal, closeModal, openModal } = useModal();
 
@@ -57,22 +57,30 @@ const ConnectProvider: FC<{
   const getErrorHandler = useCallback(() => onErrorRef.current, []);
 
   useEffect(() => {
-    if (!isConnecting && (connected || isConnected)) {
-      if (isConnected) {
+    if (!isConnecting) {
+      if (isConnectedEVM) {
         blockchainEngineRef.current = BlockchainEngineType.EVM;
-      } else {
+      } else if (isConnectedSOl) {
         blockchainEngineRef.current = BlockchainEngineType.SOL;
+      } else {
+        blockchainEngineRef.current = undefined;
       }
     }
-  }, []);
+  }, [isConnecting, isConnectedSOl, isConnectedEVM, isModalShown]);
 
   useEffect(() => {
-    if (isConnecting && (connected || isConnected)) {
+    if (isConnecting && (isConnectedSOl || isConnectedEVM)) {
       setIsConnecting(false);
       setIsExtensionOpen(true);
       closeModal();
     }
-  }, [isConnecting, closeModal, getErrorHandler, isConnected, connected]);
+  }, [
+    isConnecting,
+    closeModal,
+    getErrorHandler,
+    isConnectedEVM,
+    isConnectedSOl,
+  ]);
 
   const onConnect = ({ blockchainEngine }: OnConnectOptions): void => {
     blockchainEngineRef.current = blockchainEngine;

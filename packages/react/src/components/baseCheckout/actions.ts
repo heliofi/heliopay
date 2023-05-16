@@ -5,7 +5,10 @@ import {
   Paystream,
   ProductDetails,
   PaymentRequestType,
+  Currency,
+  BlockchainSymbol,
 } from '@heliofi/common';
+import { HelioSDK as HelioSDKType } from '@heliofi/sdk/dist/src/app/HelioSDK';
 import {
   PaymentDetailsType,
   PaymentFeatures,
@@ -127,4 +130,40 @@ export const handleSubmit =
 export const formatTotalPrice = (price: number, quantity = 1): number => {
   const totalPrice = Number(price * quantity);
   return totalPrice || price;
+};
+
+export const getIsBalanceEnough = ({
+  HelioSDK,
+  customPrice,
+  quantity,
+  activeCurrency,
+  paymentDetails,
+  blockchain,
+  canSwapTokens,
+}: {
+  HelioSDK: HelioSDKType;
+  customPrice?: number;
+  quantity?: number;
+  activeCurrency?: Currency;
+  paymentDetails?: PaymentDetailsType;
+  blockchain?: BlockchainSymbol;
+  canSwapTokens?: boolean;
+}): boolean => {
+  if (!activeCurrency?.symbol || !paymentDetails?.normalizedPrice) {
+    return true;
+  }
+
+  return HelioSDK.availableBalanceService.isBalanceEnough({
+    quantity,
+    decimalAmount:
+      customPrice ||
+      HelioSDK.tokenConversionService.convertFromMinimalUnits(
+        activeCurrency.symbol,
+        paymentDetails.normalizedPrice,
+        blockchain
+      ),
+    isTokenSwapped: !!(
+      canSwapTokens && HelioSDK.defaultCurrencyService.getSolCurrencySymbol()
+    ),
+  });
 };

@@ -3,7 +3,12 @@ import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
 import { LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
-import { formatTotalPrice, getInitialValues, handleSubmit } from './actions';
+import {
+  formatTotalPrice,
+  getInitialValues,
+  getIsBalanceEnough,
+  handleSubmit,
+} from './actions';
 import {
   ButtonWithTooltip,
   CurrencyIcon,
@@ -45,7 +50,6 @@ const BaseCheckout = ({
   PricingComponent,
 }: BaseCheckoutProps) => {
   const {
-    currencyList,
     getPaymentFeatures,
     getPaymentDetails,
     tokenSwapLoading,
@@ -98,29 +102,6 @@ const BaseCheckout = ({
     getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
     searchParams
   );
-
-  // @todo-v swapCurrency
-  const isBalanceEnough = (
-    customPrice?: number,
-    quantity?: number
-  ): boolean => {
-    if (!activeCurrency?.symbol) {
-      return true;
-    }
-    return HelioSDK.availableBalanceService.isBalanceEnough({
-      quantity,
-      decimalAmount:
-        customPrice ||
-        HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          activeCurrency.symbol,
-          paymentDetails?.normalizedPrice,
-          blockchain
-        ),
-      isTokenSwapped: !!(
-        canSwapTokens && HelioSDK.defaultCurrencyService.getSolCurrencySymbol()
-      ),
-    });
-  };
 
   useEffect(() => {
     if (
@@ -223,10 +204,26 @@ const BaseCheckout = ({
                       type="submit"
                       disabled={
                         payButtonDisable ||
-                        !isBalanceEnough(values.customPrice, values.quantity)
+                        !getIsBalanceEnough({
+                          HelioSDK,
+                          customPrice: values.customPrice,
+                          quantity: values.quantity,
+                          activeCurrency,
+                          paymentDetails,
+                          blockchain,
+                          canSwapTokens,
+                        })
                       }
                       showTooltip={
-                        !isBalanceEnough(values.customPrice, values.quantity)
+                        !getIsBalanceEnough({
+                          HelioSDK,
+                          customPrice: values.customPrice,
+                          quantity: values.quantity,
+                          activeCurrency,
+                          paymentDetails,
+                          blockchain,
+                          canSwapTokens,
+                        })
                       }
                       tooltipText="Not enough funds in your wallet"
                     >
