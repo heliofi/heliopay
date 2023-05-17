@@ -18,7 +18,7 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     // '643d47cee509bc5eb64cff48'
-    '6426c604d6b811801fbca8dc'
+    '645e363c0c3f7fa850c7b5a7'
   );
 
   return (
@@ -45,9 +45,9 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={['MATIC', 'USDC']}
-        paymentType={PaymentRequestType.PAYSTREAM}
-        // totalAmount={0.00001}
+        supportedCurrencies={undefined}
+        paymentType={PaymentRequestType.PAYLINK}
+        totalAmount={undefined}
       />
     </>
   );

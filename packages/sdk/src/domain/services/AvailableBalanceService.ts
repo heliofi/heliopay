@@ -53,7 +53,7 @@ export class AvailableBalanceService {
     tokenSwapQuote?: TokenSwapQuote;
     blockchain?: BlockchainSymbol;
     areCurrenciesDefined: boolean;
-  }): Promise<void> {
+  }): Promise<number> {
     let availableBalance = 0;
     const isTokenSwapped = !!(canSwapTokens && swapCurrency);
 
@@ -105,6 +105,8 @@ export class AvailableBalanceService {
 
     this.availableBalance = availableBalance;
     this.swappedPrice = swappedPrice;
+
+    return availableBalance;
   }
 
   isBalanceEnough({

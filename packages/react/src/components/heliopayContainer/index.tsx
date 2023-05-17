@@ -428,26 +428,25 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   useEffect(() => {
     if (walletConnected) {
       const fetchData = async () => {
-        await HelioSDK.availableBalanceService.fetchAvailableBalance({
-          publicKey: walletSol?.publicKey,
-          connection: connectionProvider?.connection,
-          evmPublicKey,
-          blockchain: paymentDetails?.currency.blockchain.symbol,
-          areCurrenciesDefined: currencyList.length > 0,
-          currency: activeCurrency?.symbol,
-          canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
-          swapCurrency: 'SOL',
-          tokenSwapQuote: tokenSwapQuote ?? undefined,
-          decimalAmount:
-            HelioSDK.tokenConversionService.convertFromMinimalUnits(
-              activeCurrency?.symbol ?? '',
-              paymentDetails?.normalizedPrice,
-              paymentDetails?.currency?.blockchain?.symbol
-            ),
-        });
-        setAvailableBalance(
-          HelioSDK?.availableBalanceService?.availableBalance
-        );
+        const balance =
+          await HelioSDK.availableBalanceService.fetchAvailableBalance({
+            publicKey: walletSol?.publicKey,
+            connection: connectionProvider?.connection,
+            evmPublicKey,
+            blockchain: paymentDetails?.currency.blockchain.symbol,
+            areCurrenciesDefined: currencyList.length > 0,
+            currency: activeCurrency?.symbol,
+            canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
+            swapCurrency: 'SOL',
+            tokenSwapQuote: tokenSwapQuote ?? undefined,
+            decimalAmount:
+              HelioSDK.tokenConversionService.convertFromMinimalUnits(
+                activeCurrency?.symbol ?? '',
+                paymentDetails?.normalizedPrice,
+                paymentDetails?.currency?.blockchain?.symbol
+              ),
+          });
+        setAvailableBalance(balance);
       };
       fetchData().catch();
     }
