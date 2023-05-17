@@ -25,6 +25,8 @@ import { DefaultCurrencyService } from '../domain/services/DefaultCurrencyServic
 export class HelioSDK {
   private _cluster?: ClusterHelioType;
 
+  private _customApiUrl?: string;
+
   private _currencyService: CurrencyService;
 
   private _defaultCurrencyService: DefaultCurrencyService;
@@ -59,9 +61,13 @@ export class HelioSDK {
 
   private _availableBalanceService: AvailableBalanceService;
 
-  constructor(options?: { cluster: ClusterHelioType }) {
+  constructor(options?: { cluster: ClusterHelioType; customApiUrl: string }) {
     this._cluster = options?.cluster;
-    this._configService = new ConfigService(options?.cluster);
+    this._customApiUrl = options?.customApiUrl;
+    this._configService = new ConfigService({
+      cluster: options?.cluster,
+      customApiUrl: options?.customApiUrl,
+    });
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
     this._defaultCurrencyService = new DefaultCurrencyService();
@@ -128,6 +134,11 @@ export class HelioSDK {
   setCluster(cluster: ClusterHelioType) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
+  }
+
+  setCustomApiUrl(customApiUrl: string) {
+    this._customApiUrl = customApiUrl;
+    this._configService.setCustomApiUrl(customApiUrl);
   }
 
   get currencyService(): CurrencyService | never {

@@ -70,6 +70,7 @@ interface HeliopayContainerProps {
   totalAmount?: number;
   paymentType: PaymentRequestType;
   searchCustomerDetails?: CheckoutSearchParamsValues;
+  additionalJSON?: {};
 }
 
 const HelioPayContainer: FC<HeliopayContainerProps> = ({
@@ -84,6 +85,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   totalAmount,
   paymentType,
   searchCustomerDetails,
+  additionalJSON,
 }) => {
   const walletSol = useAnchorWallet();
   const isConnectedSOl = !!walletSol;
@@ -278,7 +280,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         onSuccess: handleSuccessPayment,
         onError: handleErrorPayment,
         onPending,
-        customerDetails,
+        customerDetails: {
+          ...customerDetails,
+          additionalJSON: JSON.stringify(additionalJSON),
+        },
         quantity: Number(quantity),
         productDetails,
         splitRevenue: getPaymentFeatures()?.splitRevenue,
@@ -388,7 +393,10 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           handleSuccessPayment(event),
         onError: handleErrorPayment,
         onPending,
-        customerDetails,
+        customerDetails: {
+          ...customerDetails,
+          additionalJSON: JSON.stringify(additionalJSON),
+        },
         productDetails,
         interval,
         maxTime,

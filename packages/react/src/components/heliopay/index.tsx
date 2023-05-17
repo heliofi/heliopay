@@ -32,6 +32,8 @@ interface HelioPayProps {
   totalAmount?: number;
   paymentType?: PaymentRequestType;
   searchCustomerDetails?: CheckoutSearchParamsValues;
+  additionalJSON?: {};
+  customApiUrl?: string;
 }
 
 export const HelioPay = ({
@@ -47,6 +49,8 @@ export const HelioPay = ({
   totalAmount,
   paymentType = PaymentRequestType.PAYLINK,
   searchCustomerDetails,
+  additionalJSON,
+  customApiUrl,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -55,6 +59,12 @@ export const HelioPay = ({
   useMemo(() => {
     HelioSDK.setCluster(cluster);
   }, [cluster]);
+
+  useMemo(() => {
+    if (customApiUrl) {
+      HelioSDK.setCustomApiUrl(customApiUrl);
+    }
+  }, [customApiUrl]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
@@ -78,6 +88,7 @@ export const HelioPay = ({
               totalAmount={totalAmount}
               paymentType={paymentType}
               searchCustomerDetails={searchCustomerDetails}
+              additionalJSON={additionalJSON}
             />
             <Toaster />
           </ConnectProvider>
