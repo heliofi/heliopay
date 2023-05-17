@@ -515,17 +515,17 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [searchCustomerDetails, queryString]);
 
   useEffect(() => {
-    if (
-      paymentDetails &&
-      !isDynamic &&
-      activeCurrency &&
-      !isCustomerDetailsRequired &&
-      !canChangeQuantity &&
-      !isInterval &&
-      paymentRequestType === PaymentRequestType.PAYLINK
-    ) {
-      setIsOnlyPay(true);
-    }
+    setIsOnlyPay(
+      !!(
+        paymentDetails &&
+        !isDynamic &&
+        activeCurrency &&
+        !isCustomerDetailsRequired &&
+        !canChangeQuantity &&
+        !isInterval &&
+        paymentRequestType === PaymentRequestType.PAYLINK
+      )
+    );
   }, [
     paymentDetails,
     isDynamic,
