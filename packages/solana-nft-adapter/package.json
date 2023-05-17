@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/solana-nft-adapter",
-  "version": "0.1.12-beta.0",
+  "version": "0.3.1-alpha.0",
   "description": "API to interact with Helio NFT program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
