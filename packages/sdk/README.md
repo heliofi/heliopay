@@ -29,21 +29,32 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the HelioSDK
 
-| Methods                 | Params                         | Return                        | Description                                                                  |
-|:------------------------|:-------------------------------|:------------------------------|:-----------------------------------------------------------------------------|
-| constructor             | options?: { cluster: Cluster } | void                          | set properties,  **cluster available values:** devnet, mainnet-beta, testnet |
-| setCluster              | cluster: Cluster               | void                          | set cluster available value                                                  |
-| currencyService         | none                           | CurrencyService, never        | returns object CurrencyService                                               |
-| apiService              | none                           | HelioApiConnector, never      | returns object HelioApiAdapter                                               |
-| solExplorerService      | none                           | SolExplorerService, never     | returns object SolExplorerService                                            |
-| tokenConversionService  | none                           | TokenConversionService, never | returns object TokenConversionService                                        |
-| paylinkService          | none                           | PaylinkSubmitService, never   | returns object PaylinkSubmitService                                          |
-| paystreamStartService   | none                           | PaystreamStartService, never  | returns object PaystreamStartService                                         |
-| paystreamCancelService  | none                           | PaystreamCancelService, never | returns object PaystreamCancelService                                        |
-| configService           | none                           | ConfigService, never          | returns object ConfigService                                                 |
+| Methods                        | Params                                                        | Return                                 | Description                                                             |
+|:-------------------------------|:--------------------------------------------------------------|:---------------------------------------|:------------------------------------------------------------------------|
+| constructor                    | options?: { cluster: ClusterHelioType; customApiUrl: string } | void                                   | set properties,  **cluster available values:** devnet, mainnet, testnet |
+| setCluster                     | cluster: ClusterHelioType                                     | void                                   | set cluster available value                                             |
+| setCustomApiUrl                | customApiUrl: string                                          | void                                   | set custom api url                                                      |
+| currencyService                | none                                                          | CurrencyService, never                 | returns object CurrencyService                                          |
+| defaultCurrencyService         | none                                                          | DefaultCurrencyService, never          | returns object DefaultCurrencyService                                   |
+| apiService                     | none                                                          | HelioApiConnector, never               | returns object HelioApiAdapter                                          |
+| solExplorerService             | none                                                          | SolExplorerService, never              | returns object SolExplorerService                                       |
+| polygonExplorerService         | none                                                          | PolygonExplorerService, never          | returns object PolygonExplorerService                                   |
+| ethExplorerService             | none                                                          | EthereumExplorerService, never         | returns object EthereumExplorerService                                  |
+| tokenConversionService         | none                                                          | TokenConversionService, never          | returns object TokenConversionService                                   |
+| paylinkService                 | none                                                          | PaylinkSubmitService, never            | returns object PaylinkSubmitService                                     |
+| polygonPaylinkService          | none                                                          | PolygonPaylinkSubmitService, never     | returns object PolygonPaylinkSubmitService                              |
+| ethPaylinkService              | none                                                          | EthPaylinkSubmitService, never         | returns object EthPaylinkSubmitService                                  |
+| paystreamStartService          | none                                                          | PaystreamStartService, never           | returns object PaystreamStartService                                    |
+| paystreamCancelService         | none                                                          | PaystreamCancelService, never          | returns object PaystreamCancelService                                   |
+| configService                  | none                                                          | ConfigService, never                   | returns object ConfigService                                            |
+| solAvailableBalanceService     | none                                                          | SolAvailableBalanceService, never      | returns object SolAvailableBalanceService                               |
+| ethAvailableBalanceService     | none                                                          | EthereumAvailableBalanceService, never | returns object EthereumAvailableBalanceService                          |
+| polygonAvailableBalanceService | none                                                          | PolygonAvailableBalanceService, never  | returns object PolygonAvailableBalanceService                           |
+| availableBalanceService        | none                                                          | AvailableBalanceService, never         | returns object AvailableBalanceService                                  |
 
-```
- Cluster = "devnet" | "testnet" | "mainnet-beta";
+```Typescript
+type ClusterHelioType = 'devnet' | 'testnet' | 'mainnet';
+
 ```
 <br>
 
@@ -51,108 +62,171 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the CurrencyService
 
-| Methods                | Params                 | Return               | Description                             |
-|:-----------------------|:-----------------------|:---------------------|:----------------------------------------|
-| getCurrencies          | none                   | Promise<Currency[]>  | if currencies are empty adds currencies |
-| getCurrencyBySymbol    | symbol: string         | Currency, never      | get currency by symbol (e.g. "SOl")     |
-| getCurrencyByMint      | mint: string           | Currency, never      | get currency by mint address            |
+| Methods                           | Params                                                  | Return                     | Description                             |
+|:----------------------------------|:--------------------------------------------------------|:---------------------------|:----------------------------------------|
+| getCurrencies                     | none                                                    | Promise<Currency[]>        | if currencies are empty adds currencies |
+| getCurrencyBySymbol               | symbol: string                                          | Currency, undefined, never | get currency by symbol (e.g. "SOl")     |
+| getCurrencyByMint                 | mint: string                                            | Currency, never            | get currency by mint address            |
+| getCurrencyByMintOptional         | mint: string                                            | Currency, undefined        | get currency by mint address            |
+| getCurrencyBySymbolAndBlockchain  | { symbol: string; blockchain?: BlockchainSymbol; }      | Currency, undefined, never | get currency by symbol and blockchain   |
+| getCurrenciesByTypeAndBlockchain  | { type: CurrencyType; blockchain?: BlockchainSymbol; }  | Currency[]                 | get currency by type and blockchain     |
 
+```Typescript
+import { BlockchainSymbol, Currency, CurrencyType } from '@heliofi/common';
 ```
-  Currency: {
-    blockchain: {
-      engine: {
-        id: string;
-        type: "EVM" | "SOL";
-      };
-    };
-    id: string;
-    symbol: string;
-    name: string;
-    mintAddress?: string;
-    coinMarketCapId: number;
-    decimals: number;
-    symbolPrefix?: string;
-    order: number;
-    type?: "FIAT" | "DIGITAL";
-    iconUrl?: string;
-  };
+<br>
+
+### Properties table for the DefaultCurrencyService
+
+| Methods                               | Params             | Return            | Description                       |
+|:--------------------------------------|:-------------------|:------------------|:----------------------------------|
+| getNativeCurrencyByBlockchainToSymbol | blockchain: string | string, undefined | get native currency by blockchain |
+| getSolCurrencySymbol                  | none               | string            | get sol native currency           |
+| getMaticCurrencySymbol                | none               | string            | get matic native currency         |
+| getEthCurrencySymbol                  | none               | string            | get eth native currency           |
+| getDefaultCurrencySymbol              | none               | string            | get usdc native currency          |
+
+<br>
+
+### Properties table for the SolAvailableBalanceService
+
+| Methods              | Params                                        | Return                              | Description                 |
+|:---------------------|:----------------------------------------------|:------------------------------------|:----------------------------|
+| getAvailableBalance  | publicKey: PublicKey, connection: Connection  | Promise&lt;AvailableBalance[]&gt;   | get available balance list  |
+
+```Typescript
+import { Connection, PublicKey } from '@solana/web3.js';
+
+interface AvailableBalance {
+    tokenSymbol: string;
+    value: number;
+}
 ```
+<br>
+
+### Properties table for the EthereumAvailableBalanceService
+
+| Methods              | Params                   | Return                            | Description                 |
+|:---------------------|:-------------------------|:----------------------------------|:----------------------------|
+| getAvailableBalance  | publicKey: EVMPublicKey  | Promise&lt;AvailableBalance[]&gt; | get available balance list  |
+
+```Typescript
+type EVMPublicKey = `0x${string}`;
+
+interface AvailableBalance {
+    tokenSymbol: string;
+    value: number;
+}
+```
+<br>
+
+### Properties table for the PolygonAvailableBalanceService
+
+| Methods              | Params                   | Return                            | Description                 |
+|:---------------------|:-------------------------|:----------------------------------|:----------------------------|
+| getAvailableBalance  | publicKey: EVMPublicKey  | Promise&lt;AvailableBalance[]&gt; | get available balance list  |
+
+```Typescript
+type EVMPublicKey = `0x${string}`;
+
+interface AvailableBalance {
+    tokenSymbol: string;
+    value: number;
+}
+```
+<br>
+
+### Properties table for the AvailableBalanceService
+
+| Methods               | Params                                                                  | Return                | Description            |
+|:----------------------|:------------------------------------------------------------------------|:----------------------|:-----------------------|
+| fetchAvailableBalance | { props: AvailableBalanceServiceProps }                                 | Promise&lt;number&gt; | get available balance  |
+| isBalanceEnough       | { isTokenSwapped: boolean; quantity?: number; decimalAmount: number; }  | boolean               | get is balance enough  |
+
+```Typescript
+import { Connection, PublicKey } from '@solana/web3.js';
+import { BlockchainSymbol, Currency } from '@heliofi/common';
+
+type EVMPublicKey = `0x${string}`;
+
+interface TokenSwapQuote {
+    paymentRequestId: string;
+    routeTokenString: string;
+    from: Currency;
+    to: Currency;
+    slippageBps: number;
+    priceImpactPct: number;
+    inAmount: number;
+    outAmount: number;
+    amount: number;
+}
+
+interface AvailableBalanceServiceProps {
+    publicKey?: PublicKey;
+    connection?: Connection;
+    evmPublicKey?: EVMPublicKey;
+    decimalAmount: number;
+    currency?: string;
+    canSwapTokens?: boolean;
+    swapCurrency?: string;
+    quantity?: number;
+    tokenSwapQuote?: TokenSwapQuote;
+    blockchain?: BlockchainSymbol;
+    areCurrenciesDefined: boolean;
+}
+```
+
+<br>
+
+### Properties table for the EthereumExplorerService
+
+| Methods                           | Params                | Return  | Description                           |
+|:----------------------------------|:----------------------|:--------|:--------------------------------------|
+| getEthereumExplorerUrlByCluster   | none                  | string  | get ethereum url                      |
+| getEthereumExplorerTransactionURL | transactionID: string | string  | get ethereum explorer transaction url |
+| getEthereumExplorerAddressURL     | address: string       | string  | get ethereum explorer address url     |
+
+<br>
+
+### Properties table for the PolygonExplorerService
+
+| Methods                          | Params                | Return  | Description                          |
+|:---------------------------------|:----------------------|:--------|:-------------------------------------|
+| getPolygonExplorerUrlByCluster   | none                  | string  | get polygon url                      |
+| getPolygonExplorerTransactionURL | transactionID: string | string  | get polygon explorer transaction url |
+| getPolygonExplorerAddressURL     | address: string       | string  | get polygon explorer address url     |
+
 <br>
 
 ### Properties table for the HelioApiAdapter
 
-| Methods                           | Params                                                                                                                                                   | Return                                 | Description                                          |
-|:----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------|:-----------------------------------------------------|
-| findAddress                       | query: string, country_code: string                                                                                                                      | Promise&lt;FetchifyFindAddress&gt;     | get addresses list by area code and country code     |
-| retrieveAddress                   | address_id: string, country_code: string                                                                                                                 | Promise&lt;FetchifyRetrieveAddress&gt; | get address more info by address id and country code |
-| getCurrencies                     | none                                                                                                                                                     | Promise<Currency[]>                    | get currencies list                                  |
-| getPaymentRequestByIdPublic       | id: string, paymentType: PaymentRequestType                                                                                                              | Promise&lt;any&gt;                     | get payment data by req. id and payment type         |
-| getTokenSwapMintAddresses         | mintAddress: string                                                                                                                                      | Promise<string[]>                      | get mint addresses list                              |
-| getTokenSwapQuote                 | paymentRequestId: string, paymentRequestType: PaymentRequestType,<br> fromMint: string, quantity?: number,<br> normalizedPrice?: number, toMint?: string | Promise&lt;SwapRouteToken&gt;          | get route token for swap                             |
-| getLivePrice                      | amount: number, to: string, from: string,<br> paymentRequestId?: string, paymentRequestType?: string                                                     | Promise&lt;TokenQuoting&gt;            | get converted data                                   |
-| getPreparedTransactionMessage     | url: string, body: string                                                                                                                                | Promise&lt;PrepareTransaction&gt;      | prepare transaction to send                          |
-| getPreparedTransactionSwapMessage | url: string, body: string                                                                                                                                | Promise&lt;PrepareSwapTransaction&gt;  | prepare transaction to send for swap case            |
+| Methods                           | Params                                                                                                                                                   | Return                                          | Description                                          |
+|:----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------|:-----------------------------------------------------|
+| findAddress                       | query: string, country_code: string                                                                                                                      | Promise&lt;FetchifyFindAddress&gt;              | get addresses list by area code and country code     |
+| retrieveAddress                   | address_id: string, country_code: string                                                                                                                 | Promise&lt;FetchifyRetrieveAddress&gt;          | get address more info by address id and country code |
+| getCurrencies                     | none                                                                                                                                                     | Promise<Currency[]>                             | get currencies list                                  |
+| getPaymentRequestByIdPublic       | id: string, paymentType: PaymentRequestType                                                                                                              | Promise&lt;PaymentRequest&gt;                   | get payment data by req. id and payment type         |
+| getTokenSwapMintAddresses         | mintAddress: string                                                                                                                                      | Promise<string[]>                               | get mint addresses list                              |
+| getTokenSwapQuote                 | paymentRequestId: string, paymentRequestType: PaymentRequestType,<br> fromMint: string, quantity?: number,<br> normalizedPrice?: number, toMint?: string | Promise&lt;SwapRouteToken&gt;                   | get route token for swap                             |
+| getLivePrice                      | amount: number, to: string, from: string,<br> paymentRequestId?: string, paymentRequestType?: string                                                     | Promise&lt;TokenQuoting&gt;                     | get converted data                                   |
+| getPreparedTransactionMessage     | url: string, body: string                                                                                                                                | Promise&lt;PrepareTransaction&gt;               | prepare transaction to send                          |
+| getPreparedTransactionSwapMessage | url: string, body: string                                                                                                                                | Promise&lt;PrepareSwapTransaction&gt;           | prepare transaction to send for swap case            |
+| getTransactionStatus              | statusToken: string, endpoint:string = '/transaction/status'                                                                                             | Promise&lt;OnlyContentAndTransactionPaylink&gt; | get transaction status                               |
 
-```
-  FetchifyFindAddress: {
-    results: {
-      id: string;
-      count: number;
-      labels: string[];
-    }[];
-  };
-  
-  FetchifyRetrieveAddress: {
-    result: {
-      province_name: string;
-      street_name: string;
-      street_prefix: string;
-      street_suffix: string;
-      building_number: string;
-      line_2: string;
-      province: string;
-      locality: string;
-    };
-  };
-  
-  Currency: {
-    blockchain: {
-      engine: {
-        id: string;
-        type: "EVM" | "SOL";
-      };
-    };
-    id: string;
-    symbol: string;
-    name: string;
-    mintAddress?: string;
-    coinMarketCapId: number;
-    decimals: number;
-    symbolPrefix?: string;
-    order: number;
-    type?: "FIAT" | "DIGITAL";
-    iconUrl?: string;
-  };
-  
-  PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
- 
-  SwapRouteToken: {
-    routeToken: string;
-  };
-
-  TokenQuoting: {
-    rateToken: string;
-  };
- 
-  PrepareTransaction: {
-    transactionToken: string;
-    transactionMessage: string;
-  };
-  
-  PrepareSwapTransaction: {
-    standardTransaction: PrepareTransaction;
-    swapTransaction: string;
-  };
+```Typescript
+import {
+    FetchifyFindAddress,
+    PaymentRequest,
+    PaymentRequestType,
+    FetchifyRetrieveAddress,
+    Currency,
+    PrepareTransaction,
+    PrepareSwapTransaction,
+    TokenQuoting,
+    SwapRouteToken,
+    PaymentRequestType,
+    OnlyContentAndTransactionPaylink,
+} from '@heliofi/common';
 ```
 <br>
 
@@ -166,32 +240,15 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the TokenConversionService
 
-| Methods                     | Params                                       | Return  | Description                            |
-|:----------------------------|:---------------------------------------------|:--------|:---------------------------------------|
-| convertFromMinimalUnits     | symbol: any, minimalAmount: bigint           | number  | convert from minimal amount            |
-| convertToMinimalUnits       | symbol?: any actualAmount?: number           | number  | convert to minimal amount              |
-| formatPrice                 | currency: Currency, normalizedAmount: number | string  | format price                           |
-| convertFromMinimalAndRound  | symbol: string, minimalAmount: bigint        | string  | convert from minimal amount and round  |
+| Methods                     | Params                                                               | Return  | Description                            |
+|:----------------------------|:---------------------------------------------------------------------|:--------|:---------------------------------------|
+| convertFromMinimalUnits     | symbol: string, minimalAmount: bigint, blockchain?: BlockchainSymbol | number  | convert from minimal amount            |
+| convertToMinimalUnits       | symbol?: any actualAmount?: number                                   | number  | convert to minimal amount              |
+| formatPrice                 | currency: Currency, normalizedAmount: number                         | string  | format price                           |
+| convertFromMinimalAndRound  | symbol: string, minimalAmount: bigint                                | string  | convert from minimal amount and round  |
 
-```
-  Currency: {
-    blockchain: {
-      engine: {
-        id: string;
-        type: "EVM" | "SOL";
-      };
-    };
-    id: string;
-    symbol: string;
-    name: string;
-    mintAddress?: string;
-    coinMarketCapId: number;
-    decimals: number;
-    symbolPrefix?: string;
-    order: number;
-    type?: "FIAT" | "DIGITAL";
-    iconUrl?: string;
-  };
+```Typescript
+import { BlockchainSymbol, Currency } from '@heliofi/common';
 ```
 <br>
 
@@ -244,9 +301,75 @@ Please ensure you select the correct 'Cluster' or network during deployment.
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-    cluster: Cluster;
   };
   
+```
+
+<br>
+
+### Properties table for the PolygonPaylinkSubmitService, EthPaylinkSubmitService
+
+| Methods            | Params                                              | Return               | Description                                              |
+|:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
+| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
+
+```Typescript
+import { OnlyContentAndTransactionPaylink } from '@heliofi/common';
+import {
+    BlockchainSymbol,
+    CustomerDetails,
+    ProductDetails,
+} from '@heliofi/common';
+import { Web3Provider } from '@ethersproject/providers';
+
+class BasePaymentResponse extends OnlyContentAndTransactionPaylink {}
+
+enum LoadingModalStep {
+    GET_PERMISSION = 'GET_PERMISSION',
+    SIGN_TRANSACTION = 'SIGN_TRANSACTION',
+    SUBMIT_TRANSACTION = 'SUBMIT_TRANSACTION',
+    DEFAULT = 'DEFAULT',
+    CLOSE = 'CLOSE',
+}
+
+type ClusterHelioType = 'devnet' | 'testnet' | 'mainnet';
+
+interface PaymentEvent {
+    transaction?: string;
+}
+
+interface ErrorPaymentEvent extends PaymentEvent {
+    errorMessage: string;
+}
+
+interface PendingPaymentEvent extends PaymentEvent {
+    transaction: string;
+}
+
+interface SuccessPaymentEvent<BasePaymentResponse> extends PaymentEvent {
+    data: BasePaymentResponse;
+    transaction: string;
+    paymentPK?: string;
+    swapTransactionSignature?: string;
+}
+
+interface BasePaymentProps<BasePaymentResponse> {
+    onSuccess: (event: SuccessPaymentEvent<BasePaymentResponse>) => void;
+    onError: (event: ErrorPaymentEvent) => void;
+    onPending?: (event: PendingPaymentEvent) => void;
+    onInitiated?: (event: PaymentEvent) => void;
+    setLoadingModalStep: (step: LoadingModalStep) => void;
+    onCancel?: () => void;
+    symbol: string;
+    blockchain?: BlockchainSymbol;
+    anchorProvider: Web3Provider;
+    rateToken?: string;
+    customerDetails?: CustomerDetails;
+    productDetails?: ProductDetails;
+    mintAddress: string;
+    isNativeMintAddress: boolean;
+    cluster: ClusterHelioType;
+}
 ```
 
 <br>
@@ -305,7 +428,6 @@ Please ensure you select the correct 'Cluster' or network during deployment.
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-    cluster: Cluster;
   };
   
 ```
@@ -361,7 +483,6 @@ Please ensure you select the correct 'Cluster' or network during deployment.
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-    cluster: Cluster;
   };
 
 ```
@@ -369,18 +490,18 @@ Please ensure you select the correct 'Cluster' or network during deployment.
 
 ### Properties table for the ConfigService
 
-| Methods            | Params                                       | Return  | Description                                |
-|:-------------------|:---------------------------------------------|:--------|:-------------------------------------------|
-| getAssetUrl        | none                                         | string  | get helio assets url                       |
-| getCluster         | none                                         | Cluster | return selected cluster                    |
-| setCluster         | cluster: Cluster                             | void    | set cluster                                |
-| getHelioApiBaseUrl | none                                         | string  | get Helio api base url for current cluster |
-| getPhantomLink     | id: string, paymentType: PaymentRequestType  | string  | get payment url for phantom app            |
+| Methods            | Params                                      | Return           | Description                                |
+|:-------------------|:--------------------------------------------|:-----------------|:-------------------------------------------|
+| getAssetUrl        | none                                        | string           | get helio assets url                       |
+| getImageUrl        | name: string                                | string           | get helio images url                       |
+| getCluster         | none                                        | ClusterHelioType | return selected cluster                    |
+| getHelioApiBaseUrl | none                                        | string           | get Helio api base url for current cluster |
+| getPhantomLink     | id: string, paymentType: PaymentRequestType | string           | get payment url for phantom app            |
 
 ```Typescript
- Cluster = "devnet" | "testnet" | "mainnet-beta";
+import { PaymentRequestType } from '@heliofi/common';
 
-PaymentRequestType = "PAYLINK" | "PAYSTREAM" | "INVOICE";
+type ClusterHelioType = 'devnet' | 'testnet' | 'mainnet';
 ```
 
 ## Example
@@ -409,6 +530,16 @@ const transactionUrl = helioSDK.solExplorerService.getSolanaExplorerTransactionU
 //convert to minimal amount
 const amount = helioSDK.tokenConversionService.convertToMinimalUnits('symbol', 100);
 
-//handle transaction
+//handle transaction paylink for sol blockchain
 await helioSDK.paylinkService.handleTransaction({...});
+
+//handle transaction paystream for sol blockchain
+await helioSDK.paystreamStartService.handleTransaction({...});
+
+//handle cancel transaction paystream for sol blockchain
+await helioSDK.paystreamCancelService.handleTransaction({...});
+
+//handle cancel transaction for evm(polygon, etherium) blockchain
+await helioSDK.polygonPaylinkService.handleTransaction({...});
+await helioSDK.ethPaylinkService.handleTransaction({...});
 ```

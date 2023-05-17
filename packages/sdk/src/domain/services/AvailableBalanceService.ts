@@ -8,13 +8,18 @@ import { PolygonAvailableBalanceService } from './PolygonAvailableBalanceService
 import { EVMPublicKey } from '../model/blockchain';
 import { EthereumAvailableBalanceService } from './EthereumAvailableBalanceService';
 
-export interface AvailableBalanceServiceProps {
+interface AvailableBalanceServiceProps {
+  publicKey?: PublicKey;
+  connection?: Connection;
+  evmPublicKey?: EVMPublicKey;
   decimalAmount: number;
   currency?: string;
   canSwapTokens?: boolean;
   swapCurrency?: string;
   quantity?: number;
   tokenSwapQuote?: TokenSwapQuote;
+  blockchain?: BlockchainSymbol;
+  areCurrenciesDefined: boolean;
 }
 
 // @todo-v eth
@@ -41,19 +46,7 @@ export class AvailableBalanceService {
     canSwapTokens,
     swapCurrency,
     tokenSwapQuote,
-  }: {
-    publicKey?: PublicKey;
-    connection?: Connection;
-    evmPublicKey?: EVMPublicKey;
-    decimalAmount: number;
-    currency?: string;
-    canSwapTokens?: boolean;
-    swapCurrency?: string;
-    quantity?: number;
-    tokenSwapQuote?: TokenSwapQuote;
-    blockchain?: BlockchainSymbol;
-    areCurrenciesDefined: boolean;
-  }): Promise<number> {
+  }: AvailableBalanceServiceProps): Promise<number> {
     let availableBalance = 0;
     const isTokenSwapped = !!(canSwapTokens && swapCurrency);
 
