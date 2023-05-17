@@ -2994,26 +2994,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
-"@heliofi/sdk@^0.1.30-alpha.0":
-  version "0.1.30-alpha.0"
-  resolved "https://registry.yarnpkg.com/@heliofi/sdk/-/sdk-0.1.30-alpha.0.tgz#223246c8aca9b9c674c606ee802923c56873d233"
-  integrity sha512-nWomW+9WGAq2edQL/g7KBBcB2FuT+hi+yeN10CF5msQKgJ37bSNZEDtvpXs/t0IQezIryTDZ6sghT7C344C2MA==
-  dependencies:
-    "@ethersproject/providers" "^5.7.0"
-    "@heliofi/common" "0.1.248"
-    "@heliofi/evm-adapter" "0.0.30-beta"
-    "@heliofi/solana-adapter" "^3.1.15-alpha.0"
-    "@project-serum/anchor" "^0.25.0"
-    "@solana/wallet-adapter-react" "^0.15.20"
-    "@solana/web3.js" "^1.66.2"
-    bs58 "^5.0.0"
-    ethers "^5.7.2"
-    jwt-decode "^3.1.2"
-    reflect-metadata "^0.1.13"
-    tweetnacl "^1.0.3"
-    wagmi "^0.8.6"
-    yarn "^1.22.19"
-
 "@heliofi/solana-adapter@^3.1.15-alpha.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.3.0.tgz#d344753f8ce7b90bda65c930467152619c360bb2"
