@@ -14,6 +14,18 @@ export const StyledLoadingModalWrapper = styled.div`
       height: 100%;
     }
   }
+  .animate-spin {
+    animation: spin 1s linear infinite;
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
 `;
 
 export const StyledLoadingModalBody = styled.div`

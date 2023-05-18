@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "3.5.8-alpha.0",
+  "version": "3.5.9-alpha.0",
   "description": "React components for Helio",
   "type": "module",
   "main": "dist/index.js",

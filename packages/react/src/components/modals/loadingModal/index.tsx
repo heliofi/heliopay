@@ -59,7 +59,10 @@ const LoadingModal = ({
   return ReactDOM.createPortal(
     <StyledLoadingModalWrapper>
       <Modal onHide={onHide}>
-        <Icon iconName="Helio" className="loading-modal-header-icon" />
+        <Icon
+          iconName="Helio"
+          className="loading-modal-header-icon animate-spin"
+        />
 
         <StyledLoadingModalBody>
           {getModalContent()}
