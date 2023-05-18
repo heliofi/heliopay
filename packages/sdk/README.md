@@ -254,75 +254,85 @@ import { BlockchainSymbol, Currency } from '@heliofi/common';
 
 ### Properties table for the PaylinkSubmitService
 
-| Methods            | Params                                              | Return               | Description                                              |
-|:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
-| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
+| Methods            | Params                         | Return               | Description                                              |
+|:-------------------|:-------------------------------|:---------------------|:---------------------------------------------------------|
+| handleTransaction  | { props: CreatePaymentProps }  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
 
 ```Typescript
-  import { Idl, Program } from "@project-serum/anchor";
-  import { AnchorWallet } from "@solana/wallet-adapter-react";
-  import { Cluster, Connection } from "@solana/web3.js";
-  import { HelioIdl } from '@heliofi/solana-adapter';
+import { Program } from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Connection } from "@solana/web3.js";
+import { HelioIdl } from '@heliofi/solana-adapter';
+import {
+    OnlyContentAndSwapTransactionPaylink,
+    OnlyContentAndTransactionPaylink,
+    CustomerDetails,
+    SplitWallet,
+} from '@heliofi/common';
 
-  TransactionStatus: {
-      INITIATED = "INITIATED",
-      PENDING = "PENDING",
-      SUCCESS = "SUCCESS",
-      FAILED = "FAILED",
-      CANCELED = "CANCELED",
-      SETTLED = "SETTLED"
-  };
-    
-  ContentResponse: {
-      text?: string;
-      mediaUrl?: string;
-      mediaAttachmentId?: string;
-  };
+type ApproveTransactionResponse = OnlyContentAndTransactionPaylink | OnlyContentAndSwapTransactionPaylink;
 
-  ApproveTransactionResponse: {
-      transactionSignature: string;
-      swapTransactionSignature?: string;
-      content: ContentResponse;
-      status?: TransactionStatus;
-      statusToken?: string;
-  };
-  
-  BasePaymentProps: {
-    onSuccess: (event: {
-      data: ApproveTransactionResponse;
-      transaction: string;
-      paymentPK?: string;
-      swapTransaction?: string;
-    }) => void;
-    onError: (event: { transaction?: string; errorMessage: string }) => void;
-    onPending?: (event: { transaction: string }) => void;
+interface PaymentEvent {
+    transaction?: string;
+}
+
+interface ErrorPaymentEvent extends PaymentEvent {
+    errorMessage: string;
+}
+
+interface PendingPaymentEvent extends PaymentEvent {
+    transaction: string;
+}
+
+interface BasePaymentProps<ApproveTransactionResponse> {
+    onSuccess: (event: SuccessPaymentEvent<ApproveTransactionResponse>) => void;
+    onError: (event: ErrorPaymentEvent) => void;
+    onPending?: (event: PendingPaymentEvent) => void;
     symbol: string;
     anchorProvider: Program<HelioIdl>;
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-  };
-  
+}
+
+interface CreatePaymentProps
+    extends BasePaymentProps<ApproveTransactionResponse> {
+    recipientPK: string;
+    amount: bigint;
+    paymentRequestId: string;
+    customerDetails?: CustomerDetails;
+    quantity?: number;
+    productDetails?: {
+        name?: string;
+        value?: string;
+    };
+    splitRevenue?: boolean;
+    splitWallets?: SplitWallet[];
+    wallet: AnchorWallet;
+    connection: Connection;
+    canSwapTokens?: boolean;
+    swapRouteToken?: string;
+    rateToken?: string;
+}
 ```
 
 <br>
 
 ### Properties table for the PolygonPaylinkSubmitService, EthPaylinkSubmitService
 
-| Methods            | Params                                              | Return               | Description                                              |
-|:-------------------|:----------------------------------------------------|:---------------------|:---------------------------------------------------------|
-| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction |
+| Methods            | Params                        | Return               | Description                                               |
+|:-------------------|:------------------------------|:---------------------|:----------------------------------------------------------|
+| handleTransaction  | { props: CreatePaymentProps } | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send transaction  |
 
 ```Typescript
-import { OnlyContentAndTransactionPaylink } from '@heliofi/common';
 import {
     BlockchainSymbol,
     CustomerDetails,
     ProductDetails,
+    SplitWallet,
+    OnlyContentAndTransactionPaylink,
 } from '@heliofi/common';
 import { Web3Provider } from '@ethersproject/providers';
-
-class BasePaymentResponse extends OnlyContentAndTransactionPaylink {}
 
 enum LoadingModalStep {
     GET_PERMISSION = 'GET_PERMISSION',
@@ -346,15 +356,17 @@ interface PendingPaymentEvent extends PaymentEvent {
     transaction: string;
 }
 
-interface SuccessPaymentEvent<BasePaymentResponse> extends PaymentEvent {
-    data: BasePaymentResponse;
+ApproveTransactionResponse = OnlyContentAndTransactionPaylink;
+
+interface SuccessPaymentEvent<ApproveTransactionResponse> extends PaymentEvent {
+    data: ApproveTransactionResponse;
     transaction: string;
     paymentPK?: string;
     swapTransactionSignature?: string;
 }
 
-interface BasePaymentProps<BasePaymentResponse> {
-    onSuccess: (event: SuccessPaymentEvent<BasePaymentResponse>) => void;
+interface BasePaymentProps<ApproveTransactionResponse> {
+    onSuccess: (event: SuccessPaymentEvent<ApproveTransactionResponse>) => void;
     onError: (event: ErrorPaymentEvent) => void;
     onPending?: (event: PendingPaymentEvent) => void;
     onInitiated?: (event: PaymentEvent) => void;
@@ -370,122 +382,123 @@ interface BasePaymentProps<BasePaymentResponse> {
     isNativeMintAddress: boolean;
     cluster: ClusterHelioType;
 }
+
+interface CreatePaymentProps
+    extends BasePaymentProps<ApproveTransactionResponse> {
+    recipientPK: string;
+    amount: bigint;
+    paymentRequestId: string;
+    quantity?: number;
+    splitRevenue?: boolean;
+    splitWallets?: SplitWallet[];
+    discountToken?: string;
+    canSwapTokens?: boolean;
+    swapRouteToken?: string;
+    rateToken?: string;
+}
 ```
 
 <br>
 
 ### Properties table for the PaystreamStartService
 
-| Methods            | Params                                              | Return               | Description                                                         |
-|:-------------------|:----------------------------------------------------|:---------------------|:--------------------------------------------------------------------|
-| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream transaction |
+| Methods            | Params                         | Return               | Description                                                         |
+|:-------------------|:-------------------------------|:---------------------|:--------------------------------------------------------------------|
+| handleTransaction  | { props: CreatePaymentProps }  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream transaction |
 
 ```Typescript
-  import { Idl, Program } from "@project-serum/anchor";
-  import { AnchorWallet } from "@solana/wallet-adapter-react";
-  import { Cluster, Connection } from "@solana/web3.js";
-  import { HelioIdl } from '@heliofi/solana-adapter';
+import { Program } from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Connection } from "@solana/web3.js";
+import { HelioIdl } from '@heliofi/solana-adapter';
+import {
+    CustomerDetails,
+    OnlyContentAndTransactionPaylink,
+} from '@heliofi/common';
 
-  TransactionStatus: {
-      INITIATED = "INITIATED",
-      PENDING = "PENDING",
-      SUCCESS = "SUCCESS",
-      FAILED = "FAILED",
-      CANCELED = "CANCELED",
-      SETTLED = "SETTLED"
-  };
+interface PaymentEvent {
+    transaction?: string;
+}
 
-  ContentResponse: {
-      text?: string;
-      mediaUrl?: string;
-      mediaAttachmentId?: string;
-  };
+interface ErrorPaymentEvent extends PaymentEvent {
+    errorMessage: string;
+}
 
-  CreatePaystreamResponse: {
-      document: {
-          id: string;
-          startedAt: bigint;
-          endedAt: bigint;
-      };
-      content: ContentResponse;
-      transactionSignature: string;
-      status?: TransactionStatus;
-      statusToken?: string;
-      swapTransactionSignature?: string;
-  };
-  
-  BasePaymentProps: {
-    onSuccess: (event: {
-      data: CreatePaystreamResponse;
-      transaction: string;
-      paymentPK?: string;
-      swapTransaction?: string;
-    }) => void;
-    onError: (event: { transaction?: string; errorMessage: string }) => void;
-    onPending?: (event: { transaction: string }) => void;
+interface PendingPaymentEvent extends PaymentEvent {
+    transaction: string;
+}
+
+interface CreatePaystreamResponse extends OnlyContentAndTransactionPaylink {} {
+    document: {
+        id: string;
+        startedAt: bigint;
+        endedAt: bigint;
+    };
+}
+
+interface BasePaymentProps<CreatePaystreamResponse> {
+    onSuccess: (event: SuccessPaymentEvent<CreatePaystreamResponse>) => void;
+    onError: (event: ErrorPaymentEvent) => void;
+    onPending?: (event: PendingPaymentEvent) => void;
     symbol: string;
     anchorProvider: Program<HelioIdl>;
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-  };
-  
+}
+
+interface CreatePaystreamProps
+    extends BasePaymentProps<CreatePaystreamResponse> {
+    interval: number;
+    maxTime: number;
+    recipientPK: string;
+    amount: bigint;
+    paymentRequestId: string;
+    customerDetails?: CustomerDetails;
+    quantity?: number;
+    rateToken?: string;
+    productDetails?: {
+        name?: string;
+        value?: string;
+    };
+    canSwapTokens?: boolean;
+    swapRouteToken?: string;
+    swapSignedTx?: string;
+}
 ```
 
 <br>
 
 ### Properties table for the PaystreamCancelService
 
-| Methods            | Params                                              | Return               | Description                                                                     |
-|:-------------------|:----------------------------------------------------|:---------------------|:--------------------------------------------------------------------------------|
-| handleTransaction  | props: BasePaymentProps&lt;BasePaymentResponse&gt;  | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream for cancel transaction  |
+| Methods            | Params                         | Return               | Description                                                                     |
+|:-------------------|:-------------------------------|:---------------------|:--------------------------------------------------------------------------------|
+| handleTransaction  | { props: CancelStreamProps }   | Promise&lt;void&gt;  | prepare transaction, connect to wallet, send pay stream for cancel transaction  |
 
 ```Typescript
-  import { Idl, Program } from "@project-serum/anchor";
-  import { AnchorWallet } from "@solana/wallet-adapter-react";
-  import { Cluster, Connection } from "@solana/web3.js";
-  import { HelioIdl } from '@heliofi/solana-adapter';
+import { Program } from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Cluster, Connection } from "@solana/web3.js";
+import { HelioIdl } from '@heliofi/solana-adapter';
 
-  TransactionStatus: {
-    INITIATED = "INITIATED",
-    PENDING = "PENDING",
-    SUCCESS = "SUCCESS",
-    FAILED = "FAILED",
-    CANCELED = "CANCELED",
-    SETTLED = "SETTLED"
-  };
-
-  ContentResponse: {
-    text?: string;
-    mediaUrl?: string;
-    mediaAttachmentId?: string;
-  };
-
-  CancelStreamResponse: {
-    content: ContentResponse;
-    transactionSignature: string;
-    status?: TransactionStatus;
-    statusToken?: string;
-    swapTransactionSignature?: string;
-  };
-
-  BasePaymentProps: {
-    onSuccess: (event: {
-        data: CancelStreamResponse;
-        transaction: string;
-        paymentPK?: string;
-        swapTransaction?: string;
-    }) => void;
-    onError: (event: { transaction?: string; errorMessage: string }) => void;
-    onPending?: (event: { transaction: string }) => void;
+interface BasePaymentProps<CancelStreamResponse> {
+    onSuccess: (event: SuccessPaymentEvent<CancelStreamResponse>) => void;
+    onError: (event: ErrorPaymentEvent) => void;
+    onPending?: (event: PendingPaymentEvent) => void;
     symbol: string;
     anchorProvider: Program<HelioIdl>;
     wallet: AnchorWallet;
     connection: Connection;
     rateToken?: string;
-  };
+}
 
+interface CancelStreamResponse extends OnlyContentAndTransactionPaylink {}
+
+interface CancelStreamProps extends BasePaymentProps<CancelStreamResponse> {
+    paymentId: string;
+}
 ```
+
 <br>
 
 ### Properties table for the ConfigService
@@ -539,7 +552,7 @@ await helioSDK.paystreamStartService.handleTransaction({...});
 //handle cancel transaction paystream for sol blockchain
 await helioSDK.paystreamCancelService.handleTransaction({...});
 
-//handle cancel transaction for evm(polygon, etherium) blockchain
+//handle transaction for evm(polygon, etherium) blockchain
 await helioSDK.polygonPaylinkService.handleTransaction({...});
 await helioSDK.ethPaylinkService.handleTransaction({...});
 ```

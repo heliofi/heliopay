@@ -50,7 +50,7 @@ const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="mainnet-beta"
+        cluster={ClusterHelio.Mainnet}
         paymentRequestId={"your_paylink_id"}
         supportedCurrencies={["SOL"]}
         totalAmount={0.01}
@@ -105,13 +105,18 @@ Use this option if you want to embed the Helio Pay Button on your site for Links
 
 ```ts
 import { HelioPay } from "@heliofi/react";
-import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+import {
+    ClusterHelio,
+    SuccessPaymentEvent,
+    ErrorPaymentEvent,
+    PendingPaymentEvent
+} from '@heliofi/sdk';
 
 const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="mainnet-beta"
+        cluster={ClusterHelio.Mainnet}
         paymentRequestId={"your_paylink_id"}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log("onSuccess", event);
@@ -137,13 +142,18 @@ Use this option if you want to embed the Helio Pay Button on your site for Pay S
 
 ```ts
 import { HelioPay } from "@heliofi/react";
-import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+import {
+    ClusterHelio,
+    SuccessPaymentEvent,
+    ErrorPaymentEvent,
+    PendingPaymentEvent
+} from '@heliofi/sdk';
 
 const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="mainnet-beta"
+        cluster={ClusterHelio.Mainnet}
         paymentRequestId={"your_paystream_id"}
         paymentType={PaymentRequestType.PAYSTREAM}
         onSuccess={function (event: SuccessPaymentEvent): void {
@@ -164,7 +174,7 @@ const App = () => {
 };
 ```
 
-### 4. Populate customer details with parameter passthrough on the Helio Pay button
+### 4. Populate customer details with parameter pass through on the Helio Pay button
 
 **Available parameter passthroughs for customer information**
 
@@ -174,17 +184,22 @@ const App = () => {
 
 `http://your_domain/?fullName=full%20name&city=your_city`
 
-<br>**Use this option if you want to embed the Helio Pay Button on your site for parameter passthrough for customer information:**
+<br>**Use this option if you want to embed the Helio Pay Button on your site for parameter pass through for customer information:**
 
 ```ts
 import { HelioPay } from "@heliofi/react";
-import { SuccessPaymentEvent, ErrorPaymentEvent, PendingPaymentEvent } from '@heliofi/sdk'
+import {
+    ClusterHelio,
+    SuccessPaymentEvent,
+    ErrorPaymentEvent,
+    PendingPaymentEvent
+} from '@heliofi/sdk';
 
 const App = () => {
   return (
     <div>
       <HelioPay
-        cluster="mainnet-beta"
+        cluster={ClusterHelio.Mainnet}
         paymentRequestId={"your_paylink_id"}
         onSuccess={function (event: SuccessPaymentEvent): void {
           console.log("onSuccess", event);
@@ -205,20 +220,62 @@ const App = () => {
 };
 ```
 
+### 5. Embed a additionalJSON or customApiUrl with the Helio Pay button
+
+Use this options if you want to save additional information or change api url
+
+```ts
+import { HelioPay } from "@heliofi/react";
+import { 
+    ClusterHelio, 
+    SuccessPaymentEvent, 
+    ErrorPaymentEvent, 
+    PendingPaymentEvent
+} from '@heliofi/sdk';
+
+const App = () => {
+  return (
+    <div>
+      <HelioPay
+        additionalJSON={{ key1: 'value1' }}
+        customApiUrl="http://127.0.0.1"
+        cluster={ClusterHelio.Mainnet}
+        paymentRequestId={"your_paystream_id"}
+        paymentType={PaymentRequestType.PAYSTREAM}
+        onSuccess={function (event: SuccessPaymentEvent): void {
+          console.log("onSuccess", event);
+        }}
+        onError={function (event: ErrorPaymentEvent): void {
+          console.log("onError", event);
+        }}
+        onPending={function (event: PendingPaymentEvent): void {
+          console.log("onPending", event);
+        }}
+        onStartPayment={function (): void {
+          console.log("onStartPayment");
+        }}
+      />
+    </div>
+  );
+};
+```
+
 #### Properties table for the Helio components
 
-| Property            | Type                | Required | Default value               | Description                                                                                |
-|:--------------------|:--------------------|:---------|:----------------------------|:-------------------------------------------------------------------------------------------|
-| cluster             | string              | yes      |                             | **available values:** devnet, mainnet-beta, testnet                                        |
-| paymentRequestId    | string              | yes      |                             | Your paylink ID                                                                            |
-| onSuccess           | function            | no       |                             | triggered event when success                                                               |
-| onError             | function            | no       |                             | triggered event when error                                                                 |
-| onPending           | function            | no       |                             | triggered event when pending                                                               |
-| onStartPayment      | function            | no       |                             | triggered event on start payment                                                           |
-| theme               | object              | no       |                             | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-| totalAmount         | number              | no       |                             | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
-| supportedCurrencies | string array        | no       |                             | currencies you want to support.                                                            |
-| paymentType         | PaymentRequestType  | no       | PaymentRequestType.PAYLINK  | **available values:** PAYLINK, PAYSTREAM                                                   |
+| Property            | Type               | Required | Default value              | Description                                                                                |
+|:--------------------|:-------------------|:---------|:---------------------------|:-------------------------------------------------------------------------------------------|
+| cluster             | string             | yes      |                            | **available values:** devnet, mainnet, testnet                                             |
+| paymentRequestId    | string             | yes      |                            | Your paylink ID                                                                            |
+| onSuccess           | function           | no       |                            | triggered event when success                                                               |
+| onError             | function           | no       |                            | triggered event when error                                                                 |
+| onPending           | function           | no       |                            | triggered event when pending                                                               |
+| onStartPayment      | function           | no       |                            | triggered event on start payment                                                           |
+| theme               | object             | no       |                            | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
+| totalAmount         | number             | no       |                            | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
+| supportedCurrencies | string array       | no       |                            | currencies you want to support.                                                            |
+| paymentType         | PaymentRequestType | no       | PaymentRequestType.PAYLINK | **available values:** PAYLINK, PAYSTREAM                                                   |
+| additionalJSON      | object             | no       |                            | set additional information for customers                                                   |
+| customApiUrl        | string             | no       |                            | change api url for all requests                                                            |
 
 ### Support Currencies
 
