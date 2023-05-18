@@ -4,7 +4,13 @@ import {
 } from '@heliofi/common';
 import { CreatePaymentRequest } from '@heliofi/solana-adapter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Cluster, Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import {
+  Cluster,
+  Keypair,
+  PublicKey,
+  Transaction,
+  VersionedTransaction,
+} from '@solana/web3.js';
 
 import {
   isEmptyObject,
@@ -245,7 +251,8 @@ export class PaystreamStartService extends BasePaystreamService<
       prepareSwapTransactionResponse?.standardTransaction
     );
 
-    const swapTx = Transaction.from(Buffer.from(swapTransaction, 'base64'));
+    const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
+    const swapTx = VersionedTransaction.deserialize(swapTransactionBuf) as any;
 
     const { swapSignedTx, standardSignedTx } = await signSwapTransactions(
       swapTx,
@@ -254,8 +261,12 @@ export class PaystreamStartService extends BasePaystreamService<
       this.paymentAccount
     );
 
+    const serializedSwapTx = Buffer.from(swapSignedTx.serialize()).toString(
+      'base64'
+    );
+
     return {
-      swapSignedTx,
+      swapSignedTx: serializedSwapTx,
       signedTx: standardSignedTx,
       token:
         prepareSwapTransactionResponse?.standardTransaction.transactionToken,

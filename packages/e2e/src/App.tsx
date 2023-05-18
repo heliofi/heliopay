@@ -26,7 +26,7 @@ const App = () => {
       <HelioPay
         additionalJSON={{ key1: 'value1' }}
         cluster="devnet"
-        customApiUrl="https://dev.api.hel.io/v1"
+        // customApiUrl="https://dev.api.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
           console.log('onSuccess', event);
@@ -40,7 +40,7 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['USDC', 'SOL']}
+        // supportedCurrencies={['USDC', 'SOL']}
         // paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />
