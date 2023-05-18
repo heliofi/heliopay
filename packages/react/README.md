@@ -23,6 +23,6 @@ Full installation and setup details : https://github.com/heliofi/heliopay#readme
 - address lookup improvement
 - minor bug fixes
 - support ethereum and polygon for pay link
-- add customer details information
+- add additional information for customers
 - add custom api url
 
