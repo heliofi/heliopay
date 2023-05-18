@@ -18,7 +18,7 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
     // '643d47cee509bc5eb64cff48'
-    '64650d1e9ecd5288aeba247c'
+    '6438352ad4d671306c91778d'
   );
 
   return (
@@ -30,8 +30,8 @@ const App = () => {
       />
       <HelioPay
         additionalJSON={{ key1: 'value1' }}
-        cluster={ClusterHelio.Devnet}
-        customApiUrl="https://dev.api.hel.io/v1"
+        cluster={ClusterHelio.Mainnet}
+        // customApiUrl="https://dev.api.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
           console.log('onSuccess', event);

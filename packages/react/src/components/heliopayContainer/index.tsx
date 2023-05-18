@@ -518,6 +518,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setIsOnlyPay(
       !!(
         paymentDetails &&
+        !getPaymentFeatures().canSwapTokens &&
         !isDynamic &&
         activeCurrency &&
         !isCustomerDetailsRequired &&
