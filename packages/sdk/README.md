@@ -552,7 +552,7 @@ await helioSDK.paystreamStartService.handleTransaction({...});
 //handle cancel transaction paystream for sol blockchain
 await helioSDK.paystreamCancelService.handleTransaction({...});
 
-//handle transaction for evm(polygon, etherium) blockchain
+//handle transaction for evm(polygon, ethereum) blockchain
 await helioSDK.polygonPaylinkService.handleTransaction({...});
 await helioSDK.ethPaylinkService.handleTransaction({...});
 ```

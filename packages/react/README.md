@@ -10,10 +10,11 @@ We currently support React v18.
 
 ## Embed Helio Components
 
-You can embed Helio components for the following two use cases:
+You can embed Helio components for the following these use cases:
 
 * Embed a Dynamic payment with the Helio Pay button
-* Embed a Pay Link or Pay Stream with the Helio Pay button
+* Embed a Pay Link or Pay Stream (SOL blockchain) with the Helio Pay button
+* Embed a Pay Link (ethereum, polygon blockchain) with the Helio Pay button
 
 Full installation and setup details : https://github.com/heliofi/heliopay#readme
 ![img.png](img.png)
@@ -21,4 +22,7 @@ Full installation and setup details : https://github.com/heliofi/heliopay#readme
 
 - address lookup improvement
 - minor bug fixes
+- support ethereum and polygon for pay link
+- add customer details information
+- add custom api url
 
