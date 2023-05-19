@@ -1,5 +1,5 @@
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Keypair, Transaction } from '@solana/web3.js';
+import { Keypair, Transaction, VersionedTransaction } from '@solana/web3.js';
 import nacl from 'tweetnacl';
 
 export async function signTransaction(
@@ -29,12 +29,12 @@ export async function signTransaction(
 }
 
 export async function signSwapTransactions(
-  swappedTransaction: Transaction,
+  swappedTransaction: VersionedTransaction,
   standardTransaction: Transaction,
   wallet: AnchorWallet,
   otherSigner?: Keypair
 ): Promise<{
-  swapSignedTx: string;
+  swapSignedTx: VersionedTransaction;
   standardSignedTx: string;
 }> {
   try {
@@ -43,7 +43,9 @@ export async function signSwapTransactions(
       standardTransaction,
     ]);
     if (otherSigner) {
-      const transactionDataToSign = signedTransactions[1].serializeMessage();
+      const transactionDataToSign = (
+        signedTransactions[1] as Transaction
+      ).serializeMessage();
 
       const otherSignature = nacl.sign.detached(
         transactionDataToSign,
@@ -55,7 +57,7 @@ export async function signSwapTransactions(
       );
     }
     return {
-      swapSignedTx: JSON.stringify(signedTransactions[0].serialize()),
+      swapSignedTx: signedTransactions[0] as VersionedTransaction,
       standardSignedTx: JSON.stringify(signedTransactions[1].serialize()),
     };
   } catch (error) {
