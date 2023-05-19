@@ -2963,6 +2963,21 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
+"@heliofi/sdk@0.3.13-alpha.0", "@heliofi/sdk@^0.3.13-alpha.0":
+  version "0.3.13-alpha.0"
+  resolved "https://registry.yarnpkg.com/@heliofi/sdk/-/sdk-0.3.13-alpha.0.tgz#74345db198b3040e312abdb620ea933e4755681c"
+  integrity sha512-gOlyJ9FDYX3WL/9AQeAnl7mSXtvvy1ymQHlxRpdjrXzVA0LZde5RLdSvB23HQXxkmLUmldKsB2+sBtshFovxXA==
+  dependencies:
+    "@heliofi/common" "0.1.195"
+    "@heliofi/solana-adapter" "^3.3.2-alpha.0"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    reflect-metadata "^0.1.13"
+    tweetnacl "^1.0.3"
+    yarn "^1.22.19"
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
