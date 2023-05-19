@@ -12,7 +12,6 @@ interface AvailableBalanceServiceProps {
   publicKey?: PublicKey;
   connection?: Connection;
   evmPublicKey?: EVMPublicKey;
-  decimalAmount: number;
   currency?: string;
   canSwapTokens?: boolean;
   swapCurrency?: string;

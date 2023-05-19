@@ -439,13 +439,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
             canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
             swapCurrency: 'SOL',
             tokenSwapQuote: tokenSwapQuote ?? undefined,
-            decimalAmount:
-              totalAmount ||
-              HelioSDK.tokenConversionService.convertFromMinimalUnits(
-                activeCurrency?.symbol ?? '',
-                paymentDetails?.normalizedPrice,
-                paymentDetails?.currency?.blockchain?.symbol
-              ),
           });
         setAvailableBalance(balance);
       };
@@ -460,19 +453,19 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     connectionProvider?.connection,
     tokenSwapQuote,
     walletSol?.publicKey,
-    totalAmount,
   ]);
 
   useEffect(() => {
-    setIsBalanceEnough(
-      getIsBalanceEnough({
-        HelioSDK,
-        activeCurrency,
-        paymentDetails,
-        blockchain,
-        customPrice: totalAmount,
-      })
-    );
+    if (!isDynamic) {
+      setIsBalanceEnough(
+        getIsBalanceEnough({
+          HelioSDK,
+          activeCurrency,
+          paymentDetails,
+          blockchain,
+        })
+      );
+    }
   }, [
     availableBalance,
     HelioSDK,
@@ -480,7 +473,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     paymentDetails,
     blockchain,
     getIsBalanceEnough,
-    totalAmount,
+    isDynamic,
   ]);
 
   useEffect(() => {
