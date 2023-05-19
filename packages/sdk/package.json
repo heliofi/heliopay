@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/sdk",
-  "version": "0.3.15-alpha.0",
+  "version": "0.3.16-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
