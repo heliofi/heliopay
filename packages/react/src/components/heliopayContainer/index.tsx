@@ -440,6 +440,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
             swapCurrency: 'SOL',
             tokenSwapQuote: tokenSwapQuote ?? undefined,
             decimalAmount:
+              totalAmount ||
               HelioSDK.tokenConversionService.convertFromMinimalUnits(
                 activeCurrency?.symbol ?? '',
                 paymentDetails?.normalizedPrice,
@@ -459,6 +460,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     connectionProvider?.connection,
     tokenSwapQuote,
     walletSol?.publicKey,
+    totalAmount,
   ]);
 
   useEffect(() => {
@@ -468,9 +470,18 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         activeCurrency,
         paymentDetails,
         blockchain,
+        customPrice: totalAmount,
       })
     );
-  }, [availableBalance]);
+  }, [
+    availableBalance,
+    HelioSDK,
+    activeCurrency,
+    paymentDetails,
+    blockchain,
+    getIsBalanceEnough,
+    totalAmount,
+  ]);
 
   useEffect(() => {
     if (mainCluster) {

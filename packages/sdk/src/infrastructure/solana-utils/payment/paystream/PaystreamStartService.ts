@@ -4,7 +4,7 @@ import {
 } from '@heliofi/common';
 import { CreatePaymentRequest } from '@heliofi/solana-adapter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Keypair, PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
+import { Keypair, PublicKey, VersionedTransaction } from '@solana/web3.js';
 
 import {
   isEmptyObject,
