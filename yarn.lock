@@ -2963,7 +2963,7 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
-"@heliofi/sdk@0.3.13-alpha.0", "@heliofi/sdk@^0.3.13-alpha.0":
+"@heliofi/sdk@^0.3.13-alpha.0":
   version "0.3.13-alpha.0"
   resolved "https://registry.yarnpkg.com/@heliofi/sdk/-/sdk-0.3.13-alpha.0.tgz#74345db198b3040e312abdb620ea933e4755681c"
   integrity sha512-gOlyJ9FDYX3WL/9AQeAnl7mSXtvvy1ymQHlxRpdjrXzVA0LZde5RLdSvB23HQXxkmLUmldKsB2+sBtshFovxXA==
