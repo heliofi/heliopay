@@ -72,16 +72,12 @@ export class AvailableBalanceService {
     interval,
     tokenSwapQuote,
   }: Props): boolean {
-    const isTokenSwapped = !!(canSwapTokens && swapCurrency);
+    const isTokenSwapped = !!(canSwapTokens && swapCurrency && tokenSwapQuote);
 
-    const swappedPrice =
-      swapCurrency && tokenSwapQuote?.inAmount
-        ? this.tokenConversionService.convertFromMinimalUnits(
-            swapCurrency,
-            BigInt(tokenSwapQuote?.inAmount)
-          )
-        : 0;
-
+    if (isTokenSwapped) {
+      return true;
+    }
+    
     const availableSolBalance =
       Number(
         this.availableBalances.find(
@@ -91,11 +87,8 @@ export class AvailableBalanceService {
       ) || 0;
 
     return (
-      availableSolBalance >=
-      (isTokenSwapped
-        ? swappedPrice
-        : (quantity ?? 1) * (interval ?? 1) * decimalAmount)
-    );
+      availableSolBalance >= (quantity ?? 1) * (interval ?? 1) * decimalAmount
+      )
   }
 
   private async getTokenBalances(
