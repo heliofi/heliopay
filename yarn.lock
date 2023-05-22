@@ -3049,6 +3049,21 @@
     wagmi "^0.8.6"
     yup "^0.32.11"
 
+"@heliofi/sdk@^0.3.3-alpha.0":
+  version "0.3.3-alpha.0"
+  resolved "https://registry.yarnpkg.com/@heliofi/sdk/-/sdk-0.3.3-alpha.0.tgz#8fc5636af810cd70e85f9eaf0e8a92882613939c"
+  integrity sha512-dQAxBYT0q22CSepkQfdPF122xudUEJDWbRkFVxk88pFejhiZUTrvaBlmpvdFGHQdjurc1oUJjX6tAhutLfPrIQ==
+  dependencies:
+    "@heliofi/common" "0.1.195"
+    "@heliofi/solana-adapter" "^3.3.1-alpha.0"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    reflect-metadata "^0.1.13"
+    tweetnacl "^1.0.3"
+    yarn "^1.22.19"
+
 "@heliofi/sdk@^0.3.6-alpha.0":
   version "0.3.6-alpha.0"
   resolved "https://registry.yarnpkg.com/@heliofi/sdk/-/sdk-0.3.6-alpha.0.tgz#83c78022200aebeda3fb038fa61288ec1fe52b76"
@@ -3073,6 +3088,20 @@
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.3.0.tgz#d344753f8ce7b90bda65c930467152619c360bb2"
   integrity sha512-RAAV+MSV9MNjH2gaJq7WPzkmtmWwrLyKDjKtRNsHfugzMh7fSrBkMqeOker8zvXhB6m62IwJwqbau97wddXZZA==
+  dependencies:
+    "@project-serum/anchor" "^0.25.0"
+    "@sideway/formula" "^3.0.1"
+    "@solana/spl-token" "^0.2.0"
+    "@solana/wallet-adapter-react" "^0.15.20"
+    "@solana/web3.js" "^1.66.2"
+    bs58 "^5.0.0"
+    jsonwebtoken "^9.0.0"
+    tweetnacl "^1.0.3"
+
+"@heliofi/solana-adapter@^3.3.1-alpha.0":
+  version "3.3.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.3.1-alpha.0.tgz#8ed362bb609cfc79365316bae0e777d97e66d36a"
+  integrity sha512-GGefYZQwt+ikvSEHGeEsFWQOXcIViOijIj6DLFl6tSGbjbIeQpWJZHjlYFMYOvh5Pqrf366GNsbPS0t+xraCUQ==
   dependencies:
     "@project-serum/anchor" "^0.25.0"
     "@sideway/formula" "^3.0.1"
