@@ -2,7 +2,6 @@ import { DefaultTheme, ThemeProvider } from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
-  ClusterHelio,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -55,7 +54,7 @@ export const HelioPay = ({
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as ClusterHelio);
+    HelioSDK.setCluster(cluster);
   }, [cluster]);
 
   useEffect(() => {
