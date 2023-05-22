@@ -2,6 +2,7 @@ import { DefaultTheme, ThemeProvider } from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Cluster } from '@solana/web3.js';
 import {
+  ClusterHelio,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -54,14 +55,8 @@ export const HelioPay = ({
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as Cluster);
+    HelioSDK.setCluster(cluster as ClusterHelio);
   }, [cluster]);
-
-  useMemo(() => {
-    if (customApiUrl) {
-      HelioSDK.setCustomApiUrl(customApiUrl);
-    }
-  }, [customApiUrl]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
