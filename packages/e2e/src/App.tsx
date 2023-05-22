@@ -25,7 +25,7 @@ const App = () => {
       />
       <HelioPay
         additionalJSON={{ key1: 'value1' }}
-        cluster="devnet"
+        cluster="devnet" // test
         customApiUrl="https://dev.api.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
