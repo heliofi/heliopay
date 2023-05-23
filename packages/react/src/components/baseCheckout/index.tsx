@@ -115,7 +115,7 @@ const BaseCheckout = ({
           paymentDetails?.currency.symbol,
           paymentDetails?.normalizedPrice
         ),
-      canSwapTokens: true,
+      canSwapTokens: paymentDetails.features.canSwapTokens,
       tokenSwapQuote,
       quantity,
       interval,
