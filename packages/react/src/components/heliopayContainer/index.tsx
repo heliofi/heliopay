@@ -115,7 +115,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           paymentDetails?.normalizedPrice
         ),
         tokenSwapQuote,
-        canSwapTokens: paymentDetails.features?.canSwapTokens,
+        canSwapTokens: true,
       }),
     [paymentDetails, tokenSwapQuote]
   );
