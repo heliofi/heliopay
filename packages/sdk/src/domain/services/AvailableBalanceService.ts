@@ -72,7 +72,11 @@ export class AvailableBalanceService {
     interval,
     tokenSwapQuote,
   }: Props): boolean {
-    const isTokenSwapped = !!(canSwapTokens && swapCurrency);
+    const isTokenSwapped = !!(canSwapTokens && tokenSwapQuote);
+
+    if (isTokenSwapped) {
+      return true;
+    }
 
     const swappedPrice =
       swapCurrency && tokenSwapQuote?.inAmount
