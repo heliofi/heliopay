@@ -412,3 +412,5 @@ const amount = helioSDK.tokenConversionService.convertToMinimalUnits('symbol', 1
 //handle transaction
 await helioSDK.paylinkService.handleTransaction({...});
 ```
+
+swaps

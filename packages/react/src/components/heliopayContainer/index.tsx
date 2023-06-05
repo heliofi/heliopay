@@ -106,6 +106,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
 
+  const canSwapTokens = getPaymentFeatures()?.canSwapTokens;
+
   const isBalanceEnough = useMemo(
     () =>
       HelioSDK.availableBalanceService.isBalanceEnough({
@@ -115,8 +117,9 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           paymentDetails?.normalizedPrice
         ),
         tokenSwapQuote,
+        canSwapTokens,
       }),
-    [paymentDetails, tokenSwapQuote]
+    [paymentDetails, tokenSwapQuote, canSwapTokens]
   );
 
   const notEnoughFunds =
