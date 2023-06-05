@@ -230,7 +230,6 @@ export class PaylinkSubmitService extends BasePaymentService<
       );
 
     const swapTransaction = prepareSwapTransactionResponse?.swapTransaction;
-
     const standardTx = createTransaction(
       prepareSwapTransactionResponse?.standardTransaction
     );
