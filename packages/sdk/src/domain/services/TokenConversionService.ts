@@ -1,18 +1,37 @@
-import { Currency } from '@heliofi/common';
+import { BlockchainSymbol, Currency } from '@heliofi/common';
 import type { CurrencyService } from './CurrencyService';
 import { fromBigintDivisionToNumber } from '../../utils';
 
 export class TokenConversionService {
   constructor(private currencyService: CurrencyService) {}
 
-  convertFromMinimalUnits(symbol: any, minimalAmount: bigint): number {
+  convertFromMinimalUnits(
+    symbol: string,
+    minimalAmount: bigint,
+    blockchain?: BlockchainSymbol
+  ): number {
     try {
-      const currencyMeta = this.currencyService.getCurrencyBySymbol(symbol);
+      let currencyMeta;
+
+      if (blockchain) {
+        currencyMeta = this.currencyService.getCurrencyBySymbolAndBlockchain({
+          symbol,
+          blockchain,
+        });
+      } else {
+        currencyMeta = this.currencyService.getCurrencyBySymbol(symbol);
+      }
+
       if (currencyMeta == null) {
         return 0;
       }
       const units = BigInt(10 ** currencyMeta.decimals);
-      return fromBigintDivisionToNumber(minimalAmount, units, 1000000000);
+
+      return fromBigintDivisionToNumber(
+        minimalAmount,
+        units,
+        1_000_000_000_000_000_000
+      );
     } catch (e) {
       return 0;
     }

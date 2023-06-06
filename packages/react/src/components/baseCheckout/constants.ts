@@ -11,7 +11,7 @@ export type InheritedOnSubmit = (
 export type InheritedBaseCheckoutProps = {
   onHide: () => void;
   onSubmit: InheritedOnSubmit;
-  allowedCurrencies: Currency[];
+  supportedAllowedCurrencies: Currency[];
   totalAmount?: number;
 };
 
@@ -31,7 +31,7 @@ export interface IHandleSubmit {
   HelioSDK: HelioSDKType;
   totalDecimalAmount: number;
   onSubmit: InheritedOnSubmit;
-  currencyList: Currency[];
+  currency: Currency;
   paymentType: PaymentRequestType;
 }
 

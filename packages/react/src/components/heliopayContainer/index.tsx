@@ -1,28 +1,36 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
-  ClusterType,
+  blockchainToNativeToken,
+  ClusterHelio,
+  ClusterHelioType,
+  CreatePaymentProps,
   CreatePaystreamResponse,
   ErrorPaymentEvent,
+  LoadingModalStep,
+  LoadingModalStepsCount,
+  PaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
+  CreatePaystreamProps,
 } from '@heliofi/sdk';
 import {
   AnchorWallet,
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { Cluster } from '@solana/web3.js';
 import {
-  BlockchainEngineType,
+  BlockchainSymbol,
   Currency,
+  LinkFeaturesDto,
   PaymentRequestType,
+  Paystream,
 } from '@heliofi/common';
 
+import { useAccount } from 'wagmi';
 import { SubmitPaylinkProps, SubmitPaystreamProps } from './constants';
 import PaymentResult from '../paymentResult';
-import { LoadingModal } from '../loadingModal';
 import WalletController from '../WalletController';
-import { ButtonWithTooltip, ConnectButton } from '../../ui-kits';
+import { ButtonWithTooltip } from '../../ui-kits';
 import PaylinkCheckout from '../payLink/paylinkCheckout';
 import PaystreamCheckout from '../payStream/paystreamCheckout';
 import HelioLogoGray from '../../assets/icons/HelioLogoGray';
@@ -46,6 +54,11 @@ import {
   CheckoutSearchParamsValues,
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { ConnectButton } from '../../ui-kits/connectButton';
+import { useEVMProvider } from '../../hooks/useEVMProvider';
+import LoadingModal from '../modals/loadingModal';
+import { useConnect } from '../../hooks/useConnect';
+import { getIsBalanceEnough } from '../baseCheckout/actions';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -53,7 +66,7 @@ interface HeliopayContainerProps {
   onError?: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
-  cluster: Cluster;
+  cluster: ClusterHelioType;
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
@@ -76,8 +89,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   searchCustomerDetails,
   additionalJSON,
 }) => {
-  const wallet = useAnchorWallet();
-  const helioProvider = useAnchorProvider();
+  const walletSol = useAnchorWallet();
+  const isConnectedSOl = !!walletSol;
+
+  const { isConnected: isConnectedEVM } = useAccount();
+  const { address: evmPublicKey } = useAccount();
+
+  const solProvider = useAnchorProvider();
+  const evmProvider = useEVMProvider();
+
   const { dynamicRateToken } = useTokenConversion();
   const {
     currencyList,
@@ -91,6 +111,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     tokenSwapQuote,
     paymentType: paymentRequestType,
     setPaymentType,
+    activeCurrency,
+    initActiveCurrency,
   } = useHelioProvider();
   const connectionProvider = useConnection();
 
@@ -99,32 +121,88 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const { HelioSDK } = useCompositionRoot();
   const { setCustomerDetails } = useCheckoutSearchParamsProvider();
 
+  const { blockchainEngineRef } = useConnect();
+
   const [result, setResult] = useState<
-    SuccessPaymentEvent | ErrorPaymentEvent | null
+    | SuccessPaymentEvent
+    | ErrorPaymentEvent
+    | PendingPaymentEvent
+    | PaymentEvent
+    | null
   >(null);
   const [showFormModal, setShowFormModal] = useState(false);
-  const [showLoadingModal, setShowLoadingModal] = useState(false);
-  const [allowedCurrencies, setAllowedCurrencies] = useState<Currency[]>([]);
+  const [showLoadingModal, setShowLoadingModal] = useState<LoadingModalStep>(
+    LoadingModalStep.CLOSE
+  );
+  const [supportedAllowedCurrencies, setSupportedAllowedCurrencies] = useState<
+    Currency[]
+  >([]);
 
-  const canSwapTokens = getPaymentFeatures()?.canSwapTokens;
+  const [isOnlyPay, setIsOnlyPay] = useState<boolean>(false);
+  const [isBalanceEnough, setIsBalanceEnough] = useState<boolean>(true);
+  const [availableBalance, setAvailableBalance] = useState<number>(0);
 
-  const isBalanceEnough = useMemo(
-    () =>
-      HelioSDK.availableBalanceService.isBalanceEnough({
-        currency: paymentDetails?.currency.symbol,
-        decimalAmount: HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency.symbol,
-          paymentDetails?.normalizedPrice
-        ),
-        tokenSwapQuote,
-        canSwapTokens,
-      }),
-    [paymentDetails, tokenSwapQuote, canSwapTokens]
+  const walletConnected = isConnectedSOl || isConnectedEVM;
+  const blockchain = paymentDetails?.currency?.blockchain?.symbol;
+  const isDynamic = paymentDetails?.dynamic;
+  const canSelectCurrency = supportedAllowedCurrencies.length > 1;
+  const canChangeQuantity =
+    getPaymentFeatures<LinkFeaturesDto>()?.canChangeQuantity;
+  const isInterval = getPaymentDetails<Paystream>()?.maxTime;
+
+  const isPaystreamEVM =
+    isConnectedEVM && paymentRequestType === PaymentRequestType.PAYSTREAM;
+  const getPaymentTooltip = (): string => {
+    switch (true) {
+      case !paymentRequestId:
+        return 'Please set payment request id';
+      case !paymentDetails?.id:
+        return `Cannot find  
+        ${paymentType === PaymentRequestType.PAYLINK ? 'Pay link' : ''}
+        ${paymentType === PaymentRequestType.PAYSTREAM ? 'Pay stream' : ''}
+         data`;
+      case isPaystreamEVM:
+        return 'Pay Streams - available on Solana now. Coming to ETH soon.';
+      case !isBalanceEnough:
+        return 'Not enough founds in your wallet';
+      case isDynamic && supportedAllowedCurrencies.length === 0:
+        return 'Please set allowed supported currencies';
+      case isDynamic && !totalAmount:
+        return 'Please set total amount';
+      case !!(
+        paymentType === PaymentRequestType.PAYLINK &&
+        blockchainEngineRef.current &&
+        blockchainEngineRef.current !==
+          paymentDetails?.currency?.blockchain?.engine?.type
+      ):
+        return 'Please check your wallet connection';
+      case !!(paymentType === PaymentRequestType.PAYSTREAM && totalAmount):
+        return "You can't pass total amount for pay stream payments";
+      case !!(
+        paymentType === PaymentRequestType.PAYSTREAM && supportedCurrencies
+      ):
+        return "You can't pass supported currencies for pay stream payments";
+      default:
+        return '';
+    }
+  };
+
+  const isNativeToken =
+    blockchain &&
+    activeCurrency?.symbol === blockchainToNativeToken.get(blockchain);
+
+  const getLoadingModalStartingStep = useCallback(
+    (): LoadingModalStep =>
+      isNativeToken
+        ? LoadingModalStep.SIGN_TRANSACTION
+        : LoadingModalStep.GET_PERMISSION,
+    [isNativeToken]
   );
 
-  const notEnoughFunds =
-    !(isCustomerDetailsRequired || supportedCurrencies?.length) &&
-    !isBalanceEnough;
+  const getTotalSteps = (): number =>
+    isNativeToken
+      ? LoadingModalStepsCount.EVM_NATIVE_TOKEN
+      : LoadingModalStepsCount.ERC20;
 
   /** typeof window === 'undefined' means we're on the server */
   const queryString =
@@ -132,15 +210,16 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       ? window.location.href.split('?')[1]
       : undefined;
 
-  const generateAllowedCurrencies = () => {
-    const allowedCurrenciesTemp = currencyList.filter(
-      (currency) =>
-        supportedCurrencies?.includes(currency.symbol) &&
-        (!currency?.blockchain ||
-          currency?.blockchain?.engine?.type === BlockchainEngineType.SOL)
-    );
-    setAllowedCurrencies(allowedCurrenciesTemp || []);
-  };
+  const generateSupportedAllowedCurrencies = useCallback(() => {
+    if (isDynamic) {
+      const supportedAllowedCurrenciesTemp = currencyList.filter(
+        (currency) =>
+          supportedCurrencies?.includes(currency.symbol) &&
+          currency?.blockchain?.symbol === blockchain
+      );
+      setSupportedAllowedCurrencies(supportedAllowedCurrenciesTemp || []);
+    }
+  }, [isDynamic, currencyList, supportedCurrencies, blockchain]);
 
   const getCurrency = (currency?: string): Currency => {
     if (!currency) {
@@ -160,13 +239,24 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   const handleSuccessPayment = (event: SuccessPaymentEvent) => {
     onSuccess?.(event);
     setResult(event);
-    setShowLoadingModal(false);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
   };
 
   const handleErrorPayment = (event: ErrorPaymentEvent) => {
     onError?.(event);
     setResult(event);
-    setShowLoadingModal(false);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
+  };
+
+  const handlePendingPayment = (event: PendingPaymentEvent): void => {
+    onPending?.(event);
+    setResult(event);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
+  };
+
+  const handleCancelPayment = (): void => {
+    setResult(null);
+    setShowLoadingModal(LoadingModalStep.CLOSE);
   };
 
   const submitPaylink = async ({
@@ -176,15 +266,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     customerDetails,
     productDetails,
   }: SubmitPaylinkProps) => {
-    if (helioProvider && currency?.symbol != null) {
+    if (solProvider && currency?.symbol != null) {
       onStartPayment?.();
-      setShowLoadingModal(true);
+      setShowLoadingModal(LoadingModalStep.DEFAULT);
       setShowFormModal(false);
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
-        anchorProvider: helioProvider,
+      const payload: CreatePaymentProps = {
+        anchorProvider: solProvider,
         recipientPK: recipient,
         symbol,
         amount: amount * (quantity || BigInt(1)),
@@ -200,16 +290,78 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         productDetails,
         splitRevenue: getPaymentFeatures()?.splitRevenue,
         splitWallets: paymentDetails?.splitWallets,
-        wallet: wallet as AnchorWallet,
+        wallet: walletSol as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
-        cluster,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
       };
 
       try {
         await HelioSDK.paylinkService.handleTransaction(payload);
+      } catch (error) {
+        handleErrorPayment({
+          errorMessage: String(error),
+        });
+      }
+    }
+  };
+
+  const submitPaylinkEVM = async ({
+    amount,
+    currency,
+    quantity,
+    customerDetails,
+    productDetails,
+  }: SubmitPaylinkProps): Promise<void> => {
+    const mintAddress =
+      currency &&
+      HelioSDK.currencyService.getCurrencyBySymbolAndBlockchain({
+        symbol: currency?.symbol ?? '',
+        blockchain,
+      })?.mintAddress;
+    if (
+      evmProvider != null &&
+      currency?.symbol != null &&
+      evmPublicKey != null &&
+      mintAddress
+    ) {
+      onStartPayment?.();
+      setShowLoadingModal(getLoadingModalStartingStep());
+      setShowFormModal(false);
+      const { symbol } = getCurrency(currency.symbol);
+
+      const props = {
+        anchorProvider: evmProvider,
+        recipientPK: String(paymentDetails?.wallet?.publicKey),
+        symbol,
+        amount: amount * (quantity || BigInt(1)),
+        paymentRequestId,
+        blockchain,
+        onSuccess: handleSuccessPayment,
+        onError: handleErrorPayment,
+        onPending: handlePendingPayment,
+        onCancel: handleCancelPayment,
+        setLoadingModalStep: setShowLoadingModal,
+        customerDetails,
+        quantity: Number(quantity),
+        productDetails,
+        splitRevenue: getPaymentFeatures()?.splitRevenue,
+        splitWallets: paymentDetails?.splitWallets,
+        rateToken: dynamicRateToken,
+        canSwapTokens: getPaymentFeatures().canSwapTokens,
+        swapRouteToken: tokenSwapQuote?.routeTokenString,
+        mintAddress,
+        isNativeMintAddress: isNativeToken,
+        cluster,
+      };
+
+      try {
+        if (BlockchainSymbol.POLYGON === blockchain) {
+          await HelioSDK.polygonPaylinkService.handleTransaction(props);
+        } else {
+          await HelioSDK.ethPaylinkService.handleTransaction(props);
+        }
       } catch (error) {
         handleErrorPayment({
           errorMessage: String(error),
@@ -226,15 +378,15 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     customerDetails,
     productDetails,
   }: SubmitPaystreamProps) => {
-    if (helioProvider && currency?.symbol != null) {
+    if (solProvider && currency?.symbol != null) {
       onStartPayment?.();
-      setShowLoadingModal(true);
+      setShowLoadingModal(LoadingModalStep.DEFAULT);
       setShowFormModal(false);
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
-        anchorProvider: helioProvider,
+      const payload: CreatePaystreamProps = {
+        anchorProvider: solProvider,
         recipientPK: recipient,
         symbol,
         amount: amount * BigInt(maxTime),
@@ -250,12 +402,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         productDetails,
         interval,
         maxTime,
-        wallet: wallet as AnchorWallet,
+        wallet: walletSol as AnchorWallet,
         connection: connectionProvider.connection,
         rateToken: dynamicRateToken,
         canSwapTokens: getPaymentFeatures().canSwapTokens,
         swapRouteToken: tokenSwapQuote?.routeTokenString,
-        cluster,
       };
 
       try {
@@ -277,30 +428,89 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
   }, [paymentType]);
 
   useEffect(() => {
-    if (wallet) {
-      HelioSDK.availableBalanceService
-        .fetchAvailableBalances(wallet.publicKey, connectionProvider.connection)
-        .catch();
+    if (walletConnected) {
+      const fetchData = async () => {
+        const balance =
+          await HelioSDK.availableBalanceService.fetchAvailableBalance({
+            publicKey: walletSol?.publicKey,
+            connection: connectionProvider?.connection,
+            evmPublicKey,
+            blockchain: paymentDetails?.currency?.blockchain?.symbol,
+            areCurrenciesDefined: currencyList.length > 0,
+            currency: activeCurrency?.symbol,
+            canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
+            swapCurrency: tokenSwapQuote?.from?.symbol,
+            tokenSwapQuote: tokenSwapQuote ?? undefined,
+          });
+        setAvailableBalance(balance);
+      };
+      fetchData().catch();
     }
-  }, [wallet, connectionProvider]);
+  }, [
+    walletConnected,
+    paymentDetails,
+    currencyList,
+    activeCurrency,
+    evmPublicKey,
+    connectionProvider?.connection,
+    tokenSwapQuote,
+    walletSol?.publicKey,
+  ]);
+
+  useEffect(() => {
+    if (!isDynamic) {
+      setIsBalanceEnough(
+        getIsBalanceEnough({
+          HelioSDK,
+          activeCurrency,
+          paymentDetails,
+          blockchain,
+        })
+      );
+    }
+  }, [
+    availableBalance,
+    HelioSDK,
+    activeCurrency,
+    paymentDetails,
+    blockchain,
+    getIsBalanceEnough,
+    isDynamic,
+    tokenSwapQuote,
+  ]);
 
   useEffect(() => {
     if (mainCluster) {
-      getCurrencyList().catch();
+      getCurrencyList(blockchain).catch();
     }
-  }, [mainCluster]);
+  }, [mainCluster, blockchain]);
 
   useEffect(() => {
-    if (supportedCurrencies) {
-      generateAllowedCurrencies();
+    let symbol;
+    if (supportedAllowedCurrencies.length === 1) {
+      symbol = supportedAllowedCurrencies[0]?.symbol;
+    } else if (!canSelectCurrency) {
+      symbol = paymentDetails?.currency?.symbol;
+    } else if (paymentDetails?.currency?.symbol) {
+      symbol = paymentDetails?.currency?.symbol;
     }
-  }, [currencyList, supportedCurrencies]);
+    initActiveCurrency(symbol);
+  }, [
+    paymentDetails,
+    currencyList,
+    supportedAllowedCurrencies,
+    canSelectCurrency,
+  ]);
+
+  useEffect(() => {
+    generateSupportedAllowedCurrencies();
+  }, [generateSupportedAllowedCurrencies]);
 
   useEffect(() => {
     if (mainCluster && paymentRequestType && paymentRequestId) {
       initPaymentDetails(paymentRequestId).catch();
     }
-  }, [paymentRequestId, mainCluster, paymentRequestType]);
+  }, [paymentRequestId, mainCluster, paymentRequestType, cluster]);
 
   useEffect(() => {
     if (queryString) {
@@ -311,41 +521,64 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     }
   }, [searchCustomerDetails, queryString]);
 
+  useEffect(() => {
+    setIsOnlyPay(
+      !!(
+        paymentDetails &&
+        !getPaymentFeatures()?.canSwapTokens &&
+        !isDynamic &&
+        activeCurrency &&
+        !isCustomerDetailsRequired &&
+        !canChangeQuantity &&
+        !isInterval &&
+        paymentRequestType === PaymentRequestType.PAYLINK
+      )
+    );
+  }, [
+    paymentDetails,
+    isDynamic,
+    isCustomerDetailsRequired,
+    supportedCurrencies,
+    activeCurrency,
+    canChangeQuantity,
+    isInterval,
+  ]);
+
   return (
     <StyledWrapper>
       {!result ? (
         <>
           <StyledRow>
             <StyledLeft>
-              {wallet ? (
+              {walletConnected ? (
                 <div>
                   <ButtonWithTooltip
                     onClick={() => {
-                      if (
-                        isCustomerDetailsRequired ||
-                        supportedCurrencies?.length
-                      ) {
+                      if (!isOnlyPay) {
                         setShowFormModal(true);
-                      } else if (paymentDetails) {
-                        submitPaylink({
+                      } else if (activeCurrency) {
+                        const reqData = {
                           amount: paymentDetails?.normalizedPrice,
                           quantity: BigInt(1),
-                          customerDetails: undefined,
-                          currency: paymentDetails?.currency,
-                        });
+                          currency: activeCurrency,
+                        };
+
+                        if (isConnectedSOl) {
+                          submitPaylink(reqData);
+                        } else {
+                          submitPaylinkEVM(reqData);
+                        }
                       }
                     }}
-                    disabled={
-                      !paymentRequestId || !paymentDetails?.id || notEnoughFunds
-                    }
-                    showTooltip={notEnoughFunds}
-                    tooltipText="Not enough funds in your wallet"
+                    disabled={!!getPaymentTooltip()}
+                    showTooltip={!!getPaymentTooltip()}
+                    tooltipText={getPaymentTooltip()}
                   >
                     {payButtonTitle}
                   </ButtonWithTooltip>
                 </div>
               ) : (
-                <ConnectButton />
+                <ConnectButton paymentRequestType={paymentRequestType} />
               )}
             </StyledLeft>
             <StyledRight>
@@ -354,7 +587,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                 <StyledLogo>
                   <HelioLogoGray />
                 </StyledLogo>
-                {cluster === ClusterType.Devnet && (
+                {cluster === ClusterHelio.Devnet && (
                   <StyledEnvironment>DEVNET</StyledEnvironment>
                 )}
               </StyledLogoContainer>
@@ -365,12 +598,21 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           )}
           @todo-v fix this case
            */}
-          {wallet && <WalletController />}
+          {walletConnected && (
+            <WalletController
+              paymentRequestType={paymentRequestType}
+              publicKey={
+                walletSol?.publicKey
+                  ? String(walletSol?.publicKey)
+                  : String(evmPublicKey)
+              }
+            />
+          )}
         </>
       ) : (
         <>
           {paymentRequestType === PaymentRequestType.PAYLINK && (
-            <PaymentResult result={result} />
+            <PaymentResult result={result} blockchain={blockchain} />
           )}
           {paymentRequestType === PaymentRequestType.PAYSTREAM && (
             <PaystreamPaymentResult
@@ -390,8 +632,13 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       {showFormModal && paymentRequestType === PaymentRequestType.PAYLINK && (
         <PaylinkCheckout
           onHide={() => setShowFormModal(false)}
-          onSubmit={(data) => submitPaylink(data as SubmitPaylinkProps)}
-          allowedCurrencies={allowedCurrencies}
+          onSubmit={(data) =>
+            isConnectedSOl
+              ? submitPaylink(data as SubmitPaylinkProps)
+              : submitPaylinkEVM(data as SubmitPaylinkProps)
+          }
+          supportedAllowedCurrencies={supportedAllowedCurrencies}
+          supportedCurrencies={supportedCurrencies}
           totalAmount={totalAmount}
         />
       )}
@@ -399,12 +646,16 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
         <PaystreamCheckout
           onHide={() => setShowFormModal(false)}
           onSubmit={(data) => submitPaystream(data as SubmitPaystreamProps)}
-          allowedCurrencies={[]}
+          supportedAllowedCurrencies={[]}
           totalAmount={totalAmount}
         />
       )}
-      {showLoadingModal && (
-        <LoadingModal onHide={() => setShowLoadingModal(false)} />
+      {showLoadingModal !== LoadingModalStep.CLOSE && (
+        <LoadingModal
+          onHide={() => setShowLoadingModal(LoadingModalStep.CLOSE)}
+          totalSteps={getTotalSteps()}
+          step={showLoadingModal}
+        />
       )}
     </StyledWrapper>
   );

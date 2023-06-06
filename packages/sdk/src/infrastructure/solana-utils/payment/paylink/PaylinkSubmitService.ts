@@ -1,12 +1,6 @@
 import { CustomerDetails, SplitWallet } from '@heliofi/common';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import {
-  Cluster,
-  Connection,
-  PublicKey,
-  Transaction,
-  VersionedTransaction,
-} from '@solana/web3.js';
+import { Connection, PublicKey, VersionedTransaction } from '@solana/web3.js';
 import 'reflect-metadata';
 import { SinglePaymentRequest } from '@heliofi/solana-adapter';
 
@@ -192,7 +186,6 @@ export class PaylinkSubmitService extends BasePaymentService<
       splitRevenue,
       splitWallets,
       currency: symbol,
-      cluster: this.cluster as Cluster,
       customerDetails,
       quantity: quantity || 1,
       rateToken,

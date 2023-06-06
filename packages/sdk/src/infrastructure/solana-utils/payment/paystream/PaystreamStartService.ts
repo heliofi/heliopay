@@ -4,13 +4,7 @@ import {
 } from '@heliofi/common';
 import { CreatePaymentRequest } from '@heliofi/solana-adapter';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import {
-  Cluster,
-  Keypair,
-  PublicKey,
-  Transaction,
-  VersionedTransaction,
-} from '@solana/web3.js';
+import { Keypair, PublicKey, VersionedTransaction } from '@solana/web3.js';
 
 import {
   isEmptyObject,
@@ -25,7 +19,7 @@ import { BaseTransactionPayload } from '../models/TransactionPayload';
 import { ExecuteTransactionPayload, SignedTxAndToken } from '../../types';
 import { signSwapTransactions, signTransaction } from '../../SignTransaction';
 
-interface CreatePaystreamProps
+export interface CreatePaystreamProps
   extends BasePaymentProps<CreatePaystreamResponse> {
   interval: number;
   maxTime: number;
@@ -195,7 +189,6 @@ export class PaystreamStartService extends BasePaystreamService<
       interval,
       rateToken,
       ...details,
-      cluster: this.cluster as Cluster,
     };
   }
 

@@ -1,4 +1,3 @@
-import { Cluster } from '@solana/web3.js';
 import { createContext, useContext, useEffect } from 'react';
 import {
   Currency,
@@ -13,32 +12,37 @@ import {
 } from '@heliofi/common';
 import jwtDecode from 'jwt-decode';
 
-import { TokenSwapQuote } from '@heliofi/sdk';
+import { ClusterHelioType, TokenSwapQuote } from '@heliofi/sdk';
+import { BlockchainSymbol } from '@heliofi/common/dist/src/domain/model/blockchain/constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 
 export type PaymentDetailsType = Paylink | Paystream;
 export type PaymentFeatures = PaymentRequestFeatures | LinkFeaturesDto;
 
 export const HelioContext = createContext<{
+  activeCurrency?: Currency;
+  setActiveCurrency: (activeCurrency?: Currency) => void;
   currencyList: Currency[];
   setCurrencyList: (currencyList: Currency[]) => void;
   paymentDetails?: PaymentRequest;
   setPaymentDetails: (paymentDetails: any) => void;
-  cluster: Cluster | null;
-  setCluster: (cluster: Cluster) => void;
+  cluster: ClusterHelioType | null;
+  setCluster: (cluster: ClusterHelioType) => void;
   isCustomerDetailsRequired: boolean;
   setIsCustomerDetailsRequired: (isCustomerDetailsRequired: boolean) => void;
   tokenSwapLoading: boolean;
   setTokenSwapLoading: (loading: boolean) => void;
   tokenSwapCurrencies: Currency[] | null;
   setTokenSwapCurrencies: (tokenSwapCurrencies: Currency[]) => void;
-  tokenSwapQuote: TokenSwapQuote | null;
-  setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote) => void;
+  tokenSwapQuote?: TokenSwapQuote;
+  setTokenSwapQuote: (tokenSwapQuote?: TokenSwapQuote) => void;
   tokenSwapError: string;
   setTokenSwapError: (error: string) => void;
   paymentType?: PaymentRequestType;
   setPaymentType: (requestType: PaymentRequestType) => void;
 }>({
+  activeCurrency: undefined,
+  setActiveCurrency: () => {},
   currencyList: [],
   setCurrencyList: () => {},
   paymentDetails: undefined,
@@ -51,7 +55,7 @@ export const HelioContext = createContext<{
   setTokenSwapLoading: () => {},
   tokenSwapCurrencies: null,
   setTokenSwapCurrencies: () => {},
-  tokenSwapQuote: null,
+  tokenSwapQuote: undefined,
   setTokenSwapQuote: () => {},
   tokenSwapError: '',
   setTokenSwapError: () => {},
@@ -61,6 +65,8 @@ export const HelioContext = createContext<{
 
 export const useHelioProvider = () => {
   const {
+    activeCurrency,
+    setActiveCurrency,
     currencyList,
     setCurrencyList,
     paymentDetails,
@@ -83,11 +89,18 @@ export const useHelioProvider = () => {
 
   const { HelioSDK } = useCompositionRoot();
 
-  const getCurrencyList = async () => {
+  const getCurrencyList = async (blockchain: BlockchainSymbol) => {
     if (cluster) {
       const result = await HelioSDK.currencyService.getCurrencies();
-      setCurrencyList(result || []);
+      const allowedCurrenciesTemp = result.filter(
+        (currency) => currency?.blockchain?.symbol === blockchain
+      );
+      setCurrencyList(allowedCurrenciesTemp || []);
     }
+  };
+
+  const initActiveCurrency = (symbol?: string): void => {
+    setActiveCurrency(currencyList.find((c: Currency) => c.symbol === symbol));
   };
 
   const getPaymentDetails = <T extends PaymentDetailsType>(): T =>
@@ -126,7 +139,7 @@ export const useHelioProvider = () => {
     setPaymentDetails(result || {});
   };
 
-  const initCluster = (initialCluster: Cluster) => {
+  const initCluster = (initialCluster: ClusterHelioType) => {
     setCluster(initialCluster);
   };
 
@@ -189,7 +202,7 @@ export const useHelioProvider = () => {
               ? quantity ?? 1
               : undefined,
             HelioSDK.tokenConversionService.convertToMinimalUnits(
-              paymentDetails?.currency.symbol,
+              activeCurrency?.symbol,
               totalDecimalAmount
             ),
             toMint
@@ -228,6 +241,8 @@ export const useHelioProvider = () => {
   }, [paymentDetails]);
 
   return {
+    activeCurrency,
+    initActiveCurrency,
     currencyList,
     paymentDetails,
     getCurrencyList,
@@ -241,6 +256,7 @@ export const useHelioProvider = () => {
     tokenSwapCurrencies,
     getTokenSwapCurrencies,
     tokenSwapQuote,
+    setTokenSwapQuote,
     tokenSwapError,
     getTokenSwapQuote,
     removeTokenSwapError,

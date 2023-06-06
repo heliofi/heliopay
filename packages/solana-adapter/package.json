@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/solana-adapter",
-  "version": "3.3.11-alpha.0",
+  "version": "3.3.17-alpha.0",
   "description": "API to interact with Helio Finances program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -87,5 +87,5 @@
   "prettier": {
     "singleQuote": true
   },
-  "gitHead": "7f55a11a37ee280d753dc97e3515c88155585fad"
+  "gitHead": "c204944e6e6e861c0b2413a3f3a242cc5ab49ac9"
 }

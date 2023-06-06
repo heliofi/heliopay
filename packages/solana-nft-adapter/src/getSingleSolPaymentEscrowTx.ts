@@ -18,7 +18,7 @@ export const getSingleSolPaymentEscrowTx = async (
   program: Program<HelioNftIdl>,
   req: SinglePaymentRequest
 ): Promise<Transaction> => {
-  const escrowAccount = req.escrowAccount;
+  const { escrowAccount } = req;
 
   const senderNftAccount = await getAssociatedTokenAddress(
     req.nftMint,
@@ -35,7 +35,7 @@ export const getSingleSolPaymentEscrowTx = async (
     program.programId
   );
 
-  return await program.methods
+  return program.methods
     .singleSolPaymentEscrow()
     .accounts({
       sender: req.sender,

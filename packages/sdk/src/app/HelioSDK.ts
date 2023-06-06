@@ -1,12 +1,14 @@
-import { Cluster } from '@solana/web3.js';
-
 import {
-  AvailableBalanceService,
+  SolAvailableBalanceService,
   ConfigService,
   CurrencyService,
   HelioApiConnector,
   SolExplorerService,
   TokenConversionService,
+  PolygonAvailableBalanceService,
+  AvailableBalanceService,
+  EthereumAvailableBalanceService,
+  ClusterHelioType,
 } from '../domain';
 import {
   HelioApiAdapter,
@@ -14,13 +16,20 @@ import {
   PaystreamStartService,
   PaystreamCancelService,
 } from '../infrastructure';
+import { PolygonPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/PolygonPaylinkSubmitService';
+import { EthPaylinkSubmitService } from '../infrastructure/evm-utils/payment/paylink/EthPaylinkSubmitService';
+import { PolygonExplorerService } from '../domain/services/PolygonExplorerService';
+import { EthereumExplorerService } from '../domain/services/EthereumExplorerService';
+import { DefaultCurrencyService } from '../domain/services/DefaultCurrencyService';
 
 export class HelioSDK {
-  private _cluster?: Cluster;
+  private _cluster?: ClusterHelioType;
 
   private _customApiUrl?: string;
 
   private _currencyService: CurrencyService;
+
+  private _defaultCurrencyService: DefaultCurrencyService;
 
   private _apiService: HelioApiConnector;
 
@@ -28,7 +37,15 @@ export class HelioSDK {
 
   private _solExplorerService: SolExplorerService;
 
+  private _polygonExplorerService: PolygonExplorerService;
+
+  private _ethExplorerService: EthereumExplorerService;
+
   private _paylinkService: PaylinkSubmitService;
+
+  private _polygonPaylinkService: PolygonPaylinkSubmitService;
+
+  private _ethPaylinkService: EthPaylinkSubmitService;
 
   private _paystreamStartService: PaystreamStartService;
 
@@ -36,9 +53,15 @@ export class HelioSDK {
 
   private _configService: ConfigService;
 
+  private _solAvailableBalanceService: SolAvailableBalanceService;
+
+  private _ethAvailableBalanceService: EthereumAvailableBalanceService;
+
+  private _polygonAvailableBalanceService: PolygonAvailableBalanceService;
+
   private _availableBalanceService: AvailableBalanceService;
 
-  constructor(options?: { cluster: Cluster; customApiUrl: string }) {
+  constructor(options?: { cluster: ClusterHelioType; customApiUrl: string }) {
     this._cluster = options?.cluster;
     this._customApiUrl = options?.customApiUrl;
     this._configService = new ConfigService({
@@ -47,11 +70,26 @@ export class HelioSDK {
     });
     this._apiService = new HelioApiAdapter(this._configService);
     this._currencyService = new CurrencyService(this._apiService);
+    this._defaultCurrencyService = new DefaultCurrencyService();
     this._tokenConversionService = new TokenConversionService(
       this._currencyService
     );
     this._solExplorerService = new SolExplorerService(this._configService);
+    this._polygonExplorerService = new PolygonExplorerService(
+      this._configService
+    );
+    this._ethExplorerService = new EthereumExplorerService(this._configService);
     this._paylinkService = new PaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._polygonPaylinkService = new PolygonPaylinkSubmitService(
+      this._apiService,
+      this._currencyService,
+      this._configService
+    );
+    this._ethPaylinkService = new EthPaylinkSubmitService(
       this._apiService,
       this._currencyService,
       this._configService
@@ -66,9 +104,24 @@ export class HelioSDK {
       this._currencyService,
       this._configService
     );
-    this._availableBalanceService = new AvailableBalanceService(
+    this._solAvailableBalanceService = new SolAvailableBalanceService(
       this._tokenConversionService,
       this._currencyService
+    );
+    this._ethAvailableBalanceService = new EthereumAvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService
+    );
+    this._polygonAvailableBalanceService = new PolygonAvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService
+    );
+    this._availableBalanceService = new AvailableBalanceService(
+      this._tokenConversionService,
+      this._currencyService,
+      this._solAvailableBalanceService,
+      this._polygonAvailableBalanceService,
+      this._ethAvailableBalanceService
     );
   }
 
@@ -78,7 +131,7 @@ export class HelioSDK {
     }
   }
 
-  setCluster(cluster: Cluster) {
+  setCluster(cluster: ClusterHelioType) {
     this._cluster = cluster;
     this._configService.setCluster(cluster);
   }
@@ -93,6 +146,11 @@ export class HelioSDK {
     return this._currencyService;
   }
 
+  get defaultCurrencyService(): DefaultCurrencyService | never {
+    this.checkCluster();
+    return this._defaultCurrencyService;
+  }
+
   get apiService(): HelioApiConnector | never {
     this.checkCluster();
     return this._apiService;
@@ -103,6 +161,16 @@ export class HelioSDK {
     return this._solExplorerService;
   }
 
+  get polygonExplorerService(): PolygonExplorerService | never {
+    this.checkCluster();
+    return this._polygonExplorerService;
+  }
+
+  get ethExplorerService(): EthereumExplorerService | never {
+    this.checkCluster();
+    return this._ethExplorerService;
+  }
+
   get tokenConversionService(): TokenConversionService | never {
     this.checkCluster();
     return this._tokenConversionService;
@@ -111,6 +179,16 @@ export class HelioSDK {
   get paylinkService(): PaylinkSubmitService | never {
     this.checkCluster();
     return this._paylinkService;
+  }
+
+  get polygonPaylinkService(): PolygonPaylinkSubmitService | never {
+    this.checkCluster();
+    return this._polygonPaylinkService;
+  }
+
+  get ethPaylinkService(): EthPaylinkSubmitService | never {
+    this.checkCluster();
+    return this._ethPaylinkService;
   }
 
   get paystreamStartService(): PaystreamStartService | never {
@@ -126,6 +204,21 @@ export class HelioSDK {
   get configService(): ConfigService | never {
     this.checkCluster();
     return this._configService;
+  }
+
+  get solAvailableBalanceService(): SolAvailableBalanceService | never {
+    this.checkCluster();
+    return this._solAvailableBalanceService;
+  }
+
+  get ethAvailableBalanceService(): EthereumAvailableBalanceService | never {
+    this.checkCluster();
+    return this._ethAvailableBalanceService;
+  }
+
+  get polygonAvailableBalanceService(): PolygonAvailableBalanceService | never {
+    this.checkCluster();
+    return this._polygonAvailableBalanceService;
   }
 
   get availableBalanceService(): AvailableBalanceService | never {

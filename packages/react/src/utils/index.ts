@@ -12,7 +12,7 @@ export const deepMerge = (target: any, source: any) => {
 };
 
 export const shortenWalletAddress = (address: string): string => {
-  if (address === 'null') {
+  if (!address) {
     return 'N/A';
   }
   return `${address.slice(0, 6)}..${address.slice(-3)}`;

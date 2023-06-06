@@ -1,0 +1,13 @@
+export enum LoadingModalStep {
+  GET_PERMISSION = 'GET_PERMISSION',
+  SIGN_TRANSACTION = 'SIGN_TRANSACTION',
+  SUBMIT_TRANSACTION = 'SUBMIT_TRANSACTION',
+  DEFAULT = 'DEFAULT',
+  CLOSE = 'CLOSE',
+}
+
+export enum LoadingModalStepsCount {
+  SOL = 1,
+  EVM_NATIVE_TOKEN = 2,
+  ERC20 = 3,
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency, Paystream } from '@heliofi/common';
+import { Paystream } from '@heliofi/common';
 
 import { timeUnitLabels } from '../time-units';
 import { FormikProps } from '../../baseCheckout/constants';
@@ -8,17 +8,15 @@ import { formatTotalPrice } from '../../baseCheckout/actions';
 import { useHelioProvider } from '../../../providers/helio/HelioContext';
 
 export type PaystreamPricingProps = FormikProps & {
-  activeCurrency: Currency | null;
   totalDecimalAmount: number;
 };
 
 const PaystreamPricing = ({
   formValues,
   setFieldValue,
-  activeCurrency,
   totalDecimalAmount,
 }: PaystreamPricingProps) => {
-  const { getPaymentDetails } = useHelioProvider();
+  const { getPaymentDetails, activeCurrency } = useHelioProvider();
   const paymentDetails = getPaymentDetails<Paystream>();
 
   return (

@@ -1,7 +1,7 @@
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Cluster } from '@solana/web3.js';
 import {
+  ClusterHelioType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -15,6 +15,8 @@ import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
+import { EVMProvider } from '../../providers/wagmi';
+import ConnectProvider from '../../providers/connect';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -23,7 +25,7 @@ interface HelioPayProps {
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
   theme?: DefaultTheme;
-  cluster: Cluster;
+  cluster: ClusterHelioType;
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
@@ -54,7 +56,7 @@ export const HelioPay = ({
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as Cluster);
+    HelioSDK.setCluster(cluster);
   }, [cluster]);
 
   useMemo(() => {
@@ -70,23 +72,27 @@ export const HelioPay = ({
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <SolanaProvider cluster={cluster}>
-        <HelioPayContainer
-          paymentRequestId={paymentRequestId}
-          onStartPayment={onStartPayment}
-          onSuccess={onSuccess}
-          onError={onError}
-          onPending={onPending}
-          cluster={cluster}
-          payButtonTitle={payButtonTitle}
-          supportedCurrencies={supportedCurrencies}
-          totalAmount={totalAmount}
-          paymentType={paymentType}
-          searchCustomerDetails={searchCustomerDetails}
-          additionalJSON={additionalJSON}
-        />
-        <Toaster />
-      </SolanaProvider>
+      <EVMProvider>
+        <SolanaProvider cluster={cluster}>
+          <ConnectProvider>
+            <HelioPayContainer
+              paymentRequestId={paymentRequestId}
+              onStartPayment={onStartPayment}
+              onSuccess={onSuccess}
+              onError={onError}
+              onPending={onPending}
+              cluster={cluster}
+              payButtonTitle={payButtonTitle}
+              supportedCurrencies={supportedCurrencies}
+              totalAmount={totalAmount}
+              paymentType={paymentType}
+              searchCustomerDetails={searchCustomerDetails}
+              additionalJSON={additionalJSON}
+            />
+            <Toaster />
+          </ConnectProvider>
+        </SolanaProvider>
+      </EVMProvider>
     </ThemeProvider>
   );
 };

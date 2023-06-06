@@ -6,17 +6,15 @@ import {
   ErrorPaymentEvent,
   SuccessPaymentEvent,
   PendingPaymentEvent,
-} from '@heliofi/sdk';
-import {
   SECOND_MS,
   StringService,
   TimeFormatterService,
-} from '@heliofi/sdk/dist/src/domain';
+  CreatePaymentService,
+  getTransactionSignature,
+  LoadingModalStep,
+} from '@heliofi/sdk';
 import { Currency, IntervalType, Paystream } from '@heliofi/common';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
-import { CreatePaymentService } from '@heliofi/sdk/dist/src/domain/services/CreatePaymentService';
-import { getTransactionSignature } from '@heliofi/sdk/dist/src/infrastructure/solana-utils/getTransactionSignature';
-
 import { timeUnitLabels } from '../time-units';
 import { ExplorerLink } from '../../../ui-kits';
 import Alarm from '../../../assets/icons/Alarm';
@@ -49,7 +47,7 @@ interface Props {
   result: {
     errorMessage?: string;
   } & (SuccessPaymentEvent<CreatePaystreamResponse> | ErrorPaymentEvent);
-  setShowLoadingModal: (showLoadingModal: boolean) => void;
+  setShowLoadingModal: (showLoadingModal: LoadingModalStep) => void;
   currency: Currency;
   onError: (event: ErrorPaymentEvent) => void;
   onPending?: (event: PendingPaymentEvent) => void;
@@ -65,7 +63,7 @@ const PaystreamPaymentResult = ({
   const wallet = useAnchorWallet();
   const helioProvider = useAnchorProvider();
   const connectionProvider = useConnection();
-  const { getPaymentDetails } = useHelioProvider();
+  const { getPaymentDetails, activeCurrency } = useHelioProvider();
   const { HelioSDK } = useCompositionRoot();
 
   const [loading, setLoading] = useState(true);
@@ -88,12 +86,12 @@ const PaystreamPaymentResult = ({
   const hasError = 'errorMessage' in result;
 
   const decimalAmount = HelioSDK.tokenConversionService.convertFromMinimalUnits(
-    paymentDetails?.currency?.symbol,
+    activeCurrency?.symbol ?? '',
     paymentDetails?.normalizedPrice
   );
 
   const cancelPayment = useCallback(async () => {
-    setShowLoadingModal(true);
+    setShowLoadingModal(LoadingModalStep.DEFAULT);
     if (helioProvider && wallet && connectionProvider && paymentId) {
       await HelioSDK.paystreamCancelService.handleTransaction({
         anchorProvider: helioProvider,
@@ -111,7 +109,6 @@ const PaystreamPaymentResult = ({
         onPending: (event: PendingPaymentEvent) => onPending?.(event),
         wallet,
         connection: connectionProvider.connection,
-        cluster: HelioSDK.configService.getCluster(),
       });
     }
   }, [
@@ -198,7 +195,7 @@ const PaystreamPaymentResult = ({
             <StyledPPResultAmount>
               Pay per {timeUnit}:{' '}
               <StyledPPResultPrice>
-                {decimalAmount} {paymentDetails.currency.symbol} / {timeUnit}
+                {decimalAmount} {activeCurrency?.symbol} / {timeUnit}
               </StyledPPResultPrice>
             </StyledPPResultAmount>
 

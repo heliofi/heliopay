@@ -1,11 +1,9 @@
-import { Cluster } from '@solana/web3.js';
-
 import { PaymentRequestType } from '@heliofi/common';
-import { ClusterType } from '../model';
+import { ClusterHelio, ClusterHelioType } from '../model';
 import { ASSET_URL } from '../constants';
 
 export class ConfigService {
-  private cluster?: Cluster;
+  private cluster?: ClusterHelioType;
 
   private customApiUrl?: string;
 
@@ -21,7 +19,7 @@ export class ConfigService {
     cluster,
     customApiUrl,
   }: {
-    cluster?: Cluster;
+    cluster?: ClusterHelioType;
     customApiUrl?: string;
   }) {
     this.cluster = cluster;
@@ -32,14 +30,22 @@ export class ConfigService {
     return ASSET_URL;
   }
 
-  getCluster(): Cluster {
+  getImageUrl(name: string): string {
+    switch (name) {
+      case 'MetaMask':
+      default:
+        return `${ASSET_URL}/MetaMask.png`;
+    }
+  }
+
+  getCluster(): ClusterHelioType {
     if (!this.cluster) {
       throw new Error('Please set cluster before getCluster');
     }
     return this.cluster;
   }
 
-  setCluster(cluster: Cluster) {
+  setCluster(cluster: ClusterHelioType) {
     this.cluster = cluster;
   }
 
@@ -55,10 +61,10 @@ export class ConfigService {
     }
 
     switch (this.cluster) {
-      case ClusterType.Testnet:
-      case ClusterType.Devnet:
+      case ClusterHelio.Testnet:
+      case ClusterHelio.Devnet:
         return ConfigService.DEV_HELIO_SERVICE_BASE_URL;
-      case ClusterType.Mainnet:
+      case ClusterHelio.Mainnet:
         return ConfigService.PROD_HELIO_SERVICE_BASE_URL;
       default:
         return ConfigService.PROD_HELIO_SERVICE_BASE_URL;
@@ -67,10 +73,10 @@ export class ConfigService {
 
   getHelioBaseUrl(): string {
     switch (this.cluster) {
-      case ClusterType.Testnet:
-      case ClusterType.Devnet:
+      case ClusterHelio.Testnet:
+      case ClusterHelio.Devnet:
         return ConfigService.DEV_HELIO_BASE_URL;
-      case ClusterType.Mainnet:
+      case ClusterHelio.Mainnet:
         return ConfigService.PROD_HELIO_BASE_URL;
       default:
         return ConfigService.PROD_HELIO_BASE_URL;
