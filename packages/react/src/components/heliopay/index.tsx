@@ -12,7 +12,7 @@ import { PaymentRequestType } from '@heliofi/common';
 import { deepMerge } from '../../utils';
 import { defaultTheme } from '../../theme';
 import { SolanaProvider } from '../../providers';
-import HelioPayContainer from '../heliopayContainer';
+import { HelioPayContainer } from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
 import { EVMProvider } from '../../providers/wagmi';

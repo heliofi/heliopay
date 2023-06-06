@@ -75,7 +75,7 @@ interface HeliopayContainerProps {
   additionalJSON?: {};
 }
 
-const HelioPayContainer: FC<HeliopayContainerProps> = ({
+export const HelioPayContainer: FC<HeliopayContainerProps> = ({
   onStartPayment,
   onSuccess,
   paymentRequestId,
@@ -131,6 +131,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     | null
   >(null);
   const [showFormModal, setShowFormModal] = useState(false);
+  const [showWalletConnector, setShowWalletConnector] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState<LoadingModalStep>(
     LoadingModalStep.CLOSE
   );
@@ -544,13 +545,17 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     isInterval,
   ]);
 
+  useEffect(() => {
+    setShowWalletConnector(true);
+  });
+
   return (
     <StyledWrapper>
       {!result ? (
         <>
           <StyledRow>
             <StyledLeft>
-              {walletConnected ? (
+              {showWalletConnector && walletConnected ? (
                 <div>
                   <ButtonWithTooltip
                     onClick={() => {
@@ -598,7 +603,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
           )}
           @todo-v fix this case
            */}
-          {walletConnected && (
+          {showWalletConnector && walletConnected && (
             <WalletController
               paymentRequestType={paymentRequestType}
               publicKey={
@@ -660,5 +665,3 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     </StyledWrapper>
   );
 };
-
-export default HelioPayContainer;
