@@ -25,7 +25,7 @@ interface Props {
     transaction?: string;
     errorMessage?: string;
     content?: string;
-    swapTransaction?: string;
+    swapTransactionSignature?: string;
   };
 }
 
@@ -60,11 +60,13 @@ const PaymentResult = ({ result, blockchain }: Props) => {
                   blockchain={blockchain}
                 />
               </StyledResultLink>
-              {result?.swapTransaction && (
+              {result?.swapTransactionSignature && (
                 <StyledSwapWrapper>
                   Swap transaction
                   <StyledResultLink>
-                    <ExplorerLink transaction={result?.transaction} />
+                    <ExplorerLink
+                      transaction={result?.swapTransactionSignature}
+                    />
                   </StyledResultLink>
                 </StyledSwapWrapper>
               )}
