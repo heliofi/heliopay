@@ -2994,20 +2994,6 @@
   resolved "https://registry.yarnpkg.com/@heliofi/helio-icons/-/helio-icons-1.0.5.tgz#c240bbc3482b76133ac79e8240dd5c6f71ee0c4b"
   integrity sha512-e5aztRvr62l8LEIGvUmZ5Nu5oKuvNcUE7PhDwN3LBLqeVU+NR7TtiIcaboiFPP2ZHhWGPkAoDbeMXWYxWPu4FA==
 
-"@heliofi/solana-adapter@^3.1.15-alpha.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@heliofi/solana-adapter/-/solana-adapter-3.3.0.tgz#d344753f8ce7b90bda65c930467152619c360bb2"
-  integrity sha512-RAAV+MSV9MNjH2gaJq7WPzkmtmWwrLyKDjKtRNsHfugzMh7fSrBkMqeOker8zvXhB6m62IwJwqbau97wddXZZA==
-  dependencies:
-    "@project-serum/anchor" "^0.25.0"
-    "@sideway/formula" "^3.0.1"
-    "@solana/spl-token" "^0.2.0"
-    "@solana/wallet-adapter-react" "^0.15.20"
-    "@solana/web3.js" "^1.66.2"
-    bs58 "^5.0.0"
-    jsonwebtoken "^9.0.0"
-    tweetnacl "^1.0.3"
-
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

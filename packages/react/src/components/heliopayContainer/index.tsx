@@ -437,7 +437,8 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
             areCurrenciesDefined: currencyList.length > 0,
             currency: activeCurrency?.symbol,
             canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
-            swapCurrency: 'SOL',
+            swapCurrency:
+              HelioSDK.defaultCurrencyService.getSolCurrencySymbol(),
             tokenSwapQuote: tokenSwapQuote ?? undefined,
           });
         setAvailableBalance(balance);

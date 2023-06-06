@@ -1,5 +1,9 @@
 import { FormikValues } from 'formik';
-import { StreamTimeService, CreatePaymentService } from '@heliofi/sdk';
+import {
+  StreamTimeService,
+  CreatePaymentService,
+  HelioSDK as HelioSDKType,
+} from '@heliofi/sdk';
 import {
   CustomerDetails,
   Paystream,
@@ -8,7 +12,6 @@ import {
   Currency,
   BlockchainSymbol,
 } from '@heliofi/common';
-import { HelioSDK as HelioSDKType } from '@heliofi/sdk/dist/src/app/HelioSDK';
 import {
   PaymentDetailsType,
   PaymentFeatures,

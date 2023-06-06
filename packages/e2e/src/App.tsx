@@ -29,7 +29,7 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
-        additionalJSON={{ key1: 'value1' }}
+        // additionalJSON={{ key1: 'value1' }}
         cluster={ClusterHelio.Devnet}
         // customApiUrl="https://dev.api.hel.io/v1"
         paymentRequestId={paymentId}
@@ -45,9 +45,9 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={undefined}
+        // supportedCurrencies={undefined}
         paymentType={PaymentRequestType.PAYLINK}
-        totalAmount={undefined}
+        // totalAmount={undefined}
       />
     </>
   );

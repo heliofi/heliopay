@@ -61,19 +61,17 @@ export const ConnectModal: FC<ConnectModalProps> = ({
   }, [blockchainEngine]);
 
   useEffect(() => {
-    switch (activeTab) {
-      case BlockchainEngineType.SOL:
-      case BlockchainEngineType.EVM:
-        setConnectTabs(
-          getConnectWalletTabs({
-            activeTab,
-            blockchainEngine,
-            inactiveIconType,
-          })
-        );
-        break;
-      default:
-        break;
+    if (
+      activeTab === BlockchainEngineType.SOL ||
+      activeTab === BlockchainEngineType.EVM
+    ) {
+      setConnectTabs(
+        getConnectWalletTabs({
+          activeTab,
+          blockchainEngine,
+          inactiveIconType,
+        })
+      );
     }
   }, [activeTab, blockchainEngine, inactiveIconType]);
 

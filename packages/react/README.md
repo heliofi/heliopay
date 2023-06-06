@@ -26,4 +26,3 @@ Full installation and setup details : https://github.com/heliofi/heliopay#readme
 - support ethereum and polygon for pay link
 - add additional information for customers
 - add custom api url
-
