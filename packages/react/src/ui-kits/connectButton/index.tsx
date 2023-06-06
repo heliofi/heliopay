@@ -57,7 +57,10 @@ export const ConnectButton: FC<ConnectButtonProps> = ({
   return (
     <StyledButton
       onClick={() => connectOrRedirect()}
-      disabled={connectingSOL || connectingEVM}
+      disabled={connectingSOL || connectingEVM || !paymentDetails?.id}
+      title={
+        !paymentDetails?.id ? 'Cannot find data, please check your id' : ''
+      }
     >
       {connectingSOL || connectingEVM ? (
         <ConnectButtonConnecting>

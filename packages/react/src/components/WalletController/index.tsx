@@ -43,7 +43,7 @@ const WalletController = ({
   const paymentDetails = getPaymentDetails();
   const blockchainEngine =
     paymentRequestType === PaymentRequestType.PAYLINK
-      ? paymentDetails?.currency.blockchain.engine.type
+      ? paymentDetails?.currency?.blockchain?.engine?.type
       : BlockchainEngineType.SOL;
 
   const items = [

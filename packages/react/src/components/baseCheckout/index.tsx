@@ -58,6 +58,7 @@ const BaseCheckout = ({
     removeTokenSwapError,
     paymentType,
     activeCurrency,
+    setTokenSwapQuote,
   } = useHelioProvider();
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
@@ -81,7 +82,7 @@ const BaseCheckout = ({
   const blockchain = paymentDetails?.currency?.blockchain?.symbol;
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
-    const amount = (decimalAmount || totalAmount) ?? 0;
+    const amount = (totalAmount || decimalAmount) ?? 0;
     return paymentType === PaymentRequestType.PAYLINK
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
@@ -137,7 +138,10 @@ const BaseCheckout = ({
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
           showSwap={canSwapTokens}
           isSwapShown={showSwapMenu}
-          toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
+          toggleSwap={() => {
+            setShowSwapMenu(!showSwapMenu);
+            setTokenSwapQuote(undefined);
+          }}
           onHide={onHide}
           showQRCode={showQRCode}
         />
@@ -212,6 +216,7 @@ const BaseCheckout = ({
                           paymentDetails,
                           blockchain,
                           canSwapTokens,
+                          tokenSwapQuote,
                         })
                       }
                       showTooltip={
@@ -223,6 +228,7 @@ const BaseCheckout = ({
                           paymentDetails,
                           blockchain,
                           canSwapTokens,
+                          tokenSwapQuote,
                         })
                       }
                       tooltipText="Not enough funds in your wallet"

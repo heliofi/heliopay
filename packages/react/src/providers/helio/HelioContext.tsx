@@ -34,8 +34,8 @@ export const HelioContext = createContext<{
   setTokenSwapLoading: (loading: boolean) => void;
   tokenSwapCurrencies: Currency[] | null;
   setTokenSwapCurrencies: (tokenSwapCurrencies: Currency[]) => void;
-  tokenSwapQuote: TokenSwapQuote | null;
-  setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote) => void;
+  tokenSwapQuote?: TokenSwapQuote;
+  setTokenSwapQuote: (tokenSwapQuote?: TokenSwapQuote) => void;
   tokenSwapError: string;
   setTokenSwapError: (error: string) => void;
   paymentType?: PaymentRequestType;
@@ -55,7 +55,7 @@ export const HelioContext = createContext<{
   setTokenSwapLoading: () => {},
   tokenSwapCurrencies: null,
   setTokenSwapCurrencies: () => {},
-  tokenSwapQuote: null,
+  tokenSwapQuote: undefined,
   setTokenSwapQuote: () => {},
   tokenSwapError: '',
   setTokenSwapError: () => {},
@@ -256,6 +256,7 @@ export const useHelioProvider = () => {
     tokenSwapCurrencies,
     getTokenSwapCurrencies,
     tokenSwapQuote,
+    setTokenSwapQuote,
     tokenSwapError,
     getTokenSwapQuote,
     removeTokenSwapError,
@@ -263,5 +264,3 @@ export const useHelioProvider = () => {
     setPaymentType,
   };
 };
-
-

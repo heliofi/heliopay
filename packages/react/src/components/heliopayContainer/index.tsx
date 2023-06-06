@@ -3,6 +3,7 @@ import {
   blockchainToNativeToken,
   ClusterHelio,
   ClusterHelioType,
+  CreatePaymentProps,
   CreatePaystreamResponse,
   ErrorPaymentEvent,
   LoadingModalStep,
@@ -10,6 +11,7 @@ import {
   PaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
+  CreatePaystreamProps,
 } from '@heliofi/sdk';
 import {
   AnchorWallet,
@@ -150,7 +152,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   const isPaystreamEVM =
     isConnectedEVM && paymentRequestType === PaymentRequestType.PAYSTREAM;
-  const getPaymentTooltip = () => {
+  const getPaymentTooltip = (): string => {
     switch (true) {
       case !paymentRequestId:
         return 'Please set payment request id';
@@ -162,7 +164,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       case isPaystreamEVM:
         return 'Pay Streams - available on Solana now. Coming to ETH soon.';
       case !isBalanceEnough:
-        return 'Not enough funds in your wallet';
+        return 'Not enough founds in your wallet';
       case isDynamic && supportedAllowedCurrencies.length === 0:
         return 'Please set allowed supported currencies';
       case isDynamic && !totalAmount:
@@ -271,7 +273,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
+      const payload: CreatePaymentProps = {
         anchorProvider: solProvider,
         recipientPK: recipient,
         symbol,
@@ -383,7 +385,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
+      const payload: CreatePaystreamProps = {
         anchorProvider: solProvider,
         recipientPK: recipient,
         symbol,
@@ -433,12 +435,11 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
             publicKey: walletSol?.publicKey,
             connection: connectionProvider?.connection,
             evmPublicKey,
-            blockchain: paymentDetails?.currency.blockchain.symbol,
+            blockchain: paymentDetails?.currency?.blockchain?.symbol,
             areCurrenciesDefined: currencyList.length > 0,
             currency: activeCurrency?.symbol,
             canSwapTokens: !!getPaymentFeatures()?.canSwapTokens,
-            swapCurrency:
-              HelioSDK.defaultCurrencyService.getSolCurrencySymbol(),
+            swapCurrency: tokenSwapQuote?.from?.symbol,
             tokenSwapQuote: tokenSwapQuote ?? undefined,
           });
         setAvailableBalance(balance);
@@ -475,6 +476,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     blockchain,
     getIsBalanceEnough,
     isDynamic,
+    tokenSwapQuote,
   ]);
 
   useEffect(() => {
@@ -523,7 +525,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
     setIsOnlyPay(
       !!(
         paymentDetails &&
-        !getPaymentFeatures().canSwapTokens &&
+        !getPaymentFeatures()?.canSwapTokens &&
         !isDynamic &&
         activeCurrency &&
         !isCustomerDetailsRequired &&
@@ -568,10 +570,6 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                         }
                       }
                     }}
-                    /* disabled={
-                      !paymentRequestId || !paymentDetails?.id || notEnoughFunds
-                    }
-                    showTooltip={notEnoughFunds} */
                     disabled={!!getPaymentTooltip()}
                     showTooltip={!!getPaymentTooltip()}
                     tooltipText={getPaymentTooltip()}

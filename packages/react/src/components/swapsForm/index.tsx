@@ -114,7 +114,7 @@ const SwapsForm = ({
 
     return currencyLabel;
   };
-
+  console.log(tokenSwapQuote);
   return (
     <StyledSwapsContainer>
       {tokenSwapLoading ? (

@@ -3,6 +3,7 @@ import {
   StreamTimeService,
   CreatePaymentService,
   HelioSDK as HelioSDKType,
+  TokenSwapQuote,
 } from '@heliofi/sdk';
 import {
   CustomerDetails,
@@ -143,6 +144,7 @@ export const getIsBalanceEnough = ({
   paymentDetails,
   blockchain,
   canSwapTokens,
+  tokenSwapQuote,
 }: {
   HelioSDK: HelioSDKType;
   customPrice?: number;
@@ -151,6 +153,7 @@ export const getIsBalanceEnough = ({
   paymentDetails?: PaymentDetailsType;
   blockchain?: BlockchainSymbol;
   canSwapTokens?: boolean;
+  tokenSwapQuote?: TokenSwapQuote;
 }): boolean => {
   if (!activeCurrency?.symbol || !paymentDetails?.normalizedPrice) {
     return true;
@@ -165,8 +168,6 @@ export const getIsBalanceEnough = ({
         paymentDetails.normalizedPrice,
         blockchain
       ),
-    isTokenSwapped: !!(
-      canSwapTokens && HelioSDK.defaultCurrencyService.getSolCurrencySymbol()
-    ),
+    isTokenSwapped: !!(canSwapTokens && tokenSwapQuote?.from?.symbol),
   });
 };
