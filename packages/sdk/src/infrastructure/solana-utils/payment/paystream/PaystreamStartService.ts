@@ -25,7 +25,7 @@ import { BaseTransactionPayload } from '../models/TransactionPayload';
 import { ExecuteTransactionPayload, SignedTxAndToken } from '../../types';
 import { signSwapTransactions, signTransaction } from '../../SignTransaction';
 
-interface CreatePaystreamProps
+export interface CreatePaystreamProps
   extends BasePaymentProps<CreatePaystreamResponse> {
   interval: number;
   maxTime: number;

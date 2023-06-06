@@ -15,6 +15,7 @@ import { SolanaProvider } from '../../providers';
 import HelioPayContainer from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
+import { UserSetPropertiesProvider } from '../../providers/userSetProperties/UserSetPropertiesContext';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -31,6 +32,7 @@ interface HelioPayProps {
   searchCustomerDetails?: CheckoutSearchParamsValues;
   additionalJSON?: {};
   customApiUrl?: string;
+  debugMode?: boolean;
 }
 
 export const HelioPay = ({
@@ -48,6 +50,7 @@ export const HelioPay = ({
   searchCustomerDetails,
   additionalJSON,
   customApiUrl,
+  debugMode = false,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -71,20 +74,22 @@ export const HelioPay = ({
   return (
     <ThemeProvider theme={currentTheme}>
       <SolanaProvider cluster={cluster}>
-        <HelioPayContainer
-          paymentRequestId={paymentRequestId}
-          onStartPayment={onStartPayment}
-          onSuccess={onSuccess}
-          onError={onError}
-          onPending={onPending}
-          cluster={cluster}
-          payButtonTitle={payButtonTitle}
-          supportedCurrencies={supportedCurrencies}
-          totalAmount={totalAmount}
-          paymentType={paymentType}
-          searchCustomerDetails={searchCustomerDetails}
-          additionalJSON={additionalJSON}
-        />
+        <UserSetPropertiesProvider debugMode={debugMode}>
+          <HelioPayContainer
+            paymentRequestId={paymentRequestId}
+            onStartPayment={onStartPayment}
+            onSuccess={onSuccess}
+            onError={onError}
+            onPending={onPending}
+            cluster={cluster}
+            payButtonTitle={payButtonTitle}
+            supportedCurrencies={supportedCurrencies}
+            totalAmount={totalAmount}
+            paymentType={paymentType}
+            searchCustomerDetails={searchCustomerDetails}
+            additionalJSON={additionalJSON}
+          />
+        </UserSetPropertiesProvider>
         <Toaster />
       </SolanaProvider>
     </ThemeProvider>

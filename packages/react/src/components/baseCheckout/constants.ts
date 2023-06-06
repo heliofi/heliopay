@@ -4,6 +4,8 @@ import { Currency, PaymentRequestType } from '@heliofi/common';
 
 import { SubmitPaymentsTypesProps } from '../heliopayContainer/constants';
 
+export const NOT_ENOUGH_FUNDS_TOOLTIP = 'Not enough funds in your wallet';
+
 export type InheritedOnSubmit = (
   data: SubmitPaymentsTypesProps
 ) => Promise<void>;

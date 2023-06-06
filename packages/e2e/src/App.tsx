@@ -13,7 +13,7 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '6438011a8fdd74a899bd0f51'
+    '641ad861c1d104c62898362d'
   );
 
   return (
@@ -24,8 +24,9 @@ const App = () => {
         onChange={(e) => setPaymentId(e.target.value)}
       />
       <HelioPay
+        debugMode={true}
         additionalJSON={{ key1: 'value1' }}
-        cluster="devnet"
+        cluster="mainnet-beta"
         // customApiUrl="https://dev.api.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
@@ -40,7 +41,7 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={['USDC', 'SOL']}
+        supportedCurrencies={['USDC']}
         // paymentType={PaymentRequestType.PAYSTREAM}
         // totalAmount={0.01} // @TODO bug when also has normalizedPrice
       />

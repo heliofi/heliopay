@@ -74,6 +74,7 @@ export const handleSubmit =
     paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
+    
     const details = {
       fullName: values.fullName,
       email: values.email,
