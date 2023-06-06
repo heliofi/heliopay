@@ -2,9 +2,11 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   ClusterType,
   CreatePaystreamResponse,
+  CreatePaystreamProps,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
+  CreatePaymentProps,
 } from '@heliofi/sdk';
 import {
   AnchorWallet,
@@ -46,6 +48,7 @@ import {
   CheckoutSearchParamsValues,
 } from '../../domain/services/CheckoutSearchParams';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { NOT_ENOUGH_FUNDS_TOOLTIP } from '../baseCheckout/constants';
 
 interface HeliopayContainerProps {
   paymentRequestId: string;
@@ -183,7 +186,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
+      const payload: CreatePaymentProps = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
         symbol,
@@ -233,7 +236,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
       const recipient = String(paymentDetails?.wallet?.publicKey);
       const { symbol } = getCurrency(currency.symbol);
 
-      const payload = {
+      const payload: CreatePaystreamProps = {
         anchorProvider: helioProvider,
         recipientPK: recipient,
         symbol,
@@ -339,7 +342,7 @@ const HelioPayContainer: FC<HeliopayContainerProps> = ({
                       !paymentRequestId || !paymentDetails?.id || notEnoughFunds
                     }
                     showTooltip={notEnoughFunds}
-                    tooltipText="Not enough funds in your wallet"
+                    tooltipText={NOT_ENOUGH_FUNDS_TOOLTIP}
                   >
                     {payButtonTitle}
                   </ButtonWithTooltip>

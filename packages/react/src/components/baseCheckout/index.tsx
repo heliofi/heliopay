@@ -21,7 +21,7 @@ import SwapsForm from '../swapsForm';
 import CustomerInfo from '../customerInfo';
 import { CheckoutHeader } from '../checkoutHeader';
 import validationSchema from './validation-schema';
-import { InheritedBaseCheckoutProps } from './constants';
+import { InheritedBaseCheckoutProps, NOT_ENOUGH_FUNDS_TOOLTIP } from './constants';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { useHelioProvider } from '../../providers/helio/HelioContext';
 
@@ -35,6 +35,7 @@ import {
 } from './styles';
 import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { useUserSetProperties } from '../../providers/userSetProperties/UserSetPropertiesContext';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -56,7 +57,10 @@ const BaseCheckout = ({
     tokenSwapError,
     removeTokenSwapError,
     paymentType,
+    setTokenSwapQuote
   } = useHelioProvider();
+
+  const { debugMode } = useUserSetProperties();
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
 
@@ -67,21 +71,38 @@ const BaseCheckout = ({
 
   const canSelectCurrency = allowedCurrencies.length > 1;
 
+  const isSwapValid = showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError;
+
   const payButtonText =
-    showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError
+    isSwapValid
       ? `PAY IN ${tokenSwapQuote.from.symbol}`
       : 'PAY';
-  const payButtonDisable =
-    (showSwapMenu && !!tokenSwapError) || tokenSwapLoading;
 
   const paymentDetails = getPaymentDetails();
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
-    const amount = (decimalAmount || totalAmount) ?? 0;
+    console.log(totalAmount, decimalAmount);
+
+
+    const amount = (totalAmount || decimalAmount) ?? 0;
     return paymentType === PaymentRequestType.PAYLINK
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
   };
+
+  const getSwapOrStandardPrice = (formValues: FormikValues) : number => {
+
+    return (isSwapValid ? HelioSDK.tokenConversionService.convertFromMinimalUnits(
+      tokenSwapQuote.from.symbol,
+      BigInt(tokenSwapQuote.inAmount)
+    ) : formValues.customPrice)
+  }
+
+  const getSwapOrStandardCurrency = (formValues: FormikValues) : string => {
+
+    return (isSwapValid ? tokenSwapQuote.from.symbol : formValues.currency)
+  }
+
   const searchParams =
     CheckoutSearchParamsManager.getFilteredCheckoutSearchParams(
       getPaymentFeatures(),
@@ -120,6 +141,29 @@ const BaseCheckout = ({
       quantity,
       interval,
     });
+
+  const isPayButtonDisabled = (values: FormikValues) =>
+  (showSwapMenu && !!tokenSwapError) || tokenSwapLoading || !isBalanceEnough(
+    getSwapOrStandardPrice(values),
+    values.quantity,
+    getSwapOrStandardCurrency(values),
+    values.interval
+  );
+
+  const getPayButtonTooltip = (values: FormikValues) => {
+    const isDisabled = isPayButtonDisabled(values);
+    const swapOrStandardPrice = getSwapOrStandardPrice(values);
+    const swapOrStandardCurrency = getSwapOrStandardCurrency(values);
+  
+    const tooltipText = debugMode 
+    ? isDisabled 
+        ? `${NOT_ENOUGH_FUNDS_TOOLTIP} (${swapOrStandardPrice} ${swapOrStandardCurrency})` 
+        : `(${swapOrStandardPrice} ${swapOrStandardCurrency})`
+    : NOT_ENOUGH_FUNDS_TOOLTIP;
+
+    return tooltipText;
+  }
+
 
   useEffect(() => {
     if (allowedCurrencies.length === 1) {
@@ -163,7 +207,15 @@ const BaseCheckout = ({
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
           showSwap={!!getPaymentFeatures().canSwapTokens}
           isSwapShown={showSwapMenu}
-          toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
+          toggleSwap={() => {
+            if (showSwapMenu) {
+              setTokenSwapQuote(null);
+              setShowSwapMenu(false);
+            } else {
+              setShowSwapMenu(true);
+            }
+
+          }}
           onHide={onHide}
           showQRCode={showQRCode}
         />
@@ -233,24 +285,17 @@ const BaseCheckout = ({
 
                     <ButtonWithTooltip
                       type="submit"
-                      disabled={
-                        payButtonDisable ||
-                        !isBalanceEnough(
-                          values.customPrice,
-                          values.quantity,
-                          values.currency,
-                          values.interval
-                        )
-                      }
+                      disabled={isPayButtonDisabled(values)}
                       showTooltip={
+                        debugMode ||
                         !isBalanceEnough(
-                          values.customPrice,
+                          getSwapOrStandardPrice(values),
                           values.quantity,
-                          values.currency,
+                          getSwapOrStandardCurrency(values),
                           values.interval
                         )
                       }
-                      tooltipText="Not enough funds in your wallet"
+                      tooltipText={getPayButtonTooltip(values)}
                     >
                       {payButtonText}
                     </ButtonWithTooltip>

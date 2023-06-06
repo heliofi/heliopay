@@ -33,7 +33,7 @@ export const HelioContext = createContext<{
   tokenSwapCurrencies: Currency[] | null;
   setTokenSwapCurrencies: (tokenSwapCurrencies: Currency[]) => void;
   tokenSwapQuote: TokenSwapQuote | null;
-  setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote) => void;
+  setTokenSwapQuote: (tokenSwapQuote: TokenSwapQuote | null) => void;
   tokenSwapError: string;
   setTokenSwapError: (error: string) => void;
   paymentType?: PaymentRequestType;
@@ -144,7 +144,7 @@ export const useHelioProvider = () => {
         validatedMintAddress
       );
 
-      const currencies = mintAddresses.map((address) =>
+      const currencies: Currency[] = mintAddresses.map((address) =>
         HelioSDK.currencyService.getCurrencyByMint(address)
       );
 
@@ -160,7 +160,7 @@ export const useHelioProvider = () => {
         currencies.push(bonkCurrency);
       }
 
-      setTokenSwapCurrencies(currencies as unknown as Currency[]);
+      setTokenSwapCurrencies(currencies);
     }
     setTokenSwapLoading(false);
   };
@@ -242,6 +242,7 @@ export const useHelioProvider = () => {
     getTokenSwapCurrencies,
     tokenSwapQuote,
     tokenSwapError,
+    setTokenSwapQuote,
     getTokenSwapQuote,
     removeTokenSwapError,
     paymentType,
