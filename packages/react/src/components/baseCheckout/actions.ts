@@ -74,7 +74,7 @@ export const handleSubmit =
     paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
-    console.log(totalDecimalAmount, currencyList);
+    
     const details = {
       fullName: values.fullName,
       email: values.email,

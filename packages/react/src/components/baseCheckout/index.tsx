@@ -81,8 +81,6 @@ const BaseCheckout = ({
   const paymentDetails = getPaymentDetails();
 
   const getSwapsFormPrice = (formValues: FormikValues) => {
-    console.log(totalAmount, decimalAmount);
-
 
     const amount = (totalAmount || decimalAmount) ?? 0;
     return paymentType === PaymentRequestType.PAYLINK
