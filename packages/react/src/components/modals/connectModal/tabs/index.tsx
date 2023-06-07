@@ -21,7 +21,7 @@ export const getConnectWalletTabs = ({
       title: 'Solana',
       icon:
         inactiveIconType === ConnectWalletDefaultIconType.WITH_COLOR
-          ? ' SOLWhite'
+          ? 'SOLWhite'
           : 'SOL',
       activeIcon:
         inactiveIconType === ConnectWalletDefaultIconType.WITH_COLOR

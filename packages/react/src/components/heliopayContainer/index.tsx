@@ -547,7 +547,7 @@ export const HelioPayContainer: FC<HeliopayContainerProps> = ({
 
   useEffect(() => {
     setShowWalletConnector(true);
-  });
+  }, []);
 
   return (
     <StyledWrapper>
