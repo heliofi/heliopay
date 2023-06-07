@@ -17,9 +17,8 @@ export const HelioProvider: FC<{
   const [tokenSwapCurrencies, setTokenSwapCurrencies] = useState<
     Currency[] | null
   >(null);
-  const [tokenSwapQuote, setTokenSwapQuote] = useState<TokenSwapQuote | null>(
-    null
-  );
+  const [tokenSwapQuote, setTokenSwapQuote] =
+    useState<TokenSwapQuote | undefined>(undefined);
   const [tokenSwapError, setTokenSwapError] = useState('');
   const [paymentType, setPaymentType] = useState<PaymentRequestType>();
 
