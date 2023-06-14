@@ -1,5 +1,5 @@
 export default {
-  version: '0.1.0',
+  version: '0.2.0',
   name: 'solana_nft',
   instructions: [
     {
@@ -26,6 +26,11 @@ export default {
           isSigner: false,
         },
         {
+          name: 'nftMetadataAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: 'escrowPda',
           isMut: false,
           isSigner: false,
@@ -41,11 +46,6 @@ export default {
           isSigner: false,
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -56,7 +56,42 @@ export default {
           isSigner: false,
         },
         {
+          name: 'sysvarInstructions',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMasterEdition',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'ownerTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'destinationTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'authRulesProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'authRules',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'metaplexMetadataProgram',
           isMut: false,
           isSigner: false,
         },
@@ -80,12 +115,12 @@ export default {
       name: 'cancelEscrow',
       accounts: [
         {
-          name: 'owner',
+          name: 'sender',
           isMut: true,
           isSigner: true,
         },
         {
-          name: 'ownerNftAccount',
+          name: 'senderNftAccount',
           isMut: true,
           isSigner: false,
         },
@@ -100,17 +135,17 @@ export default {
           isSigner: false,
         },
         {
+          name: 'nftMetadataAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: 'escrowPda',
           isMut: false,
           isSigner: false,
         },
         {
           name: 'mint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
           isMut: false,
           isSigner: false,
         },
@@ -125,7 +160,42 @@ export default {
           isSigner: false,
         },
         {
+          name: 'sysvarInstructions',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMasterEdition',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'ownerTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'destinationTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'authRulesProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'authRules',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'metaplexMetadataProgram',
           isMut: false,
           isSigner: false,
         },
@@ -171,6 +241,16 @@ export default {
           isSigner: false,
         },
         {
+          name: 'escrowPda',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMetadataAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: 'helioFeeTokenAccount',
           isMut: true,
           isSigner: false,
@@ -178,11 +258,6 @@ export default {
         {
           name: 'daoFeeTokenAccount',
           isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'escrowPda',
-          isMut: false,
           isSigner: false,
         },
         {
@@ -206,11 +281,6 @@ export default {
           isSigner: false,
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -221,7 +291,42 @@ export default {
           isSigner: false,
         },
         {
+          name: 'sysvarInstructions',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMasterEdition',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'ownerTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'destinationTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'authRulesProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'authRules',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'metaplexMetadataProgram',
           isMut: false,
           isSigner: false,
         },
@@ -247,12 +352,7 @@ export default {
           isSigner: false,
         },
         {
-          name: 'helioFeeAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'daoFeeAccount',
+          name: 'escrowAccount',
           isMut: true,
           isSigner: false,
         },
@@ -262,12 +362,22 @@ export default {
           isSigner: false,
         },
         {
-          name: 'escrowAccount',
+          name: 'escrowPda',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMetadataAccount',
           isMut: true,
           isSigner: false,
         },
         {
-          name: 'escrowPda',
+          name: 'helioFeeAccount',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'daoFeeAccount',
           isMut: false,
           isSigner: false,
         },
@@ -277,7 +387,7 @@ export default {
           isSigner: false,
         },
         {
-          name: 'rent',
+          name: 'currency',
           isMut: false,
           isSigner: false,
         },
@@ -292,7 +402,42 @@ export default {
           isSigner: false,
         },
         {
+          name: 'sysvarInstructions',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'nftMasterEdition',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'ownerTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'destinationTokenRecord',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'authRulesProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'authRules',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'metaplexMetadataProgram',
           isMut: false,
           isSigner: false,
         },
@@ -319,6 +464,10 @@ export default {
             type: 'publicKey',
           },
           {
+            name: 'creator',
+            type: 'publicKey',
+          },
+          {
             name: 'amount',
             type: 'u64',
           },
@@ -335,7 +484,15 @@ export default {
             type: 'u64',
           },
           {
+            name: 'royaltyFee',
+            type: 'u64',
+          },
+          {
             name: 'bump',
+            type: 'u8',
+          },
+          {
+            name: 'nrCreators',
             type: 'u8',
           },
         ],
@@ -372,6 +529,21 @@ export default {
       code: 6005,
       name: 'InvalidFeeAccount',
       msg: 'Invalid fee account address.',
+    },
+    {
+      code: 6006,
+      name: 'InvalidTokenStandard',
+      msg: 'Token standard not support in escrow.',
+    },
+    {
+      code: 6007,
+      name: 'InstructionBuildFailed',
+      msg: 'Instruction build failed.',
+    },
+    {
+      code: 6008,
+      name: 'InvalidAuthRules',
+      msg: 'Invalida auth rules.',
     },
   ],
   metadata: {
