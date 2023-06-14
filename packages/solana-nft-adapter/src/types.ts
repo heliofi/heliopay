@@ -4,8 +4,10 @@ export type SinglePaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   escrowAccount: PublicKey;
-  nftMint: PublicKey;
+  mint: PublicKey;
   currency: PublicKey;
+  metadataAccount: PublicKey;
+  authRules?: PublicKey;
 };
 
 export type EscrowNftRequest = {
