@@ -1,7 +1,7 @@
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Cluster } from '@solana/web3.js';
 import {
+  ClusterHelioType,
   ErrorPaymentEvent,
   PendingPaymentEvent,
   SuccessPaymentEvent,
@@ -12,9 +12,11 @@ import { PaymentRequestType } from '@heliofi/common';
 import { deepMerge } from '../../utils';
 import { defaultTheme } from '../../theme';
 import { SolanaProvider } from '../../providers';
-import HelioPayContainer from '../heliopayContainer';
+import { HelioPayContainer } from '../heliopayContainer';
 import { useCompositionRoot } from '../../hooks/compositionRoot';
 import { CheckoutSearchParamsValues } from '../../domain/services/CheckoutSearchParams';
+import { EVMProvider } from '../../providers/wagmi';
+import ConnectProvider from '../../providers/connect';
 
 interface HelioPayProps {
   paymentRequestId: string;
@@ -23,12 +25,14 @@ interface HelioPayProps {
   onPending?: (event: PendingPaymentEvent) => void;
   onStartPayment?: () => void;
   theme?: DefaultTheme;
-  cluster: Cluster;
+  cluster: ClusterHelioType;
   payButtonTitle?: string;
   supportedCurrencies?: string[];
   totalAmount?: number;
   paymentType?: PaymentRequestType;
   searchCustomerDetails?: CheckoutSearchParamsValues;
+  additionalJSON?: {};
+  customApiUrl?: string;
 }
 
 export const HelioPay = ({
@@ -44,14 +48,22 @@ export const HelioPay = ({
   totalAmount,
   paymentType = PaymentRequestType.PAYLINK,
   searchCustomerDetails,
+  additionalJSON,
+  customApiUrl,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as Cluster);
+    HelioSDK.setCluster(cluster);
   }, [cluster]);
+
+  useMemo(() => {
+    if (customApiUrl) {
+      HelioSDK.setCustomApiUrl(customApiUrl);
+    }
+  }, [customApiUrl]);
 
   useEffect(() => {
     const mergedTheme = deepMerge(defaultTheme, theme || {});
@@ -60,22 +72,27 @@ export const HelioPay = ({
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <SolanaProvider cluster={cluster}>
-        <HelioPayContainer
-          paymentRequestId={paymentRequestId}
-          onStartPayment={onStartPayment}
-          onSuccess={onSuccess}
-          onError={onError}
-          onPending={onPending}
-          cluster={cluster}
-          payButtonTitle={payButtonTitle}
-          supportedCurrencies={supportedCurrencies}
-          totalAmount={totalAmount}
-          paymentType={paymentType}
-          searchCustomerDetails={searchCustomerDetails}
-        />
-        <Toaster />
-      </SolanaProvider>
+      <EVMProvider>
+        <SolanaProvider cluster={cluster}>
+          <ConnectProvider>
+            <HelioPayContainer
+              paymentRequestId={paymentRequestId}
+              onStartPayment={onStartPayment}
+              onSuccess={onSuccess}
+              onError={onError}
+              onPending={onPending}
+              cluster={cluster}
+              payButtonTitle={payButtonTitle}
+              supportedCurrencies={supportedCurrencies}
+              totalAmount={totalAmount}
+              paymentType={paymentType}
+              searchCustomerDetails={searchCustomerDetails}
+              additionalJSON={additionalJSON}
+            />
+            <Toaster />
+          </ConnectProvider>
+        </SolanaProvider>
+      </EVMProvider>
     </ThemeProvider>
   );
 };

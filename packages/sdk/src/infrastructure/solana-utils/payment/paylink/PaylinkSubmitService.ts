@@ -1,6 +1,6 @@
 import { CustomerDetails, SplitWallet } from '@heliofi/common';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { Cluster, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { Connection, PublicKey, VersionedTransaction } from '@solana/web3.js';
 import 'reflect-metadata';
 import { SinglePaymentRequest } from '@heliofi/solana-adapter';
 
@@ -186,7 +186,6 @@ export class PaylinkSubmitService extends BasePaymentService<
       splitRevenue,
       splitWallets,
       currency: symbol,
-      cluster: this.cluster as Cluster,
       customerDetails,
       quantity: quantity || 1,
       rateToken,
@@ -224,20 +223,22 @@ export class PaylinkSubmitService extends BasePaymentService<
       );
 
     const swapTransaction = prepareSwapTransactionResponse?.swapTransaction;
-
     const standardTx = createTransaction(
       prepareSwapTransactionResponse?.standardTransaction
     );
 
-    const swapTx = Transaction.from(Buffer.from(swapTransaction, 'base64'));
-
+    const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
+    const swapTx = VersionedTransaction.deserialize(swapTransactionBuf) as any;
     const [swapSignedTx, signedTx] = await wallet.signAllTransactions([
       swapTx,
       standardTx,
     ]);
+    const serializedSwapTx = Buffer.from(swapSignedTx.serialize()).toString(
+      'base64'
+    );
 
     return {
-      swapSignedTx: JSON.stringify(swapSignedTx.serialize()),
+      swapSignedTx: serializedSwapTx,
       signedTx: JSON.stringify(signedTx.serialize()),
       token:
         prepareSwapTransactionResponse?.standardTransaction.transactionToken,

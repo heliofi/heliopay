@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, Formik, FormikValues } from 'formik';
-import { Currency, LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
+import { LinkFeaturesDto, PaymentRequestType } from '@heliofi/common';
 
 import {
   formatTotalPrice,
-  getCurrency,
   getInitialValues,
+  getIsBalanceEnough,
   handleSubmit,
 } from './actions';
 import {
@@ -30,11 +30,13 @@ import { PaystreamPricingProps } from '../payStream/paystreamPricing';
 
 import {
   StyledBaseCheckoutBody,
+  StyledBaseCheckoutBodyFooter,
   StyledBaseCheckoutContainer,
   StyledBaseCheckoutWrapper,
 } from './styles';
 import { CheckoutSearchParamsManager } from '../../domain/services/CheckoutSearchParamsManager';
 import { useCheckoutSearchParamsProvider } from '../../providers/checkoutSearchParams/CheckoutSearchParamsContext';
+import { NetworkIndicator } from '../../ui-kits/networkIndicator';
 
 type BaseCheckoutProps = InheritedBaseCheckoutProps & {
   PricingComponent: FC<PaylinkPricingProps & PaystreamPricingProps>;
@@ -43,12 +45,11 @@ type BaseCheckoutProps = InheritedBaseCheckoutProps & {
 const BaseCheckout = ({
   onHide,
   onSubmit,
-  allowedCurrencies,
+  supportedAllowedCurrencies,
   totalAmount,
   PricingComponent,
 }: BaseCheckoutProps) => {
   const {
-    currencyList,
     getPaymentFeatures,
     getPaymentDetails,
     tokenSwapLoading,
@@ -56,16 +57,18 @@ const BaseCheckout = ({
     tokenSwapError,
     removeTokenSwapError,
     paymentType,
+    activeCurrency,
+    setTokenSwapQuote,
   } = useHelioProvider();
   const { customerDetails } = useCheckoutSearchParamsProvider();
   const { HelioSDK } = useCompositionRoot();
 
   const [decimalAmount, setDecimalAmount] = useState<number>(0);
-  const [activeCurrency, setActiveCurrency] = useState<Currency | null>(null);
   const [showSwapMenu, setShowSwapMenu] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
 
-  const canSelectCurrency = allowedCurrencies.length > 1;
+  const canSelectCurrency = supportedAllowedCurrencies.length > 1;
+  const canSwapTokens = !!getPaymentFeatures().canSwapTokens;
 
   const payButtonText =
     showSwapMenu && tokenSwapQuote?.from?.symbol && !tokenSwapError
@@ -76,8 +79,10 @@ const BaseCheckout = ({
 
   const paymentDetails = getPaymentDetails();
 
+  const blockchain = paymentDetails?.currency?.blockchain?.symbol;
+
   const getSwapsFormPrice = (formValues: FormikValues) => {
-    const amount = (decimalAmount || totalAmount) ?? 0;
+    const amount = (totalAmount || decimalAmount) ?? 0;
     return paymentType === PaymentRequestType.PAYLINK
       ? amount * (formValues.quantity ?? 1)
       : amount * (formValues.interval ?? 1);
@@ -92,57 +97,28 @@ const BaseCheckout = ({
     totalAmount || decimalAmount,
     canSelectCurrency,
     getPaymentDetails,
-    paymentDetails?.dynamic
-      ? allowedCurrencies?.[0].symbol
-      : paymentDetails?.currency?.symbol,
+    activeCurrency?.symbol,
     getPaymentFeatures(),
     getPaymentFeatures<LinkFeaturesDto>().canChangeQuantity,
     getPaymentFeatures<LinkFeaturesDto>().canChangePrice,
     searchParams
   );
 
-  const isBalanceEnough = (
-    customPrice?: number,
-    quantity?: number,
-    currency?: string,
-    interval?: number
-  ) =>
-    HelioSDK.availableBalanceService.isBalanceEnough({
-      currency: currency || paymentDetails?.currency.symbol,
-      decimalAmount:
-        customPrice ||
-        HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency.symbol,
-          paymentDetails?.normalizedPrice
-        ),
-      tokenSwapQuote,
-      quantity,
-      interval,
-    });
-
-  useEffect(() => {
-    if (allowedCurrencies.length === 1) {
-      setActiveCurrency(allowedCurrencies[0]);
-    } else if (!canSelectCurrency) {
-      setActiveCurrency(
-        getCurrency(currencyList, paymentDetails?.currency?.symbol)
-      );
-    }
-  }, [paymentDetails?.currency, canSelectCurrency]);
-
   useEffect(() => {
     if (
+      activeCurrency &&
       paymentDetails?.currency != null &&
       paymentDetails?.normalizedPrice != null
     ) {
       setDecimalAmount(
         HelioSDK.tokenConversionService.convertFromMinimalUnits(
-          paymentDetails?.currency?.symbol,
-          paymentDetails?.normalizedPrice
+          activeCurrency.symbol,
+          paymentDetails?.normalizedPrice,
+          paymentDetails?.currency?.blockchain?.symbol
         )
       );
     }
-  }, [paymentDetails?.currency, paymentDetails?.normalizedPrice]);
+  }, [activeCurrency, paymentDetails]);
 
   useEffect(() => {
     if (!showSwapMenu) {
@@ -160,9 +136,12 @@ const BaseCheckout = ({
             )
           }
           title={activeCurrency ? `Pay with ${activeCurrency?.symbol}` : 'Pay'}
-          showSwap={!!getPaymentFeatures().canSwapTokens}
+          showSwap={canSwapTokens}
           isSwapShown={showSwapMenu}
-          toggleSwap={() => setShowSwapMenu(!showSwapMenu)}
+          toggleSwap={() => {
+            setShowSwapMenu(!showSwapMenu);
+            setTokenSwapQuote(undefined);
+          }}
           onHide={onHide}
           showQRCode={showQRCode}
         />
@@ -191,7 +170,7 @@ const BaseCheckout = ({
             </div>
           )}
           {!showQRCode &&
-            (paymentDetails && paymentType ? (
+            (paymentDetails && paymentType && activeCurrency ? (
               <Formik
                 enableReinitialize
                 initialValues={initialValues}
@@ -200,7 +179,7 @@ const BaseCheckout = ({
                   HelioSDK,
                   totalDecimalAmount: totalAmount || decimalAmount,
                   onSubmit,
-                  currencyList,
+                  currency: activeCurrency,
                   paymentType,
                 })}
                 validationSchema={validationSchema}
@@ -210,13 +189,10 @@ const BaseCheckout = ({
                     <PricingComponent
                       formValues={values}
                       setFieldValue={setFieldValue}
-                      activeCurrency={activeCurrency}
                       totalDecimalAmount={totalAmount || decimalAmount}
                       canSelectCurrency={canSelectCurrency}
-                      allowedCurrencies={allowedCurrencies}
-                      setActiveCurrency={setActiveCurrency}
+                      supportedAllowedCurrencies={supportedAllowedCurrencies}
                     />
-
                     {showSwapMenu && (
                       <SwapsForm
                         formValues={values}
@@ -224,30 +200,36 @@ const BaseCheckout = ({
                         totalDecimalAmount={getSwapsFormPrice(values)}
                       />
                     )}
-
                     <CustomerInfo
                       formValues={values}
                       setFieldValue={setFieldValue}
                     />
-
                     <ButtonWithTooltip
                       type="submit"
                       disabled={
                         payButtonDisable ||
-                        !isBalanceEnough(
-                          values.customPrice,
-                          values.quantity,
-                          values.currency,
-                          values.interval
-                        )
+                        !getIsBalanceEnough({
+                          HelioSDK,
+                          customPrice: values.customPrice,
+                          quantity: values.quantity,
+                          activeCurrency,
+                          paymentDetails,
+                          blockchain,
+                          canSwapTokens,
+                          tokenSwapQuote,
+                        })
                       }
                       showTooltip={
-                        !isBalanceEnough(
-                          values.customPrice,
-                          values.quantity,
-                          values.currency,
-                          values.interval
-                        )
+                        !getIsBalanceEnough({
+                          HelioSDK,
+                          customPrice: values.customPrice,
+                          quantity: values.quantity,
+                          activeCurrency,
+                          paymentDetails,
+                          blockchain,
+                          canSwapTokens,
+                          tokenSwapQuote,
+                        })
                       }
                       tooltipText="Not enough funds in your wallet"
                     >
@@ -260,7 +242,10 @@ const BaseCheckout = ({
               <h2>Failed to load payment details.</h2>
             ))}
 
-          <QRButton showQRCode={showQRCode} setShowQRCode={setShowQRCode} />
+          <StyledBaseCheckoutBodyFooter>
+            {blockchain && <NetworkIndicator blockchain={blockchain} />}
+            <QRButton showQRCode={showQRCode} setShowQRCode={setShowQRCode} />
+          </StyledBaseCheckoutBodyFooter>
         </StyledBaseCheckoutBody>
       </StyledBaseCheckoutContainer>
     </StyledBaseCheckoutWrapper>,

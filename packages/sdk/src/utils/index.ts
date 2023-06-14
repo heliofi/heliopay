@@ -23,3 +23,10 @@ export const fromBigintDivisionToNumber = (
 ): number =>
   Number((dividend * BigInt(divisionNormalizer)) / divider) /
   divisionNormalizer;
+
+export const delay = (millis: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, millis);
+  });

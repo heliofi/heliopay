@@ -16,17 +16,22 @@ export const getSplitPaymentTx = async (
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
   const contract = new Contract(contractAddress, helio.abi, provider);
+
+  const BNRecipientsAndAmounts = recipientsAndAmounts.map((r) => ({
+    recipient: r.recipient,
+    amount: BigNumber.from(r.amount),
+  }));
+
   const unsignedTx = await contract.populateTransaction.splitPayment(
     req.recipientAddress,
     req.tokenAddres,
     BigNumber.from(req.amount),
     BigNumber.from(req.fee),
-    recipientsAndAmounts,
+    BNRecipientsAndAmounts,
     req.transactonDbId,
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),
-      nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
   unsignedTx.chainId = chainId;

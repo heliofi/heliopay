@@ -40,6 +40,7 @@ const SwapsForm = ({
     tokenSwapError,
     currencyList,
     paymentType,
+    activeCurrency,
   } = useHelioProvider();
 
   const { HelioSDK } = useCompositionRoot();
@@ -81,7 +82,7 @@ const SwapsForm = ({
     debouncedQuantity,
     debouncedPrice,
     paymentDetails?.currency.mintAddress,
-    paymentDetails?.currency.symbol,
+    activeCurrency,
     paymentDetails?.id,
     paymentType,
     formValues.interval,
@@ -91,7 +92,7 @@ const SwapsForm = ({
     tokenSwapCurrencies
       ?.filter(
         ({ mintAddress, symbol }) =>
-          mintAddress != null && symbol !== paymentDetails?.currency.symbol
+          mintAddress != null && symbol !== activeCurrency?.symbol
       )
       .map((currency) => ({
         value: currency.symbol,
@@ -113,7 +114,7 @@ const SwapsForm = ({
 
     return currencyLabel;
   };
-
+  console.log(tokenSwapQuote);
   return (
     <StyledSwapsContainer>
       {tokenSwapLoading ? (
@@ -165,7 +166,7 @@ const SwapsForm = ({
               <StyledTokenSwapQuoteInfo>
                 <p>Exchange rate:</p>
                 <p>
-                  1 {paymentDetails?.currency.symbol} ={' '}
+                  1 {activeCurrency?.symbol} ={' '}
                   {roundValue(
                     HelioSDK.tokenConversionService.convertFromMinimalUnits(
                       tokenSwapQuote.from.symbol,

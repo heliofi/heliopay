@@ -10,34 +10,33 @@ import {
 } from '../../../ui-kits';
 import { FormikProps } from '../../baseCheckout/constants';
 import { useHelioProvider } from '../../../providers/helio/HelioContext';
-import { formatTotalPrice, getCurrency } from '../../baseCheckout/actions';
+import { formatTotalPrice } from '../../baseCheckout/actions';
 
 import { StyledCurrency, StyledCurrencySelectIcon } from './styles';
 
 export type PaylinkPricingProps = FormikProps & {
-  activeCurrency: Currency | null;
   totalDecimalAmount: number;
   canSelectCurrency: boolean;
-  allowedCurrencies: Currency[];
-  setActiveCurrency: (activeCurrency: Currency | null) => void;
+  supportedAllowedCurrencies: Currency[];
 };
 
 const PaylinkPricing = ({
   formValues,
   setFieldValue,
-  activeCurrency,
   totalDecimalAmount,
   canSelectCurrency,
-  allowedCurrencies,
-  setActiveCurrency,
+  supportedAllowedCurrencies,
 }: PaylinkPricingProps) => {
-  const { currencyList, getPaymentFeatures } = useHelioProvider();
+  const { getPaymentFeatures, activeCurrency, initActiveCurrency } =
+    useHelioProvider();
 
-  const currenciesOptions = allowedCurrencies.map((currency: Currency) => ({
-    label: currency?.symbol ?? '',
-    value: currency?.symbol ?? '',
-    icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
-  }));
+  const currenciesOptions = supportedAllowedCurrencies.map(
+    (currency: Currency) => ({
+      label: currency?.symbol ?? '',
+      value: currency?.symbol ?? '',
+      icon: <CurrencyIcon gradient iconName={currency.symbol ?? ''} />,
+    })
+  );
 
   return (
     <>
@@ -89,9 +88,7 @@ const PaylinkPricing = ({
           }
           onChange={(option) => {
             setFieldValue('currency', option.value);
-            setActiveCurrency(
-              getCurrency(currencyList, option.value as string)
-            );
+            initActiveCurrency(option.value as string);
           }}
         />
       )}

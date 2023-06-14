@@ -16,22 +16,25 @@ export const getSplitEthPaymentTx = async (
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
   const contract = new Contract(contractAddress, helio.abi, provider);
-  let totalAmount = BigNumber.from(req.amount);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const r of recipientsAndAmounts) {
-    totalAmount = totalAmount.add(r.amount);
-  }
+
+  const totalAmount =
+    req.amount + recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n);
+
+  const BNRecipientsAndAmounts = recipientsAndAmounts.map((r) => ({
+    recipient: r.recipient,
+    amount: BigNumber.from(r.amount),
+  }));
+
   const unsignedTx = await contract.populateTransaction.splitEthPayment(
     req.recipientAddress,
     BigNumber.from(req.amount),
     BigNumber.from(req.fee),
-    recipientsAndAmounts,
+    BNRecipientsAndAmounts,
     req.transactonDbId,
     {
       value: totalAmount,
       gasPrice: await provider.getGasPrice(),
       gasLimit,
-      nonce: await provider.getTransactionCount(req.walletAddress),
     }
   );
   unsignedTx.chainId = chainId;

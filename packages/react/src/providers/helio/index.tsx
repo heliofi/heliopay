@@ -1,30 +1,31 @@
-import { Cluster } from '@solana/web3.js';
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Currency, PaymentRequestType } from '@heliofi/common';
-import { TokenSwapQuote } from '@heliofi/sdk';
+import { ClusterHelioType, TokenSwapQuote } from '@heliofi/sdk';
 
 import { HelioContext } from './HelioContext';
 
 export const HelioProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
+  const [activeCurrency, setActiveCurrency] = useState<Currency | undefined>();
   const [currencyList, setCurrencyList] = useState<Currency[]>([]);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
-  const [cluster, setCluster] = useState<Cluster | null>(null);
+  const [cluster, setCluster] = useState<ClusterHelioType | null>(null);
   const [isCustomerDetailsRequired, setIsCustomerDetailsRequired] =
     useState(false);
   const [tokenSwapLoading, setTokenSwapLoading] = useState(false);
   const [tokenSwapCurrencies, setTokenSwapCurrencies] = useState<
     Currency[] | null
   >(null);
-  const [tokenSwapQuote, setTokenSwapQuote] = useState<TokenSwapQuote | null>(
-    null
-  );
+  const [tokenSwapQuote, setTokenSwapQuote] =
+    useState<TokenSwapQuote | undefined>(undefined);
   const [tokenSwapError, setTokenSwapError] = useState('');
   const [paymentType, setPaymentType] = useState<PaymentRequestType>();
 
   const helioProviderValue = useMemo(
     () => ({
+      activeCurrency,
+      setActiveCurrency,
       currencyList,
       setCurrencyList,
       paymentDetails,
@@ -45,6 +46,8 @@ export const HelioProvider: FC<{
       setPaymentType,
     }),
     [
+      activeCurrency,
+      setActiveCurrency,
       currencyList,
       setCurrencyList,
       paymentDetails,

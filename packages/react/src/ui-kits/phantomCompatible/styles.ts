@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '../styledComponents';
 
 export const StyledPhantomRow = styled.div`
   padding: 0.5rem;

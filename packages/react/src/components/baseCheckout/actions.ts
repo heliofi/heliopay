@@ -1,10 +1,17 @@
 import { FormikValues } from 'formik';
-import { StreamTimeService, CreatePaymentService } from '@heliofi/sdk';
+import {
+  StreamTimeService,
+  CreatePaymentService,
+  HelioSDK as HelioSDKType,
+  TokenSwapQuote,
+} from '@heliofi/sdk';
 import {
   CustomerDetails,
   Paystream,
   ProductDetails,
   PaymentRequestType,
+  Currency,
+  BlockchainSymbol,
 } from '@heliofi/common';
 import {
   PaymentDetailsType,
@@ -59,18 +66,13 @@ export const getInitialValues = (
   ...searchParams,
 });
 
-export const getCurrency = (currencyList: any[], currency?: string) => {
-  if (!currency) return null;
-  return currencyList.find((c: any) => c.symbol === currency);
-};
-
 export const handleSubmit =
   ({
     paymentDetails,
     HelioSDK,
     totalDecimalAmount,
     onSubmit,
-    currencyList,
+    currency,
     paymentType,
   }: IHandleSubmit) =>
   (values: FormikValues) => {
@@ -102,14 +104,11 @@ export const handleSubmit =
       productDetails: clearProductDetails,
       amount: BigInt(
         HelioSDK.tokenConversionService.convertToMinimalUnits(
-          values.currency || paymentDetails?.currency.symbol,
+          currency.symbol,
           values.canChangePrice ? values.customPrice : totalDecimalAmount
         )
       ),
-      currency: getCurrency(
-        currencyList,
-        values.currency || paymentDetails?.currency.symbol
-      ),
+      currency,
     };
 
     if (paymentType === PaymentRequestType.PAYLINK) {
@@ -135,4 +134,40 @@ export const handleSubmit =
 export const formatTotalPrice = (price: number, quantity = 1): number => {
   const totalPrice = Number(price * quantity);
   return totalPrice || price;
+};
+
+export const getIsBalanceEnough = ({
+  HelioSDK,
+  customPrice,
+  quantity,
+  activeCurrency,
+  paymentDetails,
+  blockchain,
+  canSwapTokens,
+  tokenSwapQuote,
+}: {
+  HelioSDK: HelioSDKType;
+  customPrice?: number;
+  quantity?: number;
+  activeCurrency?: Currency;
+  paymentDetails?: PaymentDetailsType;
+  blockchain?: BlockchainSymbol;
+  canSwapTokens?: boolean;
+  tokenSwapQuote?: TokenSwapQuote;
+}): boolean => {
+  if (!activeCurrency?.symbol || !paymentDetails?.normalizedPrice) {
+    return true;
+  }
+
+  return HelioSDK.availableBalanceService.isBalanceEnough({
+    quantity,
+    decimalAmount:
+      customPrice ||
+      HelioSDK.tokenConversionService.convertFromMinimalUnits(
+        activeCurrency.symbol,
+        paymentDetails.normalizedPrice,
+        blockchain
+      ),
+    isTokenSwapped: !!(canSwapTokens && tokenSwapQuote?.from?.symbol),
+  });
 };

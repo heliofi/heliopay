@@ -1,4 +1,3 @@
-import { Cluster } from '@solana/web3.js';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 
 import { SignedTxAndToken } from '../../types';
@@ -20,7 +19,6 @@ interface StreamCancelPayload {
   signedTransaction: string;
   canceledAt: number;
   streamToken?: string;
-  cluster: Cluster;
 }
 
 export class PaystreamCancelService extends BasePaystreamService<
@@ -46,7 +44,6 @@ export class PaystreamCancelService extends BasePaystreamService<
       signedTransaction: signedTx,
       streamToken: token,
       canceledAt: this.dateToTimeStamp(new Date()),
-      cluster: this.cluster as Cluster,
     };
   }
 

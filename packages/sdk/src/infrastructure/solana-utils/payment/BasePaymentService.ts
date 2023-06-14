@@ -1,5 +1,5 @@
 import { SplitWallet } from '@heliofi/common';
-import { Cluster, Connection, PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
 
 import {
@@ -26,8 +26,6 @@ export abstract class BasePaymentService<
   protected abstract readonly endpoint: string;
 
   protected mintAddress?: PublicKey;
-
-  protected cluster?: Cluster;
 
   protected wallet?: AnchorWallet;
 
@@ -61,7 +59,7 @@ export abstract class BasePaymentService<
     swapSignedTx?: string
   ): Payload;
 
-  protected async init({ symbol, wallet, connection, cluster }: Props) {
+  protected async init({ symbol, wallet, connection }: Props) {
     this.wallet = wallet;
     this.connection = connection;
 
@@ -72,7 +70,6 @@ export abstract class BasePaymentService<
     }
 
     this.mintAddress = new PublicKey(currency.mintAddress as string);
-    this.cluster = cluster;
   }
 
   public async handleTransaction(props: Props): Promise<void> {

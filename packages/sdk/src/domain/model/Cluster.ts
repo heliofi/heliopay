@@ -1,5 +1,7 @@
-export enum ClusterType {
-  Mainnet = 'mainnet-beta',
+export enum ClusterHelio {
+  Mainnet = 'mainnet',
   Testnet = 'testnet',
   Devnet = 'devnet',
 }
+
+export type ClusterHelioType = 'devnet' | 'testnet' | 'mainnet';

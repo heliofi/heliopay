@@ -1,6 +1,7 @@
 import React from 'react';
 import { WarningTriangleIcon } from '@heliofi/helio-icons';
 
+import { BlockchainSymbol } from '@heliofi/common';
 import { ExplorerLink } from '../../ui-kits';
 import CheckMarkIcon from '../../assets/icons/CheckMarkIcon';
 
@@ -19,15 +20,16 @@ import {
 } from './styles';
 
 interface Props {
+  blockchain?: BlockchainSymbol;
   result: {
     transaction?: string;
     errorMessage?: string;
     content?: string;
-    swapTransaction?: string;
+    swapTransactionSignature?: string;
   };
 }
 
-const PaymentResult = ({ result }: Props) => {
+const PaymentResult = ({ result, blockchain }: Props) => {
   const hasError = result?.errorMessage;
   return (
     <StyledResultWrapper>
@@ -53,13 +55,18 @@ const PaymentResult = ({ result }: Props) => {
           ) : (
             <>
               <StyledResultLink>
-                <ExplorerLink transaction={result?.transaction} />
+                <ExplorerLink
+                  transaction={result?.transaction}
+                  blockchain={blockchain}
+                />
               </StyledResultLink>
-              {result?.swapTransaction && (
+              {result?.swapTransactionSignature && (
                 <StyledSwapWrapper>
                   Swap transaction
                   <StyledResultLink>
-                    <ExplorerLink transaction={result?.transaction} />
+                    <ExplorerLink
+                      transaction={result?.swapTransactionSignature}
+                    />
                   </StyledResultLink>
                 </StyledSwapWrapper>
               )}

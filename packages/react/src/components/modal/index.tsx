@@ -27,6 +27,7 @@ type ModalProps = {
   toggleSwap?: () => void;
 };
 
+// @todo-v move to modals
 export const Modal: FC<ModalProps & InheritedModalProps> = ({
   title,
   onHide,

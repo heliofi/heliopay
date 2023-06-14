@@ -8,6 +8,7 @@ import {
   FetchifyFindAddress,
   PrepareSwapTransaction,
   FetchifyRetrieveAddress,
+  OnlyContentAndTransactionPaylink,
 } from '@heliofi/common';
 
 export interface HelioApiConnector {
@@ -21,7 +22,7 @@ export interface HelioApiConnector {
     country_code: string
   ): Promise<FetchifyRetrieveAddress>;
 
-  listCurrencies(): Promise<Currency[]>;
+  getCurrencies(): Promise<Currency[]>;
 
   getPaymentRequestByIdPublic(
     id: string,
@@ -56,4 +57,9 @@ export interface HelioApiConnector {
     url: string,
     body: string
   ): Promise<PrepareSwapTransaction>;
+
+  getTransactionStatus(
+    statusToken: string,
+    endpoint?: string
+  ): Promise<OnlyContentAndTransactionPaylink>;
 }

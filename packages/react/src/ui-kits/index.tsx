@@ -13,8 +13,8 @@ export { default as PriceBanner } from './priceBanner';
 export { default as PhantomCompatibleCard } from './phantomCompatible';
 export { default as QRCodeCard } from './QRCode';
 export { default as SelectBox } from './selectbox';
-export { default as ConnectButton } from './connectButton';
 export { default as ExplorerLink } from './explorerLink';
+export { Icon } from './icon';
 
 export * from './tooltip';
 export * from './buttonWithTooltip';
