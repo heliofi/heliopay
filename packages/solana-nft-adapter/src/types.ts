@@ -20,7 +20,9 @@ export type EscrowNftRequest = {
 };
 
 export type CancelEscrowRequest = {
-  owner: PublicKey;
+  sender: PublicKey;
   escrowAccount: PublicKey;
   mint: PublicKey;
+  metadataAccount: PublicKey;
+  authRules?: PublicKey;
 };
