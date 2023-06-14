@@ -1,5 +1,8 @@
 import { BN, Program } from '@coral-xyz/anchor';
-import { PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+import {
+  PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID,
+  metadat,
+} from '@metaplex-foundation/mpl-token-metadata';
 import { PROGRAM_ID as AUTH_RULES_PROGRAM_ID } from '@metaplex-foundation/mpl-token-auth-rules';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -16,6 +19,7 @@ import { HelioNftIdl } from './program';
 import { EscrowNftRequest } from './types';
 import {
   deriveEditionPDA,
+  deriveMetadataPDA,
   deriveTokenRecordPDA,
   getTransaction,
 } from './utils';
@@ -24,12 +28,12 @@ export const getEscrowNftTx = async (
   program: Program<HelioNftIdl>,
   req: EscrowNftRequest
 ): Promise<Transaction> => {
-  const { escrowAccount } = req;
+  const { mint, escrowAccount } = req;
 
-  const ownerNftAccount = await getAssociatedTokenAddress(req.mint, req.owner);
+  const ownerNftAccount = await getAssociatedTokenAddress(mint, req.owner);
 
   const escrowNftAccount = await getAssociatedTokenAddress(
-    req.mint,
+    mint,
     req.escrowAccount
   );
 
@@ -46,16 +50,16 @@ export const getEscrowNftTx = async (
       escrowAccount,
       escrowNftAccount,
       escrowPda,
-      mint: req.mint,
-      nftMetadataAccount: req.metadataAccount,
+      mint,
+      nftMetadataAccount: deriveMetadataPDA(mint),
       currency: req.currency,
       tokenProgram: TOKEN_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
       systemProgram: SystemProgram.programId,
-      nftMasterEdition: deriveEditionPDA(req.mint),
-      ownerTokenRecord: deriveTokenRecordPDA(req.mint, ownerNftAccount),
-      destinationTokenRecord: deriveTokenRecordPDA(req.mint, escrowNftAccount),
+      nftMasterEdition: deriveEditionPDA(mint),
+      ownerTokenRecord: deriveTokenRecordPDA(mint, ownerNftAccount),
+      destinationTokenRecord: deriveTokenRecordPDA(mint, escrowNftAccount),
       authRulesProgram: AUTH_RULES_PROGRAM_ID,
       authRules: req.authRules || AUTH_RULES_PROGRAM_ID,
       metaplexMetadataProgram: METAPLEX_METADATA_PROGRAM_ID,

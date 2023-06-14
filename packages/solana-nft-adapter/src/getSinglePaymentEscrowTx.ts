@@ -17,6 +17,7 @@ import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
 import {
   deriveEditionPDA,
+  deriveMetadataPDA,
   deriveTokenRecordPDA,
   getTransaction,
 } from './utils';
@@ -67,7 +68,7 @@ export const getSinglePaymentEscrowTx = async (
       escrowAccount,
       escrowNftAccount,
       escrowPda,
-      nftMetadataAccount: req.metadataAccount,
+      nftMetadataAccount: deriveMetadataPDA(mint),
       helioFeeAccount: helioFeeWalletKey,
       daoFeeAccount: daoFeeWalletKey,
       helioFeeTokenAccount,

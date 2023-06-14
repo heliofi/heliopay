@@ -14,7 +14,11 @@ import {
 } from '@solana/spl-token';
 import { HelioNftIdl } from './program';
 import { CancelEscrowRequest } from './types';
-import { deriveEditionPDA, deriveTokenRecordPDA } from './utils';
+import {
+  deriveEditionPDA,
+  deriveMetadataPDA,
+  deriveTokenRecordPDA,
+} from './utils';
 
 export const getCancelEscrowTx = async (
   program: Program<HelioNftIdl>,
@@ -45,7 +49,7 @@ export const getCancelEscrowTx = async (
       escrowAccount,
       escrowNftAccount,
       escrowPda,
-      nftMetadataAccount: req.metadataAccount,
+      nftMetadataAccount: deriveMetadataPDA(mint),
       mint,
       tokenProgram: TOKEN_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,

@@ -18,6 +18,7 @@ import { HelioNftIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import {
   deriveEditionPDA,
+  deriveMetadataPDA,
   deriveTokenRecordPDA,
   getTransaction,
 } from './utils';
@@ -46,6 +47,7 @@ export const getSingleSolPaymentEscrowTx = async (
       escrowAccount,
       escrowNftAccount,
       escrowPda,
+      nftMetadataAccount: deriveMetadataPDA(mint),
       helioFeeAccount: helioFeeWalletKey,
       daoFeeAccount: daoFeeWalletKey,
       mint,
