@@ -373,12 +373,12 @@ export default {
         },
         {
           name: 'helioFeeAccount',
-          isMut: false,
+          isMut: true,
           isSigner: false,
         },
         {
           name: 'daoFeeAccount',
-          isMut: false,
+          isMut: true,
           isSigner: false,
         },
         {

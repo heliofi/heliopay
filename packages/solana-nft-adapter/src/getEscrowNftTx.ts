@@ -1,8 +1,5 @@
 import { BN, Program } from '@coral-xyz/anchor';
-import {
-  PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID,
-  metadat,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 import { PROGRAM_ID as AUTH_RULES_PROGRAM_ID } from '@metaplex-foundation/mpl-token-auth-rules';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
