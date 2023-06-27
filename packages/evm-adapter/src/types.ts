@@ -5,7 +5,7 @@ export type RecipientAndAmount = {
 
 export type FeeAndAddress = {
   recipient: string;
-  feeBps: bigint;
+  feeBps: number;
 };
 
 export type PaymentRequest = {
