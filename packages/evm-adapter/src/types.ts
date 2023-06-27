@@ -15,5 +15,5 @@ export type PaymentRequest = {
   fee: number;
   transactonDbId: string;
   tokenAddres?: string;
-  feeAndAddresses?: FeeAndAddress[];
+  feesAndAddresses?: FeeAndAddress[];
 };

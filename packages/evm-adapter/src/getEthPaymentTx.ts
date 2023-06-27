@@ -3,7 +3,7 @@ import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { gasLimit } from './constants';
 import { PaymentRequest } from './types';
-import { getContractAddress } from './utils';
+import { getContractAddress, getFeesAndAddresses, isPolygon } from './utils';
 
 export const getEthPaymentTx = async (
   provider: BaseProvider,
@@ -15,17 +15,21 @@ export const getEthPaymentTx = async (
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
   const contract = new Contract(contractAddress, helio.abi, provider);
-  const unsignedTx = await contract.populateTransaction.ethPayment(
+  const feesAndAddresses = getFeesAndAddresses(req);
+  const params: Array<any> = [
     req.recipientAddress,
     BigNumber.from(req.amount),
     BigNumber.from(req.fee),
     req.transactonDbId,
-    {
-      value: BigNumber.from(req.amount),
-      gasLimit,
-      gasPrice: await provider.getGasPrice(),
-    }
-  );
+  ];
+  if (isPolygon(chainId)) {
+    params.push(feesAndAddresses);
+  }
+  const unsignedTx = await contract.populateTransaction.ethPayment(...params, {
+    value: BigNumber.from(req.amount),
+    gasLimit,
+    gasPrice: await provider.getGasPrice(),
+  });
   unsignedTx.chainId = chainId;
   return unsignedTx;
 };
