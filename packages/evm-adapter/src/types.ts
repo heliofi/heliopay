@@ -3,6 +3,11 @@ export type RecipientAndAmount = {
   amount: bigint;
 };
 
+export type FeeAndAddress = {
+  recipient: string;
+  feeBps: bigint;
+};
+
 export type PaymentRequest = {
   walletAddress: string;
   recipientAddress: string;
@@ -10,4 +15,5 @@ export type PaymentRequest = {
   fee: number;
   transactonDbId: string;
   tokenAddres?: string;
+  feeAndAddresses?: FeeAndAddress[];
 };
