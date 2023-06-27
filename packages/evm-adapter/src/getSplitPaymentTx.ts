@@ -3,7 +3,7 @@ import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
 import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
-import { getContractAddress } from './utils';
+import { getContractAddress, getFeesAndAddresses, isPolygon } from './utils';
 
 export const getSplitPaymentTx = async (
   provider: BaseProvider,
@@ -22,13 +22,21 @@ export const getSplitPaymentTx = async (
     amount: BigNumber.from(r.amount),
   }));
 
-  const unsignedTx = await contract.populateTransaction.splitPayment(
+  const feesAndAddresses = getFeesAndAddresses(req);
+  const params: Array<any> = [
     req.recipientAddress,
     req.tokenAddres,
     BigNumber.from(req.amount),
     BigNumber.from(req.fee),
     BNRecipientsAndAmounts,
     req.transactonDbId,
+  ];
+  if (isPolygon(chainId)) {
+    params.push(feesAndAddresses);
+  }
+
+  const unsignedTx = await contract.populateTransaction.splitPayment(
+    ...params,
     {
       gasLimit,
       gasPrice: await provider.getGasPrice(),
