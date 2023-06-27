@@ -1,9 +1,13 @@
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
-import { helio } from './abi';
 import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
-import { getContractAddress, getFeesAndAddresses, isPolygon } from './utils';
+import {
+  getAbi,
+  getContractAddress,
+  getFeesAndAddresses,
+  isPolygon,
+} from './utils';
 
 export const getSplitEthPaymentTx = async (
   provider: BaseProvider,
@@ -15,7 +19,7 @@ export const getSplitEthPaymentTx = async (
   if (!contractAddress) {
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
-  const contract = new Contract(contractAddress, helio.abi, provider);
+  const contract = new Contract(contractAddress, getAbi(chainId), provider);
 
   const totalAmount =
     req.amount + recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n);

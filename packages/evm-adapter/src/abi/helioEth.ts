@@ -1,4 +1,4 @@
-export const helio = {
+export const helioEth = {
   contractName: 'Helio',
   abi: [
     {
@@ -36,19 +36,6 @@ export const helio = {
         },
       ],
       name: 'EthPayment',
-      type: 'event',
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: 'uint8',
-          name: 'version',
-          type: 'uint8',
-        },
-      ],
-      name: 'Initialized',
       type: 'event',
     },
     {
@@ -135,7 +122,7 @@ export const helio = {
             },
           ],
           indexed: false,
-          internalType: 'struct IHelio.RecipientAndAmount[]',
+          internalType: 'struct IHelio.RecepientAndAmount[]',
           name: 'splitData',
           type: 'tuple[]',
         },
@@ -196,7 +183,7 @@ export const helio = {
             },
           ],
           indexed: false,
-          internalType: 'struct IHelio.RecipientAndAmount[]',
+          internalType: 'struct IHelio.RecepientAndAmount[]',
           name: 'splitData',
           type: 'tuple[]',
         },
@@ -224,7 +211,7 @@ export const helio = {
         },
         {
           internalType: 'uint16',
-          name: 'feeBps',
+          name: 'fee',
           type: 'uint16',
         },
         {
@@ -232,34 +219,10 @@ export const helio = {
           name: 'transactionDbId',
           type: 'string',
         },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint16',
-              name: 'feeBps',
-              type: 'uint16',
-            },
-          ],
-          internalType: 'struct IHelio.FeeAndAddress[]',
-          name: 'splitFeeData',
-          type: 'tuple[]',
-        },
       ],
       name: 'ethPayment',
       outputs: [],
       stateMutability: 'payable',
-      type: 'function',
-    },
-    {
-      inputs: [],
-      name: 'initialize',
-      outputs: [],
-      stateMutability: 'nonpayable',
       type: 'function',
     },
     {
@@ -281,30 +244,13 @@ export const helio = {
         },
         {
           internalType: 'uint16',
-          name: 'feeBps',
+          name: 'fee',
           type: 'uint16',
         },
         {
           internalType: 'string',
           name: 'transactionDbId',
           type: 'string',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint16',
-              name: 'feeBps',
-              type: 'uint16',
-            },
-          ],
-          internalType: 'struct IHelio.FeeAndAddress[]',
-          name: 'splitFeeData',
-          type: 'tuple[]',
         },
       ],
       name: 'payment',
@@ -326,7 +272,7 @@ export const helio = {
         },
         {
           internalType: 'uint16',
-          name: 'feeBps',
+          name: 'fee',
           type: 'uint16',
         },
         {
@@ -342,7 +288,7 @@ export const helio = {
               type: 'uint256',
             },
           ],
-          internalType: 'struct IHelio.RecipientAndAmount[]',
+          internalType: 'struct IHelio.RecepientAndAmount[]',
           name: 'splitData',
           type: 'tuple[]',
         },
@@ -350,23 +296,6 @@ export const helio = {
           internalType: 'string',
           name: 'transactionDbId',
           type: 'string',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint16',
-              name: 'feeBps',
-              type: 'uint16',
-            },
-          ],
-          internalType: 'struct IHelio.FeeAndAddress[]',
-          name: 'splitFeeData',
-          type: 'tuple[]',
         },
       ],
       name: 'splitEthPayment',
@@ -393,7 +322,7 @@ export const helio = {
         },
         {
           internalType: 'uint16',
-          name: 'feeBps',
+          name: 'fee',
           type: 'uint16',
         },
         {
@@ -409,7 +338,7 @@ export const helio = {
               type: 'uint256',
             },
           ],
-          internalType: 'struct IHelio.RecipientAndAmount[]',
+          internalType: 'struct IHelio.RecepientAndAmount[]',
           name: 'splitData',
           type: 'tuple[]',
         },
@@ -417,23 +346,6 @@ export const helio = {
           internalType: 'string',
           name: 'transactionDbId',
           type: 'string',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint16',
-              name: 'feeBps',
-              type: 'uint16',
-            },
-          ],
-          internalType: 'struct IHelio.FeeAndAddress[]',
-          name: 'splitFeeData',
-          type: 'tuple[]',
         },
       ],
       name: 'splitPayment',
