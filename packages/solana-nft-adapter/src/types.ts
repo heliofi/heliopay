@@ -6,6 +6,7 @@ export type SinglePaymentRequest = {
   escrowAccount: PublicKey;
   mint: PublicKey;
   currency: PublicKey;
+  beWallet: PublicKey;
   authRules?: PublicKey;
 };
 
@@ -16,6 +17,7 @@ export type EscrowNftRequest = {
   escrowAccount: PublicKey;
   mint: PublicKey;
   currency: PublicKey;
+  beWallet: PublicKey;
   authRules?: PublicKey;
 };
 
@@ -23,5 +25,6 @@ export type CancelEscrowRequest = {
   sender: PublicKey;
   escrowAccount: PublicKey;
   mint: PublicKey;
+  beWallet: PublicKey;
   authRules?: PublicKey;
 };

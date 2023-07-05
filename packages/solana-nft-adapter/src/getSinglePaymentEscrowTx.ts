@@ -61,6 +61,7 @@ export const getSinglePaymentEscrowTx = async (
     .singlePaymentEscrow()
     .accounts({
       sender: req.sender,
+      helioBeWallet: req.beWallet,
       senderTokenAccount,
       senderNftAccount,
       recipient: req.recipient,

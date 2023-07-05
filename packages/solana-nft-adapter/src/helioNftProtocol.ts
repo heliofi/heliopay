@@ -11,6 +11,11 @@ export default {
           isSigner: true,
         },
         {
+          name: 'helioBeWallet',
+          isMut: false,
+          isSigner: true,
+        },
+        {
           name: 'ownerNftAccount',
           isMut: true,
           isSigner: false,
@@ -120,6 +125,11 @@ export default {
           isSigner: true,
         },
         {
+          name: 'helioBeWallet',
+          isMut: false,
+          isSigner: true,
+        },
+        {
           name: 'senderNftAccount',
           isMut: true,
           isSigner: false,
@@ -208,6 +218,11 @@ export default {
         {
           name: 'sender',
           isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'helioBeWallet',
+          isMut: false,
           isSigner: true,
         },
         {
@@ -339,6 +354,11 @@ export default {
         {
           name: 'sender',
           isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'helioBeWallet',
+          isMut: false,
           isSigner: true,
         },
         {
@@ -543,7 +563,12 @@ export default {
     {
       code: 6008,
       name: 'InvalidAuthRules',
-      msg: 'Invalida auth rules.',
+      msg: 'Invalid auth rules.',
+    },
+    {
+      code: 6009,
+      name: 'WrongBackendWallet',
+      msg: 'Wrong helio backend wallet signature.',
     },
   ],
   metadata: {
