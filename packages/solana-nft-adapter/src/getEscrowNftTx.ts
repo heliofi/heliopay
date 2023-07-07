@@ -1,28 +1,36 @@
-import {
-  PublicKey,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
-  Transaction,
-} from '@solana/web3.js';
+import { BN, Program } from '@coral-xyz/anchor';
+import { PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+import { PROGRAM_ID as AUTH_RULES_PROGRAM_ID } from '@metaplex-foundation/mpl-token-auth-rules';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { BN, Program } from '@coral-xyz/anchor';
+import {
+  PublicKey,
+  SystemProgram,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
+  Transaction,
+} from '@solana/web3.js';
 import { HelioNftIdl } from './program';
 import { EscrowNftRequest } from './types';
+import {
+  deriveEditionPDA,
+  deriveMetadataPDA,
+  deriveTokenRecordPDA,
+  getTransaction,
+} from './utils';
 
 export const getEscrowNftTx = async (
   program: Program<HelioNftIdl>,
   req: EscrowNftRequest
 ): Promise<Transaction> => {
-  const { escrowAccount } = req;
+  const { mint, escrowAccount } = req;
 
-  const ownerNftAccount = await getAssociatedTokenAddress(req.mint, req.owner);
+  const ownerNftAccount = await getAssociatedTokenAddress(mint, req.owner);
 
   const escrowNftAccount = await getAssociatedTokenAddress(
-    req.mint,
+    mint,
     req.escrowAccount
   );
 
@@ -31,20 +39,30 @@ export const getEscrowNftTx = async (
     program.programId
   );
 
-  return program.methods
+  const ix = await program.methods
     .escrowNft(new BN(String(req.price)), new BN(req.fee), bump)
     .accounts({
       owner: req.owner,
+      helioSignatureWallet: req.helioSignatureWallet,
       ownerNftAccount,
       escrowAccount,
       escrowNftAccount,
       escrowPda,
-      mint: req.mint,
+      mint,
+      nftMetadataAccount: deriveMetadataPDA(mint),
       currency: req.currency,
-      rent: SYSVAR_RENT_PUBKEY,
       tokenProgram: TOKEN_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
       systemProgram: SystemProgram.programId,
+      nftMasterEdition: deriveEditionPDA(mint),
+      ownerTokenRecord: deriveTokenRecordPDA(mint, ownerNftAccount),
+      destinationTokenRecord: deriveTokenRecordPDA(mint, escrowNftAccount),
+      authRulesProgram: AUTH_RULES_PROGRAM_ID,
+      authRules: req.authRules || AUTH_RULES_PROGRAM_ID,
+      metaplexMetadataProgram: METAPLEX_METADATA_PROGRAM_ID,
     })
-    .transaction();
+    .instruction();
+
+  return getTransaction(ix);
 };
