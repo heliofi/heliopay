@@ -43,7 +43,7 @@ export const getEscrowNftTx = async (
     .escrowNft(new BN(String(req.price)), new BN(req.fee), bump)
     .accounts({
       owner: req.owner,
-      helioBeWallet: req.beWallet,
+      helioSignatureWallet: req.helioSignatureWallet,
       ownerNftAccount,
       escrowAccount,
       escrowNftAccount,

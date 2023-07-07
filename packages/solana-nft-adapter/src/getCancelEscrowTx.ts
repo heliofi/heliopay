@@ -45,7 +45,7 @@ export const getCancelEscrowTx = async (
     .cancelEscrow()
     .accounts({
       sender: req.sender,
-      helioBeWallet: req.beWallet,
+      helioSignatureWallet: req.helioSignatureWallet,
       senderNftAccount,
       escrowAccount,
       escrowNftAccount,

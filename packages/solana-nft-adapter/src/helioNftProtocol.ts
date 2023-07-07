@@ -11,7 +11,7 @@ export default {
           isSigner: true,
         },
         {
-          name: 'helioBeWallet',
+          name: 'helioSignatureWallet',
           isMut: false,
           isSigner: true,
         },
@@ -125,7 +125,7 @@ export default {
           isSigner: true,
         },
         {
-          name: 'helioBeWallet',
+          name: 'helioSignatureWallet',
           isMut: false,
           isSigner: true,
         },
@@ -221,7 +221,7 @@ export default {
           isSigner: true,
         },
         {
-          name: 'helioBeWallet',
+          name: 'helioSignatureWallet',
           isMut: false,
           isSigner: true,
         },
@@ -357,7 +357,7 @@ export default {
           isSigner: true,
         },
         {
-          name: 'helioBeWallet',
+          name: 'helioSignatureWallet',
           isMut: false,
           isSigner: true,
         },

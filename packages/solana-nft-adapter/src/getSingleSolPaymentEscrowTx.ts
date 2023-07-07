@@ -42,7 +42,7 @@ export const getSingleSolPaymentEscrowTx = async (
     .singleSolPaymentEscrow()
     .accounts({
       sender: req.sender,
-      helioBeWallet: req.beWallet,
+      helioSignatureWallet: req.helioSignatureWallet,
       senderNftAccount,
       recipient: req.recipient,
       escrowAccount,
