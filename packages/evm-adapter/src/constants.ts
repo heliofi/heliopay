@@ -15,5 +15,3 @@ export enum ContractAddress {
   ETHEREUM_GOERLI = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
   ETHEREUM_SEPOLIA = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
 }
-
-export const gasLimit = BigNumber.from(utils.hexlify('0x060000'));

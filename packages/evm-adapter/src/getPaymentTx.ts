@@ -1,13 +1,13 @@
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
-import { gasLimit } from './constants';
-import { PaymentRequest } from './types';
+import { PaymentRequest, RecipientAndAmount } from './types';
 import { getContractAddress } from './utils';
 
 export const getPaymentTx = async (
   provider: BaseProvider,
-  req: PaymentRequest
+  req: PaymentRequest,
+  recipientsAndAmounts: RecipientAndAmount[]
 ) => {
   const { chainId } = await provider.getNetwork();
   const contractAddress = getContractAddress(chainId);
@@ -17,17 +17,23 @@ export const getPaymentTx = async (
 
   const contract = new Contract(contractAddress, helio.abi, provider);
 
-  const amount = BigNumber.from(req.amount);
+  const BNRecipientsAndAmounts = recipientsAndAmounts.map((r) => ({
+    recipient: r.recipient,
+    amount: BigNumber.from(r.amount),
+  }));
+
+  const valueOverride =
+    Number(req.tokenAddres) === 0
+      ? {
+          value: recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n),
+        }
+      : undefined;
+
   const unsignedTx = await contract.populateTransaction.payment(
-    req.recipientAddress,
     req.tokenAddres,
-    amount,
-    BigNumber.from(req.fee),
+    BNRecipientsAndAmounts,
     req.transactonDbId,
-    {
-      gasLimit,
-      gasPrice: await provider.getGasPrice(),
-    }
+    valueOverride
   );
   unsignedTx.chainId = chainId;
   return unsignedTx;

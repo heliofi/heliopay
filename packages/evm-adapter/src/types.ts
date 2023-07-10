@@ -4,10 +4,6 @@ export type RecipientAndAmount = {
 };
 
 export type PaymentRequest = {
-  walletAddress: string;
-  recipientAddress: string;
-  amount: bigint;
-  fee: number;
   transactonDbId: string;
-  tokenAddres?: string;
+  tokenAddres: string;
 };
