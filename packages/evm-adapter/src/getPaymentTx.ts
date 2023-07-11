@@ -23,14 +23,14 @@ export const getPaymentTx = async (
   }));
 
   const valueOverride =
-    Number(req.tokenAddres) === 0
+    Number(req.tokenAddress) === 0
       ? {
           value: recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n),
         }
       : undefined;
 
   const unsignedTx = await contract.populateTransaction.payment(
-    req.tokenAddres,
+    req.tokenAddress,
     BNRecipientsAndAmounts,
     req.transactonDbId,
     valueOverride

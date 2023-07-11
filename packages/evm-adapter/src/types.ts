@@ -5,5 +5,5 @@ export type RecipientAndAmount = {
 
 export type PaymentRequest = {
   transactonDbId: string;
-  tokenAddres: string;
+  tokenAddress: string;
 };

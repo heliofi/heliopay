@@ -1,5 +1,3 @@
-import { BigNumber, utils } from 'ethers';
-
 export enum ChainId {
   ETHEREUM_MAINNET = 1,
   ETHEREUM_GOERLI = 5,
@@ -15,3 +13,6 @@ export enum ContractAddress {
   ETHEREUM_GOERLI = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
   ETHEREUM_SEPOLIA = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
 }
+
+export const helioEvmFeeWalletKey =
+  '0xa50E658C75dd31C8a1FD29d48F3de26e6d79df5D';
