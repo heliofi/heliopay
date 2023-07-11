@@ -18,6 +18,7 @@ import {
   deriveEditionPDA,
   deriveMetadataPDA,
   deriveTokenRecordPDA,
+  getTransaction,
 } from './utils';
 
 export const getCancelEscrowTx = async (
@@ -41,7 +42,7 @@ export const getCancelEscrowTx = async (
     program.programId
   );
 
-  return program.methods
+  const ix = await program.methods
     .cancelEscrow()
     .accounts({
       sender: req.sender,
@@ -63,5 +64,7 @@ export const getCancelEscrowTx = async (
       authRules: req.authRules || AUTH_RULES_PROGRAM_ID,
       metaplexMetadataProgram: METAPLEX_METADATA_PROGRAM_ID,
     })
-    .transaction();
+    .instruction();
+
+  return getTransaction(ix);
 };
