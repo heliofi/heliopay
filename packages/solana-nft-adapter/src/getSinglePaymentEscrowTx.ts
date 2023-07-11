@@ -84,7 +84,7 @@ export const getSinglePaymentEscrowTx = async (
       ownerTokenRecord: deriveTokenRecordPDA(mint, escrowNftAccount),
       destinationTokenRecord: deriveTokenRecordPDA(mint, senderNftAccount),
       authRulesProgram: AUTH_RULES_PROGRAM_ID,
-      authRules: TOKEN_PROGRAM_ID,
+      authRules: req.authRules || AUTH_RULES_PROGRAM_ID,
       metaplexMetadataProgram: METAPLEX_METADATA_PROGRAM_ID,
     })
     .instruction();
