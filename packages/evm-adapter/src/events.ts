@@ -23,8 +23,17 @@ export type SplitEthPaymentEvent = BasePaymentEvent & {
   splitData: RecipientAndAmount[];
 };
 
+export type Payment2Event = {
+  sender: string;
+  tokenAddress: string;
+  transferAmount: bigint;
+  splitData: RecipientAndAmount[];
+  transactionDbId: string;
+};
+
 export enum EventName {
   PAYMENT = 'Payment',
+  PAYMENT2 = 'Payment2',
   ETH_PAYMENT = 'EthPayment',
   SPLIT_PAYMENT = 'SplitPayment',
   SPLIT_ETH_PAYMENT = 'SplitEthPayment',
