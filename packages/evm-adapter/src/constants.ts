@@ -1,3 +1,5 @@
+import { BigNumber, utils } from 'ethers';
+
 export enum ChainId {
   ETHEREUM_MAINNET = 1,
   ETHEREUM_GOERLI = 5,
@@ -8,7 +10,7 @@ export enum ChainId {
 
 export enum ContractAddress {
   POLYGON_MAINNET = '0x644cF27D0CB17cf252BCfb96e2821fc17109761f',
-  POLYGON_MUMBAI = '0x1B43FB8a3c4CC150768C72656C352bdf35Dd1209',
+  POLYGON_MUMBAI = '0xfef9839589ff4E14F0Ca349CC6727dDeeB291bAC',
   ETHEREUM_MAINNET = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
   ETHEREUM_GOERLI = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
   ETHEREUM_SEPOLIA = '0xbCe44616D96BA1659FAc008ed3D9f171F67D254e',
@@ -16,3 +18,5 @@ export enum ContractAddress {
 
 export const helioEvmFeeWalletKey =
   '0xa50E658C75dd31C8a1FD29d48F3de26e6d79df5D';
+
+export const gasLimit = BigNumber.from(utils.hexlify('0x060000'));
