@@ -1,6 +1,7 @@
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber, Contract } from 'ethers';
 import { helio } from './abi';
+import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
 import { getContractAddress } from './utils';
 
@@ -22,18 +23,20 @@ export const getPaymentTx = async (
     amount: BigNumber.from(r.amount),
   }));
 
-  const valueOverride =
-    Number(req.tokenAddress) === 0
-      ? {
-          value: recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n),
-        }
-      : undefined;
+  const overrides = {
+    value:
+      Number(req.tokenAddress) === 0
+        ? recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n)
+        : 0n,
+    gasLimit,
+    gasPrice: await provider.getGasPrice(),
+  };
 
   const unsignedTx = await contract.populateTransaction.payment(
     req.tokenAddress,
     BNRecipientsAndAmounts,
     req.transactonDbId,
-    valueOverride
+    overrides
   );
   unsignedTx.chainId = chainId;
   return unsignedTx;
