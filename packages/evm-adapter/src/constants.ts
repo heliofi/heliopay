@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 
 export enum ChainId {
   ETHEREUM_MAINNET = 1,
@@ -19,4 +19,4 @@ export enum ContractAddress {
 export const helioEvmFeeWalletKey =
   '0xa50E658C75dd31C8a1FD29d48F3de26e6d79df5D';
 
-export const gasLimit = BigNumber.from(utils.hexlify('0x060000'));
+export const gasLimit = BigNumber.from(200_000);
