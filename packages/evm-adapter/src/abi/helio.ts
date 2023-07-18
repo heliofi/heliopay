@@ -60,7 +60,7 @@ export const helio = {
           type: 'string',
         },
       ],
-      name: 'Payment2',
+      name: 'Payment',
       type: 'event',
     },
     {
