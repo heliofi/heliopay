@@ -86,6 +86,7 @@ export class ConfigService {
   getPhantomLink(id: string, paymentType: PaymentRequestType): string {
     const baseUrl = this.getHelioBaseUrl();
     const urlParam = paymentType === PaymentRequestType.PAYLINK ? 'pay' : 's';
+
     return `https://phantom.app/ul/browse/${baseUrl}/${urlParam}/${id}?ref=${baseUrl}`;
   }
 
