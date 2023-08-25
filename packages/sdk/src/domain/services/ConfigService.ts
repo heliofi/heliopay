@@ -7,7 +7,7 @@ export class ConfigService {
 
   private customApiUrl?: string;
 
-  static DEV_HELIO_SERVICE_BASE_URL = 'https://dev.api.hel.io/v1';
+  static DEV_HELIO_SERVICE_BASE_URL = 'https://api.dev.hel.io/v1';
 
   static PROD_HELIO_SERVICE_BASE_URL = 'https://api.hel.io/v1';
 
@@ -86,6 +86,7 @@ export class ConfigService {
   getPhantomLink(id: string, paymentType: PaymentRequestType): string {
     const baseUrl = this.getHelioBaseUrl();
     const urlParam = paymentType === PaymentRequestType.PAYLINK ? 'pay' : 's';
+
     return `https://phantom.app/ul/browse/${baseUrl}/${urlParam}/${id}?ref=${baseUrl}`;
   }
 
