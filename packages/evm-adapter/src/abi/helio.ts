@@ -5,37 +5,13 @@ export const helio = {
       anonymous: false,
       inputs: [
         {
-          indexed: true,
-          internalType: 'address',
-          name: 'sender',
-          type: 'address',
-        },
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
           indexed: false,
-          internalType: 'uint256',
-          name: 'transferAmount',
-          type: 'uint256',
-        },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'feeAmount',
-          type: 'uint256',
-        },
-        {
-          indexed: false,
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
+          internalType: 'uint8',
+          name: 'version',
+          type: 'uint8',
         },
       ],
-      name: 'EthPayment',
+      name: 'Initialized',
       type: 'event',
     },
     {
@@ -45,12 +21,6 @@ export const helio = {
           indexed: true,
           internalType: 'address',
           name: 'sender',
-          type: 'address',
-        },
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'recipient',
           type: 'address',
         },
         {
@@ -66,10 +36,22 @@ export const helio = {
           type: 'uint256',
         },
         {
+          components: [
+            {
+              internalType: 'address',
+              name: 'recipient',
+              type: 'address',
+            },
+            {
+              internalType: 'uint256',
+              name: 'amount',
+              type: 'uint256',
+            },
+          ],
           indexed: false,
-          internalType: 'uint256',
-          name: 'feeAmount',
-          type: 'uint256',
+          internalType: 'struct IHelio.RecipientAndAmount[]',
+          name: 'splitData',
+          type: 'tuple[]',
         },
         {
           indexed: false,
@@ -82,170 +64,35 @@ export const helio = {
       type: 'event',
     },
     {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'sender',
-          type: 'address',
-        },
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'transferAmount',
-          type: 'uint256',
-        },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'feeAmount',
-          type: 'uint256',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-          ],
-          indexed: false,
-          internalType: 'struct IHelio.RecepientAndAmount[]',
-          name: 'splitData',
-          type: 'tuple[]',
-        },
-        {
-          indexed: false,
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
-        },
-      ],
-      name: 'SplitEthPayment',
-      type: 'event',
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'sender',
-          type: 'address',
-        },
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          indexed: true,
-          internalType: 'address',
-          name: 'tokenAddress',
-          type: 'address',
-        },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'transferAmount',
-          type: 'uint256',
-        },
-        {
-          indexed: false,
-          internalType: 'uint256',
-          name: 'feeAmount',
-          type: 'uint256',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-          ],
-          indexed: false,
-          internalType: 'struct IHelio.RecepientAndAmount[]',
-          name: 'splitData',
-          type: 'tuple[]',
-        },
-        {
-          indexed: false,
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
-        },
-      ],
-      name: 'SplitPayment',
-      type: 'event',
-    },
-    {
-      inputs: [
-        {
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'amount',
-          type: 'uint256',
-        },
-        {
-          internalType: 'uint16',
-          name: 'fee',
-          type: 'uint16',
-        },
-        {
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
-        },
-      ],
-      name: 'ethPayment',
+      inputs: [],
+      name: 'initialize',
       outputs: [],
-      stateMutability: 'payable',
+      stateMutability: 'nonpayable',
       type: 'function',
     },
     {
       inputs: [
         {
           internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
           name: 'tokenAddress',
           type: 'address',
         },
         {
-          internalType: 'uint256',
-          name: 'amount',
-          type: 'uint256',
-        },
-        {
-          internalType: 'uint16',
-          name: 'fee',
-          type: 'uint16',
+          components: [
+            {
+              internalType: 'address',
+              name: 'recipient',
+              type: 'address',
+            },
+            {
+              internalType: 'uint256',
+              name: 'amount',
+              type: 'uint256',
+            },
+          ],
+          internalType: 'struct IHelio.RecipientAndAmount[]',
+          name: 'splitData',
+          type: 'tuple[]',
         },
         {
           internalType: 'string',
@@ -255,102 +102,7 @@ export const helio = {
       ],
       name: 'payment',
       outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        {
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'amount',
-          type: 'uint256',
-        },
-        {
-          internalType: 'uint16',
-          name: 'fee',
-          type: 'uint16',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-          ],
-          internalType: 'struct IHelio.RecepientAndAmount[]',
-          name: 'splitData',
-          type: 'tuple[]',
-        },
-        {
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
-        },
-      ],
-      name: 'splitEthPayment',
-      outputs: [],
       stateMutability: 'payable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        {
-          internalType: 'address',
-          name: 'recipient',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
-          name: 'tokenAddress',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'amount',
-          type: 'uint256',
-        },
-        {
-          internalType: 'uint16',
-          name: 'fee',
-          type: 'uint16',
-        },
-        {
-          components: [
-            {
-              internalType: 'address',
-              name: 'recipient',
-              type: 'address',
-            },
-            {
-              internalType: 'uint256',
-              name: 'amount',
-              type: 'uint256',
-            },
-          ],
-          internalType: 'struct IHelio.RecepientAndAmount[]',
-          name: 'splitData',
-          type: 'tuple[]',
-        },
-        {
-          internalType: 'string',
-          name: 'transactionDbId',
-          type: 'string',
-        },
-      ],
-      name: 'splitPayment',
-      outputs: [],
-      stateMutability: 'nonpayable',
       type: 'function',
     },
   ],
