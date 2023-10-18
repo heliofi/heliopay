@@ -101,17 +101,10 @@ describe('solana-nft', () => {
       })
     );
     await provider.connection.sendTransaction(tx, [payer]);
-    console.log(
-      'Owner: ',
-      ownerMainAccount.publicKey.toBase58(),
-      ' buyer: ',
-      buyerMainAccount.publicKey.toBase58()
-    );
     await sleep(20_000);
     const ownerMainAccountBalance = await provider.connection.getBalance(
       ownerMainAccount.publicKey
     );
-    console.log('Owners balance', ownerMainAccountBalance);
 
     mintKey = await createMint(
       provider.connection,
@@ -120,14 +113,14 @@ describe('solana-nft', () => {
       null,
       0
     );
-    console.log('mintKey: ', mintKey.toString());
+
     ownerTokenAccount = await createAssociatedTokenAccount(
       provider.connection,
       payer,
       mintKey,
       ownerMainAccount.publicKey
     );
-    console.log('Owner nft account: ', ownerTokenAccount.toString());
+
     await mintTo(
       provider.connection,
       payer,
@@ -138,14 +131,9 @@ describe('solana-nft', () => {
     );
 
     await sleep(10_000);
-    console.log('Here');
     const _ownerTokenAccount = await getAccount(
       provider.connection,
       ownerTokenAccount
-    );
-    console.log(
-      'Owner token account amount: ',
-      Number(_ownerTokenAccount.amount)
     );
     assert.ok(Number(_ownerTokenAccount.amount) === 1);
 
@@ -156,7 +144,6 @@ describe('solana-nft', () => {
       null,
       6
     );
-    console.log('Here');
 
     buyerCurrencyAccount = await createAssociatedTokenAccount(
       provider.connection,
@@ -165,7 +152,6 @@ describe('solana-nft', () => {
       buyerMainAccount.publicKey
     );
 
-    console.log('Buyer currency account: ', buyerCurrencyAccount.toString());
     const mintAmount = LAMPORTS_PER_SOL;
     await mintTo(
       provider.connection,
@@ -175,7 +161,7 @@ describe('solana-nft', () => {
       payer,
       mintAmount
     );
-    console.log('Here');
+
     let _buyerCurrencyAccount = await getAccount(
       provider.connection,
       buyerCurrencyAccount

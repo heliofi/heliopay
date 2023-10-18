@@ -4,8 +4,10 @@ export type SinglePaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   escrowAccount: PublicKey;
-  nftMint: PublicKey;
+  mint: PublicKey;
   currency: PublicKey;
+  helioSignatureWallet: PublicKey;
+  authRules?: PublicKey;
 };
 
 export type EscrowNftRequest = {
@@ -15,10 +17,14 @@ export type EscrowNftRequest = {
   escrowAccount: PublicKey;
   mint: PublicKey;
   currency: PublicKey;
+  helioSignatureWallet: PublicKey;
+  authRules?: PublicKey;
 };
 
 export type CancelEscrowRequest = {
-  owner: PublicKey;
+  sender: PublicKey;
   escrowAccount: PublicKey;
   mint: PublicKey;
+  helioSignatureWallet: PublicKey;
+  authRules?: PublicKey;
 };
