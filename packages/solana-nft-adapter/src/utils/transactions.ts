@@ -9,9 +9,5 @@ export function getTransaction(ix: TransactionInstruction): Transaction {
     units: 1000000,
   });
 
-  const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-    microLamports: 1,
-  });
-
-  return new Transaction().add(modifyComputeUnits).add(addPriorityFee).add(ix);
+  return new Transaction().add(modifyComputeUnits).add(ix);
 }
