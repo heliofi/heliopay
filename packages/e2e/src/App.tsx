@@ -9,7 +9,7 @@ import {
 import { HelioPay } from '@heliofi/react';
 
 import './styles/style.scss';
-import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
+import { PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -17,7 +17,7 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '6463450b60755941ed524a0e'
+    '643d47cee509bc5eb64cff48'
     // '6438352ad4d671306c91778d'
   );
 
@@ -45,10 +45,10 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        supportedCurrencies={['SOL', 'USDC']}
+        supportedCurrencies={['SOL', 'BONK', 'USDC']}
+        totalAmount={0.0001}
         paymentType={PaymentRequestType.PAYLINK}
-        blockchainEngine={BlockchainEngineType.EVM}
-        totalAmount={0.001}
+        // totalAmount={undefined}
       />
     </>
   );

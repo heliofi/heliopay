@@ -1,6 +1,7 @@
 {
   "name": "@heliofi/solana-nft-adapter",
-  "version": "1.0.2",
+  "version": "2.0.1-alpha.0",
+  "private": false,
   "description": "API to interact with Helio NFT program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,6 +35,8 @@
   "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
     "@coral-xyz/anchor": "^0.27.0",
+    "@metaplex-foundation/mpl-token-auth-rules": "^2.0.0",
+    "@metaplex-foundation/mpl-token-metadata": "^2.12.0",
     "@solana/spl-token": "^0.3.7",
     "@solana/wallet-adapter-react": "^0.15.20",
     "@solana/web3.js": "^1.68.0",

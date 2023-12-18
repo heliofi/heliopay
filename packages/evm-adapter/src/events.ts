@@ -1,31 +1,13 @@
 import { RecipientAndAmount } from './types';
 
-type BasePaymentEvent = {
+export type PaymentEvent = {
   sender: string;
-  recipient: string;
+  tokenAddress: string;
   transferAmount: bigint;
-  feeAmount: bigint;
+  splitData: RecipientAndAmount[];
   transactionDbId: string;
-};
-
-export type PaymentEvent = BasePaymentEvent & {
-  tokenAddress: string;
-};
-
-export type EthPaymentEvent = BasePaymentEvent;
-
-export type SplitPaymentEvent = BasePaymentEvent & {
-  tokenAddress: string;
-  splitData: RecipientAndAmount[];
-};
-
-export type SplitEthPaymentEvent = BasePaymentEvent & {
-  splitData: RecipientAndAmount[];
 };
 
 export enum EventName {
   PAYMENT = 'Payment',
-  ETH_PAYMENT = 'EthPayment',
-  SPLIT_PAYMENT = 'SplitPayment',
-  SPLIT_ETH_PAYMENT = 'SplitEthPayment',
 }
