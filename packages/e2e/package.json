@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@heliofi/common": "0.1.248",
-    "@heliofi/react": "^4.0.2",
-    "@heliofi/sdk": "^1.0.2",
+    "@heliofi/react": "*",
+    "@heliofi/sdk": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

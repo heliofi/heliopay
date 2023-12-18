@@ -170,7 +170,7 @@ export const useHelioProvider = () => {
       }
 
       if (bonkCurrency && mintAddress !== bonkCurrency.mintAddress) {
-        currencies.push(bonkCurrency);
+        currencies.unshift(bonkCurrency);
       }
 
       setTokenSwapCurrencies(currencies as unknown as Currency[]);

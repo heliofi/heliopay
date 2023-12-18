@@ -30,7 +30,7 @@ const App = () => {
       />
       <HelioPay
         // additionalJSON={{ key1: 'value1' }}
-        cluster={ClusterHelio.Devnet}
+        cluster={ClusterHelio.Mainnet}
         // customApiUrl="https://api.dev.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
@@ -45,7 +45,8 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={undefined}
+        supportedCurrencies={['SOL', 'BONK', 'USDC']}
+        totalAmount={0.0001}
         paymentType={PaymentRequestType.PAYLINK}
         // totalAmount={undefined}
       />

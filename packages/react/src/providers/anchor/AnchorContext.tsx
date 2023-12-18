@@ -1,4 +1,4 @@
-import { Program } from '@project-serum/anchor';
+import { Program } from '@coral-xyz/anchor';
 import { createContext, useContext } from 'react';
 import { HelioIdl } from '@heliofi/solana-adapter';
 
