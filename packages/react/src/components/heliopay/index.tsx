@@ -7,7 +7,10 @@ import {
   SuccessPaymentEvent,
 } from '@heliofi/sdk';
 import { Toaster } from 'react-hot-toast';
-import { PaymentRequestType } from '@heliofi/common';
+import {
+  BlockchainEngineType,
+  PaymentRequestType,
+} from '@heliofi/common';
 
 import { deepMerge } from '../../utils';
 import { defaultTheme } from '../../theme';
@@ -33,6 +36,7 @@ interface HelioPayProps {
   searchCustomerDetails?: CheckoutSearchParamsValues;
   additionalJSON?: {};
   customApiUrl?: string;
+  blockchainEngine?: BlockchainEngineType;
 }
 
 export const HelioPay = ({
@@ -50,6 +54,7 @@ export const HelioPay = ({
   searchCustomerDetails,
   additionalJSON,
   customApiUrl,
+  blockchainEngine,
 }: HelioPayProps) => {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
@@ -74,7 +79,7 @@ export const HelioPay = ({
     <ThemeProvider theme={currentTheme}>
       <EVMProvider>
         <SolanaProvider cluster={cluster}>
-          <ConnectProvider>
+          <ConnectProvider blockchainEngine={blockchainEngine}>
             <HelioPayContainer
               paymentRequestId={paymentRequestId}
               onStartPayment={onStartPayment}

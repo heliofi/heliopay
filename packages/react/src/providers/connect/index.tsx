@@ -40,7 +40,8 @@ export const ConnectContext = createContext<ConnectOptions>({
 
 const ConnectProvider: FC<{
   children: ReactNode;
-}> = ({ children }) => {
+  blockchainEngine?: BlockchainEngineType;
+}> = ({ children, blockchainEngine: blockchainEngineType }) => {
   const { connected: isConnectedSOl } = useWallet();
   const { isConnected: isConnectedEVM } = useAccount();
 
@@ -51,12 +52,15 @@ const ConnectProvider: FC<{
 
   const onErrorRef = useRef<ErrorFunc>();
   const blockchainEngineRef = useRef<BlockchainEngineType | undefined>(
-    undefined
+    blockchainEngineType
   );
 
   const getErrorHandler = useCallback(() => onErrorRef.current, []);
 
   useEffect(() => {
+    if (blockchainEngineType) {
+      return;
+    }
     if (!isConnecting) {
       if (isConnectedEVM) {
         blockchainEngineRef.current = BlockchainEngineType.EVM;
@@ -83,7 +87,7 @@ const ConnectProvider: FC<{
   ]);
 
   const onConnect = ({ blockchainEngine }: OnConnectOptions): void => {
-    blockchainEngineRef.current = blockchainEngine;
+    blockchainEngineRef.current = blockchainEngineType ?? blockchainEngine;
     openModal();
   };
 
@@ -112,6 +116,7 @@ const ConnectProvider: FC<{
       {children}
       <ConnectModal
         blockchainEngine={blockchainEngineRef.current}
+        forcedBlockchainEngine={blockchainEngineType}
         isModalShown={isModalShown}
         onHide={() => toggleModal()}
       />

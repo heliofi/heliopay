@@ -9,7 +9,7 @@ import {
 import { HelioPay } from '@heliofi/react';
 
 import './styles/style.scss';
-import { PaymentRequestType } from '@heliofi/common';
+import { BlockchainEngineType, PaymentRequestType } from '@heliofi/common';
 
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -17,7 +17,7 @@ window.Buffer = window.Buffer || require('buffer').Buffer;
 
 const App = () => {
   const [paymentId, setPaymentId] = useState<string | null>(
-    '643d47cee509bc5eb64cff48'
+    '6463450b60755941ed524a0e'
     // '6438352ad4d671306c91778d'
   );
 
@@ -30,7 +30,7 @@ const App = () => {
       />
       <HelioPay
         // additionalJSON={{ key1: 'value1' }}
-        cluster={ClusterHelio.Devnet}
+        cluster={ClusterHelio.Mainnet}
         // customApiUrl="https://api.dev.hel.io/v1"
         paymentRequestId={paymentId}
         onSuccess={(event: SuccessPaymentEvent) => {
@@ -45,9 +45,10 @@ const App = () => {
         onStartPayment={() => {
           console.log('onStartPayment');
         }}
-        // supportedCurrencies={undefined}
+        supportedCurrencies={['SOL', 'USDC']}
         paymentType={PaymentRequestType.PAYLINK}
-        // totalAmount={undefined}
+        blockchainEngine={BlockchainEngineType.EVM}
+        totalAmount={0.001}
       />
     </>
   );
