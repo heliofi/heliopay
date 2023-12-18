@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/react",
-  "version": "3.7.0",
+  "version": "3.7.1-alpha.0",
   "description": "React components for Helio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,12 +14,12 @@
   },
   "dependencies": {
     "@aws-amplify/api-graphql": "^2.3.12",
+    "@coral-xyz/anchor": "^0.27.0",
     "@heliofi/common": "0.1.195",
     "@heliofi/helio-icons": "^1.0.5",
+    "@heliofi/sdk": "^0.5.1-alpha.0",
     "@heliofi/solana-adapter": "^3.3.10-alpha.0",
-    "@heliofi/sdk": "*",
     "@popperjs/core": "^2.11.7",
-    "@coral-xyz/anchor": "^0.27.0",
     "@solana/spl-token": "^0.3.6",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.5",
