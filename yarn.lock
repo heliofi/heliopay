@@ -2941,6 +2941,20 @@
     class-validator "^0.14.0"
     moment "^2.29.4"
 
+"@heliofi/common@0.1.248":
+  version "0.1.248"
+  resolved "https://registry.yarnpkg.com/@heliofi/common/-/common-0.1.248.tgz#0b251b9b48b856d7877c256f851917f1d4bd0d76"
+  integrity sha512-dA/QA/PuLWuHDD6vCcMSkLtch+kVMCcbs8M29WUqcTnGbxR9CPouCqQfIHbH1Tj3lABkVTfYsY9T5XKp1j0aLA==
+  dependencies:
+    "@heliofi/evm-adapter" "^0.0.28-beta"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/web3.js" "^1.44.0"
+    bignumber.js "^9.1.1"
+    bs58 "^5.0.0"
+    class-transformer "^0.5.1"
+    class-validator "^0.14.0"
+    moment "^2.29.4"
+
 "@heliofi/eslint-config-helio@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.0.4.tgz#51eeddbf669f67866e1303201120a373ec0e8d22"
@@ -2950,6 +2964,13 @@
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@heliofi/eslint-config-helio/-/eslint-config-helio-0.1.1.tgz#2e35edc2e725b2536fcd79aa0b1141a8b0e95028"
   integrity sha512-23VJ5uixK2OO2uugcXKVzdPwW/BjJ1elfwMZnwMF+VYGTz6dv6HeA77vMjGJ2IkV6nnCwsYC7FeuBXOIKrzPxw==
+
+"@heliofi/evm-adapter@0.0.30-beta":
+  version "0.0.30-beta"
+  resolved "https://registry.yarnpkg.com/@heliofi/evm-adapter/-/evm-adapter-0.0.30-beta.tgz#ee82f2813b6f827a6b9cd274ef0ef962f430fcac"
+  integrity sha512-B0tAEUKU7+VqqL/5esaR45TPkqTkHX0/Xb6Y8fGGjdiHosMjnEB5+1KZ/Crth7F5gfzOD0yxTSZltA3i3ZHWOA==
+  dependencies:
+    ethers "^5.7.2"
 
 "@heliofi/evm-adapter@^0.0.28-beta":
   version "0.0.28-beta"

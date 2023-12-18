@@ -210,7 +210,7 @@ export class PaylinkSubmitService extends BasePaymentService<
   }> {
     const prepareSwapTransactionResponse =
       await this.apiService.getPreparedTransactionSwapMessage(
-        `${this.prepareEndpoint}/swap`,
+        `${this.prepareEndpoint}/swap${this.getQueryParams()}`,
         JSON.stringify({
           paymentRequestId,
           currency: symbol,
@@ -262,7 +262,7 @@ export class PaylinkSubmitService extends BasePaymentService<
   }: GetAndSignPayload): Promise<SignedTxAndToken> {
     const prepareTransactionResponse =
       await this.apiService.getPreparedTransactionMessage(
-        this.prepareEndpoint,
+        this.prepareEndpoint + this.getQueryParams(),
         JSON.stringify({
           paymentRequestId,
           currency: symbol,
@@ -279,5 +279,9 @@ export class PaylinkSubmitService extends BasePaymentService<
       signedTx: signedTransaction,
       token: prepareTransactionResponse.transactionToken,
     };
+  }
+
+  private getQueryParams(): string {
+    return `?feePayer=HELIO`;
   }
 }

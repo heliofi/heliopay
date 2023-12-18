@@ -1,5 +1,5 @@
 import { HelioIdl } from '@heliofi/solana-adapter';
-import { Program } from '@project-serum/anchor';
+import { Program } from '@coral-xyz/anchor';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { Cluster, Connection } from '@solana/web3.js';
 import {

@@ -54,7 +54,7 @@ export const HelioPay = ({
   const { HelioSDK } = useCompositionRoot();
 
   useMemo(() => {
-    HelioSDK.setCluster(cluster as Cluster);
+    HelioSDK.setCluster(cluster as any);
   }, [cluster]);
 
   useMemo(() => {

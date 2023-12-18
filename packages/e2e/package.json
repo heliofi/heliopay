@@ -14,6 +14,9 @@
     "@heliofi/common": "0.1.195",
     "@heliofi/react": "^3.7.0",
     "@heliofi/sdk": "^0.5.0",
+    "@heliofi/common": "0.1.248",
+    "@heliofi/react": "*",
+    "@heliofi/sdk": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
