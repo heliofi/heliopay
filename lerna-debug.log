@@ -1,0 +1,8 @@
+57 warn complete Waiting for 1 child process to exit. CTRL-C to exit immediately.
+58 error Error: Command failed with exit code 128: git tag e2e@3.9.1- 3.9.1-alpha.1.0 -m e2e@3.9.1- 3.9.1-alpha.1.0
+58 error fatal: 'e2e@3.9.1- 3.9.1-alpha.1.0' is not a valid tag name.
+58 error     at makeError (/Users/martinavagyan/Desktop/Work/Helio/projects/heliopay/node_modules/execa/lib/error.js:60:11)
+58 error     at handlePromise (/Users/martinavagyan/Desktop/Work/Helio/projects/heliopay/node_modules/execa/index.js:118:26)
+58 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+58 error     at async Promise.all (index 0)
+58 error     at async Promise.all (index 0)

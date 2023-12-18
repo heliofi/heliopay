@@ -27,12 +27,14 @@ interface ConnectModalProps {
   onHide: () => void;
   isModalShown: boolean;
   blockchainEngine?: BlockchainEngineType;
+  forcedBlockchainEngine?: BlockchainEngineType;
 }
 
 export const ConnectModal: FC<ConnectModalProps> = ({
   onHide,
   isModalShown,
   blockchainEngine,
+  forcedBlockchainEngine,
 }) => {
   const { wallets } = useWallet();
   const inactiveIconType = ConnectWalletDefaultIconType.WHITE;
@@ -86,7 +88,11 @@ export const ConnectModal: FC<ConnectModalProps> = ({
         <StyledConnectModalTabs>
           <Tabs
             activeTab={connectTabs.find((tab) => tab.id === activeTab)}
-            tabs={connectTabs}
+            tabs={
+              forcedBlockchainEngine
+                ? connectTabs.filter((tab) => !tab.disabled)
+                : connectTabs
+            }
             onTabChange={(tab: Tab) => {
               setActiveTab(tab.id as BlockchainEngineType);
             }}
