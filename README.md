@@ -1,3 +1,9 @@
+## This package is **DEPRECATED**.
+
+Please use **Helio Checkout Widget** instead.
+Link to the documentation: https://docs.hel.io/developers/helio-checkout-widget
+
+
 ## Introduction
 
 Helio embedded components can be used in your website for dynamic payments or standard paylinks and pay streams.
