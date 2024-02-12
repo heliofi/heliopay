@@ -63,7 +63,8 @@ export const getSinglePaymentTx = async (
 
   const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
     mint,
-    req.recipient
+    req.recipient,
+    true
   );
 
   const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
