@@ -1,5 +1,5 @@
 import { PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
-import { BN, Program } from '@project-serum/anchor';
+import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { WithdrawRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';

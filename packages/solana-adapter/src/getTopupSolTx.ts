@@ -1,4 +1,4 @@
-import { BN, Program } from '@project-serum/anchor';
+import { BN, Program } from '@coral-xyz/anchor';
 import { Transaction } from '@solana/web3.js';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';

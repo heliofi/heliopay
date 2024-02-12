@@ -9,7 +9,7 @@ import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { BN, Program } from '@project-serum/anchor';
+import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
