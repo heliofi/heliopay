@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/solana-adapter",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "API to interact with Helio Finances program on Solana.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
+    "@coral-xyz/anchor": "^0.27.0",
     "@project-serum/anchor": "^0.26.0",
     "@sideway/formula": "^3.0.1",
     "@solana/spl-token": "^0.2.0",
