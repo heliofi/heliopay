@@ -6,6 +6,7 @@
   },
   "scripts": {
     "release": "lerna publish",
+    "release:solana-adapter": "yarn workspace @heliofi/solana-adapter release",
     "build": "(yarn workspace @heliofi/solana-adapter run build) && (yarn workspace @heliofi/sdk run build) && (yarn workspace @heliofi/react run build)"
   },
   "workspaces": [
