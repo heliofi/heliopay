@@ -20,3 +20,4 @@ export const helioEvmFeeWalletKey =
   '0xa50E658C75dd31C8a1FD29d48F3de26e6d79df5D';
 
 export const gasLimit = BigNumber.from(200_000);
+export const directTransferGasLimit = BigNumber.from(80_000);
