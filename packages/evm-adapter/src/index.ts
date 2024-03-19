@@ -1,4 +1,5 @@
 export * from './getPaymentTx';
+export * from './getDirectTransferTx';
 export * from './directErc20Transfer';
 export * from './getDirectErc20TransferTxData';
 export * from './requestTokenAmountApproval';
