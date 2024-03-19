@@ -1,9 +1,6 @@
-import { utils } from 'ethers';
+import { Interface } from 'ethers/lib/utils';
 import { erc20 } from './abi';
 
-export const getErc20ContractInterface = (
-  recipient: string,
-  amount: bigint
-): utils.Interface => {
-  return new utils.Interface(erc20.abi);
+export const getErc20ContractInterface = (): Interface => {
+  return new Interface(erc20.abi);
 };
