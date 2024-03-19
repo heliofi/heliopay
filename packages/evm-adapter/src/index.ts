@@ -2,6 +2,7 @@ export * from './getPaymentTx';
 export * from './getDirectTransferTx';
 export * from './directErc20Transfer';
 export * from './getDirectErc20TransferTxData';
+export * from './getErc20ContractInterface';
 export * from './requestTokenAmountApproval';
 export * from './types';
 export * from './constants';
