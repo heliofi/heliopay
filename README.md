@@ -4,7 +4,7 @@ Helio embedded components can be used in your website for dynamic payments or st
 
 We currently support React v18.
 
-Download the NPM from here: https://www.npmjs.com/package/@heliofi/react
+Download the NPM from here: https://www.npmjs.com/package/@heliofi/checkout-react
 
 (Use the latest full version modules for deployment. Do not use the alpha versions unless recommended by Helio)
 
