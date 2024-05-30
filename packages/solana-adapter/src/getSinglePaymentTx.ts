@@ -96,7 +96,7 @@ export const getSinglePaymentTx = async (
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount: daoFeeTokenAccountAddress,
       rent: SYSVAR_RENT_PUBKEY,
-      // tokenProgram: TOKEN_PROGRAM_ID,
+      // tokenProgram: TOKEN_PROGRAM_ID, // .... test123
       tokenProgram: TOKEN_2022_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
