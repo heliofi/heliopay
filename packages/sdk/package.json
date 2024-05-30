@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/sdk",
-  "version": "1.0.3-alpha.0",
+  "version": "1.0.4-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@heliofi/common": "0.1.248",
     "@heliofi/evm-adapter": "0.0.30-beta",
-    "@heliofi/solana-adapter": "^4.0.9-alpha.0",
+    "@heliofi/solana-adapter": "^4.0.10-alpha.0",
     "@project-serum/anchor": "^0.26.0",
     "@solana/wallet-adapter-react": "^0.15.20",
     "@solana/web3.js": "^1.66.2",
