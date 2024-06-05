@@ -7,12 +7,12 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
+import { getProgramId } from './utils';
 
 export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
@@ -48,6 +48,8 @@ export const getCreatePaymentTx = async (
     program.programId
   );
 
+  const tokenProgram = getProgramId(req.tokenProgram);
+
   // Signers method is useless (signers removed after wallet sign)
   const transaction = await program.methods
     .createPayment(
@@ -71,7 +73,7 @@ export const getCreatePaymentTx = async (
       daoFeeTokenAccount,
       mint,
       rent: SYSVAR_RENT_PUBKEY,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })

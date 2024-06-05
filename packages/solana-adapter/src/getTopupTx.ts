@@ -1,8 +1,9 @@
 import { PublicKey, Transaction } from '@solana/web3.js';
-import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
+import { getProgramId } from './utils';
 
 export const getTopupTx = async (
   program: Program<HelioIdl>,
@@ -21,6 +22,8 @@ export const getTopupTx = async (
     req.payment
   );
 
+  const tokenProgram = getProgramId(req.tokenProgram);
+
   const transaction = await program.methods
     .topup(new BN(req.amount))
     .accounts({
@@ -29,7 +32,7 @@ export const getTopupTx = async (
       paymentAccount: req.payment,
       paymentTokenAccount,
       pdaSigner: pda,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram,
     })
     .transaction();
 

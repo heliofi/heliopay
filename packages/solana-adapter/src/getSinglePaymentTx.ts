@@ -8,12 +8,12 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
+import { getProgramId } from './utils';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<string> = [],
@@ -82,6 +82,8 @@ export const getSinglePaymentTx = async (
     accounts
   );
 
+  const tokenProgram = getProgramId(req.tokenProgram);
+
   const transaction = await program.methods
     .singlePayment(new BN(req.amount), new BN(fee), remainingAmounts)
     .accounts({
@@ -95,7 +97,7 @@ export const getSinglePaymentTx = async (
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount: daoFeeTokenAccountAddress,
       rent: SYSVAR_RENT_PUBKEY,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })

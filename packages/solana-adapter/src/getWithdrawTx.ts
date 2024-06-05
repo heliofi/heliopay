@@ -1,9 +1,10 @@
 import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
-import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { WithdrawRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
+import { getProgramId } from './utils';
 
 export const getWithdrawTx = async (
   program: Program<HelioIdl>,
@@ -37,6 +38,8 @@ export const getWithdrawTx = async (
     daoFeeWalletKey
   );
 
+  const tokenProgram = getProgramId(req.tokenProgram);
+
   const transaction = await program.methods
     .withdraw(new BN(fee))
     .accounts({
@@ -50,7 +53,7 @@ export const getWithdrawTx = async (
       helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram,
       systemProgram: SystemProgram.programId,
     })
     .transaction();
