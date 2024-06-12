@@ -1,9 +1,4 @@
-import {
-  SystemProgram,
-  PublicKey,
-  SYSVAR_RENT_PUBKEY,
-  Transaction,
-} from '@solana/web3.js';
+import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
@@ -72,7 +67,6 @@ export const getCreatePaymentTx = async (
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
       mint,
-      rent: SYSVAR_RENT_PUBKEY,
       tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,

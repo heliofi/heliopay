@@ -1,9 +1,13 @@
 export default {
-  version: '0.0.0',
+  version: '1.0.1',
   name: 'helio_protocol',
+  docs: [
+    'Program for processing stream and one time payments in SOL or SPL token.',
+  ],
   instructions: [
     {
       name: 'createPayment',
+      docs: ['Entry point for function for creating the stream payment.'],
       accounts: [
         {
           name: 'sender',
@@ -57,11 +61,6 @@ export default {
         },
         {
           name: 'mint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
           isMut: false,
           isSigner: false,
         },
@@ -110,6 +109,9 @@ export default {
     },
     {
       name: 'createSolPayment',
+      docs: [
+        'Entry point for function for creating the stream payment in SOL.',
+      ],
       accounts: [
         {
           name: 'sender',
@@ -157,6 +159,7 @@ export default {
     },
     {
       name: 'cancelPayment',
+      docs: ['Entry point for cancelling(terminating) the stream payment.'],
       accounts: [
         {
           name: 'signer',
@@ -219,6 +222,11 @@ export default {
           isSigner: false,
         },
         {
+          name: 'mint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -238,6 +246,7 @@ export default {
     },
     {
       name: 'cancelSolPayment',
+      docs: ['Entry point for cancelling(terminating) the stream payment.'],
       accounts: [
         {
           name: 'signer',
@@ -284,6 +293,7 @@ export default {
     },
     {
       name: 'withdraw',
+      docs: ['Entry point for witdhraw due SPL tokens for recipient.'],
       accounts: [
         {
           name: 'signer',
@@ -336,6 +346,11 @@ export default {
           isSigner: false,
         },
         {
+          name: 'mint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -355,6 +370,7 @@ export default {
     },
     {
       name: 'withdrawSol',
+      docs: ['Entry point for witdhraw due SOL for recipient.'],
       accounts: [
         {
           name: 'signer',
@@ -396,6 +412,7 @@ export default {
     },
     {
       name: 'singlePayment',
+      docs: ['Entry point for one time payment in SPL tokens.'],
       accounts: [
         {
           name: 'sender',
@@ -443,11 +460,6 @@ export default {
           isSigner: false,
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -482,6 +494,7 @@ export default {
     },
     {
       name: 'singleSolPayment',
+      docs: ['Entry point for one time payment in SOL.'],
       accounts: [
         {
           name: 'sender',
@@ -528,6 +541,7 @@ export default {
     },
     {
       name: 'topup',
+      docs: ['Entry point for topup in SPL tokens.'],
       accounts: [
         {
           name: 'sender',
@@ -555,6 +569,11 @@ export default {
           isSigner: false,
         },
         {
+          name: 'mint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
           name: 'tokenProgram',
           isMut: false,
           isSigner: false,
@@ -569,6 +588,7 @@ export default {
     },
     {
       name: 'topupSol',
+      docs: ['Entry point for topup in SPL tokens.'],
       accounts: [
         {
           name: 'sender',
@@ -597,55 +617,70 @@ export default {
   accounts: [
     {
       name: 'PaymentAccount',
+      docs: ['Account holding metadata for payment stream.'],
       type: {
         kind: 'struct',
         fields: [
           {
             name: 'amount',
+            docs: ['The raw amount to transfer'],
             type: 'u64',
           },
           {
             name: 'withdrawal',
+            docs: ['The recipents withrawed amount'],
             type: 'u64',
           },
           {
             name: 'startAt',
+            docs: ['The unix timestamp to start the payment at'],
             type: 'u64',
           },
           {
             name: 'endAt',
+            docs: [
+              'The unix timestamp to end the payment at. If recurrence_interval is zero, then start_at must equal end_at',
+            ],
             type: 'u64',
           },
           {
             name: 'interval',
+            docs: ['Duration of charged interval in seconds'],
             type: 'u64',
           },
           {
             name: 'senderKey',
+            docs: ['The sender party of the payment'],
             type: 'publicKey',
           },
           {
             name: 'senderTokens',
+            docs: ["The sender's token account address"],
             type: 'publicKey',
           },
           {
             name: 'recipientKey',
+            docs: ['The recipient party of the payment'],
             type: 'publicKey',
           },
           {
             name: 'recipientTokens',
+            docs: ["The recipient's token account address"],
             type: 'publicKey',
           },
           {
             name: 'mint',
+            docs: ['The mint (currency) token of the payment'],
             type: 'publicKey',
           },
           {
             name: 'bump',
+            docs: ['PDA bump (0-255, sent from client on stream creation)'],
             type: 'u8',
           },
           {
             name: 'payFees',
+            docs: ['Pay fees flag'],
             type: 'bool',
           },
         ],
@@ -653,101 +688,51 @@ export default {
     },
     {
       name: 'SolPaymentAccount',
+      docs: ['Account holding metadata for sol payment stream.'],
       type: {
         kind: 'struct',
         fields: [
           {
             name: 'amount',
+            docs: ['The total amount to transfer'],
             type: 'u64',
           },
           {
             name: 'withdrawal',
+            docs: ['The recipents withrawed amount'],
             type: 'u64',
           },
           {
             name: 'startAt',
+            docs: ['The unix timestamp to start the payment at'],
             type: 'u64',
           },
           {
             name: 'endAt',
+            docs: [
+              'The unix timestamp to end the payment at. If recurrence_interval is zero, then start_at must equal end_at',
+            ],
             type: 'u64',
           },
           {
             name: 'interval',
+            docs: ['Duration of charged interval in seconds'],
             type: 'u64',
           },
           {
             name: 'senderKey',
+            docs: ['The sender party of the payment'],
             type: 'publicKey',
           },
           {
             name: 'recipientKey',
+            docs: ['The recipient party of the payment'],
             type: 'publicKey',
           },
           {
             name: 'payFees',
+            docs: ['Pay fees flag'],
             type: 'bool',
-          },
-        ],
-      },
-    },
-  ],
-  types: [
-    {
-      name: 'HelioError',
-      type: {
-        kind: 'enum',
-        variants: [
-          {
-            name: 'InsufficientBalance',
-          },
-          {
-            name: 'InvalidChronology',
-          },
-          {
-            name: 'InvalidAmount',
-          },
-          {
-            name: 'InvalidPeriod',
-          },
-          {
-            name: 'EmptyAccount',
-          },
-          {
-            name: 'CancelAuthority',
-          },
-          {
-            name: 'InvalidNumber',
-          },
-          {
-            name: 'InvalidTokenAccount',
-          },
-          {
-            name: 'InvalidSplitPaymentData',
-          },
-          {
-            name: 'InvalidPaymentTokenAccount',
-          },
-          {
-            name: 'InvalidPDASigner',
-          },
-          {
-            name: 'InvalidFeeAccount',
-          },
-          {
-            name: 'StreamExpired',
-          },
-          {
-            name: 'InvalidTopupAmount',
-          },
-          {
-            name: 'InvalidFee',
-          },
-          {
-            name: 'UnauthorizedSigner',
-          },
-          {
-            name: 'General',
           },
         ],
       },
@@ -785,7 +770,94 @@ export default {
       ],
     },
   ],
+  errors: [
+    {
+      code: 6000,
+      name: 'InsufficientBalance',
+      msg: 'Insufficient SOL to pay transfer fees.',
+    },
+    {
+      code: 6001,
+      name: 'InvalidChronology',
+      msg: 'The timestamps must be chronological.',
+    },
+    {
+      code: 6002,
+      name: 'InvalidAmount',
+      msg: 'The amount must be positive number.',
+    },
+    {
+      code: 6003,
+      name: 'InvalidPeriod',
+      msg: 'The charging period must be shorter then duration time, longer then 10secs.',
+    },
+    {
+      code: 6004,
+      name: 'EmptyAccount',
+      msg: 'The account is empty, nothing to withdraw.',
+    },
+    {
+      code: 6005,
+      name: 'CancelAuthority',
+      msg: 'The signer trying to cancel running stream is not a sender!',
+    },
+    {
+      code: 6006,
+      name: 'InvalidNumber',
+      msg: 'The number is invalid!',
+    },
+    {
+      code: 6007,
+      name: 'InvalidTokenAccount',
+      msg: 'The token account not provided or has wrong owner.',
+    },
+    {
+      code: 6008,
+      name: 'InvalidSplitPaymentData',
+      msg: 'Remainings amounts and accounts not matching.',
+    },
+    {
+      code: 6009,
+      name: 'InvalidPaymentTokenAccount',
+      msg: 'Invalid payment token account.',
+    },
+    {
+      code: 6010,
+      name: 'InvalidPDASigner',
+      msg: 'Invalid PDA signer address.',
+    },
+    {
+      code: 6011,
+      name: 'InvalidFeeAccount',
+      msg: 'Invalid fee account address.',
+    },
+    {
+      code: 6012,
+      name: 'StreamExpired',
+      msg: 'Stream already expired no changes allowed.',
+    },
+    {
+      code: 6013,
+      name: 'InvalidTopupAmount',
+      msg: 'Invalid topup amount (less then base interval amount).',
+    },
+    {
+      code: 6014,
+      name: 'InvalidFee',
+      msg: 'Invalid fee, 100 percent or larger.',
+    },
+    {
+      code: 6015,
+      name: 'UnauthorizedSigner',
+      msg: 'Signer not authorized to perform operation.',
+    },
+    {
+      code: 6016,
+      name: 'General',
+      msg: 'General error',
+    },
+  ],
   metadata: {
-    address: 'ENicYBBNZQ91toN7ggmTxnDGZW14uv9UkumN7XBGeYJ4',
+    address: '6QiXNbZNHVfgehjgSsdKBjFSuqfMQAxbi1KHBRcgrLZH',
   },
 };
