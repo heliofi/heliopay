@@ -37,9 +37,9 @@
     "@heliofi/common": "0.1.538",
     "@project-serum/anchor": "^0.26.0",
     "@sideway/formula": "^3.0.1",
-    "@solana/spl-token": "^0.3.10",
+    "@solana/spl-token": "^0.4.1",
     "@solana/wallet-adapter-react": "^0.15.20",
-    "@solana/web3.js": "^1.66.2",
+    "@solana/web3.js": "^1.91.8",
     "bs58": "^5.0.0",
     "jsonwebtoken": "^9.0.0",
     "tweetnacl": "^1.0.3"
