@@ -32,6 +32,7 @@ export const getTopupTx = async (
       paymentAccount: req.payment,
       paymentTokenAccount,
       pdaSigner: pda,
+      mint,
       tokenProgram,
     })
     .transaction();

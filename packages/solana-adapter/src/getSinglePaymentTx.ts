@@ -2,7 +2,6 @@ import {
   AccountMeta,
   PublicKey,
   SystemProgram,
-  SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
 import {
@@ -91,12 +90,11 @@ export const getSinglePaymentTx = async (
       senderTokenAccount: senderAssociatedTokenAddress,
       recipient: req.recipient,
       recipientTokenAccount: recipientAssociatedTokenAddress,
-      mint,
       helioFeeAccount: helioFeeWalletKey,
       helioFeeTokenAccount: helioFeeTokenAccountAddress,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount: daoFeeTokenAccountAddress,
-      rent: SYSVAR_RENT_PUBKEY,
+      mint,
       tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,

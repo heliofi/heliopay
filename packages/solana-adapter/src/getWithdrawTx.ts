@@ -53,6 +53,7 @@ export const getWithdrawTx = async (
       helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
+      mint,
       tokenProgram,
       systemProgram: SystemProgram.programId,
     })
