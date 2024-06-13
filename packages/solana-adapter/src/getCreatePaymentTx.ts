@@ -7,34 +7,41 @@ import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { CreatePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { getProgramId } from './utils';
 
 export const getCreatePaymentTx = async (
   program: Program<HelioIdl>,
   req: CreatePaymentRequest,
   payFees: boolean = true
 ): Promise<Transaction> => {
-  const mint = req.mintAddress!;
+  const { mintAddress, tokenProgram } = req;
 
-  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
+  if (!mintAddress) {
+    throw new Error('mintAddress address is required for cancel payment');
+  }
+
+  // TODO: change for token2022
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    req.sender
+  );
 
   const recipientTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.recipient
   );
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.paymentAccount
   );
 
   const helioFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     helioFeeWalletKey
   );
 
   const daoFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     daoFeeWalletKey
   );
 
@@ -42,8 +49,6 @@ export const getCreatePaymentTx = async (
     [req.paymentAccount.toBytes()],
     program.programId
   );
-
-  const tokenProgram = getProgramId(req.tokenProgram);
 
   // Signers method is useless (signers removed after wallet sign)
   const transaction = await program.methods
@@ -66,7 +71,7 @@ export const getCreatePaymentTx = async (
       helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
-      mint,
+      mint: mintAddress,
       tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,

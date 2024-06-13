@@ -3,7 +3,6 @@ import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
-import { getProgramId } from './utils';
 
 export const getTopupTx = async (
   program: Program<HelioIdl>,
@@ -13,16 +12,21 @@ export const getTopupTx = async (
     [req.payment.toBytes()],
     program.programId
   );
-  const mint = req.mintAddress!;
+  const { mintAddress, tokenProgram } = req;
 
-  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
+  if (!mintAddress) {
+    throw new Error('mintAddress address is required for cancel payment');
+  }
 
-  const paymentTokenAccount = await getAssociatedTokenAddress(
-    mint,
-    req.payment
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    req.sender
   );
 
-  const tokenProgram = getProgramId(req.tokenProgram);
+  const paymentTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    req.payment
+  );
 
   const transaction = await program.methods
     .topup(new BN(req.amount))
@@ -32,7 +36,7 @@ export const getTopupTx = async (
       paymentAccount: req.payment,
       paymentTokenAccount,
       pdaSigner: pda,
-      mint,
+      mint: mintAddress,
       tokenProgram,
     })
     .transaction();

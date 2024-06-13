@@ -4,7 +4,6 @@ import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { WithdrawRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { getProgramId } from './utils';
 
 export const getWithdrawTx = async (
   program: Program<HelioIdl>,
@@ -16,29 +15,32 @@ export const getWithdrawTx = async (
     [req.payment.toBytes()],
     program.programId
   );
-  const mint = req.mintAddress!;
+  const { mintAddress, tokenProgram } = req;
 
+  if (!mintAddress) {
+    throw new Error('mintAddress address is required for cancel payment');
+  }
+
+  // TODO: change for token2022
   const recipientTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.recipient
   );
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.payment
   );
 
   const helioFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     helioFeeWalletKey
   );
 
   const daoFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     daoFeeWalletKey
   );
-
-  const tokenProgram = getProgramId(req.tokenProgram);
 
   const transaction = await program.methods
     .withdraw(new BN(fee))
@@ -53,7 +55,7 @@ export const getWithdrawTx = async (
       helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
-      mint,
+      mint: mintAddress,
       tokenProgram,
       systemProgram: SystemProgram.programId,
     })

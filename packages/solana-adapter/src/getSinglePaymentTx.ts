@@ -12,7 +12,6 @@ import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { SinglePaymentRequest } from './types';
 import { helioFeeWalletKey, daoFeeWalletKey } from './config';
-import { getProgramId } from './utils';
 
 const prepareSplitPaymentsValues = (
   amounts: Array<string> = [],
@@ -53,35 +52,40 @@ export const getSinglePaymentTx = async (
   amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): Promise<Transaction> => {
-  const mint = req.mintAddress;
+  const { mintAddress, tokenProgram } = req;
 
   const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
-    req.sender
+    mintAddress,
+    req.sender,
+    true,
+    tokenProgram
   );
 
   const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.recipient,
-    true
+    true,
+    tokenProgram
   );
 
   const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
-    mint,
-    helioFeeWalletKey
+    mintAddress,
+    helioFeeWalletKey,
+    false,
+    tokenProgram
   );
 
   const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
-    mint,
-    daoFeeWalletKey
+    mintAddress,
+    daoFeeWalletKey,
+    false,
+    tokenProgram
   );
 
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
     amounts,
     accounts
   );
-
-  const tokenProgram = getProgramId(req.tokenProgram);
 
   const transaction = await program.methods
     .singlePayment(new BN(req.amount), new BN(fee), remainingAmounts)
@@ -94,7 +98,7 @@ export const getSinglePaymentTx = async (
       helioFeeTokenAccount: helioFeeTokenAccountAddress,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount: daoFeeTokenAccountAddress,
-      mint,
+      mint: mintAddress,
       tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,

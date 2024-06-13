@@ -1,7 +1,6 @@
 import * as nacl from 'tweetnacl';
 import { Connection, Transaction, Keypair, PublicKey } from '@solana/web3.js';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { CurrencyTokenProgram } from '@heliofi/common';
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
 export async function signTransaction(
@@ -29,13 +28,4 @@ export async function signTransaction(
     );
   }
   return JSON.stringify(signedTransaction.serialize());
-}
-
-export function getProgramId(
-  currencyTokenProgram: CurrencyTokenProgram | undefined
-): PublicKey {
-  // Safe to have a fallback to TOKEN_PROGRAM_ID, in case of undefined
-  return currencyTokenProgram === CurrencyTokenProgram.TOKEN2022
-    ? TOKEN_2022_PROGRAM_ID
-    : TOKEN_PROGRAM_ID;
 }

@@ -1,5 +1,4 @@
 import { PublicKey } from '@solana/web3.js';
-import { CurrencyTokenProgram } from '@heliofi/common';
 
 export type CreatePaymentRequest = {
   amount: string;
@@ -10,7 +9,7 @@ export type CreatePaymentRequest = {
   recipient: PublicKey;
   paymentAccount: PublicKey;
   mintAddress?: PublicKey;
-  tokenProgram?: CurrencyTokenProgram;
+  tokenProgram?: PublicKey;
 };
 
 export type CancelPaymentRequest = {
@@ -18,14 +17,14 @@ export type CancelPaymentRequest = {
   recipient: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
-  tokenProgram?: CurrencyTokenProgram;
+  tokenProgram?: PublicKey;
 };
 
 export type WithdrawRequest = {
   recipient: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
-  tokenProgram?: CurrencyTokenProgram;
+  tokenProgram?: PublicKey;
 };
 
 export type TopupRequest = {
@@ -33,7 +32,7 @@ export type TopupRequest = {
   sender: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
-  tokenProgram?: CurrencyTokenProgram;
+  tokenProgram?: PublicKey;
 };
 
 export type SinglePaymentRequest = {
@@ -41,7 +40,7 @@ export type SinglePaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   mintAddress: PublicKey;
-  tokenProgram?: CurrencyTokenProgram;
+  tokenProgram?: PublicKey;
 };
 
 export type SingleTransactionProps = {

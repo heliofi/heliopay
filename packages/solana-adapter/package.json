@@ -34,7 +34,6 @@
   "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
     "@coral-xyz/anchor": "^0.27.0",
-    "@heliofi/common": "0.1.538",
     "@sideway/formula": "^3.0.1",
     "@solana/spl-token": "^0.4.1",
     "@solana/wallet-adapter-react": "^0.15.20",
@@ -63,6 +62,9 @@
     "ts-mocha": "^9.0.2",
     "typescript": "^5.1.6"
   },
+  "resolutions": {
+    "rpc-websockets": "7.11.0"
+ },
   "files": [
     "*.js",
     "/**/*.js",
