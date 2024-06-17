@@ -858,6 +858,6 @@ export default {
     },
   ],
   metadata: {
-    address: '6QiXNbZNHVfgehjgSsdKBjFSuqfMQAxbi1KHBRcgrLZH',
+    address: 'ENicYBBNZQ91toN7ggmTxnDGZW14uv9UkumN7XBGeYJ4',
   },
 };
