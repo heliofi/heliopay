@@ -9,6 +9,7 @@ export type CreatePaymentRequest = {
   recipient: PublicKey;
   paymentAccount: PublicKey;
   mintAddress?: PublicKey;
+  tokenProgram?: PublicKey;
 };
 
 export type CancelPaymentRequest = {
@@ -16,12 +17,14 @@ export type CancelPaymentRequest = {
   recipient: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
+  tokenProgram?: PublicKey;
 };
 
 export type WithdrawRequest = {
   recipient: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
+  tokenProgram?: PublicKey;
 };
 
 export type TopupRequest = {
@@ -29,6 +32,7 @@ export type TopupRequest = {
   sender: PublicKey;
   payment: PublicKey;
   mintAddress?: PublicKey;
+  tokenProgram?: PublicKey;
 };
 
 export type SinglePaymentRequest = {
@@ -36,6 +40,7 @@ export type SinglePaymentRequest = {
   sender: PublicKey;
   recipient: PublicKey;
   mintAddress: PublicKey;
+  tokenProgram?: PublicKey;
 };
 
 export type SingleTransactionProps = {

@@ -1,13 +1,7 @@
-import {
-  SystemProgram,
-  PublicKey,
-  SYSVAR_RENT_PUBKEY,
-  Transaction,
-} from '@solana/web3.js';
+import { SystemProgram, PublicKey, Transaction } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
@@ -19,27 +13,35 @@ export const getCreatePaymentTx = async (
   req: CreatePaymentRequest,
   payFees: boolean = true
 ): Promise<Transaction> => {
-  const mint = req.mintAddress!;
+  const { mintAddress, tokenProgram } = req;
 
-  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
+  if (!mintAddress) {
+    throw new Error('mintAddress address is required for cancel payment');
+  }
+
+  // TODO: change for token2022
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    req.sender
+  );
 
   const recipientTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.recipient
   );
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.paymentAccount
   );
 
   const helioFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     helioFeeWalletKey
   );
 
   const daoFeeTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     daoFeeWalletKey
   );
 
@@ -69,9 +71,8 @@ export const getCreatePaymentTx = async (
       helioFeeTokenAccount,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount,
-      mint,
-      rent: SYSVAR_RENT_PUBKEY,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      mint: mintAddress,
+      tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })

@@ -1,5 +1,5 @@
 import { PublicKey, Transaction } from '@solana/web3.js';
-import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
 import { TopupRequest } from './types';
@@ -12,12 +12,19 @@ export const getTopupTx = async (
     [req.payment.toBytes()],
     program.programId
   );
-  const mint = req.mintAddress!;
+  const { mintAddress, tokenProgram } = req;
 
-  const senderTokenAccount = await getAssociatedTokenAddress(mint, req.sender);
+  if (!mintAddress) {
+    throw new Error('mintAddress address is required for cancel payment');
+  }
+
+  const senderTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    req.sender
+  );
 
   const paymentTokenAccount = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.payment
   );
 
@@ -29,7 +36,8 @@ export const getTopupTx = async (
       paymentAccount: req.payment,
       paymentTokenAccount,
       pdaSigner: pda,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      mint: mintAddress,
+      tokenProgram,
     })
     .transaction();
 

@@ -2,13 +2,11 @@ import {
   AccountMeta,
   PublicKey,
   SystemProgram,
-  SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
-  TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BN, Program } from '@coral-xyz/anchor';
 import { HelioIdl } from './program';
@@ -54,27 +52,34 @@ export const getSinglePaymentTx = async (
   amounts: Array<string> = [],
   accounts: Array<PublicKey> = []
 ): Promise<Transaction> => {
-  const mint = req.mintAddress;
+  const { mintAddress, tokenProgram } = req;
 
   const senderAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
-    req.sender
+    mintAddress,
+    req.sender,
+    true,
+    tokenProgram
   );
 
   const recipientAssociatedTokenAddress = await getAssociatedTokenAddress(
-    mint,
+    mintAddress,
     req.recipient,
-    true
+    true,
+    tokenProgram
   );
 
   const helioFeeTokenAccountAddress = await getAssociatedTokenAddress(
-    mint,
-    helioFeeWalletKey
+    mintAddress,
+    helioFeeWalletKey,
+    false,
+    tokenProgram
   );
 
   const daoFeeTokenAccountAddress = await getAssociatedTokenAddress(
-    mint,
-    daoFeeWalletKey
+    mintAddress,
+    daoFeeWalletKey,
+    false,
+    tokenProgram
   );
 
   const { remainingAmounts, remainingAccounts } = prepareSplitPaymentsValues(
@@ -89,13 +94,12 @@ export const getSinglePaymentTx = async (
       senderTokenAccount: senderAssociatedTokenAddress,
       recipient: req.recipient,
       recipientTokenAccount: recipientAssociatedTokenAddress,
-      mint,
       helioFeeAccount: helioFeeWalletKey,
       helioFeeTokenAccount: helioFeeTokenAccountAddress,
       daoFeeAccount: daoFeeWalletKey,
       daoFeeTokenAccount: daoFeeTokenAccountAddress,
-      rent: SYSVAR_RENT_PUBKEY,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      mint: mintAddress,
+      tokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
     })
