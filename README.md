@@ -2,13 +2,13 @@
 
 Helio embedded components can be used in your website for dynamic payments or standard paylinks and pay streams.
 
-We currently support React v18.
+## Helio checkout embed 
 
-Download the NPM from here: https://www.npmjs.com/package/@heliofi/react
+If you would like to embed our Pay Links in your webiste, please see [demo.hel.io](https://demo.hel.io) or our new [Helio Checkout React embed widget](https://www.npmjs.com/package/@heliofi/checkout-react).
 
-(Use the latest full version modules for deployment. Do not use the alpha versions unless recommended by Helio)
+Our [sample developer app](https://github.com/heliofi/sample-dev-app) shows how to use our API and embed together.
 
-Always use the latest public version and ensure that all your dependencies are on the latest versions
+## Helio SDK
 
 The Helio SDK is now integrated into the Helio React modules.
 
@@ -23,53 +23,6 @@ For full details of our API schema please review https://docs.hel.io/developers/
 Further documents with examples are available here: https://github.com/heliofi/heliopay/tree/main/docs
 
 Devnet and Mainnet are currently supported by Helio.
-
-## Installation
-
-`yarn add @heliofi/react`
-
-## Embed Helio Components
-
-You can embed Helio components for the following two use cases:
-
-* Embed a Dynamic payment with the Helio Pay button (REACT)
-* Embed a Pay Link or Pay Stream with the Helio Pay button (REACT)
-
-### 1. Embed a Dynamic payment with the Helio Pay button
-
-The Helio pay button supports a "dynamic" payment options where you can pass a currency and a value through to our standard Helio Pay button.
-This is useful for custom checkout pages that want to have more than one item on the page where a total can be calculated and passed through for payment.
-
-In the example below if you provide totalAmount and the currency to the button, the user will perform the payments with those values.
-
-```ts
-import { HelioPay } from "@heliofi/react";
-import { SuccessPaymentEvent } from '@heliofi/sdk'
-
-const App = () => {
-  return (
-    <div>
-      <HelioPay
-        cluster={ClusterHelio.Mainnet}
-        paymentRequestId={"your_paylink_id"}
-        supportedCurrencies={["SOL"]}
-        totalAmount={0.01}
-        onSuccess={(event: SuccessPaymentEvent): void => {
-          console.log("onSuccess", event);
-          /**
-           * The success event signature looks as follows:
-           * {
-           *    content: string;
-           *    transaction: string;
-           * }
-           * The transaction can be used to verify the payment with helio api
-           * */
-        }}
-      />
-    </div>
-  );
-};
-```
 
 ### Using the Helio API to verify a dynamic payment
 
@@ -99,196 +52,11 @@ try {
   throw new Error("Unable to get transactions data from backend!");
 }
 ```
-### 2. Embed a Pay Link with the Helio Pay button
 
-Use this option if you want to embed the Helio Pay Button on your site for Links
-
-```ts
-import { HelioPay } from "@heliofi/react";
-import {
-    ClusterHelio,
-    SuccessPaymentEvent,
-    ErrorPaymentEvent,
-    PendingPaymentEvent
-} from '@heliofi/sdk';
-
-const App = () => {
-  return (
-    <div>
-      <HelioPay
-        cluster={ClusterHelio.Mainnet}
-        paymentRequestId={"your_paylink_id"}
-        onSuccess={function (event: SuccessPaymentEvent): void {
-          console.log("onSuccess", event);
-        }}
-        onError={function (event: ErrorPaymentEvent): void {
-          console.log("onError", event);
-        }}
-        onPending={function (event: PendingPaymentEvent): void {
-          console.log("onPending", event);
-        }}
-        onStartPayment={function (): void {
-          console.log("onStartPayment");
-        }}
-      />
-    </div>
-  );
-};
-```
-
-### 3. Embed a Pay Stream with the Helio Pay button
-
-Use this option if you want to embed the Helio Pay Button on your site for Pay Streams
-
-```ts
-import { HelioPay } from "@heliofi/react";
-import {
-    ClusterHelio,
-    SuccessPaymentEvent,
-    ErrorPaymentEvent,
-    PendingPaymentEvent
-} from '@heliofi/sdk';
-
-const App = () => {
-  return (
-    <div>
-      <HelioPay
-        cluster={ClusterHelio.Mainnet}
-        paymentRequestId={"your_paystream_id"}
-        paymentType={PaymentRequestType.PAYSTREAM}
-        onSuccess={function (event: SuccessPaymentEvent): void {
-          console.log("onSuccess", event);
-        }}
-        onError={function (event: ErrorPaymentEvent): void {
-          console.log("onError", event);
-        }}
-        onPending={function (event: PendingPaymentEvent): void {
-          console.log("onPending", event);
-        }}
-        onStartPayment={function (): void {
-          console.log("onStartPayment");
-        }}
-      />
-    </div>
-  );
-};
-```
-
-### 4. Populate customer details with parameter pass through on the Helio Pay button
-
-**Available parameter passthroughs for customer information**
-
-`fullName, email, discordUsername, twitterUser, phoneNumber, productValue, areaCode, deliveryAddress, city, street, streetNumber.`
-
-<br>**Example parameter passthrough for name and city**
-
-`http://your_domain/?fullName=full%20name&city=your_city`
-
-<br>**Use this option if you want to embed the Helio Pay Button on your site for parameter pass through for customer information:**
-
-```ts
-import { HelioPay } from "@heliofi/react";
-import {
-    ClusterHelio,
-    SuccessPaymentEvent,
-    ErrorPaymentEvent,
-    PendingPaymentEvent
-} from '@heliofi/sdk';
-
-const App = () => {
-  return (
-    <div>
-      <HelioPay
-        cluster={ClusterHelio.Mainnet}
-        paymentRequestId={"your_paylink_id"}
-        onSuccess={function (event: SuccessPaymentEvent): void {
-          console.log("onSuccess", event);
-        }}
-        onError={function (event: ErrorPaymentEvent): void {
-          console.log("onError", event);
-        }}
-        onPending={function (event: PendingPaymentEvent): void {
-          console.log("onPending", event);
-        }}
-        onStartPayment={function (): void {
-          console.log("onStartPayment");
-        }}
-        searchCustomerDetails={{ fullName: 'full name', email: 'email@email.com', ... }}
-      />
-    </div>
-  );
-};
-```
-
-### 5. Embed a additionalJSON or customApiUrl with the Helio Pay button
-
-Use this options if you want to save additional information or change api url
-
-```ts
-import { HelioPay } from "@heliofi/react";
-import { 
-    ClusterHelio, 
-    SuccessPaymentEvent, 
-    ErrorPaymentEvent, 
-    PendingPaymentEvent
-} from '@heliofi/sdk';
-
-const App = () => {
-  return (
-    <div>
-      <HelioPay
-        additionalJSON={{ key1: 'value1' }}
-        customApiUrl="http://127.0.0.1"
-        cluster={ClusterHelio.Mainnet}
-        paymentRequestId={"your_paystream_id"}
-        paymentType={PaymentRequestType.PAYSTREAM}
-        onSuccess={function (event: SuccessPaymentEvent): void {
-          console.log("onSuccess", event);
-        }}
-        onError={function (event: ErrorPaymentEvent): void {
-          console.log("onError", event);
-        }}
-        onPending={function (event: PendingPaymentEvent): void {
-          console.log("onPending", event);
-        }}
-        onStartPayment={function (): void {
-          console.log("onStartPayment");
-        }}
-      />
-    </div>
-  );
-};
-```
-
-#### Properties table for the Helio components
-
-| Property            | Type               | Required | Default value              | Description                                                                                |
-|:--------------------|:-------------------|:---------|:---------------------------|:-------------------------------------------------------------------------------------------|
-| cluster             | string             | yes      |                            | **available values:** devnet, mainnet, testnet                                             |
-| paymentRequestId    | string             | yes      |                            | Your paylink ID                                                                            |
-| onSuccess           | function           | no       |                            | triggered event when success                                                               |
-| onError             | function           | no       |                            | triggered event when error                                                                 |
-| onPending           | function           | no       |                            | triggered event when pending                                                               |
-| onStartPayment      | function           | no       |                            | triggered event on start payment                                                           |
-| theme               | object             | no       |                            | customize the primary color(more will come soon) `theme={{ colors: { primary: #f76c1b }}}` |
-| totalAmount         | number             | no       |                            | you can pass dynamic amount. dynamic pricing should be checked for this.                   |
-| supportedCurrencies | string array       | no       |                            | currencies you want to support.                                                            |
-| paymentType         | PaymentRequestType | no       | PaymentRequestType.PAYLINK | **available values:** PAYLINK, PAYSTREAM                                                   |
-| additionalJSON      | object             | no       |                            | set additional information for customers                                                   |
-| customApiUrl        | string             | no       |                            | change api url for all requests                                                            |
-
-### Support Currencies
+### Supported Currencies
 
 Use our Swagger API to get a list of currencies currently supported : https://api.hel.io/v1/docs#/Currency/CurrencyController_value
 
 Try it out with currency 'type' of "DIGITAL" to return all supported currencies
 
 Or pull directly from : https://api.hel.io/v1/currency?type=DIGITAL
-
-### Embedded Example App
-
-An example application with dynamic pricing can be found here: [Embedded Example App](https://embed.hel.io/)
-
-Repo for the example application which you can review to understand how to embed Helio components : https://github.com/heliofi/heliopay-nextjs-sample
-
-<img width="983" alt="Helio Embedded Example App" src="https://user-images.githubusercontent.com/97976151/213204178-1dd385db-00f0-4978-b26c-ba1fefe56d2c.png">

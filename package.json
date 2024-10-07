@@ -5,8 +5,8 @@
     "lerna": "^5.1.8"
   },
   "scripts": {
-    "release": "lerna publish --ignore '@heliofi/react'",
-    "build": "(yarn workspace @heliofi/solana-adapter run build) && (yarn workspace @heliofi/sdk run build) && (yarn workspace @heliofi/react run build)"
+    "release": "lerna publish",
+    "build": "(yarn workspace @heliofi/solana-adapter run build) && (yarn workspace @heliofi/sdk run build)"
   },
   "workspaces": [
     "packages/*"
