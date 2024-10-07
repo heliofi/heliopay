@@ -24,35 +24,6 @@ Further documents with examples are available here: https://github.com/heliofi/h
 
 Devnet and Mainnet are currently supported by Helio.
 
-### Using the Helio API to verify a dynamic payment
-
-Verify the payment using the Helio API by creating access keys here: https://docs.hel.io/developers/helio-api-key
-
-Once you have access to the API with the public and secret API keys you can call the endpoint per the following example:
-
-```ts
-try {
-  const transactionSignature = "solana blockchain transaction signature";
-  const token = "token from helio team";
-  const publicKey =
-    "you public key registered with helio team that recives transacitons";
-
-  const baseUrl = "https://api.hel.io";
-  const endpoint = `/v1/transactions/signature/${transactionSignature}?publicKey=${publickey}`;
-
-  const response = await fetch(`${baseUrl}${endpoint}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
-  return response.json();
-} catch (e) {
-  throw new Error("Unable to get transactions data from backend!");
-}
-```
-
 ### Supported Currencies
 
 Use our Swagger API to get a list of currencies currently supported : https://api.hel.io/v1/docs#/Currency/CurrencyController_value
