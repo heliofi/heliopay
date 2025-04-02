@@ -1,19 +1,18 @@
-import { BaseProvider } from '@ethersproject/providers';
-import { BigNumber, PopulatedTransaction } from 'ethers';
+import { JsonRpcProvider, TransactionRequest } from 'ethers';
 import { directTransferGasLimit } from './constants';
 
 export const getDirectTransferTx = async (
-  provider: BaseProvider,
+  provider: JsonRpcProvider,
   recipient: string,
   amount: bigint
-): Promise<PopulatedTransaction> => {
+): Promise<TransactionRequest> => {
   const { chainId } = await provider.getNetwork();
-  const gasPrice = await provider.getGasPrice();
+  const { gasPrice } = await provider.getFeeData();
   return {
     to: recipient,
-    value: BigNumber.from(amount),
+    value: amount,
     chainId,
     gasPrice,
-    gasLimit: BigNumber.from(directTransferGasLimit),
+    gasLimit: directTransferGasLimit,
   };
 };

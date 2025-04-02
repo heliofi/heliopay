@@ -1,17 +1,17 @@
-import { BaseProvider } from '@ethersproject/providers';
-import { BigNumber, Contract } from 'ethers';
+import { Contract, JsonRpcProvider } from 'ethers';
 import { helio } from './abi';
 import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
 import { getContractAddress } from './utils';
 
 export const getPaymentTx = async (
-  provider: BaseProvider,
+  provider: JsonRpcProvider,
   req: PaymentRequest,
   recipientsAndAmounts: RecipientAndAmount[]
 ) => {
   const { chainId } = await provider.getNetwork();
-  const contractAddress = getContractAddress(chainId);
+  // @Todo: After ethers v6, chainId is a bigint, but in our system we use an enum with numbers
+  const contractAddress = getContractAddress(Number(chainId));
   if (!contractAddress) {
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
@@ -20,7 +20,7 @@ export const getPaymentTx = async (
 
   const BNRecipientsAndAmounts = recipientsAndAmounts.map((r) => ({
     recipient: r.recipient,
-    amount: BigNumber.from(r.amount),
+    amount: r.amount,
   }));
 
   const overrides = {
@@ -29,10 +29,10 @@ export const getPaymentTx = async (
         ? recipientsAndAmounts.reduce((acc, r) => acc + r.amount, 0n)
         : 0n,
     gasLimit,
-    gasPrice: await provider.getGasPrice(),
+    gasPrice: (await provider.getFeeData()).gasPrice,
   };
 
-  const unsignedTx = await contract.populateTransaction.payment(
+  const unsignedTx = await contract.payment.populateTransaction(
     req.tokenAddress,
     BNRecipientsAndAmounts,
     req.transactonDbId,

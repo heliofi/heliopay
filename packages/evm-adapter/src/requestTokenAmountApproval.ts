@@ -1,5 +1,4 @@
-import { JsonRpcSigner, TransactionResponse } from '@ethersproject/providers';
-import { Contract } from 'ethers';
+import { Contract, JsonRpcSigner, TransactionResponse } from 'ethers';
 import { erc20 } from './abi';
 import { getContractAddress } from './utils';
 
@@ -17,7 +16,7 @@ export const requestTokenAmountApproval = async (
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
   const erc20Contract = new Contract(tokenAddress, erc20.abi, signer);
-  return await erc20Contract.connect(signer).approve(contractAddress, amount, {
+  return await erc20Contract.approve(contractAddress, amount, {
     from: await signer.getAddress(),
   });
 };
