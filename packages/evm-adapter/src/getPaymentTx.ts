@@ -1,4 +1,4 @@
-import { Contract, JsonRpcProvider } from 'ethers';
+import { Contract, ContractTransaction, JsonRpcProvider } from 'ethers';
 import { helio } from './abi';
 import { gasLimit } from './constants';
 import { PaymentRequest, RecipientAndAmount } from './types';
@@ -8,7 +8,7 @@ export const getPaymentTx = async (
   provider: JsonRpcProvider,
   req: PaymentRequest,
   recipientsAndAmounts: RecipientAndAmount[]
-) => {
+): Promise<ContractTransaction> => {
   const { chainId } = await provider.getNetwork();
   // @Todo: After ethers v6, chainId is a bigint, but in our system we use an enum with numbers
   const contractAddress = getContractAddress(Number(chainId));
