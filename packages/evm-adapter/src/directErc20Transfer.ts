@@ -1,5 +1,4 @@
-import { JsonRpcSigner, TransactionResponse } from '@ethersproject/providers';
-import { BigNumber, Contract } from 'ethers';
+import { Contract, JsonRpcSigner, TransactionResponse } from 'ethers';
 import { erc20 } from './abi';
 
 export const directErc20Transfer = async (
@@ -9,7 +8,5 @@ export const directErc20Transfer = async (
   tokenAddress: string
 ): Promise<TransactionResponse> => {
   const erc20Contract = new Contract(tokenAddress, erc20.abi, signer);
-  return erc20Contract
-    .connect(signer)
-    .transfer(recipient, BigNumber.from(amount));
+  return erc20Contract.transfer(recipient, amount);
 };

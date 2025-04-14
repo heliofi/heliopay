@@ -1,4 +1,4 @@
-import { Interface } from 'ethers/lib/utils';
+import { Interface } from 'ethers';
 import { erc20 } from './abi';
 
 export const getErc20ContractInterface = (): Interface => {
