@@ -6,12 +6,13 @@ export const requestTokenAmountApproval = async (
   signer: JsonRpcSigner,
   amount: bigint,
   chainId: number,
-  tokenAddress: string | undefined
+  tokenAddress: string | undefined,
+  spender?: string,
 ): Promise<TransactionResponse> => {
   if (!tokenAddress || !chainId) {
     throw new Error('Missing erc20 token address or chainId');
   }
-  const contractAddress = getContractAddress(chainId);
+  const contractAddress = spender ?? getContractAddress(chainId);
   if (!contractAddress) {
     throw new Error(`Non existant contract address for chainId ${chainId}`);
   }
