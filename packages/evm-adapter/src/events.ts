@@ -11,4 +11,5 @@ export type PaymentEvent = {
 export enum EventName {
   PAYMENT = 'Payment',
   TRANSFER = 'Transfer',
+  SWAP = 'Swap',
 }
