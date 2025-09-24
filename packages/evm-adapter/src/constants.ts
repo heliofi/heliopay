@@ -7,6 +7,9 @@ export enum ChainId {
   BASE_MAINNET = 8453,
   BASE_SEPOLIA = 84532,
   POLYGON_AMMOY = 80002,
+  SOLANA_MAINNET = 1399811149,
+  SOLANA_DEVNET = 69420,
+  BITCOIN_MAINNET = 999000313,
 }
 
 export enum ContractAddress {
