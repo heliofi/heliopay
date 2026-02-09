@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "watch": "yarn build -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
@@ -28,6 +29,7 @@
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13",
     "tweetnacl": "^1.0.3",
     "wagmi": "^0.8.6",
@@ -35,6 +37,8 @@
   },
   "devDependencies": {
     "@heliofi/eslint-config-helio": "^0.1.1",
+    "@types/lodash": "^4.17.23",
+    "@types/react": "18",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "eslint": "^8.13.0",
@@ -44,6 +48,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-prettier": "^4.0.0",
+    "react": "18",
     "typescript": "^4.7.2"
   },
   "eslintConfig": {

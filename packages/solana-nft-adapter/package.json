@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "watch": "yarn build -w",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",

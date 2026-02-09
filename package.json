@@ -2,11 +2,12 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^5.1.8"
+    "lerna": "^9.0.0"
   },
   "scripts": {
     "release": "lerna publish",
-    "build": "(yarn workspace @heliofi/solana-adapter run build) && (yarn workspace @heliofi/sdk run build)"
+    "build": "(yarn workspace @heliofi/solana-adapter run build) && (yarn workspace @heliofi/sdk run build)",
+    "typecheck": "lerna run typecheck"
   },
   "workspaces": [
     "packages/*"
