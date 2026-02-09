@@ -1,6 +1,6 @@
 import { SplitWallet } from '@heliofi/common';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
+import type { AnchorWallet } from '@solana/wallet-adapter-react/src/useAnchorWallet';
 
 import {
   PaymentResponse,

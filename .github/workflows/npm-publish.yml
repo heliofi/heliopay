@@ -1,0 +1,94 @@
+name: 📦 NPM Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        required: true
+        type: choice
+        options:
+          - evm-adapter
+          - solana-adapter
+          - solana-nft-adapter
+      version:
+        description: Optional version (e.g. 1.2.3). On feature branches this becomes an alpha.
+        required: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-engines
+
+      - name: Build and publish to npm
+        id: publish
+        shell: bash
+        run: .github/scripts/npm-publish.sh
+        env:
+          INPUT_PACKAGE: ${{ inputs.package }}
+          INPUT_VERSION: ${{ inputs.version }}
+          BRANCH_NAME: ${{ github.ref_name }}
+
+      - name: Push release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.publish.outputs.tag }}"
+          if [[ -z "$TAG" ]]; then
+            echo "Missing tag output from publish step."
+            exit 1
+          fi
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.publish.outputs.tag }}
+          NPM_PACKAGE: ${{ steps.publish.outputs.npm_package }}
+          VERSION: ${{ steps.publish.outputs.version }}
+          DIST_TAG: ${{ steps.publish.outputs.dist_tag }}
+          PRERELEASE: ${{ steps.publish.outputs.prerelease }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${TAG:-}" || -z "${NPM_PACKAGE:-}" || -z "${VERSION:-}" ]]; then
+            echo "Missing required outputs for release creation."
+            exit 1
+          fi
+
+          TITLE="${NPM_PACKAGE}@${VERSION}"
+          NOTES=$'Published `'"${NPM_PACKAGE}"$'` version `'"${VERSION}"$'`.\n\n- npm dist-tag: `'"${DIST_TAG}"$'`\n- branch: `'"${BRANCH_NAME}"$'`\n'
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TITLE" --notes "$NOTES"
+            exit 0
+          fi
+
+          if [[ "${PRERELEASE:-false}" == "true" ]]; then
+            gh release create "$TAG" --title "$TITLE" --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" --title "$TITLE" --notes "$NOTES"
+          fi
