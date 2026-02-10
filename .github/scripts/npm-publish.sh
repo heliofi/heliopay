@@ -154,7 +154,6 @@ cd "$PKG_DIR"
 npm publish \
   --tag "$NPM_DIST_TAG" \
   --access public \
-  --provenance \
   --registry "https://registry.npmjs.org"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
