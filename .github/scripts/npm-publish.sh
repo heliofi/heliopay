@@ -149,14 +149,13 @@ yarn workspace "$NPM_PACKAGE" run build
 
 echo "🚀 Publishing to npm (dist-tag: $NPM_DIST_TAG)..."
 
-export NPM_CONFIG_PROVENANCE="${NPM_CONFIG_PROVENANCE:-false}"
+cd "$PKG_DIR"
 
-npx lerna publish from-package \
-  --yes \
-  --dist-tag "$NPM_DIST_TAG" \
-  --scope "$NPM_PACKAGE" \
-  --registry "https://registry.npmjs.org" \
-  -- --provenance=false
+npm publish \
+  --tag "$NPM_DIST_TAG" \
+  --access public \
+  --provenance \
+  --registry "https://registry.npmjs.org"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   {
