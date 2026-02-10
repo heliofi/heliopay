@@ -49,6 +49,7 @@ jobs:
           INPUT_PACKAGE: ${{ inputs.package }}
           INPUT_VERSION: ${{ inputs.version }}
           BRANCH_NAME: ${{ github.ref_name }}
+          NPM_CONFIG_PROVENANCE: "false"
 
       - name: Push release tag
         shell: bash

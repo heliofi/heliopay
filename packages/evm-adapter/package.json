@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heliofi/solidity-adapter.git"
+    "url": "git+https://github.com/heliofi/heliopay.git"
   },
   "keywords": [
     "ethereum",
@@ -28,9 +28,9 @@
   ],
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/heliofi/solidity-adapter/issues"
+    "url": "https://github.com/heliofi/heliopay/issues"
   },
-  "homepage": "https://github.com/heliofi/solidity-adapter",
+  "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
     "ethers": "6.13.5"
   },
