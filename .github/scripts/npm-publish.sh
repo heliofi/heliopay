@@ -148,10 +148,13 @@ echo "🔨 Building target package..."
 yarn workspace "$NPM_PACKAGE" run build
 
 echo "🚀 Publishing to npm (dist-tag: $NPM_DIST_TAG)..."
-npx lerna publish from-package \
-  --yes \
-  --dist-tag "$NPM_DIST_TAG" \
-  --scope "$NPM_PACKAGE" \
+
+cd "$PKG_DIR"
+
+npm publish \
+  --tag "$NPM_DIST_TAG" \
+  --access public \
+  --provenance \
   --registry "https://registry.npmjs.org"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
