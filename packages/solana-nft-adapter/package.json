@@ -41,13 +41,11 @@
     "@solana/wallet-adapter-react": "^0.15.20",
     "@solana/web3.js": "^1.68.0",
     "bs58": "^5.0.0",
-    "jsonwebtoken": "^8.5.1",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@heliofi/eslint-config-helio": "^0.0.4",
     "@types/chai": "^4.3.0",
-    "@types/jsonwebtoken": "^8.5.8",
     "@types/mocha": "^9.1.0",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
