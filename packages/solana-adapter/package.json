@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "watch": "yarn build -w",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
@@ -16,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heliofi/helio-package.git"
+    "url": "git+https://github.com/heliofi/heliopay.git"
   },
   "keywords": [
     "solana",

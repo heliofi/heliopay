@@ -1,6 +1,6 @@
 {
   "name": "@heliofi/evm-adapter",
-  "version": "2.2.5",
+  "version": "2.2.11",
   "description": "API to interact with Helio Finances program on EVM chains.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "watch": "yarn build -w",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
@@ -16,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heliofi/solidity-adapter.git"
+    "url": "git+https://github.com/heliofi/heliopay.git"
   },
   "keywords": [
     "ethereum",
@@ -27,9 +28,9 @@
   ],
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/heliofi/solidity-adapter/issues"
+    "url": "https://github.com/heliofi/heliopay/issues"
   },
-  "homepage": "https://github.com/heliofi/solidity-adapter",
+  "homepage": "https://github.com/heliofi/heliopay",
   "dependencies": {
     "ethers": "6.13.5"
   },
