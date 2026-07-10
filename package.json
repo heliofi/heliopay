@@ -17,5 +17,8 @@
   },
   "dependencies": {
     "http-cache-semantics": "^4.1.1"
+  },
+  "resolutions": {
+    "@solana/web3.js": "1.98.4"
   }
 }
